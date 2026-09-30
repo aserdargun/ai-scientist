@@ -1,0 +1,49 @@
+{
+  "schema": "public050-postfix0361-execution.v1",
+  "command": [
+    "flock",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--unit=swapp-public050-browser-postfix0361",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--property=MemoryMax=512M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=50%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=90",
+    "--setenv=TMPDIR=/home/cachyos/.m0r10",
+    "--setenv=PYTHONPATH=/home/cachyos/.cache/uv/archive-v0/erDyh8-eeLPFRvqx:/home/cachyos/.cache/uv/archive-v0/zb1H4ZkTphJnPKiN",
+    "--setenv=PLAYWRIGHT_BROWSERS_PATH=/home/cachyos/ai-scientist/data/runtime/console-browser",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/tmp/ai-scientist-public050-browser/check_postfix0361.py"
+  ],
+  "session_id": 35353,
+  "launch_chunk": "e08ce4",
+  "final_chunk": "89943e",
+  "exit_code": 0,
+  "checks_passed": 3,
+  "scope": "Only existing row/drawer purpose and unchanged canonical report; all browser requests GET; prior terminal4checks retained. No newrun/stop/product changes.",
+  "result": {
+    "schema": "public050-postfix0361-browser.v1",
+    "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+    "checks": {
+      "existing_row_cpu_baseline": true,
+      "drawer_cpu_baseline": true,
+      "report_sha_unchanged": true
+    },
+    "errors": [],
+    "blocked_requests": [],
+    "report_sha256": "8cb2abd94ec92fad9079b69cb06bba44adb2a91867fd5699223c47afa15fd6ab"
+  },
+  "artifacts": {
+    "check_postfix0361.py": "63f48e6d80e1ef6e6c1a6bbb366a66223685ef1a86fc52b3bc10685cde217931",
+    "postfix0361-result.json": "1971f120cf95cd71a99800f8d7d9a2e0935ee01de5949a8e8317b911f2845b70",
+    "postfix0361.png": "6516e598b4694ffd374d9f71e211e535b353e9b0a57c87a55d1647b1062bfe7f"
+  }
+}

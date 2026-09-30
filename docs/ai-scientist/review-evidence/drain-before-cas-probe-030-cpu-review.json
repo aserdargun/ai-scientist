@@ -1,0 +1,59 @@
+{
+  "schema": "review-cpu-execution.v1",
+  "scope": "Private review instrumentation contract tests; no SQL compilation, worker lifecycle or scientific acceptance",
+  "worktree": "data/runtime/parallel-m0/lifecycle-030",
+  "main_commit": "d70dffc",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-drain-before-cas-probe.py": "3d5f03552090d06dec7e7115ace1a388d18a571efdbfc61cc4cbf1adc6b4cd95",
+    "docs/ai-scientist/review-evidence/holdout-030-drain-before-cas-probe.md": "37f5c9946388570e0f13d45ed2c0971f56281f61e6a4b9c11ffcd4f62675f919",
+    "tests/test_holdout030_drain_before_cas_probe.py": "aeb6eebf835ffe7a2cdb6256f4ba04f01fe04e78ae05699c799cec7057cea736"
+  },
+  "limits": {
+    "memory_max_bytes": 1073741824,
+    "swap_max_bytes": 0,
+    "cpu_quota_percent": 50,
+    "tasks_max": 64,
+    "runtime_max_seconds": 180,
+    "command_timeout_seconds": 75,
+    "serialization_lock": "data/runtime/parallel-m0/cpu-check.lock"
+  },
+  "attempts": [
+    {
+      "unit": "swapp-drain-probe-cpu-20260927-r1.service",
+      "exec_chunk": "b04ff7",
+      "exit_code": 1,
+      "ruff_exit_code": 0,
+      "pytest_exit_code": 1,
+      "passed": 11,
+      "failed": 3,
+      "pytest_seconds": 0.20,
+      "sources_unchanged": true,
+      "test_sha256": "17f85fccadef8fb24d9763dfb2aa5861921a6e4a3e50c0970b8233753ca8d6af",
+      "failure": "Test constructors rebuilt UUID fields from a JSON document; a SQL shape assertion depended on a trailing semicolon.",
+      "repair": "Preserve typed UUID fields with dataclasses.replace; assert the explicit role-revocation clause. Probe implementation was unchanged."
+    },
+    {
+      "unit": "swapp-drain-probe-cpu-20260927-r2.service",
+      "exec_chunk": "e8f91b",
+      "exit_code": 0,
+      "ruff_exit_code": 0,
+      "pytest_exit_code": 0,
+      "passed": 14,
+      "failed": 0,
+      "pytest_seconds": 0.19,
+      "sources_unchanged": true,
+      "test_sha256": "aeb6eebf835ffe7a2cdb6256f4ba04f01fe04e78ae05699c799cec7057cea736"
+    }
+  ],
+  "production_runtime_changed": false,
+  "postgres_executed": false,
+  "docker_executed": false,
+  "gpu_model_or_aos_executed": false,
+  "drain_before_cas_proven": false,
+  "full_quality_gate": false,
+  "remaining": [
+    "Review and integrate the probe with the frozen R10 driver",
+    "Bound observer cancellation, database operations and cleanup",
+    "Execute a reviewed disposable lifecycle test with independent ordering evidence"
+  ]
+}

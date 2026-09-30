@@ -1,0 +1,266 @@
+{
+  "checked_at": "2026-09-24T16:41:00.324073+00:00",
+  "scope": "Trusted baseline code on local CPU synthetic arrays. Literal inclusive tail counts and hand-derived MAD/normalization values are independent arithmetic oracles. Does not establish Docker/image parity, independent Scorer/PG calibration, physical blobs, Director20, public-data, model, GPU or AOS acceptance.",
+  "source_sha256": {
+    "harness/baselines.py": "abb4f46252934ed234951a9429b23cf545c53b4d7c5ea06f621bbf0d88dff909",
+    "harness/alarm.py": "f9abb7c3cf59d604616b2fffac794b34b575f902b954a1dd3daa26428721c0e9",
+    "harness/contracts.py": "8e1ee76db8855696f35774a834e0742256cfeed0081c6d7cc612c3f62283bbe6"
+  },
+  "checks": {
+    "positive_skew_inclusive_tail_oracle": true,
+    "positive_skew_single_vs_batch": true,
+    "positive_skew_fit_state_unchanged": true,
+    "negative_skew_inclusive_tail_oracle": true,
+    "negative_skew_single_vs_batch": true,
+    "negative_skew_fit_state_unchanged": true,
+    "symmetric_inclusive_tail_oracle": true,
+    "symmetric_single_vs_batch": true,
+    "symmetric_fit_state_unchanged": true,
+    "symmetric_ties_inclusive_tail_oracle": true,
+    "symmetric_ties_single_vs_batch": true,
+    "symmetric_ties_fit_state_unchanged": true,
+    "constant_feature_inclusive_tail_oracle": true,
+    "constant_feature_single_vs_batch": true,
+    "constant_feature_fit_state_unchanged": true,
+    "ecod_feature_sum": true,
+    "robust_z_causal_prefix": true,
+    "robust_z_seed_zero_repeat": true,
+    "robust_z_flat_train_alarm_recovers": true,
+    "iforest_causal_prefix": true,
+    "iforest_seed_zero_repeat": true,
+    "iforest_flat_train_alarm_recovers": true,
+    "ecod_train_frozen_causal_prefix": true,
+    "ecod_train_frozen_seed_zero_repeat": true,
+    "ecod_train_frozen_flat_train_alarm_recovers": true,
+    "robust_z_median_mad_oracle": true,
+    "EVT_normalization_floor": true,
+    "PDM_normalization_floor": true,
+    "NRM_normalization_floor": true,
+    "C-EXT_normalization_floor": true,
+    "C-UTIL_normalization_floor": true,
+    "normalization_upper_clip": true,
+    "normalization_lower_clip": true,
+    "normalization_baseline_zero": true,
+    "normalization_reference_one": true
+  },
+  "ecod_cases": [
+    {
+      "name": "positive_skew",
+      "train": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        10.0
+      ],
+      "eval": [
+        -10.0,
+        0.0,
+        0.5,
+        1.0,
+        10.0,
+        20.0
+      ],
+      "skew_sign": 1,
+      "expected": [
+        1.791759469228055,
+        0.5108256237659907,
+        0.916290731874155,
+        0.916290731874155,
+        1.6094379124341003,
+        1.791759469228055
+      ],
+      "actual": [
+        1.791759469228055,
+        0.5108256237659907,
+        0.916290731874155,
+        0.916290731874155,
+        1.6094379124341003,
+        1.791759469228055
+      ]
+    },
+    {
+      "name": "negative_skew",
+      "train": [
+        -10.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eval": [
+        -20.0,
+        -10.0,
+        -1.0,
+        -0.5,
+        0.0,
+        10.0
+      ],
+      "skew_sign": -1,
+      "expected": [
+        1.791759469228055,
+        1.6094379124341003,
+        0.916290731874155,
+        0.916290731874155,
+        0.5108256237659907,
+        1.791759469228055
+      ],
+      "actual": [
+        1.791759469228055,
+        1.6094379124341003,
+        0.916290731874155,
+        0.916290731874155,
+        0.5108256237659907,
+        1.791759469228055
+      ]
+    },
+    {
+      "name": "symmetric",
+      "train": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0
+      ],
+      "eval": [
+        -3.0,
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0
+      ],
+      "skew_sign": 0,
+      "expected": [
+        1.791759469228055,
+        1.6094379124341003,
+        1.1394342831883648,
+        1.0216512475319814,
+        1.1394342831883648,
+        1.6094379124341003,
+        1.791759469228055
+      ],
+      "actual": [
+        1.791759469228055,
+        1.6094379124341003,
+        1.1394342831883648,
+        1.0216512475319814,
+        1.1394342831883648,
+        1.6094379124341003,
+        1.791759469228055
+      ]
+    },
+    {
+      "name": "symmetric_ties",
+      "train": [
+        -2.0,
+        -2.0,
+        0.0,
+        2.0,
+        2.0
+      ],
+      "eval": [
+        -3.0,
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0
+      ],
+      "skew_sign": 0,
+      "expected": [
+        1.791759469228055,
+        0.916290731874155,
+        1.4271163556401456,
+        1.0216512475319814,
+        1.4271163556401456,
+        0.916290731874155,
+        1.791759469228055
+      ],
+      "actual": [
+        1.791759469228055,
+        0.916290731874155,
+        1.4271163556401456,
+        1.0216512475319814,
+        1.4271163556401456,
+        0.916290731874155,
+        1.791759469228055
+      ]
+    },
+    {
+      "name": "constant_feature",
+      "train": [
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "eval": [
+        3.0,
+        4.0,
+        5.0
+      ],
+      "skew_sign": 0,
+      "expected": [
+        1.791759469228055,
+        -0.0,
+        1.791759469228055
+      ],
+      "actual": [
+        1.791759469228055,
+        0.0,
+        1.791759469228055
+      ]
+    }
+  ],
+  "flat_alarm_cases": {
+    "robust_z": {
+      "threshold": 5e-324,
+      "release": 5e-324,
+      "dwell": 1,
+      "actual": [
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    "iforest": {
+      "threshold": 5e-324,
+      "release": 5e-324,
+      "dwell": 1,
+      "actual": [
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    "ecod_train_frozen": {
+      "threshold": 5e-324,
+      "release": 5e-324,
+      "dwell": 1,
+      "actual": [
+        false,
+        true,
+        false,
+        false
+      ]
+    }
+  },
+  "normalization_floor_values": {
+    "EVT": 0.4999999999999997,
+    "PDM": 0.09999999999999995,
+    "NRM": 0.09999999999999995,
+    "C-EXT": 0.1999999999999999,
+    "C-UTIL": 0.4999999999999997
+  },
+  "source_unchanged": true,
+  "script_sha256": "6d925478cb4049ad92539b922c831b45360aacbe301794d82ea09f39835cf06a",
+  "command": "OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 .venv/bin/python docs/ai-scientist/review-evidence/review_baseline_numerics.py",
+  "all_passed": true
+}

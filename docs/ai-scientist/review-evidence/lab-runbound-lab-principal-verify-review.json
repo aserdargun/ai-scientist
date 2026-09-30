@@ -1,0 +1,61 @@
+{
+  "schema": "lab-runbound-lab-principal-verification-review.v1",
+  "status": "ready_for_root_integration",
+  "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lab-canonical-lab-verifier",
+  "files": {
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "tests/test_gpu_scheduler.py": "09d1586e2d82f0d1fd5adcf0a7452500684fe7672a3946c3458db06ec6d46935"
+  },
+  "patch": {
+    "path": "docs/ai-scientist/review-evidence/lab-runbound-lab-principal-verify.patch",
+    "sha256": "29298234661c5fd059f2295d102e78551badee7f8a16ed6cd3116abb0e4026c8",
+    "clean_base_apply_check_exit": 0,
+    "clean_base_apply_check_log": {
+      "path": "docs/ai-scientist/review-evidence/lab-runbound-lab-principal-apply-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "behavior": {
+    "resolve": "Unchanged: resolve(owner='lab') still resolves only the configured exact Lab unit.",
+    "verify": "For Lab only, accepts an already-recorded receipt using the exact canonical run-bound Director parent unit. It then verifies the current live process identity, exact systemd InvocationID, exact MainPID, and the process cgroup beneath swapp-gpu.slice.",
+    "aos": "Unchanged: an AOS receipt cannot use the Lab canonical namespace.",
+    "other_lab_units": "Unchanged: any nonconfigured Lab unit outside the exact run-bound Director namespace is rejected."
+  },
+  "negative_coverage": [
+    "Wrong receipt owner using canonical Lab unit.",
+    "Malformed run UUID and unconfigured swapp-lab-gpu-train unit.",
+    "InvocationID mismatch.",
+    "Systemd cgroup outside the verified unit/slice.",
+    "Dead/reused PID, changed start ticks, and changed boot ID."
+  ],
+  "checks": [
+    {
+      "command": "flock <cpu-check.lock> systemd-run --user --wait --collect --pipe --quiet --unit=luna-canonical-lab-verifier-tests-final.service --slice=swapp-gpu.slice -p MemoryMax=2G -p MemorySwapMax=0 -p CPUQuota=100% -p TasksMax=128 -p RuntimeMaxSec=240 pytest -q tests/test_gpu_scheduler.py",
+      "exit": 0,
+      "result": "27 passed in 0.27s",
+      "log_path": "docs/ai-scientist/review-evidence/lab-runbound-lab-principal-tests.log",
+      "log_sha256": "a2e09bee64e25304f29f11ba248226d547a4be126cad4d57b39689771231804e"
+    },
+    {
+      "command": "ruff check lab/llm/gpu_scheduler.py tests/test_gpu_scheduler.py",
+      "exit": 0,
+      "log_path": "docs/ai-scientist/review-evidence/lab-runbound-lab-principal-ruff.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "command": "flock <cpu-check.lock> systemd-run --user --wait --collect --pipe --quiet --unit=luna-canonical-lab-verifier-mypy-final.service --slice=swapp-gpu.slice -p MemoryMax=2G -p MemorySwapMax=0 -p CPUQuota=100% -p TasksMax=128 -p RuntimeMaxSec=240 mypy lab/llm/gpu_scheduler.py",
+      "exit": 0,
+      "log_path": "docs/ai-scientist/review-evidence/lab-runbound-lab-principal-mypy.log",
+      "log_sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  ],
+  "limitations": [
+    "CPU-only fixture verification; no database, systemd owner unit, API, model, GPU, or live AOS operation was started.",
+    "The dynamically varying training operation unit namespace remains unsupported unless it is the existing configured exact Lab unit; expansion requires a separately reviewed authorization."
+  ]
+}

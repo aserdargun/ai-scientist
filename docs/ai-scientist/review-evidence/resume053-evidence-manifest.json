@@ -1,0 +1,20 @@
+{
+  "schema": "resume053-evidence-manifest.v1",
+  "runtime_commit": "fa28624",
+  "runtime_version": "0.36.1",
+  "driver_archive_matches_executed_source": true,
+  "actual_result": "failed_after_generation_handoff",
+  "replay_warning": "Historical driver uses fixed private paths and expects the original 0.36.1 ledger inventory. Do not rerun admission or the claimed restart ID.",
+  "files": {
+    "resume053-state.json": "aa3c91e9b3345c992beaafbc457266dfbfcd58cdfa97ffff2110abdaf73e7024",
+    "resume053-preparation.json": "d7f79dbf5e3908a6f424a9f915cdb5f649213d49fbd8654f37411f023b124c72",
+    "resume053-before-crash.json": "e3d3e0bc3096937de9c71e04e5460c62952c6d3b2124e4229bb5ea6b6984558e",
+    "resume053-after-crash.json": "4beb70429922c4a78072646d36beb7064f14a4f4a5f98fc38564240c14a2cdb9",
+    "resume053-resume-failure-snapshot.json": "5cd71e49261cf58d1432df4c1a67c2c0146ebe6213165ef122ee516589167beb",
+    "resume053-dispatch-execution.json": "0a69d5a09784235cda02af38706ad503a05f7c423887057cefa053d3f8eae63d",
+    "resume053-resume-execution.json": "ec8b1616f5e79eeee9447833ee3ca7ba9321d30b376c19f7d9c6841bc9d71217",
+    "resume053-restore.json": "c9288f3c88093be5deffeb53771111b6cbc17a0f60a9362ee23543373782cb76",
+    "resume053-interruption-outcome.json": "22fbcf82c176d1a6efe99e80ae5159f6d4133edfb0b2a002b3ce64405fbbf71e",
+    "review_resume053_process_interruption.py": "516447323ccb3c406be76ca718c92be0478c0241e32b99f764ecaccde015f323"
+  }
+}

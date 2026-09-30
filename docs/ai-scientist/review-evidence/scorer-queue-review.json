@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-09-24T11:20:01.598273+00:00",
+  "source_sha256": {
+    "lab/scorer/jobs.py": "c27d9450e759077f837418da412330c22e64ab319e5c669ef071f24c493465a7",
+    "lab/scorer/service.py": "4f5de9abb856261837c4b55cee3820eebe0e2946015c7170a8bb9a2be89b8f7b",
+    "lab/db/schema.py": "960e7749021aba089ab847e206203b10f5f2453503609e83ecf3df70be3bb930"
+  },
+  "checks": {
+    "concurrent_same_payload_same_job": true,
+    "one_queue_row": true,
+    "different_artifact_rejected": true,
+    "active_claim_not_reclaimed": true,
+    "expired_claim_cannot_commit": true,
+    "reclaimed_token_is_new": true,
+    "stale_claim_cannot_commit": true,
+    "claimed_artifact_digest_enforced": true,
+    "rejected_claims_wrote_no_scores": true,
+    "valid_claim_score_and_job_complete": true
+  },
+  "scope": "Real PostgreSQL and independent Planner/Scorer roles; CPU-only tiny metric fixture. Tests concurrent enqueue and score commit fencing, not OS worker limits, automatic restart/drain, Director end-to-end or GPU coexistence.",
+  "source_unchanged": true,
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_scorer_queue.py",
+  "script_sha256": "af9a450ca9b1266f0d5ef214fbc8cc6630c5168136f739842e89e456e6b62957"
+}

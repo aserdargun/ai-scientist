@@ -1,0 +1,24 @@
+{
+  "schema": "holdout-lifecycle-snapshot-correction.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "f4bc9dc1bc06280cafb028e80c0abbeebeaac5fa7ddb7fbe84a4b3d76a53d45e",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "2ae246d51c22d74906f105fb4b39bd0b7a1b474a2fde4c39a6919c966aca2159"
+  },
+  "previous_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "308868dcb5816b7769a121c3d8944d598519f8f44ba7ff4ede2923ac466d40cf",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "a9c9db8f425b15d7f54822a3b487e9a97f4ece5a4217d16d169bc2a244e364b0"
+  },
+  "changes": [
+    "copy Dockerfile.sandbox and docker/sandbox/requirements.txt",
+    "production harness source/snapshot fingerprint parity before DB provisioning",
+    "record allowlisted setupworker states/exit for all owned jobs"
+  ],
+  "source_review": "no blocker to bounded isolated fixture",
+  "worker_reported_checks": {
+    "tests_passed": 11,
+    "pytest_exit_code": 0,
+    "ruff_exit_code": 0
+  },
+  "runtime_changed": false
+}

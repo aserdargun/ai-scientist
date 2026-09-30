@@ -1,0 +1,17 @@
+{
+  "schema": "private-public-runtime-command-outcome.v1",
+  "source_commit": "390a6c25e94e5da339457dd17e88749ed07c7795",
+  "preparation_session_id": 48388,
+  "preparation_actual_exit_code": 0,
+  "preparation_result_sha256": "5203b7eaea0514ba4f31d6821e173ae39462a7c5db843941073ebee81ea86adc",
+  "preflight_tool_chunk_id": "ec8605",
+  "preflight_actual_exit_code": 0,
+  "preflight_elapsed_seconds": 0.8928,
+  "preflight_unit": "swapp-public-027-preflight-v2.service",
+  "preflight_driver": "data/runtime/parallel-m0/public-execution-027/data/runtime/check-preparation-v2.py",
+  "preflight_driver_sha256": "b8354b51d5a81d9a5060c71a256cedf8926939aa5dbdeb153cd35ee65eb4a80e",
+  "preflight_result_sha256": "89cd156ac5e11fe4b57344a35f84b515822ac6cdad78b1e8825bc865159ef320",
+  "services_or_models_started": false,
+  "scope": "Private Lab source/runtime, manifest, provider configuration and API principal preparation only. Shared GPU broker, AOS desktop, public research and coexistence acceptance remain open.",
+  "previous_failed_attempt": "private-public-execution-027-preflight-import-failure.json"
+}

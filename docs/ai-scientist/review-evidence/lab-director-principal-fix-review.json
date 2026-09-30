@@ -1,0 +1,18 @@
+{
+  "schema": "lab-director-principal-original-receipt-provenance.v1",
+  "status": "original receipt bytes overwritten during evidence update; original JSON was not recovered or reconstructed as verified.",
+  "original_expected_sha256": "84218b7cc7de9f02676db57caa7d04a93d9d512fb9e436c726cf296117ef9188",
+  "original_patch_sha256": "0f65b41f6a52f10abf43cfd0d1d3245a5c496d1cd709bc84efdb0d6ca0778b16",
+  "original_patch_restored": true,
+  "replacement_records": [
+    {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/lab-director-principal-verify-fix-aggregate-review.json",
+      "role": "preserved byte-for-byte copy of the later aggregate review record; this is not the original v1 receipt"
+    },
+    {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/lab-director-principal-verify-fix-review.json",
+      "role": "new incremental verify fix receipt with independent byte parity and actual systemd probe"
+    }
+  ],
+  "note": "The original expected receipt SHA above is provenance only and does not validate this file. No evidence is attributed to that SHA except its previously reported identity."
+}

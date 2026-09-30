@@ -1,0 +1,75 @@
+{
+  "schema": "resume054-tool-executions.v1",
+  "prepare": {
+    "session": 89240,
+    "launch_chunk": "40c189",
+    "final_chunk": "ed7246",
+    "exit_code": 0
+  },
+  "dispatch": {
+    "session": 59006,
+    "launch_chunk": "26464f",
+    "final_chunk": "93db5f",
+    "exit_code": 1,
+    "intentional_sigkill": true
+  },
+  "interruption": {
+    "session": 72038,
+    "launch_chunk": "f39425",
+    "final_chunk": "183ba3",
+    "exit_code": 0,
+    "verified_checkpoints": 43
+  },
+  "pre_resume_downtime_observation": {
+    "chunk": "3f295c",
+    "exit_code": 0,
+    "seconds_lower_bound": 33.818781544003286
+  },
+  "resume": {
+    "session": 44060,
+    "launch_chunk": "13c496",
+    "status": "completed",
+    "final_chunk": "24c40d",
+    "exit_code": 0,
+    "elapsed_seconds": 326.1984752959979
+  },
+  "restore": {
+    "session": 13456,
+    "launch_chunk": "5c7837",
+    "final_chunk": "d9f10d",
+    "exit_code": 1,
+    "record": "resume054-restore-r1.json"
+  },
+  "historical_second_restore": {
+    "session": 11877,
+    "launch_chunk": "c09ab2",
+    "final_tool_handle_unavailable_after_interruption": true,
+    "file_receipt_exit_code": 0,
+    "record": "resume054-restore.json",
+    "current_service_claim": false
+  },
+  "verification_r1": {
+    "session": 8302,
+    "launch_chunk": "f7df65",
+    "final_chunk": "556250",
+    "exit_code": 1,
+    "checks": 29,
+    "failed_checks": [
+      "report_plan_group"
+    ],
+    "error_type": "ProgrammingError"
+  },
+  "verification_r2": {
+    "chunk": "fd9c1b",
+    "exit_code": 0,
+    "checks": 38,
+    "failed_checks": [],
+    "role_fix": "existing migrator SELECT only for task_completions; read-only transaction and statement_timeout=5000, no SQL grant changes"
+  },
+  "current_restore": {
+    "session": 21249,
+    "launch_chunk": "d5a73e",
+    "final_chunk": "700659",
+    "exit_code": 0
+  }
+}

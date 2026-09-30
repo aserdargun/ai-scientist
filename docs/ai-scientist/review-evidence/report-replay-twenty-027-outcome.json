@@ -1,0 +1,13 @@
+{
+  "schema": "report-replay-twenty-attempt-outcome.v1",
+  "actual_session_id": 96403,
+  "actual_exit_code": 1,
+  "production_cli_exit_code": 1,
+  "production_cli_seconds": 1.2719279850134626,
+  "result_sha256": "0aa2837de113c501987f194008ee06a0b2db1ae419b2be65b82127bd85fe484f",
+  "driver_sha256": "babdbc80f1309f3cae84acd0e51077a6e9ef59f9fc182799dc22b9e44d845482",
+  "reason": "Historical scenario manifest lacks current independent_family/label_tier and suite weight provenance; strict loader rejected it before baseline work. New wrapper adds only trusted synthetic weight provenance.",
+  "product_source_changed": false,
+  "gpu_started": false,
+  "original_receipts_preserved": true
+}

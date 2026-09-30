@@ -1,0 +1,16 @@
+{
+  "schema": "baseline-integration-main-evidence-gate.v1",
+  "session_id": 98769,
+  "completion_chunk": "714256",
+  "exit_code": 0,
+  "runtime_head": "b723f9b",
+  "runtime_version": "0.32.0",
+  "command_record": "baseline-integration-main-gate-commands.json",
+  "command_record_sha256": "4baff769790d1f44940bb7987b70b472a706b3bf5a7ee55a06a4c23b2231d377",
+  "log": "baseline-integration-main-gate.log.txt",
+  "log_sha256": "43e7e1abd29c13d1ae4520697f93c1eaa4837748e1658175f9fad755ee3d2b64",
+  "scope": "Main checkout quality gate for documentation/evidence commit; private0.33/0.34 code not integrated.",
+  "raw_log_sha256": "2207b259675de85f14dbbfe1df2c374980250311d7c6c2d86311ede618b71f91",
+  "raw_log_path": "data/runtime/parallel-m0/integration-033-checks/main-gate-98769.raw.log",
+  "display_log_normalization": "Trailing whitespace removed for Git; exact command stdout/stderr retained in commands JSON and raw private log."
+}

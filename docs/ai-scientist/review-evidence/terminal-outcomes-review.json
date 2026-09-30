@@ -1,0 +1,69 @@
+{
+  "checked_at": "2026-09-24T12:46:10.505246+00:00",
+  "source_sha256": {
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/schema.py": "e0dd79c3810fec7e54b815f356ea95be34b3427b3e612f00606bda23786c22eb",
+    "lab/director/task_plan.py": "fa9ec9ec22f6cb95e8b15836804c54378cda1c94c1b95c3f946bea1cf55fa27f",
+    "lab/scorer/jobs.py": "8c79ce183922392c5ac5c021c5fc6606e584601d88680c47e77b137336db1354",
+    "lab/scorer/service.py": "f344a59cb6dd57b2be73422621c5a6950cd3ba9dba1e70132bdb90c79eaec615",
+    "lab/api/app.py": "c45a7fc87ad142b318eeb8d0f0273b584b18b6412b637688990ef38a596a6718"
+  },
+  "scope": "Real PostgreSQL service roles; owned 16-row synthetic data and bounded concurrent transactions. No model, public-data, worker-drain or full Director acceptance.",
+  "checks": {
+    "producer_derived_from_real_session": true,
+    "unsealed_mixed_run_not_finalized": true,
+    "mixed_report_has_real_score_and_explicit_terminal": true,
+    "mixed_report_idempotent": true,
+    "terminal_rows_immutable_to_planner": true,
+    "terminal_rows_immutable_to_scorer": true,
+    "scores_immutable_to_scorer": true,
+    "director_cannot_write_terminal": true,
+    "planner_cannot_write_infrastructure_error": true,
+    "wrong_candidate_denied": true,
+    "unknown_task_denied": true,
+    "repeatable_read_write_denied": true,
+    "scorer_requires_live_job_claim": true,
+    "score_wins_exclusive_completion_race": true,
+    "score_race_exactly_one_completion": true,
+    "terminal_wins_exclusive_completion_race": true,
+    "terminal_race_exactly_one_completion": true,
+    "queued_cancel_cannot_omit_actual_job": true,
+    "queued_cancel_updates_job_atomically": true,
+    "stopped_report_has_no_fabricated_metric": true,
+    "resolved_task_cannot_enqueue": true,
+    "expired_claim_cannot_terminate": true,
+    "stale_claim_cannot_terminate_successor": true,
+    "current_claim_closes_job_without_persisting_token": true,
+    "infrastructure_failure_report_is_failed": true,
+    "active_empty_plan_cannot_seal": true,
+    "prestart_stop_closes_without_fake_tasks": true,
+    "api_verified_stopped_task_report": true,
+    "api_verified_failed_task_report": true,
+    "api_verified_stopped_empty_report": true,
+    "api_report_requires_auth": true,
+    "api_run_report_status_mismatch_rejected": true,
+    "api_report_content_hash_mismatch_rejected": true,
+    "api_wrong_owner_report_hidden": true,
+    "owned_run_rows_cleaned": true,
+    "owned_dataset_rows_cleaned": true
+  },
+  "races": [
+    {
+      "first_role": "scorer",
+      "second_role": "planner",
+      "observed_database_lock_wait": true,
+      "second_write_rejected": true
+    },
+    {
+      "first_role": "planner",
+      "second_role": "scorer",
+      "observed_database_lock_wait": true,
+      "second_write_rejected": true
+    }
+  ],
+  "migration": "0008_terminal_task_outcomes",
+  "legacy_fixture": "Already cleaned or not prepared; no new upgrade claim.",
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "d59d1f7ca65ce78aa4ca63ee725fb805802fda9f10e35ff60b82bbe970f6f045"
+}

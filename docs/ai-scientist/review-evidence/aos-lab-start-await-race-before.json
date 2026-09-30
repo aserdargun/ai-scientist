@@ -1,0 +1,36 @@
+{
+  "schema": "aos-lab-start-await-race-review.v1",
+  "checked_at": "2026-09-25T08:29:55.451556+00:00",
+  "scope": "Read-only isolated AOS sources; in-memory real SQLite schema; fixture controller/client/delayed decision; no network, model, desktop, or live AOS calls.",
+  "aos_source_root": "data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged",
+  "source_before": {
+    "src/aos/lab_external.py": "6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1",
+    "src/aos/desktop_console.py": "ed2144a431c6394802dbcffa9c9d779c78c9cc7009fb5b9800014b7ede3e2f88",
+    "scripts/serve_desktop.py": "83ce3fda98e29924c74e5c749bbf69f8719841b8db8a3d1f97d4e9ee5de6a632",
+    "tests/test_lab_external_jobs.py": "612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6"
+  },
+  "observation": {
+    "lease_before": {
+      "status": "running",
+      "owner": "HUMAN",
+      "lease_id": "lease-current",
+      "generation": 3,
+      "runtime_id": "runtime"
+    },
+    "lease_after": {
+      "status": "running",
+      "owner": "HUMAN",
+      "lease_id": "lease-new",
+      "generation": 4,
+      "runtime_id": "runtime"
+    },
+    "lab_start_calls_after_lease_change": 1,
+    "exception_type": null,
+    "result_state": "queued",
+    "persisted_external_jobs": 1
+  },
+  "source_unchanged": true,
+  "revoked_lease_start_prevented": false,
+  "actual_exit_code": 1,
+  "script_sha256": "b5d8d3d92e7b0735a27b9ec6e68c06b580ddbd3564d3be7bf16a926f2940e85a"
+}

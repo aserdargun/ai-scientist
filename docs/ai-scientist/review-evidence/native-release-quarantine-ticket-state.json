@@ -1,0 +1,24 @@
+{
+  "schema": "native-release-quarantine-ticket-review.v1",
+  "scope": "Readback of the same synthetic SQLite release/quarantine race recorded by native-release-quarantine-review.json; no model/GPU.",
+  "source_sha256": "fca838d69ba2b4b44db1f849202f4d24d54a2521b4a87d076b8e0193cd44f956",
+  "database": "data/runtime/native-release-race/ec11bb75d30b4005aac270c65fc3f820/gpu.sqlite",
+  "prior_evidence": "native-release-quarantine-review.json",
+  "requests": [
+    [
+      "lab",
+      "active",
+      "done"
+    ],
+    [
+      "aos",
+      "waiting",
+      "queued"
+    ]
+  ],
+  "checks": {
+    "expired_activation_ticket_recorded_expired": false,
+    "waiting_ticket_preserved": true
+  },
+  "passed": false
+}

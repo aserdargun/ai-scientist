@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-09-24T21:19:39.318448+00:00",
+  "scope": "Targeted AOS bridge and migration-audit tests plus full package validator in isolated source-typed copy. Not full AOS pytest or model/GPU acceptance.",
+  "cwd": "data/runtime/aos-coexistence/source-typed",
+  "source_sha256": {
+    "src/aos/lab_external.py": "6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1",
+    "src/aos/contracts.py": "c9979759e29a4985ec38e57614e5cbe49392dea98a93b7c5e23848484912944e",
+    "src/aos/computer.py": "ac26bd03f44da0a721392c4567deffa3592f7a7deb625332cc71c1431ebdd31e",
+    "src/aos/desktop_console.py": "8f2888fbd1dc14b3c178430139708261a89305618a9050c10346d4ffe0218f83",
+    "src/aos/storage.py": "c557c07535b2967dd2ea2aa3fadbba8483632ec3b1a353111c90d4e92263b92d",
+    "src/aos/dataset_audit.py": "4ac95f2e8ea81a5351b10136fbce406b572762f1898393bf07bf9f8cf1e82042",
+    "tests/test_dataset_audit.py": "84dde2915938e1666902821b293fd6623a856b7ca9428ece13388a1f9ac59948",
+    "tests/test_lab_external_jobs.py": "612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6",
+    "database/migrations/0019_lab_external_job_rebinding.sql": "aecb0a308a8cab4dcd8679e7284f378210c34037baf590af0fe10146e9bf53e9",
+    "MANIFEST.sha256": "0627199dbc2c78a5eeb49b3a403524aa5fb9265b436b661468bd152b697f308f"
+  },
+  "commands": [
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_dataset_audit.py",
+        "tests/test_lab_external_jobs.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "log": "docs/ai-scientist/review-evidence/aos-typed-gate-0.txt",
+      "log_sha256": "786e061514268ffb221ae6a06d9f401645a5b710af248a9715864f632cb5b82d",
+      "summary": [
+        "................................                                         [100%]",
+        "32 passed in 1.58s"
+      ]
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+        "scripts/validate_package.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/ai-scientist/review-evidence/aos-typed-gate-1.txt",
+      "log_sha256": "562c7c59e131231bec83e1738130a5667f1bd60fdb272cd06d5100503bc5fc05",
+      "summary": [
+        "PASS: 3842 package checks. No model/runtime/training tests were run."
+      ]
+    }
+  ],
+  "source_unchanged": true,
+  "all_passed": true
+}

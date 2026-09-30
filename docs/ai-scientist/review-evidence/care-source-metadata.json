@@ -1,0 +1,46 @@
+{
+  "schema": "source-discovery.v1",
+  "dataset": "CARE to Compare",
+  "source_url": "https://zenodo.org/api/records/15846963",
+  "record_id": 15846963,
+  "doi": "10.5281/zenodo.15846963",
+  "updated": "2026-09-09T11:22:36.471663+00:00",
+  "version": null,
+  "title": "Wind Turbine SCADA Data For Early Fault Detection",
+  "license": {
+    "id": "cc-by-sa-4.0"
+  },
+  "creators": [
+    {
+      "name": "Gück, Christian",
+      "affiliation": "Fraunhofer Institute for Energy Economics and Energy System Technology",
+      "orcid": "0009-0000-5782-1641"
+    },
+    {
+      "name": "Roelofs, Cyriana",
+      "affiliation": "Fraunhofer Institute for Energy Economics and Energy System Technology",
+      "orcid": "0009-0007-8005-3194"
+    }
+  ],
+  "files": [
+    {
+      "id": "730f927a-0ac6-44ae-8c8f-11065031029e",
+      "key": "CARE_To_Compare.zip",
+      "size": 5503439673,
+      "checksum": "md5:2547b58c21ac8c242d13232860cf500c",
+      "links": {
+        "self": "https://zenodo.org/api/records/15846963/files/CARE_To_Compare.zip/content"
+      }
+    }
+  ],
+  "split_requirement": {
+    "A": "dev",
+    "B": "holdout",
+    "C": "sealed"
+  },
+  "training_eligibility": "not inferred; retain attribution and share-alike metadata, separately decide training export eligibility",
+  "known_issue_source": "https://zenodo.org/records/15846963",
+  "known_issues": "Source reports physically implausible Min/Max/Std sensor summaries; consider Avg-only explicit versioned feature policy before examining benchmark outcomes.",
+  "download_status_at_metadata_retrieval": "metadata only; full archive not yet downloaded or verified",
+  "download_status": "completed; upstream MD5 verified; see care-source-manifest.json"
+}

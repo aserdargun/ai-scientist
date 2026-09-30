@@ -1,0 +1,16 @@
+{
+  "schema": "native-release-quarantine-review.v1",
+  "scope": "Actual SQLite and scheduler with fixture principal/clock/drain; competing acquisition quarantines an expired activation while release callback is in progress. No model/GPU or real process termination.",
+  "source_sha256": "fca838d69ba2b4b44db1f849202f4d24d54a2521b4a87d076b8e0193cd44f956",
+  "observations": {
+    "next_lease_admitted": false,
+    "phase_during_callback": "quarantined",
+    "inference_deadline": 115.0
+  },
+  "release_error": null,
+  "state_after": [
+    null,
+    null
+  ],
+  "passed": true
+}

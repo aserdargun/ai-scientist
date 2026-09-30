@@ -1,0 +1,112 @@
+{
+  "schema": "observer053-r5-strict-supplement.v1",
+  "passed": true,
+  "original_probe_complete": false,
+  "original_launch_exit_code": 1,
+  "pytest_exit_code": 0,
+  "nodes": 5,
+  "phases": 15,
+  "containers": 6,
+  "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+  "source_inventory_sha256": "f8aa6cf55988950403f3b1cfb0dbcbda3c8883466eae5844e2f208f3314a10a1",
+  "default_seccomp_verified": true,
+  "wrapper_sha256": "af9a5e8156bc160f2597e6fc303b8d6fd5fe64dda3673b196ea09201841e3889",
+  "original_receipt_sha256": "168ef95c086755158097ea91d31ab066bdb35d677674e496ed47b47792d7bb85",
+  "security_receipt_sha256": "d3adc7c00bf1ac4edc383536cfaf5ee31fad6e8c829ed31eddc76484245af4b2",
+  "launch_receipt_sha256": "5ac71fad67edeb5c305592cf23757f136ea15b8ad97710e9f04d9a5478a37ca3",
+  "verifier_sha256": "4f487c1791597bdb990b7da73d52c4184fd4bf482f1a7bd14d32da1f7b846d37",
+  "checks": [
+    {
+      "id": "81662a8655459ff0e11d72ecd198ec72bccbc51d368e6750d7f222866a45d635",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "81662a8655459ff0e11d72ecd198ec72bccbc51d368e6750d7f222866a45d635"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: 81662a8655459ff0e11d72ecd198ec72bccbc51d368e6750d7f222866a45d635\n",
+      "absent": true
+    },
+    {
+      "id": "a91225ca8658b11de697980696132d2beea3d71ae27095db21c8e5a8fdeb2bb0",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "a91225ca8658b11de697980696132d2beea3d71ae27095db21c8e5a8fdeb2bb0"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: a91225ca8658b11de697980696132d2beea3d71ae27095db21c8e5a8fdeb2bb0\n",
+      "absent": true
+    },
+    {
+      "id": "34bdc3fd7c0842d69dbe1ff51e90e1a77412c4924f56e9b02d36d2240be9bd0e",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "34bdc3fd7c0842d69dbe1ff51e90e1a77412c4924f56e9b02d36d2240be9bd0e"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: 34bdc3fd7c0842d69dbe1ff51e90e1a77412c4924f56e9b02d36d2240be9bd0e\n",
+      "absent": true
+    },
+    {
+      "id": "06dbdce368cda7dbb6759688fd0b4f7c1fbded8f5a8ee4fa16fac342ce23b831",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "06dbdce368cda7dbb6759688fd0b4f7c1fbded8f5a8ee4fa16fac342ce23b831"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: 06dbdce368cda7dbb6759688fd0b4f7c1fbded8f5a8ee4fa16fac342ce23b831\n",
+      "absent": true
+    },
+    {
+      "id": "d33c53331d5896a38fb3bac5f2bdab22e42f8c50f2558f11bcac8b50f4949db1",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "d33c53331d5896a38fb3bac5f2bdab22e42f8c50f2558f11bcac8b50f4949db1"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: d33c53331d5896a38fb3bac5f2bdab22e42f8c50f2558f11bcac8b50f4949db1\n",
+      "absent": true
+    },
+    {
+      "id": "f9f8e1215554fc8361df8d10c427135efc1a26ab2d228cea205a2a1e9d89926e",
+      "command": [
+        "/usr/bin/docker",
+        "container",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "f9f8e1215554fc8361df8d10c427135efc1a26ab2d228cea205a2a1e9d89926e"
+      ],
+      "exit_code": 1,
+      "stdout_hex": "0a",
+      "stderr": "Error response from daemon: No such container: f9f8e1215554fc8361df8d10c427135efc1a26ab2d228cea205a2a1e9d89926e\n",
+      "absent": true
+    }
+  ],
+  "elapsed_seconds": 0.23872562399992603,
+  "reason": "Docker formatted absent inspect emits one blank newline; original retained"
+}

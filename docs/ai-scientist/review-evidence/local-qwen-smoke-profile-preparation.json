@@ -1,0 +1,69 @@
+{
+  "schema": "local-qwen-smoke-profile-preparation.v1",
+  "checked_at": "2026-09-25T00:43:52.277060+00:00",
+  "fixture_id": "7089275f-d7d2-4f46-b04b-27e809d15326",
+  "scope": "Owned synthetic Scorer profile installation and real Planner loader only; no Lab run, candidate proposal, Docker experiment, model or GPU invocation.",
+  "operation": "install",
+  "suite_file": "data/runtime/local-qwen-review/7089275f-d7d2-4f46-b04b-27e809d15326/suite.json",
+  "suite_manifest_sha256": "c0c1e4d87fd26cb2a63b5da416e33ca4c415d15f8a5e8be7aa885d4fac2445da",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_local_qwen_profiles.py": "b7ffb9903bfb10af161730cc40bc77188f64de4757116d7bf6da94a07e0e34cf",
+    "docs/ai-scientist/review-evidence/local-qwen-smoke-input-preparation.json": "1a8e91dc66b55683e8a7267fad55b872a821a92ecceac46931984c0b463e3a9f",
+    "lab/db/schema.py": "d58f0a5e48f90c6af860900cc539bbcd0b38895c35588456e144f7de30f7cb6c",
+    "lab/director/suite_manifest.py": "04e0a7d70cee21c463d1d4f2cdb50ccd7ac9ffbb9913b2503022408703cec2dc",
+    "docs/ai-scientist/review-evidence/review_scorer_queue.py": "af9a450ca9b1266f0d5ef214fbc8cc6630c5168136f739842e89e456e6b62957",
+    "docs/ai-scientist/review-evidence/review_local_qwen_inputs.py": "4d80815c658b2d04f2314b93f8c3c9f6296bbe649de5e48909aa106bab500be7",
+    "docs/ai-scientist/review-evidence/review_director_synthetic_scenario.py": "2a64715052fe2df0551a70c5ce237030e2888d3e6c99acc7352c2f8f7def179b"
+  },
+  "checks": {
+    "four_production_planner_tasks": true,
+    "suite_identity_and_manifest_match": true,
+    "scorer_labels_exact": true,
+    "no_run_tasks_created": true,
+    "no_labels_in_suite": true,
+    "no_fake_provider_scenario": true,
+    "sources_unchanged": true
+  },
+  "execution_started": false,
+  "profile_count": 4,
+  "scorer_label_count": 512,
+  "profiles": [
+    {
+      "dataset_id": "local-qwen-smoke-7089275f-d7d2-4f46-b04b-27e809d15326-0",
+      "split_id": "review-v1",
+      "session_id": "local",
+      "profile_sha256": "a3a32c1ccf3d24cec55ce6e5f1dd03208bc5d4fb7763937d032329f4d0c40a21",
+      "sample_count": 128,
+      "sliding_window": 4,
+      "visibility": "dev"
+    },
+    {
+      "dataset_id": "local-qwen-smoke-7089275f-d7d2-4f46-b04b-27e809d15326-1",
+      "split_id": "review-v1",
+      "session_id": "local",
+      "profile_sha256": "f0d63d10ff78a61ba6909acd02637006649a31c5be80d633e21c2a3728d54960",
+      "sample_count": 128,
+      "sliding_window": 4,
+      "visibility": "dev"
+    },
+    {
+      "dataset_id": "local-qwen-smoke-7089275f-d7d2-4f46-b04b-27e809d15326-2",
+      "split_id": "review-v1",
+      "session_id": "local",
+      "profile_sha256": "dd61b7ab4b65c35e8f5dedb269e70751f7924cc89a0ba0433636ba1758b98bc1",
+      "sample_count": 128,
+      "sliding_window": 4,
+      "visibility": "dev"
+    },
+    {
+      "dataset_id": "local-qwen-smoke-7089275f-d7d2-4f46-b04b-27e809d15326-3",
+      "split_id": "review-v1",
+      "session_id": "local",
+      "profile_sha256": "619731450a53e9ea3242f9cc0eb4dcdd3a771e81ad35a191dd6abd62152187cb",
+      "sample_count": 128,
+      "sliding_window": 4,
+      "visibility": "dev"
+    }
+  ],
+  "preparation_passed": true
+}

@@ -1,0 +1,33 @@
+--- a/src/aos/lab_external.py
++++ b/src/aos/lab_external.py
+@@ -98,6 +98,7 @@
+ 
+     run_id: UUID
+     origin: Literal["aos"]
++    purpose: Literal["baseline", "research", "mode-grid"] | None = None
+     state: Literal["queued", "running", "stop_requested", "completed", "stopped", "failed"]
+     created_at: StrictStr
+     updated_at: StrictStr
+@@ -1168,7 +1169,10 @@
+         stop_action_id = await self._record_control_action(
+             row,
+             "stop",
+-            idempotency_key=f"lab-stop:{job_id}",
++            # A new explicit HUMAN binding authorizes a fresh stop intent;
++            # retain any prior uncertain intent from the old process/lease.
++            # Repeated calls within this same binding retain one action key.
++            idempotency_key=f"lab-stop:{job_id}:{session_id}:{generation}",
+             require_human_lease=True,
+         )
+         recorded = self.connection.execute(
+--- a/MANIFEST.sha256
++++ b/MANIFEST.sha256
+@@ -683,7 +683,7 @@
+ 5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5  src/aos/goal_plan.py
+ aca4c0186dc31131d0446b9c02471ba4d49856e7b0c78fb39d130f31da327af4  src/aos/gpu_turn.py
+ a158afa32f2616e253f83b5ea3742e3792ff25aed62e77864719f2f24b44c7c9  src/aos/inspection.py
+-cb9e67b51bb3084390009c60aa256d283bf3ed345e183fb905588f2e61531a64  src/aos/lab_external.py
++c08b86a2561e51c462e2ebd80b213586da6fdfffc926ae6e26805eed109fd04c  src/aos/lab_external.py
+ 0e91de0835c0848d6a076a3577b6aa619c41ef66c10a2f85b2a59091e383bcd0  src/aos/laya_candidate.py
+ 84e910d68b3afcb20139432dd82e378ccb5c74104d113ff3cc6aade7b8a7d630  src/aos/learning_candidate.py
+ 0da78732d48ccfa7d7ffe9e2c74d445ed13ab9d5e9ab884d47f4ce5d62d1c2b3  src/aos/learning_event_outbox.py

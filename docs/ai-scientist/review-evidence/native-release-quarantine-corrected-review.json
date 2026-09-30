@@ -1,0 +1,21 @@
+{
+  "schema": "native-release-quarantine-corrected-review.v1",
+  "scope": "Actual SQLite scheduler regression with fixture clock/principal/drain, after release phase changes to quarantine; checks terminal ticket expired. No real GPU/process termination.",
+  "command": [
+    "/home/cachyos/ai-scientist/.venv/bin/pytest",
+    "-q",
+    "tests/test_gpu_scheduler.py::test_release_records_expired_if_competing_acquire_quarantines_activation"
+  ],
+  "source_sha256_before": {
+    "lab/llm/gpu_scheduler.py": "2fd153be9ebf430f2c094e37bd2ad4fe0f684c6f50680cd6929ce9ed79b732c0",
+    "tests/test_gpu_scheduler.py": "581a887070c462e4e08f08fdc5b89e13c45bd62fb084c2276b83e9c72eb8795d"
+  },
+  "source_sha256_after": {
+    "lab/llm/gpu_scheduler.py": "2fd153be9ebf430f2c094e37bd2ad4fe0f684c6f50680cd6929ce9ed79b732c0",
+    "tests/test_gpu_scheduler.py": "581a887070c462e4e08f08fdc5b89e13c45bd62fb084c2276b83e9c72eb8795d"
+  },
+  "exit_code": 0,
+  "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+  "stderr": "",
+  "passed": true
+}

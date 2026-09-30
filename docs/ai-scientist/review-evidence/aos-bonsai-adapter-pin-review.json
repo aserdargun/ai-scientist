@@ -1,0 +1,9 @@
+{
+  "scope": "Bonsai adapter artifact validation only; no process or model launch",
+  "checks": {
+    "pins_match": false
+  },
+  "error": "ValueError('pinned Bonsai file digest differs')",
+  "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/bonsai/broker_worker.py\", line 50, in _verify_manifest\n    _verify_tree(Path(pins[\"runtime_path\"]), pins[\"runtime_files\"])\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/bonsai/broker_worker.py\", line 45, in _verify_tree\n    raise ValueError(\"pinned Bonsai file digest differs\")\nValueError: pinned Bonsai file digest differs\n",
+  "elapsed_seconds": 4.224093775002984
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "gpu-arbitration-delivery-binding.v1",
+  "scope": "CPU arbitration/systemd identity/deadline and package gate only; no actual GPU/model or AOS application acceptance.",
+  "harness_version": "0.15.0",
+  "harness_sha256": "6936fdaea0a194a2b8e7d61184f46446f4acacda6246a5b112a1f57a96e59d3d",
+  "harness_file_count": 48,
+  "scheduler_sha256": "d24188a858c6027644cce080d8260baca6e45310dc135127afc7f7243ccd0885",
+  "image": "sha256:f02913da232cea8c6c2c108c5ea9da2d6f4802780674b8510ecc118a465d0fdc",
+  "evidence_sha256": {
+    "evidence/quality-gate-gpu-arbitration.json": "f19f525169e6b2af66678deda82f4112e76142450d56982621d88ae181b7cb9d",
+    "review-evidence/gpu-arbitration-quality-command.json": "1ddf29137c5f5cfbf660d9e495b68de9a74cd80ef9aad2b3cca9628ebb63ed9c",
+    "review-evidence/gpu-arbitration-image-review.json": "ca8957790ea870ae07863a57054d39891d2e67fb874f3d71b937e89853d5a3d7",
+    "review-evidence/gpu-phase-bound-review.json": "adde754c6dd38583375f4c362fc96ae4fd530608a1c782ff7c9e479ce34b0e5b",
+    "review-evidence/gpu-systemd-race-review.json": "519e571f46dbde4913295397f96637379680462cb6585ac29dba10408b13781d"
+  },
+  "source_sha256": {
+    "lab/llm/gpu_scheduler.py": "d24188a858c6027644cce080d8260baca6e45310dc135127afc7f7243ccd0885",
+    "tests/test_gpu_scheduler.py": "e4de7fe9b5d254d4ed4d4f5ae6adaf9b56944cc7f1998af5ca56d618bb435b47",
+    "harness/VERSION": "f8405a7330c287028d470c3ee3506f878f1ad85ed79c1d1adc19df2ff7398915",
+    "ops/sandbox-image.lock": "facd0976ffe4d9e5a14ffb7e87d0500ad8105009c4f89a3123491c6c2c1e6ebe",
+    "scripts/quality_gate.py": "3fc71ecc3dae935b3f80516e03e686cac3e23a40d65139f3a40a685a2662a2fb",
+    "pyproject.toml": "ec03d8898d5b039538e49391534861f6ed2b2e82d54a45b4322955874c2ab473",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5"
+  },
+  "checks": {
+    "quality_process_exit_zero": true,
+    "seven_quality_commands_exit_zero": true,
+    "final_review_sources_equal_current": true,
+    "phase_review_passed": true,
+    "systemd_race_review_passed": true,
+    "sandbox_image_build_and_parity_passed": true,
+    "image_source_bytes_equal_current": true,
+    "current_image_lock_equals_measured_image": true,
+    "gpu_unit_test_source_unchanged": true,
+    "version_is_015": true
+  },
+  "all_passed": true
+}

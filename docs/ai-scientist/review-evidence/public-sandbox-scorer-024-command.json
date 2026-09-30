@@ -1,0 +1,24 @@
+{
+  "schema": "public-sandbox-scorer-command.v1",
+  "session_id": 36524,
+  "actual_exit_code": 1,
+  "review_sha256": "92a0985689b69995be0e09684b07c812cef26bfc1d99abe1a2737b4c3d8f862f",
+  "unit": "swapp-review-public-sandbox-024.service",
+  "limits": {
+    "parent_memory_max": "2G",
+    "swap_max": 0,
+    "cpu_quota_percent": 100,
+    "runtime_max_seconds": 1950,
+    "review_deadline_seconds": 1800,
+    "task_deadline_seconds": 600,
+    "cpu_lock": "shared per-task, released between tasks"
+  },
+  "observed_parent_memory_peak_bytes": 793837568,
+  "observed_peak_is_final": false,
+  "result": "1/27 completed. Second task Scorer returned retrying; subsequent read-only registration audit found its entire grid masked. No retry was launched; original fixture/source/split unchanged.",
+  "cleanup": {
+    "own_private_run_removed": true
+  },
+  "main_database_modified": false,
+  "gpu_or_model_used": false
+}

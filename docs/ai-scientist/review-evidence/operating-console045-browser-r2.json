@@ -1,0 +1,48 @@
+{
+  "schema": "mode-console-browser-proof.v1",
+  "release": "0.35.1",
+  "session_id": 17152,
+  "launch_chunk": "aa149e",
+  "final_chunk": "318a24",
+  "exit_code": 1,
+  "failure": "Browser exact label lookup did not include option text in wrapped Analiz sensörü label; no install or run admission reached. Driver switches to anchored label prefix.",
+  "script_sha256": "16273d0e93f59f70a610990a097cfe594800a345907e87f8f34b1e0461df9dfe",
+  "progress": {
+    "flow": "Database selection -> train/evaluation statistics -> JSON -> synthetic step -> Scorer install -> LSH/OPTICS/SOM grid",
+    "browser_path": "Browser plugin not available; cached Playwright Chromium",
+    "checks": {},
+    "errors": [],
+    "database_status": 200,
+    "database_snapshot": {
+      "source_kind": "private_database",
+      "scoring_available": false,
+      "snapshot_sha256": "e1665e123bbd905b1a0a54bbcc6b05a7da21c6bcb5aea472e543324b700160f3",
+      "source": {
+        "source_id": "synthetic-db-fixture",
+        "source_version": "synthetic-healthy-multiple-seed42-v1",
+        "table": "approved_sensor_view",
+        "timestamp_column": "timestamp",
+        "entity_column": "machine",
+        "entity": "synthetic-machine-01",
+        "start_utc": "2024-01-01T00:00:00Z",
+        "end_utc": "2024-01-01T00:04:48Z",
+        "row_limit": 512,
+        "sampling_seconds": 1.0,
+        "units": [
+          "a.u.",
+          "a.u."
+        ]
+      },
+      "sensors": [
+        "sensor_a",
+        "sensor_b"
+      ],
+      "rows": 288,
+      "train_rows": 192,
+      "evaluation_rows": 96,
+      "first_utc": "2024-01-01T00:00:00+00:00",
+      "last_utc": "2024-01-01T00:04:47+00:00",
+      "readiness": "pending_scorer_installation"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "quality_gate_sha256": "c3543aeda2f22ffba11379161d778f5f043cbc07734eb8ddd7f903469dfe111f",
+  "created_at": "2026-09-24T19:05:01.007178+00:00",
+  "harness_sha256": "8f222823168132d098cb9fb8e64f363e8421960c87a842b87d67a5e0c18ad073",
+  "image": "sha256:c33fb0063cd59608f633bdea90b580dd4b6e1a6ac4364dc3f729c89a5f308120",
+  "cli_sha256": "ad05935f3049ef6c786fe3fdb23b4476fbdf20b9347a58822d9abdb0b8560f12",
+  "overall_exit_code": 0,
+  "commands": [
+    {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pylint",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bandit",
+        "-q",
+        "-r",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pytest",
+        "-m",
+        "not gpu and not live"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mypy",
+        "--strict",
+        "harness",
+        "lab/referee",
+        "lab/llm",
+        "lab/sandbox",
+        "lab/api",
+        "lab/db",
+        "lab/director",
+        "lab/scorer",
+        "lab/cli.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "build",
+        "--wheel",
+        "--out-dir",
+        "/tmp/swapp-ai-scientist-wheel-4fivlhn2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python3",
+        "-c",
+        "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "quality_gate_path": "docs/ai-scientist/evidence/quality-gate-director20.json"
+}

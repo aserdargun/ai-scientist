@@ -1,0 +1,82 @@
+{
+  "schema": "swapp-review-evidence.v1",
+  "task": "care-calibration-031-lifecycle-r4-followup-source-review",
+  "reviewer": "GPT-6 Astra / high",
+  "review_date": "2026-09-27",
+  "execution": false,
+  "prior_review": "care-calibration-031-lifecycle-source-review.json",
+  "integration_decision": "approve_source_for_isolated_sql_proof_and_subsequent_integration_gates",
+  "blocking_product_findings": [],
+  "worktree": "data/runtime/parallel-m0/calibration-031",
+  "source_hashes_reviewed": {
+    "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+    "lab/db/migrations/versions/0023_care_calibration_execution.py": "23f39209b59ea13c1a2f40e81a8ed7c3d60c6a4284810adc92079b9679d12541",
+    "lab/scorer/care_calibration.py": "ca34ad87b89e92ccc7ea360cee070b78991527e9eda4cb3d032baf86cbf3a619",
+    "lab/scorer/care_calibration_supervisor.py": "0b2b48c9f3fabc6a9d9e9fb76b9879f316d8a3cab1d648f60083645a943fd064",
+    "lab/scorer/care_calibration_worker.py": "f2da3f2e4e3eed940620f4ffc2c558796103db9bc46e6752f5df0d4b511a325a",
+    "tests/test_care_baseline_calibration.py": "92335c29706eeb2d541414e6519ab412fdd40c316902b6b2129cdffac56cd102",
+    "tests/test_postgres_care_calibration.py": "33cebb03e4784ec4f1009e46365c7ca3c7dc9cd379f950c67563cee9a023b790"
+  },
+  "closed_findings": [
+    {
+      "id": "null-generation-sql-fence",
+      "source": "lab/db/migrations/versions/0023_care_calibration_execution.py:369",
+      "resolution": "Required nullable identity arguments are explicitly rejected. Bind, fail and complete use IS DISTINCT FROM for stored-versus-presented generation. The final fixture exercises otherwise eligible reserved/running claims and a valid receipt payload."
+    },
+    {
+      "id": "terminal-receipt-before-worker-drain",
+      "source": "lab/scorer/care_calibration_supervisor.py:191",
+      "resolution": "Terminal claims pass _terminal_worker_is_drained before grid advancement. Exact active generation may be stopped after PID/start/boot/invocation/cgroup verification; unknown identity stays pending. Absent or inactive unit still requires process/cgroup and owned sandbox drain.",
+      "test": "tests/test_care_baseline_calibration.py:518 invokes reconciliation with a succeeded claim and live worker, requires pending, then observes exact drained identity and requires succeeded."
+    },
+    {
+      "id": "transient-scorer-contention",
+      "source": "lab/scorer/care_calibration_worker.py:51",
+      "resolution": "Worker now retries only process-lock acquisition until the original monotonic deadline, before heavy imports or database binding; remaining time is recalculated after acquisition. Existing SQL deadline checks remain authoritative. No new reservation, generation, refund or infrastructure attempt is introduced.",
+      "test": "tests/test_care_baseline_calibration.py:481 covers busy-to-available and busy-to-original-deadline with a controlled clock."
+    },
+    {
+      "id": "worker-result-calibration-identity",
+      "source": "lab/scorer/care_calibration_supervisor.py:121",
+      "resolution": "Parser and both callers now compare the expected calibration_id. Wrong-calibration result is rejected in the focused test."
+    },
+    {
+      "id": "freeze-conflict-fixture-exception",
+      "source": "tests/test_postgres_care_calibration.py:468",
+      "resolution": "Fixture now expects DBAPIError with P0001 and freeze-conflict text."
+    },
+    {
+      "id": "direct-cell-insert-fixture-privilege",
+      "source": "tests/test_postgres_care_calibration.py:591",
+      "resolution": "Direct Scorer INSERT now expects 42501; authorized completion RPC has a separate conflicting-receipt negative."
+    }
+  ],
+  "closed_fixture_followup": {
+    "id": "null-probes-rejected-for-unrelated-reasons",
+    "source": "tests/test_postgres_care_calibration.py:378",
+    "finding": "NULL-generation probes target an already succeeded claim; NULL completion also supplies an invalid empty receipt. The old SQL rejects these calls due to terminal state or malformed payload, so current probes do not demonstrate the corrected fence.",
+    "verified_fix": "Final fixture probes NULL bind while reserved with valid process identity, then binds normally. NULL fail and NULL complete target the running claim with the matching invocation and fully valid receipt payload. Each checks P0001 and its expected input-validation message, unchanged live state/generation/invocation/100-second charge/zero cell count, followed by valid completion and replay.",
+    "product_source_change_required": false,
+    "status": "closed_by_source_review",
+    "original_r4_fixture_sha256": "5bce57dd59796a407123befc90818cd132dad76458240871996492e3a7cc675e",
+    "final_fixture_sha256": "33cebb03e4784ec4f1009e46365c7ca3c7dc9cd379f950c67563cee9a023b790",
+    "product_hashes_unchanged_at_final_fixture_review": true
+  },
+  "review_runner": {
+    "path": "docs/ai-scientist/review-evidence/review_care_calibration031_pg.py",
+    "sha256": "444f625efd67295a60973bf29ca92efb3f476022f482aeb980814d3b4a7976db",
+    "source_decision": "prior_isolation_review_remains_applicable",
+    "execution": false,
+    "proof_scope": "Disposable PostgreSQL role/fencing/deadline/idempotency contract using synthetic 135-cell receipts. It cannot establish real Farm B calibration or worker drain behavior."
+  },
+  "verification": {
+    "worker_reported": "17 pure tests, strict mypy on seven runtime files, Ruff, compilation and private import assertion passed; no live execution.",
+    "reviewer_reexecuted_tests": false,
+    "remaining": [
+      "Source-bound actual isolated PostgreSQL result using the corrected final fixture.",
+      "Integrated full quality gate and runtime/image parity where required.",
+      "Measured real calibration and real worker lifecycle/Scorer contention proof.",
+      "Required Director restart/reconcile and all other open M0/AOS acceptance items."
+    ]
+  }
+}

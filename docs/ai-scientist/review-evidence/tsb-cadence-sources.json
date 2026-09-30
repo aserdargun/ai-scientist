@@ -1,0 +1,92 @@
+[
+  {
+    "dataset": "GECCO",
+    "record_id": 3884398,
+    "source_url": "https://zenodo.org/api/records/3884398/files/4_ResourcePackage_GECCO_Industrial_Challenge_2018.zip/content",
+    "path": "data/public/original-sources/GECCO/3884398/4_ResourcePackage_GECCO_Industrial_Challenge_2018.zip",
+    "size": 1685345,
+    "upstream_checksum": "md5:a9ce2375c770bf8d3f04d2d45d62763c",
+    "sha256": "9c2f3143ca951e7db089f20c55ba4e3ab9d4810da0b7d8458a0e1b22e92a000c",
+    "attempts": [
+      {
+        "size": 1685345,
+        "md5": "a9ce2375c770bf8d3f04d2d45d62763c"
+      }
+    ]
+  },
+  {
+    "dataset": "GECCO",
+    "record_id": 3884398,
+    "source_url": "https://zenodo.org/api/records/3884398/files/1_gecco2018_water_quality.csv/content",
+    "path": "data/public/original-sources/GECCO/3884398/1_gecco2018_water_quality.csv",
+    "size": 10784171,
+    "upstream_checksum": "md5:270bbe949b418e5d2d1dc47276fcc332",
+    "sha256": "c41221f3045696b75b79374f4c41c63f6c988e1df03b1dedcdbf910d44ea71cd",
+    "attempts": [
+      {
+        "size": 10784171,
+        "md5": "270bbe949b418e5d2d1dc47276fcc332"
+      }
+    ]
+  },
+  {
+    "dataset": "GECCO",
+    "record_id": 3884398,
+    "source_url": "https://zenodo.org/api/records/3884398/files/2_CallForParticipation_GECCO_Industrial_Challenge_2018.pdf/content",
+    "path": "data/public/original-sources/GECCO/3884398/2_CallForParticipation_GECCO_Industrial_Challenge_2018.pdf",
+    "size": 190529,
+    "upstream_checksum": "md5:597586b6f0c0a2cb399f44e30f0ab21f",
+    "sha256": "a92112ccbf3c513606a2559b0d4b519e2931564bdfbae0326cca7380246bcccc",
+    "attempts": [
+      {
+        "size": 190529,
+        "md5": "597586b6f0c0a2cb399f44e30f0ab21f"
+      }
+    ]
+  },
+  {
+    "dataset": "GECCO",
+    "record_id": 3884398,
+    "source_url": "https://zenodo.org/api/records/3884398/files/3_Rules_GECCO_Industrial_Challenge_2018.pdf/content",
+    "path": "data/public/original-sources/GECCO/3884398/3_Rules_GECCO_Industrial_Challenge_2018.pdf",
+    "size": 984955,
+    "upstream_checksum": "md5:8f150ea77a0c53c16141cd59f1aba45c",
+    "sha256": "9a2143e70f52cd4fd25d6d062bb8b7d4e656349f7121e90aa0800e86822ccff8",
+    "attempts": [
+      {
+        "size": 984955,
+        "md5": "8f150ea77a0c53c16141cd59f1aba45c"
+      }
+    ]
+  },
+  {
+    "dataset": "CATSv2",
+    "record_id": 8338435,
+    "source_url": "https://zenodo.org/api/records/8338435/files/SLXENGDE-CATS-DDD%20-%20Controlled%20Anomalies%20Time%20Series%20-%2002.00.pdf/content",
+    "path": "data/public/original-sources/CATSv2/8338435/SLXENGDE-CATS-DDD - Controlled Anomalies Time Series - 02.00.pdf",
+    "size": 228485,
+    "upstream_checksum": "md5:30fee9cac0a83b8cd679b5e2f5dccf28",
+    "sha256": "6d86bd481eb8194016ce2b1fd55a9fe6ae3f7208cb118a2db116d3eede6a2565",
+    "attempts": [
+      {
+        "size": 228485,
+        "md5": "30fee9cac0a83b8cd679b5e2f5dccf28"
+      }
+    ]
+  },
+  {
+    "dataset": "CATSv2",
+    "record_id": 8338435,
+    "source_url": "https://zenodo.org/api/records/8338435/files/metadata.csv/content",
+    "path": "data/public/original-sources/CATSv2/8338435/metadata.csv",
+    "size": 11297,
+    "upstream_checksum": "md5:cb52d1d73bf4bb54ebbfb466b94618de",
+    "sha256": "7800d85fb32b3cb22fd0997385a275fc98d8a01959d996b2a6aad45ed3d5d6f9",
+    "attempts": [
+      {
+        "size": 11297,
+        "md5": "cb52d1d73bf4bb54ebbfb466b94618de"
+      }
+    ]
+  }
+]

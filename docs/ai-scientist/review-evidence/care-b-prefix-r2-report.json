@@ -1,0 +1,105 @@
+{
+  "changes": {
+    "installation_authority": "Documentation now says the trusted privileged installer (database owner/migrator) installs profiles, labels, and semantics; runtime Scorer is read-only.",
+    "invariance": "Fixture changes all fixed reference values and changes a reference status from normal to documented masked status; train values, train identities/times/cutoff, and train-derived window remain identical.",
+    "mask_receipt_scope": "Materialization driver now checks evaluation mask vector length and prediction mask-vector length against the expected fixed reference and source-endpoint grid lengths. It deliberately does not claim independent per-point mask/status parity.",
+    "registration_builder": "Fixture invokes build_care_farm_b_registration_records; checks exact task coverage, label/mask/time lengths, canonical semantics digest, FitContext, trusted task identity, and train/evaluation matrix identity after Scorer Arrow serialization round-trip."
+  },
+  "commands": [
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "focused Farm B tests",
+      "result": "13 passed in 3.79s; unit peak 150M; swap 0B",
+      "unit": "swapp-care-b-prefix-r2-tests2.service"
+    },
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "Ruff",
+      "result": "All checks passed; unit peak 12M; swap 0B",
+      "unit": "swapp-care-b-prefix-r2-ruff-final.service"
+    },
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "mypy loader and adapter",
+      "result": "Success: no issues found in 2 source files; unit peak 262.6M; swap 0B",
+      "unit": "swapp-care-b-prefix-r2-mypy-final.service"
+    }
+  ],
+  "limits": [
+    "No database writes or registration.",
+    "No GPU/model, Docker, AOS, service launch, or Farm C payload access.",
+    "The mask check is vector-length/grid alignment, not independent per-point source-status parity."
+  ],
+  "preserved_prior_receipts": {
+    "handoff": {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-handoff.json",
+      "sha256": "5b3850da787dcc547eb16cfbf71731bcdf0532e8a283df1f9436c07bda2c36d4"
+    },
+    "materialization_report": {
+      "archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+      "loader_sha256": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-materialization.json",
+      "real_materialization_summary": {
+        "aggregate_arrow_bytes": 5179824,
+        "aggregate_below_limit": true,
+        "aggregate_limit_bytes": 2147483648,
+        "all_15_tasks_present": true,
+        "all_pdm_tasks_have_positive_and_healthy_exposure": true,
+        "all_prediction_rows_mask_preserved": true,
+        "all_tasks_below_per_blob_limit": true,
+        "database_writes": false,
+        "evaluation_rows_total": 87248,
+        "expected_evaluation_rows": 87248,
+        "farm_c_payloads_opened": false,
+        "fit_rows_maximum": 1536,
+        "fit_rows_minimum": 1111,
+        "gpu_or_model_started": false,
+        "nrm_count": 9,
+        "pdm_count": 6,
+        "per_blob_max_bytes": 33554432,
+        "per_blob_observed_max_bytes": 727640,
+        "prediction_rows_retained": 72128,
+        "reference_rows_added": 15120,
+        "task_count": 15,
+        "window_bounds": [
+          10,
+          100
+        ],
+        "window_maximum": 100,
+        "window_minimum": 38
+      },
+      "sha256": "ba560ab371b2cfcb874e359b7bacbe7da2fc4bfd551955efc798817410b99c9d"
+    }
+  },
+  "real_data_rescan": false,
+  "reason_no_rescan": "The real loader SHA-256 is unchanged and matches the prior 15-task materialization. R2 changes the adapter docstring, fixture coverage, and evidence-driver reporting only.",
+  "schema": "care-b-prefix-r2.v1",
+  "scope": "R2 fixture-only correction; no loader behavior or source materialization rerun",
+  "source_hashes": {
+    "docs/ai-scientist/review-evidence/care-b-prefix-materialization.py": "d0f2f1f7fea381703438a473ddfa491a8462c5881296c6e41c0c8134734b530d",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "lab/scorer/care_holdout.py": "274fb02e2ea3efd7516a87ab3dfb1d6212a622340869b39466836a03200bf97d",
+    "tests/test_care_holdout.py": "31fc053d72e4b47bd2e10e6d02e9f0421925bdc1d4cc9d27c47f3945c3719202"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-09-24T15:06:41.323575+00:00",
+  "scope": "Read-only PostgreSQL probes of SQL type and CHECK semantics found in the unapplied 0011 draft. Does not apply migration or verify final implementation.",
+  "draft_sha256": "3baacb955edabd066aebcca917fcaac88ca28d4462210594be46e82ea11f6e58",
+  "checks": {
+    "uuid_varchar_equality": {
+      "query": "SELECT '00000000-0000-0000-0000-000000000001'::uuid = '00000000-0000-0000-0000-000000000001'::varchar",
+      "sqlstate": "42883",
+      "operator_mismatch_reproduced": true
+    },
+    "missing_baseline_name": {
+      "query": "SELECT identity_check, identity_check IS NOT FALSE AS passes_check_constraint FROM (\n      SELECT (kind = 'baseline' and experiment_number is null and baseline_name in\n      ('robust_z','iforest','ecod_train_frozen')) or\n      (kind = 'proposal' and experiment_number is not null and experiment_number >= 1 and baseline_name is null) AS identity_check\n      FROM (SELECT 'baseline'::text AS kind, NULL::integer AS experiment_number, NULL::text AS baseline_name) inputs\n    ) results",
+      "check_expression": null,
+      "passes_check_constraint": true,
+      "null_acceptance_reproduced": true
+    }
+  },
+  "database_revision": "0010_terminal_recovery_fence",
+  "all_reproduced": true
+}

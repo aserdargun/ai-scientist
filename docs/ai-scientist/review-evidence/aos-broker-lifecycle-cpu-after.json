@@ -1,0 +1,204 @@
+{
+  "cases": [
+    {
+      "binding": {
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "created_boottime": 86445.940376589,
+        "deployment_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "fencing_token": 1,
+        "invocation_id": "c12372341a2444cb88e180d430c60640",
+        "launch_state": "drained",
+        "main_pid": 2684143,
+        "main_start_ticks": 8644595,
+        "nonce": "b641eb1f2cf201cec95a2547bca1370509604c3a4e8321934e1963c73cb39982",
+        "observed_gpu_pids_json": "[]",
+        "owner": "aos",
+        "profile_id": "aos.decider.turn.v1",
+        "request_id": "edb2425a14ff49ddb41cf971a71d526c",
+        "request_sha256": "6aca5f83cf43da10fd94e1950fb2d6f8d88b27d3291313f875d5555d4781fcc4",
+        "total_seconds": 20,
+        "unit": "swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "workdir": "/run/user/1000/swapp-aos-cpu-review-037d98821cde443c9bb931d557266341/4604c1ee03df447c84846433f4de008c"
+      },
+      "mode": "success",
+      "receipt": {
+        "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "invocation_id": "c12372341a2444cb88e180d430c60640",
+        "main_pid": 2684143,
+        "response": {
+          "deployment_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "metrics": {
+            "cpu_fixture": true,
+            "netns": 4026533037,
+            "pid": 2684143
+          },
+          "prediction": {
+            "probabilities": {
+              "x": 1.0,
+              "y": 0.0
+            },
+            "selected_option": "x"
+          }
+        },
+        "unit": "swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "usage": {
+          "cpu_fixture": true,
+          "netns": 4026533037,
+          "pid": 2684143
+        }
+      },
+      "request_id": "edb2425a14ff49ddb41cf971a71d526c",
+      "result": {
+        "created_boottime": 86445.920342919,
+        "deployment_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "failure_code": null,
+        "generation_json": "{\"control_group\":\"/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service\",\"invocation_id\":\"c12372341a2444cb88e180d430c60640\",\"main_pid\":2684143,\"unit\":\"swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service\"}",
+        "profile_config_sha256": "ade4ea1db54d73b9e9e09e5b17aa532830005bc0b12025149a9942e2d9857987",
+        "profile_id": "aos.decider.turn.v1",
+        "request_id": "edb2425a14ff49ddb41cf971a71d526c",
+        "request_sha256": "58e6a52a318a19e969866c66185466b5eb54fa6c273c18d1b886e28e15749f42",
+        "response_json": "{\"deployment_digest\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"metrics\":{\"cpu_fixture\":true,\"netns\":4026533037,\"pid\":2684143},\"prediction\":{\"probabilities\":{\"x\":1.0,\"y\":0.0},\"selected_option\":\"x\"}}",
+        "state": "completed",
+        "updated_boottime": 86446.444221234,
+        "usage_json": "{\"cpu_fixture\":true,\"netns\":4026533037,\"pid\":2684143}"
+      },
+      "unit_after": {
+        "active_state": "inactive",
+        "control_group": "",
+        "cpu_quota_usec": 0,
+        "description": "swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "environment": "",
+        "invocation_id": "",
+        "load_state": "not-found",
+        "main_pid": 0,
+        "memory_max": 0,
+        "memory_swap_max": 0,
+        "runtime_max_usec": 0,
+        "tasks_max": 0
+      }
+    },
+    {
+      "binding": {
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-04b172a5e5ec44019f861de945c7f70b.service",
+        "created_boottime": 86446.484257265,
+        "deployment_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "fencing_token": 2,
+        "invocation_id": "1b55c9f3a9b24f4aadbc82f6ef369795",
+        "launch_state": "drained",
+        "main_pid": 2684155,
+        "main_start_ticks": 8644650,
+        "nonce": "940bfffdf730bbfa911a826194d736d6c48df538eb8c0c06265139d22ad8f712",
+        "observed_gpu_pids_json": "[]",
+        "owner": "aos",
+        "profile_id": "aos.decider.turn.v1",
+        "request_id": "7df0420f4fa34453b02e80e3b2cb0f80",
+        "request_sha256": "6aca5f83cf43da10fd94e1950fb2d6f8d88b27d3291313f875d5555d4781fcc4",
+        "total_seconds": 20,
+        "unit": "swapp-aos-gpu-turn-04b172a5e5ec44019f861de945c7f70b.service",
+        "workdir": "/run/user/1000/swapp-aos-cpu-review-037d98821cde443c9bb931d557266341/1263b06e2d034d6286ec3d9758c14f72"
+      },
+      "error": {
+        "message": "AOS child exited without a bounded result",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_aos_broker_lifecycle.py\", line 147, in run\n    receipt = executor.run_turn(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/gpu-cpu-review-037d98821cde443c9bb931d557266341/lab_gpu_executor.py\", line 1431, in run_turn\n    result = self._runtime.execute(\n             ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/gpu-cpu-review-037d98821cde443c9bb931d557266341/lab_gpu_executor.py\", line 962, in execute\n    self._wait_child_exit(current, row, intent, scheduler, deadline)\n  File \"/home/cachyos/ai-scientist/data/runtime/gpu-cpu-review-037d98821cde443c9bb931d557266341/lab_gpu_executor.py\", line 1003, in _wait_child_exit\n    raise BrokerExecutionError(\"AOS child exited without a bounded result\")\nlab_gpu_executor.BrokerExecutionError: AOS child exited without a bounded result\n",
+        "type": "BrokerExecutionError"
+      },
+      "mode": "failure",
+      "request_id": "7df0420f4fa34453b02e80e3b2cb0f80",
+      "result": {
+        "created_boottime": 86446.452205774,
+        "deployment_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "failure_code": "BrokerExecutionError",
+        "generation_json": null,
+        "profile_config_sha256": "ade4ea1db54d73b9e9e09e5b17aa532830005bc0b12025149a9942e2d9857987",
+        "profile_id": "aos.decider.turn.v1",
+        "request_id": "7df0420f4fa34453b02e80e3b2cb0f80",
+        "request_sha256": "67ba574589cc8df0713f7441c1428852bb73c09c0ab7af8521cb58d442ff6e8e",
+        "response_json": null,
+        "state": "failed",
+        "updated_boottime": 86446.974785641,
+        "usage_json": null
+      },
+      "unit_after": {
+        "active_state": "inactive",
+        "control_group": "",
+        "cpu_quota_usec": 0,
+        "description": "swapp-aos-gpu-turn-04b172a5e5ec44019f861de945c7f70b.service",
+        "environment": "",
+        "invocation_id": "",
+        "load_state": "not-found",
+        "main_pid": 0,
+        "memory_max": 0,
+        "memory_swap_max": 0,
+        "runtime_max_usec": 0,
+        "tasks_max": 0
+      }
+    }
+  ],
+  "checks": {
+    "failure_drained": true,
+    "failure_ledger": true,
+    "failure_no_child": true,
+    "failure_outcome": true,
+    "frozen_source_stable": true,
+    "owned_process_cleanup": true,
+    "private_network_namespace": true,
+    "success_drained": true,
+    "success_ledger": true,
+    "success_no_child": true,
+    "success_outcome": true
+  },
+  "cleanup": [
+    {
+      "empty": true,
+      "state": {
+        "active_state": "inactive",
+        "control_group": "",
+        "cpu_quota_usec": 0,
+        "description": "swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service",
+        "environment": "",
+        "invocation_id": "",
+        "load_state": "not-found",
+        "main_pid": 0,
+        "memory_max": 0,
+        "memory_swap_max": 0,
+        "runtime_max_usec": 0,
+        "tasks_max": 0
+      },
+      "unit": "swapp-aos-gpu-turn-43c75f8b7901413a86165ac2dc92a1a7.service"
+    },
+    {
+      "empty": true,
+      "state": {
+        "active_state": "inactive",
+        "control_group": "",
+        "cpu_quota_usec": 0,
+        "description": "swapp-aos-gpu-turn-04b172a5e5ec44019f861de945c7f70b.service",
+        "environment": "",
+        "invocation_id": "",
+        "load_state": "not-found",
+        "main_pid": 0,
+        "memory_max": 0,
+        "memory_swap_max": 0,
+        "runtime_max_usec": 0,
+        "tasks_max": 0
+      },
+      "unit": "swapp-aos-gpu-turn-04b172a5e5ec44019f861de945c7f70b.service"
+    }
+  ],
+  "draft_sha256": {
+    "lab_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab_gpu_executor.py": "c7a6f231da3521750a775df3b1171c35907aef645b5bd72e9af87ad571a6c043"
+  },
+  "elapsed_seconds": 1.0772340779949445,
+  "frozen_directory": "data/runtime/gpu-cpu-review-037d98821cde443c9bb931d557266341",
+  "overall_exit_code": 0,
+  "production_sha256": {
+    "lab/llm/gpu_scheduler.py": "de7305f448adfceffcc9a3934652f04ffcc9b5407d5509f179a97304416ad320",
+    "lab/llm/native_runtime.py": "613143c1b10287e1243bb926989999ce8757e9c4e6806e362ca8ad8562344de7",
+    "lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1"
+  },
+  "schema": "aos-broker-systemd-cpu-review.v1",
+  "scope": "Exercise the draft broker's real systemd lifecycle with CPU fixture workers.\n\nScheduler/SQLite, namespaces, systemd limits, process identity and drain are real.\nPeer authentication, inference, and GPU observations are explicit fixtures.\nThe worker argv alone is replaced; no model or live AOS service is started.\n"
+}

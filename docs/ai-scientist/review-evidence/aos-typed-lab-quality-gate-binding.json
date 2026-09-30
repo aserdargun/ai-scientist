@@ -1,0 +1,92 @@
+{
+  "quality_gate_path": "docs/ai-scientist/evidence/quality-gate-aos-typed.json",
+  "quality_gate_sha256": "65324fdd743d75798c54736c639b8a37c9e42d578af9da92530beb3352ce9678",
+  "created_at": "2026-09-24T21:13:53.565404+00:00",
+  "overall_exit_code": 0,
+  "harness_version": "0.14.0",
+  "harness_sha256": "35fd9146eb573cee05d1d6ac2e59a7cdba12097e409e385ae92c3dbc506367b8",
+  "image": "sha256:bdd9733e8d83be913e8c49c87295034439658458b358734eabfa3dc904a02ef1",
+  "image_review_path": "docs/ai-scientist/review-evidence/api-dispatch-image-review.json",
+  "source_sha256": {
+    "lab/api/app.py": "9eab797dfad4adf26421138258401a3699e717db9964b7e2e837c58e75825074",
+    "lab/api/contracts.py": "a2f1885e9ea714655439ec882c04bee48afb88193495f0d2455562f337f08313",
+    "lab/api/registry.py": "8f4dc516634da7c3bd4595d3135bfea9e19f581852693e41b9ad82bbfbd2d6fc",
+    "lab/cli.py": "62baf42f06b0dcad25473a8cbf892b8f35b9ffa8e340c793d5ae618afecbe7e8",
+    "lab/db/schema.py": "d58f0a5e48f90c6af860900cc539bbcd0b38895c35588456e144f7de30f7cb6c",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/director/suite_manifest.py": "04e0a7d70cee21c463d1d4f2cdb50ccd7ac9ffbb9913b2503022408703cec2dc",
+    "pyproject.toml": "ec03d8898d5b039538e49391534861f6ed2b2e82d54a45b4322955874c2ab473",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5"
+  },
+  "commands": [
+    {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pylint",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bandit",
+        "-q",
+        "-r",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pytest",
+        "-m",
+        "not gpu and not live"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mypy",
+        "--strict",
+        "harness",
+        "lab/referee",
+        "lab/llm",
+        "lab/sandbox",
+        "lab/api",
+        "lab/db",
+        "lab/director",
+        "lab/scorer",
+        "lab/cli.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "build",
+        "--wheel",
+        "--out-dir",
+        "/tmp/swapp-ai-scientist-wheel-g_ybnllm"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "scope": "Fresh full Lab gate for the typed AOS patch delivery. Lab source bytes match the measured 0.14.0 API dispatch slice. AOS copied-source package validation is separate."
+}

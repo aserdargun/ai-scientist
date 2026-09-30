@@ -1,0 +1,82 @@
+{
+  "schema": "public-suite-main-integration.v1",
+  "base_revision": "3e9826948a1bd458bdd91d1c1d5ef49b480437a6",
+  "source_worktree": "data/runtime/parallel-m0/public-suite",
+  "handoff_sha256": "342272d986ed63f3e0fd60f4ed5b80acfbd37eea3d75f614f2f257845faba09e",
+  "copied": [
+    {
+      "path": "harness/contracts.py",
+      "before_sha256": "8e1ee76db8855696f35774a834e0742256cfeed0081c6d7cc612c3f62283bbe6",
+      "after_sha256": "ab64007b3ec7c13caa8ac9312a6e3c4e41aa0cf251c9eb6477df344110f0c4ec"
+    },
+    {
+      "path": "harness/public_data.py",
+      "before_sha256": "a58c317003bee844ca83442aabcdf111ee96fab8896e9c75df8b8b5eb03393a4",
+      "after_sha256": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021"
+    },
+    {
+      "path": "lab/director/public_suite.py",
+      "before_sha256": "9d81847cf4f588bcffe71ce1e760a34325ff0475c5f624958202b6d35771823a",
+      "after_sha256": "9c68dcf6ef76ef3384c6360f214d96c06d2ae777f3868347881831b99d55b825"
+    },
+    {
+      "path": "lab/director/suite.py",
+      "before_sha256": "eab5599364e19f654bcfd6e4aea4d6fab5be8f6bc7342d03efc4fae1a47e916d",
+      "after_sha256": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820"
+    },
+    {
+      "path": "lab/director/suite_weights.py",
+      "before_sha256": "0a11df570070ba43af0acc6c8ce5ca3071cbecc0d55abf59d9f5653f1ee1eaf0",
+      "after_sha256": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3"
+    },
+    {
+      "path": "lab/director/suite_manifest.py",
+      "before_sha256": "ac47c1c1de1f18c0fa14da2f201b1787bff4f69be04b5d0116a98e7418c3b08d",
+      "after_sha256": "91a0011ddff5170a89265b6199aa6f4aa769c2089597a7a401d5d060756add1c"
+    },
+    {
+      "path": "lab/sandbox/candidate_entrypoint.py",
+      "before_sha256": "edbdc4d4263bbd6fa38c2964bb5ca14191933d522f9f6d3768309ca1ea7bb687",
+      "after_sha256": "b71bf07c746dd8208835009517ab595f7ae99a0455c0cffe8799cb51e39d213d"
+    },
+    {
+      "path": "tests/test_tsb_source_order_split.py",
+      "before_sha256": null,
+      "after_sha256": "123f17594f109e7d01465154230de10cf362bff6e2350663e30376285025b5e1"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/tsb-source-time-axis-adr.md",
+      "before_sha256": null,
+      "after_sha256": "383e2e6b584e778640f718f4d3cb0dc6803bd4cf9e32c94a8d3e8728828c4114"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/accept_default_public_suite.py",
+      "before_sha256": null,
+      "after_sha256": "27310e45f09b4869e9529cf26d8e62d9d9220df1d8ae14288e9b15aa5fbe0616"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/default-public-suite-check.json",
+      "before_sha256": null,
+      "after_sha256": "ef59eed63927e2a18b7da83bfe0d62189a15539458709260cb9e778672f3ae50"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/tsb-public-materializer-check.json",
+      "before_sha256": null,
+      "after_sha256": "6b9ee449311bcfa3def792bafd38113dcbf3040e478d3b0f2bf3cebd54f74078"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/accept_tsb_public_materializer.py",
+      "before_sha256": null,
+      "after_sha256": "26165da2e2d86d4fa718138c11431482ae0249ec6b7cf79cb2ce6ad0de44752d"
+    }
+  ],
+  "deferred": [
+    "lab/db/schema.py holdout tables await agent0019",
+    "lab/scorer/service.py mask handling under agent review"
+  ],
+  "preserved": [
+    "main Director runner/replay/recovery fixes",
+    "local compact proposal and AST repair provider; sampling contract to merge separately"
+  ],
+  "scope": "Loader and trusted registration/Planner manifest only. Public model evaluation and full acceptance remain open."
+}

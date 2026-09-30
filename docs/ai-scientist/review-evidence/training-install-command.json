@@ -1,0 +1,33 @@
+{
+  "started_at": "2026-09-24T09:38:07.873392+00:00",
+  "finished_at": "2026-09-24T09:38:37.874139+00:00",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=ai-scientist-train-install",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--property=RuntimeMaxSec=1800",
+    "--property=MemoryMax=6G",
+    "--property=CPUQuota=200%",
+    "--property=Nice=10",
+    "--property=IOWeight=10",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "/home/cachyos/.local/bin/uv",
+    "pip",
+    "install",
+    "--python",
+    "data/runtime/train/.venv/bin/python",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--torch-backend=cu130",
+    "unsloth==2026.9.11"
+  ],
+  "exit_code": 0,
+  "log_path": "data/runtime/setup/train-install.log",
+  "stop_reason": null,
+  "free_bytes_after": 83098066944,
+  "training_or_gpu_started": false
+}

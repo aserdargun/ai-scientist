@@ -1,0 +1,4976 @@
+{
+  "source_manifest_sha256": "481a37fa41223f10eaae8368480cf4a45c83682743b2863099f99f51f495a3a4",
+  "dataset_id": "TSB-AD-M-Genesis",
+  "split_id": "curated-prefix-window-embargo.v2",
+  "session_id": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d:TSB-AD-M/001_Genesis_id_1_Sensor_tr_4055_1st_15538.csv",
+  "selected_period": "train",
+  "provenance": {
+    "access_terms": "Source license applies; this installation is noncommercial research only. Original source clock/timestamp limitations remain disclosed in task metadata.",
+    "attribution": "Kaggle init-owl, Genesis Demonstrator Data for Machine Learning",
+    "dataset_id": "TSB-AD-M-Genesis",
+    "license_id": "CC-BY-NC-SA-4.0",
+    "session_id": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d:TSB-AD-M/001_Genesis_id_1_Sensor_tr_4055_1st_15538.csv",
+    "source_manifest_sha256": "af9dd91fa63fecbf658a2af96788dc1e7b49f98e78a7159b0e0bbdecc55662bf",
+    "source_revision": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d",
+    "split_id": "curated-prefix-window-embargo.v2",
+    "usage_profile": "noncommercial_research"
+  },
+  "scope": "All selected training rows/sensors. Manifest has no original timestamp column; no UTC values invented. Time-based trend/ACF unavailable with reason.",
+  "summary": {
+    "schema_version": "descriptive-statistics.v1",
+    "rows": 4055,
+    "sensors": [
+      {
+        "name": "MotorData.ActCurrent",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 5,
+        "statistics": {
+          "minimum": {
+            "value": -1172.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1151.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 2.0347718865598026,
+            "reason": null
+          },
+          "median": {
+            "value": 4.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 174.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 355.0,
+            "reason": null
+          },
+          "p01": {
+            "value": -927.0,
+            "reason": null
+          },
+          "p05": {
+            "value": -727.5999999999999,
+            "reason": null
+          },
+          "p25": {
+            "value": -169.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 186.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 742.2999999999997,
+            "reason": null
+          },
+          "p99": {
+            "value": 977.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 442.0,
+            "reason": null
+          },
+          "std": {
+            "value": 385.9399657365497,
+            "reason": null
+          },
+          "variance": {
+            "value": 148949.65715272917,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.1090877789673037,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 0.7164690319274416,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          32,
+          103,
+          187,
+          145,
+          247,
+          1080,
+          1240,
+          424,
+          252,
+          167,
+          130,
+          48
+        ],
+        "histogram_edges": [
+          -1172.0,
+          -978.4166666666666,
+          -784.8333333333333,
+          -591.25,
+          -397.66666666666663,
+          -204.08333333333326,
+          -10.5,
+          183.08333333333348,
+          376.66666666666674,
+          570.25,
+          763.8333333333335,
+          957.416666666667,
+          1151.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.ActPosition",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 222,
+        "statistics": {
+          "minimum": {
+            "value": 22011.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 389992.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 209785.005918619,
+            "reason": null
+          },
+          "median": {
+            "value": 244934.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 96628.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 128963.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 22011.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 22011.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 140012.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 268975.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 389992.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 389992.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0.0,
+            "reason": null
+          },
+          "std": {
+            "value": 106016.38586853455,
+            "reason": null
+          },
+          "variance": {
+            "value": 11239474072.626013,
+            "reason": null
+          },
+          "skewness": {
+            "value": -0.12480846456572421,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -0.8895402603502336,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          437,
+          159,
+          167,
+          738,
+          150,
+          171,
+          157,
+          951,
+          376,
+          165,
+          161,
+          423
+        ],
+        "histogram_edges": [
+          22011.0,
+          52676.08333333333,
+          83341.16666666666,
+          114006.25,
+          144671.3333333333,
+          175336.41666666666,
+          206001.5,
+          236666.5833333333,
+          267331.6666666666,
+          297996.75,
+          328661.8333333333,
+          359326.9166666666,
+          389992.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.ActSpeed",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 221,
+        "statistics": {
+          "minimum": {
+            "value": -105096.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 104168.0,
+            "reason": null
+          },
+          "mean": {
+            "value": -68.8347718865598,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": -98252.0,
+            "reason": null
+          },
+          "p05": {
+            "value": -89842.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 89212.7,
+            "reason": null
+          },
+          "p99": {
+            "value": 97930.68000000001,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 2007.0,
+            "reason": null
+          },
+          "std": {
+            "value": 56057.30310208702,
+            "reason": null
+          },
+          "variance": {
+            "value": 3142421231.0792546,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.001241351179353813,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -0.7898816655901428,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          258,
+          494,
+          231,
+          4,
+          7,
+          12,
+          2061,
+          7,
+          1,
+          208,
+          494,
+          278
+        ],
+        "histogram_edges": [
+          -105096.0,
+          -87657.33333333333,
+          -70218.66666666666,
+          -52780.0,
+          -35341.33333333333,
+          -17902.666666666657,
+          -464.0,
+          16974.66666666667,
+          34413.33333333334,
+          51852.0,
+          69290.66666666669,
+          86729.33333333334,
+          104168.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.IsAcceleration",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 223,
+        "statistics": {
+          "minimum": {
+            "value": -3016.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 3016.0,
+            "reason": null
+          },
+          "mean": {
+            "value": -2.9822441430332924,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": -1015.0,
+            "reason": null
+          },
+          "p05": {
+            "value": -1015.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1015.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1015.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 791.0,
+            "reason": null
+          },
+          "std": {
+            "value": 496.1559466682844,
+            "reason": null
+          },
+          "variance": {
+            "value": 246170.7234143015,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.11423387149334059,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 5.560883919210154,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3,
+          7,
+          12,
+          375,
+          7,
+          0,
+          3265,
+          1,
+          359,
+          16,
+          5,
+          5
+        ],
+        "histogram_edges": [
+          -3016.0,
+          -2513.3333333333335,
+          -2010.6666666666665,
+          -1508.0,
+          -1005.3333333333333,
+          -502.6666666666665,
+          0.0,
+          502.66666666666697,
+          1005.3333333333335,
+          1508.0,
+          2010.666666666667,
+          2513.333333333334,
+          3016.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.IsForce",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 7,
+        "statistics": {
+          "minimum": {
+            "value": -256.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 256.0,
+            "reason": null
+          },
+          "mean": {
+            "value": -1.1499383477188656,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 37.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 71.0,
+            "reason": null
+          },
+          "p01": {
+            "value": -216.0,
+            "reason": null
+          },
+          "p05": {
+            "value": -157.0,
+            "reason": null
+          },
+          "p25": {
+            "value": -37.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 34.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 164.29999999999973,
+            "reason": null
+          },
+          "p99": {
+            "value": 213.46000000000004,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 538.0,
+            "reason": null
+          },
+          "std": {
+            "value": 84.8637243542199,
+            "reason": null
+          },
+          "variance": {
+            "value": 7201.851711269014,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.12499483099933226,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 0.8526174756236191,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          44,
+          108,
+          164,
+          160,
+          323,
+          1112,
+          1192,
+          407,
+          214,
+          153,
+          137,
+          41
+        ],
+        "histogram_edges": [
+          -256.0,
+          -213.33333333333334,
+          -170.66666666666669,
+          -128.0,
+          -85.33333333333334,
+          -42.666666666666686,
+          0.0,
+          42.66666666666663,
+          85.33333333333331,
+          128.0,
+          170.66666666666663,
+          213.33333333333331,
+          256.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.Motor_Pos1reached",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 448,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.06091245376078915,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 247.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.23919915715506074,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.05721623678369144,
+            "reason": null
+          },
+          "skewness": {
+            "value": 3.6731251424283777,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 11.497518855423714,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3808,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          247
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.Motor_Pos2reached",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 1007,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.13686806411837238,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 555.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.34375040006768787,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.11816433754669546,
+            "reason": null
+          },
+          "skewness": {
+            "value": 2.1138077365919723,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 2.469400857667264,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3500,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          555
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.Motor_Pos3reached",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 643,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.18890258939580765,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 766.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.3914794956208648,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.15325619549156672,
+            "reason": null
+          },
+          "skewness": {
+            "value": 1.5901263219261883,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 0.5287622715917308,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3289,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          766
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "MotorData.Motor_Pos4reached",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 475,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.05745992601726264,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 233.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.23274802285002635,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.05417164214059639,
+            "reason": null
+          },
+          "skewness": {
+            "value": 3.804616212063527,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 12.481260263854882,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3822,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          233
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Ind.GL_Metall",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 819,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.06510480887792848,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 264.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.24674113275865436,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.0608811865950239,
+            "reason": null
+          },
+          "skewness": {
+            "value": 3.5268525385187184,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 10.443839678077987,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3791,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          264
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Ind.GL_NonMetall",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 819,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.9348951911220715,
+            "reason": null
+          },
+          "median": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 264.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.24674113275865436,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.0608811865950239,
+            "reason": null
+          },
+          "skewness": {
+            "value": -3.5268525385187184,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 10.443839678077987,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          264,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3791
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 386,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.1435265104808878,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 582.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.3506522117165072,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.12295697358167818,
+            "reason": null
+          },
+          "skewness": {
+            "value": 2.034205880314483,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 2.13904833798605,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3473,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          582
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 383,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.8545006165228114,
+            "reason": null
+          },
+          "median": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 590.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.3526471057460073,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.12435998119103568,
+            "reason": null
+          },
+          "skewness": {
+            "value": -2.01150409685495,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 2.0471581842380195,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          590,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3465
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 389,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.12256473489519112,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 497.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.3279773592623807,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.10756914818872472,
+            "reason": null
+          },
+          "skewness": {
+            "value": 2.302729162625634,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 3.3041910406002057,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3558,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          497
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Recv_Storage.GL_LightBarrier",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 774,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.9977805178791616,
+            "reason": null
+          },
+          "median": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 9.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.0470648731474851,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.002215102284388864,
+            "reason": null
+          },
+          "skewness": {
+            "value": -21.16339087565053,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 446.10914230907923,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          9,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4046
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "NVL_Send_Storage.ActivateStorage",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 432,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.019482120838471024,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 79.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.1382290846228058,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.01910727983565881,
+            "reason": null
+          },
+          "skewness": {
+            "value": 6.955916659810103,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 46.40766544517874,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3976,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          79
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "PLC_PRG.Gripper",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 351,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.48902589395807644,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.49994120332172076,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.24994120677877016,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.043923250451313865,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -1.9990569628890609,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          2072,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1983
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "PLC_PRG.MaterialIsMetal",
+        "rows": 4055,
+        "valid": 4055,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 793,
+        "statistics": {
+          "minimum": {
+            "value": 0.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.10431565967940813,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 423.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.3057072949108663,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.09345695016171938,
+            "reason": null
+          },
+          "skewness": {
+            "value": 2.589925735837513,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 4.710038150881697,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          3632,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          423
+        ],
+        "histogram_edges": [
+          0.0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.41666666666666663,
+          0.5,
+          0.5833333333333333,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333333,
+          0.9166666666666666,
+          1.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      }
+    ],
+    "pairs": [
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.ActPosition",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.2139240647270364,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.32379274949260084,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.ActSpeed",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.7206782060590573,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.6858444385212836,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.IsAcceleration",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.04966690414100431,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.05742017635462961,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.IsForce",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.634278617458031,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.7244036293552795,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.Motor_Pos1reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10865855368041255,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.21794319598757986,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.16025503142722206,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.26401006728019805,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.02242312087623135,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.14744890081531423,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.21613135713050524,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2755920921770789,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.12409702169926633,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1533186833731263,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.12409702169926633,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.1533186833731263,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0879302598826762,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.08548524677644134,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.07150227628512831,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0635199463023861,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.06565535726582802,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.06000596408129698,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.003602948486457435,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.006652579522462201,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.02591973524683839,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0260456107090953,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3704525264773617,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.34368486750765065,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActCurrent",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.02630155366695909,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.05828862644805584,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.ActSpeed",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.00047530863744305155,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.002925144417562563,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.IsAcceleration",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.005282847617776299,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.026946030638709515,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.IsForce",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.18795769915497973,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.3037958986171188,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.Motor_Pos1reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.4511426310861986,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.41378747228508644,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.26210850627366167,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.28914285118230154,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.22867436987853598,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.19354399035879333,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.41974431605624785,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.4032956093579181,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.4301031926770111,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.40947607800894453,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.4301031926770111,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.40947607800894453,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.03541993875851337,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.06285319296126225,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.036456326763765076,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.06539955313405885,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.03487964376904545,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.06108573868917345,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0045508602510088165,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0012015931105059862,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.016024219475029633,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.025894327388907613,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.17097492834760497,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1933717724455845,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActPosition",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.4580387456587593,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.46626688936368466,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.IsAcceleration",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.05427249663855925,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.05970703443960044,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.IsForce",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.716270062044462,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.684389938156707,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.Motor_Pos1reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.00016683024129005838,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0006780757619186026,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.00018537379704513783,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0002794264062994579,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0002893972009937477,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0011178097114902187,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0007927728920795046,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0010023873418207416,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.01995500634076395,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.013257233641257433,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.019955006340763953,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.013257233641257433,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.03305393019028931,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.03331699661431873,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0005067615091417119,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0016995552787831085,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.0004589913034036513,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0015393455867159804,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -5.792119987381615e-05,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.00019425366611944506,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.00017310897793882638,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0005805655558943864,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3579948598742458,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.3563098125854104,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.ActSpeed",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.17940833830576092,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.17281242636344413,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "MotorData.IsForce",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.04395124608359146,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.041901516133567046,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "MotorData.Motor_Pos1reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.022386122899512157,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.01520415634446115,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.0010097195965230253,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0027370355668678206,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.00218127948803514,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0019256307352793866,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.030603526330267448,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.015957196051812075,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.034466488210180675,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.020973474953767984,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.03446648821018067,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.020973474953767984,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.01476708143518592,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.013389714630427608,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.00248057828073325,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.004338502952880508,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.0022467449435858568,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.003929531129021395,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.00028352206671013235,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0004958768417762234,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.0008473618519337393,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0014820261570967993,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.03120137943848094,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.037017804459181514,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsAcceleration",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.01572847333461497,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.01457039113448135,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "MotorData.Motor_Pos1reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.09682376213555335,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.2053565228699682,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.15212516089141476,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.24716235587484114,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.026921255758439816,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.15704085278449287,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.2156620547027193,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.27264122451480244,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10278910959976334,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.13907652028906098,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10278910959976333,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.13907652028906098,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.08784775704795665,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.08061088904243212,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.06455067883455061,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.05153663125200551,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.05927584829039591,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.04867058666163653,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.0030045890045823243,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.008316811763161349,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.023365190724339565,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.02079103914922334,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3521618694601966,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.32129250544985954,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.IsForce",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.013012397178947657,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.02110551523132929,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "MotorData.Motor_Pos2reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10141740085250942,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10141740085250792,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.1229086517940071,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.12290865179400749,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0628829092483705,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.06288290924837038,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0672086354608906,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.06720863546089063,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.06720863546089059,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.06720863546089063,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10425793228345193,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10425793228345143,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10509314603193042,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1050931460319305,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.09518647175406006,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.09518647175405903,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.012011806356393238,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.01201180635639329,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.03589966240486355,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.03589966240486374,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.23764579471558822,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.23764579471558583,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos1reached",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.08691550753550084,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.08691550753550041,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "MotorData.Motor_Pos3reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.19217412726942457,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.19217412726942398,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.09832072867597032,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0983207286759707,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10508422862136906,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10508422862136739,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10508422862136906,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.10508422862136739,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3895228006194485,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.38952280061945427,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.43189283888829916,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.43189283888830354,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3959602014909554,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.39596020149095723,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.0269590415455721,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.026959041545571733,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.15671106089626077,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.15671106089626266,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.3838227695626482,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.38382276956264527,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos2reached",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.1358969573175994,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.1358969573175987,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "MotorData.Motor_Pos4reached",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.11915576718971908,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.11915576718972028,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.12735251304112033,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.1273525130411201,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.12735251304112033,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1273525130411201,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.289410859736712,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2894108597367121,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.3315293284774428,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.33152932847744104,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.2960802545034033,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.29608025450340136,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.05756603863843213,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.05756603863843235,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10519168741628265,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1051916874162822,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.46329383720970246,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.4632938372097011,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos3reached",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.16469473351131564,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.16469473351131336,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Ind.GL_Metall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.5361788609639354,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.5361788609639401,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.5361788609639354,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.5361788609639401,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10107452750900867,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10107452750900851,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10188423889640655,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.10188423889640719,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.09228005435245192,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.09228005435245147,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.011645038659517524,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.01164503865951757,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.034803504499201256,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.03480350449920123,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.25238650961274345,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.25238650961274145,
+          "reason": null
+        }
+      },
+      {
+        "first": "MotorData.Motor_Pos4reached",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.4010855203683164,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.40108552036832334,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Recv_Ind.GL_NonMetall",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.9999999999999999,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.9999999999999999,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10802746175282621,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10802746175282527,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.10889287332672908,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.10889287332672794,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.09862801526546582,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.09862801526546434,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.012446102884716315,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.012446102884716283,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.037197643598350136,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.03719764359835021,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.2697482212982878,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2697482212982837,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_Metall",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.773264028095779,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.7732640280957852,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.1080274617528262,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.10802746175282527,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.10889287332672908,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.10889287332672794,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.09862801526546575,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.09862801526546434,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.01244610288471631,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.012446102884716283,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.03719764359835013,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.03719764359835021,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.26974822129828785,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.2697482212982837,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Ind.GL_NonMetall",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.773264028095779,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.7732640280957852,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.7865882383577434,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.7865882383577443,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.771430476590452,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.7714304765904479,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.11521239768822825,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.11521239768822743,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.34433506994232094,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.34433506994231833,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.40047515877174406,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.40047515877174245,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.13970320334032715,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.1397032033403263,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "second": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.9057343447034903,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.9057343447034926,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.11429676253809906,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.11429676253809869,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.18472912806454372,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.18472912806454297,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.4036833785321465,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.4036833785321452,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_IN",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.140822370329166,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.1408223703291668,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "second": "NVL_Recv_Storage.GL_LightBarrier",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.017627208357377692,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.017627208357377647,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.05268240349489468,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.05268240349489453,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.36562990032250886,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.36562990032250453,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.12754765730968193,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.12754765730968048,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_LightBarrier",
+        "second": "NVL_Send_Storage.ActivateStorage",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.3345938527479292,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.3345938527479276,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_LightBarrier",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.04613970325666614,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.046139703256666,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Recv_Storage.GL_LightBarrier",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.01609554102156502,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.016095541021564973,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Send_Storage.ActivateStorage",
+        "second": "PLC_PRG.Gripper",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.13789764180582953,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.13789764180582897,
+          "reason": null
+        }
+      },
+      {
+        "first": "NVL_Send_Storage.ActivateStorage",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": -0.04810471229335734,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.04810471229335718,
+          "reason": null
+        }
+      },
+      {
+        "first": "PLC_PRG.Gripper",
+        "second": "PLC_PRG.MaterialIsMetal",
+        "valid_pairs": 4055,
+        "pearson": {
+          "value": 0.3488436180880658,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.3488436180880634,
+          "reason": null
+        }
+      }
+    ],
+    "timeline": {
+      "column": null,
+      "valid": 0,
+      "missing": 0,
+      "invalid": 0,
+      "naive": 0,
+      "duplicate_count": 0,
+      "backward_steps": 0,
+      "regular": false,
+      "interval_seconds": {
+        "value": null,
+        "reason": "insufficient_positive_intervals"
+      },
+      "maximum_gap_seconds": {
+        "value": null,
+        "reason": "insufficient_positive_intervals"
+      },
+      "gap_count": 0,
+      "reason": "timestamp_not_selected"
+    },
+    "notes": [
+      "Descriptive only; no model fitting, interpolation or missing-value imputation.",
+      "Sample standard deviation/variance use ddof=1; kurtosis is unbiased excess kurtosis.",
+      "Correlations use pairwise finite values and do not establish causality.",
+      "Autocorrelation requires an ordered regular UTC grid; missing sensor pairs stay missing."
+    ]
+  }
+}

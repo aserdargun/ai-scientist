@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-09-24T15:48:01.755340+00:00",
+  "scope": "Real PostgreSQL roles and production Planner/Scorer services; owned synthetic crash/cancel outcomes and fabricated no-evaluation documents. Tests terminal report/document fencing and recovery after task-plan sealing. No candidate, LLM, metric, physical blob, public-data or AOS acceptance.",
+  "source_sha256": {
+    "lab/scorer/service.py": "18403ed5d60ef19edd4278ff63475278e9fa15b2ad1ea7dec49b86be383649a9",
+    "lab/db/schema.py": "db33772e73131a54a8ef5115bdfda24abb74c6a336cb33940a25129e5d844463",
+    "lab/director/task_plan.py": "d7befe94f40bbd5ae15ea3debdc7af2475946647da295cef112b2d0ec53c02fa",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad"
+  },
+  "checks": {
+    "one_resolved_task_sealed": true,
+    "auto_finalizer_waits_for_documents": true,
+    "explicit_finalizer_rejects_missing_documents": true,
+    "database_blocks_direct_premature_terminal_update": true,
+    "failed_finalization_keeps_running_and_no_report": true,
+    "terminal_pair_can_commit_after_seal": true,
+    "registered_unplanned_experiment_also_blocks_report": true,
+    "new_proposal_after_seal_rejected": true,
+    "nonterminal_transition_after_seal_rejected": true,
+    "report_completes_after_all_document_pairs": true,
+    "completed_report_retry_identical": true,
+    "stopped_task_plan_can_seal": true,
+    "stopped_finalizer_waits_for_documents": true,
+    "abandoned_pair_can_commit_after_stop_and_seal": true,
+    "stopped_report_completes_after_document_pair": true,
+    "stopped_report_retry_identical": true,
+    "terminal_document_retry_after_stopped_report": true,
+    "owned_rows_removed": true
+  },
+  "database_revision": "0012_experiment_report_fence",
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "73a30048f1266a9f203fba429595fe1715e0f9149a1790653efb6cd7db6acf62",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_experiment_finalization.py"
+}

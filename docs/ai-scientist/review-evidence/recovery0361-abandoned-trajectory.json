@@ -1,0 +1,49 @@
+{
+  "schema": "trajectory.v1",
+  "trajectory_id": "trj_90c1b2deb9e050729e9243f806fa8d5a",
+  "run_id": "404d9a45-f1fb-4f91-a842-0edcd44bc1b9",
+  "experiment_id": "exp_dc8e977665e454878151b589a548148e",
+  "kind": "baseline",
+  "experiment_number": null,
+  "baseline_name": "ecod_train_frozen",
+  "calibration_sha256": null,
+  "agent_version": "baseline.v0.12.0",
+  "model_id": "baseline/no-llm.v1",
+  "usage_profile": "noncommercial_research",
+  "source_provenance": [
+    {
+      "dataset_id": "synthetic-operating-modes",
+      "split_id": "train-window-embargo.v1",
+      "session_id": "3d51ac1fc162901b479e94c47d908ab473ff517180935eab0ab6cba57887e359",
+      "source_manifest_sha256": "3d51ac1fc162901b479e94c47d908ab473ff517180935eab0ab6cba57887e359",
+      "source_revision": "operating-modes-synthetic.v1",
+      "license_id": "project-generated-synthetic",
+      "attribution": "AI Scientist synthetic generator",
+      "access_terms": "Generated fixture; not public-data or industrial acceptance",
+      "usage_profile": "noncommercial_research"
+    }
+  ],
+  "quantization": "none",
+  "adapter": "none",
+  "system": "S1",
+  "thinking": false,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "context_template": "baseline.no-llm.v1",
+  "inputs_sha256": "d28070bd12f728a7d614084c5ff9fdf1cd3542af275d087ba8c5dc648b8a8c7a",
+  "messages_blob_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "tool_calls": 0,
+  "outcome": null,
+  "quality_tier": "bronze",
+  "secrets_scrubbed": false,
+  "people_scrubbed": false,
+  "raw_values_scrubbed": false,
+  "exclusions": [
+    "Interrupted baseline abandoned after stop; no scores or calibration fabricated.",
+    "Timing unavailable; original run budget and reservations retained.",
+    "Infrastructure evidence artifact: 3bcec2acdd25bcaa67d4a35b751b57892ac71cd278655371cfd18ec41da8aa68"
+  ],
+  "provider_receipt": null,
+  "replay_manifests": [],
+  "terminal_replay": null
+}

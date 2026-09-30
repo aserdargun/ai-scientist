@@ -1,0 +1,109 @@
+{
+  "schema": "aos-lab-optin-control-fence-review.v1",
+  "scope": "Post-await fencing of typed Lab status/stop/report control authorization in isolated AOS copy; no live AOS or GPU/model calls.",
+  "base_commit": "c33325349e856edf52d1ab37da394388eb0607c2",
+  "parent_freeze_receipt": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-lab-optin-lifecycle-review.json",
+    "sha256": "ccac21a9a28430814ef291530781a61892b98442a1e471743f44a05f82361132"
+  },
+  "parent_freeze_patch": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-lab-optin-lifecycle.patch",
+    "sha256": "c57a95d361353c87a89fb56a05eaf7f155cd62907e3b7afd449f07e5dbc00f42"
+  },
+  "followup_patch": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-lab-optin-control-fence.patch",
+    "sha256": "bc34c191d5c635bcbb2f1c9341509e4257d04e7a429600023f1ae6dddb1ae606",
+    "bytes": 13654,
+    "applies_after_parent_freeze_patch": true,
+    "git_apply_check_exit": 0,
+    "byte_parity": "3/3 changed paths against isolated final worktree"
+  },
+  "final_manifest_sha256": "f4aeae0b09815f4ca2c5d61b32aecd953189a05a6cc047244801d36d71946494",
+  "changed_files": [
+    {
+      "path": "src/aos/lab_external.py",
+      "base_sha256": "6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1",
+      "final_sha256": "cb9e67b51bb3084390009c60aa256d283bf3ed345e183fb905588f2e61531a64"
+    },
+    {
+      "path": "tests/test_lab_external_jobs.py",
+      "base_sha256": "612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6",
+      "final_sha256": "54da140e7c9edfd8995c87eb4819583d6ead71fbae21d918593fd5a3b5180cf7"
+    },
+    {
+      "path": "MANIFEST.sha256",
+      "base_sha256": "4f22d2ff8689f16a7d5f407a8d0bb2862a6d0c15f452a374842406f3e6b79df8",
+      "final_sha256": "f4aeae0b09815f4ca2c5d61b32aecd953189a05a6cc047244801d36d71946494"
+    }
+  ],
+  "behavior": {
+    "authorization_engine": "`_decision_material` routes lab.status/stop/report to deterministic DetachedLabControlPolicy; only lab.start uses the configured Decider.",
+    "after_await_fence": [
+      "current session id remains exact",
+      "job binding, run/action/run-handle/state identities unchanged",
+      "runtime_states canonical JSON unchanged",
+      "for lab.stop, current HUMAN/running lease/generation/runtime and binding still exact"
+    ],
+    "action_deadline": "Five-second typed action deadline is created only after host policy completes and the fence passes.",
+    "external_effect": "No SQLite action intent or Lab HTTP operation is emitted after a failed fence."
+  },
+  "checks": {
+    "focused_tests": {
+      "systemd_unit": "aos-lab-control-fence-validation.service",
+      "command": "PYTHONPATH=src /home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python -m pytest -q tests/test_lab_external_jobs.py",
+      "exit_code": 0,
+      "stdout": "26 passed in 6.23s",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-control-fence-tests.log",
+        "sha256": "dde03cd56b28c45d23e928946305c06f7a8d542a6c323b4bd750a41928c1de6b"
+      }
+    },
+    "package_validation": {
+      "systemd_unit": "aos-lab-control-fence-validation.service",
+      "command": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python scripts/validate_package.py",
+      "exit_code": 0,
+      "stdout": "PASS: 4100 package checks. No model/runtime/training tests were run.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-control-fence-package.log",
+        "sha256": "fb768e0f65d720feae2aeb4e433c8386a62576ba12c567530b3af52aae88adb8"
+      }
+    },
+    "ruff_hunk_scan": {
+      "command": "ruff check --output-format=json src/aos/lab_external.py tests/test_lab_external_jobs.py followed by git-diff hunk filtering",
+      "ruff_exit_code": 1,
+      "whole_file_diagnostics": 72,
+      "diagnostics_on_changed_lines": 0,
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-control-fence-ruff-hunk-scan.log",
+        "sha256": "ae569d42298d159c17642ea967e962c0ebb588c5ef51d1ebab0dcd8a76b32d12"
+      }
+    },
+    "patch_checks": {
+      "git_diff_check_exit": 0,
+      "git_apply_check_after_parent_patch_exit": 0,
+      "source_byte_parity": "3/3"
+    },
+    "cross_api_restart_tests": {
+      "systemd_unit": "aos-lab-control-fence-integration.service",
+      "command": "PYTHONPATH=src /home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python -m pytest -q tests/test_lab_external_jobs.py tests/test_task_sequence.py::TaskSequenceTests::test_restart_quiesce_drains_detached_lab_and_explicitly_recovers_it",
+      "exit_code": 0,
+      "stdout": "27 passed in 6.19s; service runtime 6.383s; CPU 826ms; peak memory 68.8M; swap 0B",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-control-fence-integration.log",
+        "sha256": "1536f8a28eab558f2c0f56ebee944f93e0c1d840ec76299e15ffd502a39e66fc"
+      }
+    }
+  },
+  "development_test_attempts": [
+    {
+      "unit": "aos-lab-control-fence-focused.service",
+      "result": "stopped with SIGTERM after the new host-policy test accidentally awaited an unreleased fixture event; not a product failure receipt."
+    },
+    {
+      "result": "Two intermediate assertion runs counted the start-time status action/call; assertions were corrected to compare post-start baselines. Final test suite passed."
+    }
+  ],
+  "limitations": [
+    "No GPU, real model, live AOS process, Lab main product source or existing service was started, changed or stopped."
+  ]
+}

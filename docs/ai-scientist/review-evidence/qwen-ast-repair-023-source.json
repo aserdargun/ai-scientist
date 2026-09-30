@@ -1,0 +1,22 @@
+{
+  "schema": "qwen-ast-repair-integration.v1",
+  "scope": "Two Luna/high files, syntax validation before acceptance within existing single repair and aggregate budgets; real model proof pending.",
+  "branch": "feat/luna-m0-local-qwen-ast-repair",
+  "base": "c4790ec",
+  "files": {
+    "lab/director/local_llm.py": {
+      "before": "6cfcafa8cb6a490299d3e343f48a750db463a3f90fb1f057200aa5f1a2f0413b",
+      "after": "e8acd3b4b72c9bfe8433a07b47f90f4002073179addf369ddf260ca041c9b12c"
+    },
+    "tests/test_local_qwen_provider.py": {
+      "before": "64546d0de6c741e1d6cdba73050bb769518209fd8741ec49f50da4167f0cce7c",
+      "after": "5ee66bb10d84e149d84c84dbdbdf591a23f1b14abadc349f40cdb28486957c9e"
+    }
+  },
+  "agent_reported_checks": {
+    "ruff": 0,
+    "targeted_pytest_passed": 16,
+    "mypy": 0,
+    "gpu_called": false
+  }
+}

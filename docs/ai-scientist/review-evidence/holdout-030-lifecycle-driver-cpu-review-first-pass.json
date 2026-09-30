@@ -1,0 +1,46 @@
+{
+  "schema": "holdout-030-lifecycle-driver-cpu-review.v1",
+  "source_worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030",
+  "base_commit": "7ba1a1b",
+  "scope": "CPU-only precondition and lint checks; no database, Docker, worker, API service, model, GPU, or AOS execution",
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py": "3330d618d7ce192f3a4286554b701805cb3bb300c6b49a3b90317cd7ad8af594",
+    "tests/test_holdout030_lifecycle_review_preflight.py": "9de65ddc98365715aed32b18b2d3509ab8d872130890eafecfab941c3ffff9bd",
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.md": "2d701a3c21c46fb5f39779c3faa72ee870653361baadafefb51dc6b00de396e2"
+  },
+  "resource_scope": {
+    "lock": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "memory_max_bytes": 1073741824,
+    "memory_swap_max_bytes": 0,
+    "cpu_quota": "50%",
+    "tasks_max": 64
+  },
+  "ruff": {
+    "unit": "holdout-lifecycle-review-ruff-20260927.scope",
+    "invocation_id": "6caeb4b8f693409cadf186dfc5276a40",
+    "exit_code": 0,
+    "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock systemd-run --user --scope --unit=holdout-lifecycle-review-ruff-20260927 --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=60 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030 /home/cachyos/ai-scientist/.venv/bin/ruff check docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py tests/test_holdout030_lifecycle_review_preflight.py",
+    "stdout": "Running as unit: holdout-lifecycle-review-ruff-20260927.scope; invocation ID: 6caeb4b8f693409cadf186dfc5276a40\nAll checks passed!\n"
+  },
+  "focused_test": {
+    "session_id": 99996,
+    "unit": "holdout-lifecycle-review-test-20260927.scope",
+    "invocation_id": "3868c0ee0f324d7d8ef4819edeaa20d9",
+    "exit_code": 0,
+    "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock systemd-run --user --scope --unit=holdout-lifecycle-review-test-20260927 --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=90 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030 /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q --tb=short tests/test_holdout030_lifecycle_review_preflight.py",
+    "stdout": "Running as unit: holdout-lifecycle-review-test-20260927.scope; invocation ID: 3868c0ee0f324d7d8ef4819edeaa20d9\n......                                                                   [100%]\n=============================== warnings summary ===============================\n../../../../.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[Any], AbstractContextManager[Any]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n6 passed, 1 warning in 2.71s\n"
+  },
+  "test_coverage": [
+    "existing receipt destination rejected without mutation",
+    "symlink receipt destination rejected without touching target",
+    "receipt outside private directory rejected without file creation",
+    "snapshot Scorer DSN alias mismatch rejected",
+    "loopback NAT published host port kept distinct from PostgreSQL internal port while role server identity agrees",
+    "replaced receipt reservation is preserved rather than unlinked"
+  ],
+  "remaining_review_limitations": [
+    "Host drain before recovery SQL compare-and-set is not independently proven by this driver; marked unproven.",
+    "FastAPI TestClient exercises the authenticated in-process route, not a deployed HTTP server interaction.",
+    "No lifecycle fixture, DB, Docker, systemd worker, model, GPU, or AOS process was executed."
+  ]
+}

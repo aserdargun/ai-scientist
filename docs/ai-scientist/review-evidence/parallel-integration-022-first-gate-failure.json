@@ -1,0 +1,19 @@
+{
+  "schema": "quality-command-failure.v1",
+  "session_id": 97742,
+  "actual_exit_code": 1,
+  "observed": {
+    "ruff_exit_code": 0,
+    "pytest": {
+      "failed": 14,
+      "passed": 260,
+      "skipped": 7,
+      "deselected": 13,
+      "cause": "Fingerprint miniature fixture omitted required lab/reporting.py and lab/replay.py"
+    },
+    "mypy_exit_code": 0,
+    "mypy_files": 77,
+    "wheel": "FileNotFoundError: uv missing from caller PATH; gate aborted before writing fresh quality-gate-latest.json"
+  },
+  "correction": "Update test fixture/coverage; include /home/cachyos/.local/bin in isolated caller PATH; application sources and image unchanged."
+}

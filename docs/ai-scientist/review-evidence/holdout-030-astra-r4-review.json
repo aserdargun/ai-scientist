@@ -1,0 +1,47 @@
+{
+  "schema": "holdout-030-astra-r4-review.v1",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_approval": "blocked",
+  "source_sha256": {
+    "lab/director/loop.py": "7c39e42986d4476be3bcf9c190dcba43d3b43525cda212e05e7b29692ec93807",
+    "tests/test_holdout_loop_recovery.py": "d98fd3e18277c1a85db377e92bdd89f525936f20390f2e58096693e98f9389a7",
+    "tests/test_postgres_holdout030_journal.py": "a198f4a7126d7874c0dfd2ff9554f9808bbeac9be5f398a5649b5fe349519844"
+  },
+  "resolved": [
+    "terminal-intent startup routing precedes proposal work",
+    "state replay reuses verified immutable checkpoint receipt including sequence"
+  ],
+  "blockers": [
+    {
+      "id": "legacy-budget-receipts",
+      "finding": "The new universal payload.run_id filter skips historical proposal_budget_reconciled and seed_complete payloads that never contained run_id. Restart can restore less-consumed counters.",
+      "required_fix": "Require run_id for the new unavailable-intent format only; preserve historical phase schemas already bound by SQL run_id and lease. Add regression cases."
+    }
+  ],
+  "evidence_gaps": [
+    "Startup tests mock check_run_end_holdout; they do not execute complete freeze/fence/rollback recovery.",
+    "The purported exhausted startup fixture uses elapsed100 against limit120; correct it to true exhaustion and test the actual wrapper."
+  ],
+  "actual_sql_evidence": [
+    {
+      "path": "holdout-030-recovery-sql-6742df26188a.json",
+      "session_id": 89710,
+      "exit_code": 0,
+      "pytest_cases": 3,
+      "additional_probes": 72,
+      "scope": "0021 positive RPCs and sequential admission orderings with synthetic ledger setup; not a simultaneous race or real wrapper."
+    },
+    {
+      "path": "holdout-030-recovery-sql-c31e713afc5b.json",
+      "session_id": 1127,
+      "exit_code": 0,
+      "pytest_cases": 1,
+      "additional_probes": 72,
+      "scope": "Actual PostgreSQL DirectorRunLease state receipt replay across release/reacquire and synthetic marker; not actual process crash or complete wrapper."
+    }
+  ],
+  "next": "Luna/high is implementing R5 in private holdout-030. Astra/high supplied a real journal/SQL fixture plan. Main runtime remains0.29; source integration and full holdout acceptance are pending."
+}

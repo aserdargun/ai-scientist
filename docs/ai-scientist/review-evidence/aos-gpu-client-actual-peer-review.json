@@ -1,0 +1,66 @@
+{
+  "schema": "aos-gpu-peer-cpu-review.v1",
+  "scope": "Check actual AOS UDS peer authentication using a bounded CPU fixture service.\n\nThe socket/process/systemd identities are real. Inference and runtime-generation\nfields returned by the fixture are fake. No scheduler, AOS model or GPU runs.\n",
+  "checks": {
+    "foreign_pid_rejected": true,
+    "foreign_uid_rejected": true,
+    "actual_authenticated_roundtrip": true,
+    "client_and_fixture_exit_zero": true,
+    "owned_fixture_stopped": true,
+    "source_unchanged": true
+  },
+  "client_source_sha256": "aca4c0186dc31131d0446b9c02471ba4d49856e7b0c78fb39d130f31da327af4",
+  "before": {
+    "Description": "swapp-lab-gpu-broker.service",
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "MainPID": "0",
+    "ControlGroup": ""
+  },
+  "runtime_directory": "data/runtime/aos-gpu-peer-review/434f83fd325649c08fd3500ecb64f1fe",
+  "server_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-lab-gpu-broker.service",
+    "--description=SWAPP owned CPU peer review 434f83fd325649c08fd3500ecb64f1fe",
+    "--service-type=exec",
+    "--property=MemoryMax=64M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=25",
+    "--property=TimeoutStopSec=3",
+    "--property=KillMode=control-group",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/data/runtime/aos-gpu-peer-review/434f83fd325649c08fd3500ecb64f1fe/server.py",
+    "/home/cachyos/ai-scientist/data/runtime/aos-gpu-peer-review/434f83fd325649c08fd3500ecb64f1fe"
+  ],
+  "observed": {
+    "Description": "SWAPP owned CPU peer review 434f83fd325649c08fd3500ecb64f1fe",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "InvocationID": "8e1e046d99a54b92b12d43a83feec7c7",
+    "MainPID": "2585443",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-lab-gpu-broker.service"
+  },
+  "client_exit_code": 0,
+  "client_stdout": "{\"foreign_pid_rejected\": true, \"foreign_uid_rejected\": true, \"actual_authenticated_roundtrip\": true}\n",
+  "client_stderr": "",
+  "server_exit_code": 0,
+  "server_stdout": "{\"server_pid\": 2585443, \"request_fields\": [\"deployment_digest\", \"op\", \"payload\", \"profile_id\", \"request_id\", \"version\"]}\n",
+  "server_stderr": "",
+  "after": {
+    "Description": "swapp-lab-gpu-broker.service",
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "MainPID": "0",
+    "ControlGroup": ""
+  },
+  "all_passed": true
+}

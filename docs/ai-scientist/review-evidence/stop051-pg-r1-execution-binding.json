@@ -1,0 +1,13 @@
+{
+  "schema": "stop051-pg-execution-binding.v1",
+  "session": 18752,
+  "launch_chunk": "23b9f5",
+  "final_chunk": "b34816",
+  "exit_code": 0,
+  "elapsed_seconds": 89.681,
+  "memory_peak": "202.6M",
+  "swap_bytes": 0,
+  "test_passed_count": 35,
+  "source_unchanged": true,
+  "scope": "Actual isolated PostgreSQL strict runtime roles; two new production Python stop preflight regressions plus prior33 ownership/closure tests. No real process interruption acceptance."
+}

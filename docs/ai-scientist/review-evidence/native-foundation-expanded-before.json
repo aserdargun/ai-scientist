@@ -1,0 +1,68 @@
+{
+  "schema": "native-foundation-review.v1",
+  "scope": "Real systemd CPU property inspection plus actual SQLite/scheduler with fixture principal, unit and GPU observations; no model or GPU.",
+  "frozen_source_path": "data/runtime/native-foundation-review/624d8163c41143ec82e510e3fc3ed0a9/native_runtime.py",
+  "source_sha256": "732afa7103043a30b1f56736ae706626abf76bb6b914cb5bd60586409f069f80",
+  "script_sha256": "4c0dde013d50e03044f17ca45bae6428d9de4a5ec13dacf410ec61df0a89195a",
+  "checks": {
+    "aggregate_slice_inspection": true,
+    "real_active_unit_numeric_limits": false,
+    "real_collected_unit_inspection": true,
+    "fresh_runtime_database_initialization": false,
+    "created_launch_can_bind_identity": false,
+    "scheduler_release_with_runtime_verifier": false
+  },
+  "observations": {
+    "aggregate_slice_inspection": {
+      "result": "{'LoadState': 'loaded', 'ControlGroup': '/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice'}",
+      "seconds": 0.004444087993761059
+    },
+    "real_active_unit_numeric_limits": {
+      "error": "NameError: name 'math' is not defined",
+      "seconds": 0.006722149999404792
+    },
+    "real_collected_unit_inspection": {
+      "result": "UnitSnapshot(load_state='not-found', active_state='inactive', invocation_id='', control_group='', main_pid=0, description='swapp-lab-gpu-turn-624d8163c41143ec82e510e3fc3ed0a9.service', environment='', memory_max=0, memory_swap_max=0, cpu_quota_usec=0, tasks_max=0, runtime_max_usec=0)",
+      "seconds": 0.006470290005381685
+    },
+    "fresh_runtime_database_initialization": {
+      "error": "RuntimeError: legacy GPU scheduler schema needs explicit offline migration",
+      "seconds": 0.004507635996560566
+    },
+    "created_launch_can_bind_identity": {
+      "error": "LeaseConflict: model unit intent was replaced or already fenced",
+      "seconds": 0.03644582099514082
+    },
+    "scheduler_release_with_runtime_verifier": {
+      "error": "OperationalError: database is locked",
+      "seconds": 5.047063937003259
+    }
+  },
+  "real_unit_properties": {
+    "RuntimeMaxUSec": "5s",
+    "MainPID": "2214102",
+    "CPUQuotaPerSecUSec": "250ms"
+  },
+  "real_unit_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-lab-gpu-turn-624d8163c41143ec82e510e3fc3ed0a9.service",
+    "--service-type=exec",
+    "--property=MemoryMax=128M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=5",
+    "--property=TimeoutStopSec=1",
+    "--property=KillMode=control-group",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-c",
+    "import time; time.sleep(2)"
+  ],
+  "cpu_unit_process_exit_code": 0,
+  "passed": false
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "mode-console-browser-proof.v1",
+  "release": "0.35.0",
+  "browser": {
+    "session_id": 5883,
+    "launch_chunk": "0edd59",
+    "final_chunk": "5a3eb5",
+    "exit_code": 1
+  },
+  "diagnosis": {
+    "session_id": 62329,
+    "launch_chunk": "d10cd3",
+    "final_chunk": "3dfd8e",
+    "exit_code": 0
+  },
+  "result": {
+    "flow": "Database selection -> train/evaluation statistics -> JSON -> synthetic step -> Scorer install -> LSH/OPTICS/SOM grid",
+    "browser_path": "Browser plugin not available; cached Playwright Chromium",
+    "checks": {
+      "db_subset_units_and_min_max": true,
+      "unlabeled_db_measurement_disabled": true,
+      "evaluation_statistics_download": true
+    },
+    "errors": [
+      "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    ],
+    "database_status": 200,
+    "database_snapshot": {
+      "source_kind": "private_database",
+      "scoring_available": false,
+      "snapshot_sha256": "e1665e123bbd905b1a0a54bbcc6b05a7da21c6bcb5aea472e543324b700160f3",
+      "source": {
+        "source_id": "synthetic-db-fixture",
+        "source_version": "synthetic-healthy-multiple-seed42-v1",
+        "table": "approved_sensor_view",
+        "timestamp_column": "timestamp",
+        "entity_column": "machine",
+        "entity": "synthetic-machine-01",
+        "start_utc": "2024-01-01T00:00:00Z",
+        "end_utc": "2024-01-01T00:04:48Z",
+        "row_limit": 512,
+        "sampling_seconds": 1.0,
+        "units": [
+          "a.u.",
+          "a.u."
+        ]
+      },
+      "sensors": [
+        "sensor_a",
+        "sensor_b"
+      ],
+      "rows": 288,
+      "train_rows": 192,
+      "evaluation_rows": 96,
+      "first_utc": "2024-01-01T00:00:00+00:00",
+      "last_utc": "2024-01-01T00:04:47+00:00",
+      "readiness": "pending_scorer_installation"
+    },
+    "synthetic_snapshot": {
+      "source_kind": "synthetic",
+      "scoring_available": true,
+      "snapshot_sha256": "3d51ac1fc162901b479e94c47d908ab473ff517180935eab0ab6cba57887e359",
+      "source": {
+        "source_id": "synthetic.step",
+        "source_version": "v1.seed0",
+        "table": "sensor_data",
+        "timestamp_column": "timestamp",
+        "entity_column": null,
+        "entity": null,
+        "start_utc": null,
+        "end_utc": null,
+        "row_limit": 4096,
+        "sampling_seconds": 1.0,
+        "units": []
+      },
+      "sensors": [
+        "sensor_a",
+        "sensor_b",
+        "sensor_c",
+        "constant_sensor"
+      ],
+      "rows": 288,
+      "train_rows": 192,
+      "evaluation_rows": 96,
+      "first_utc": "2024-01-01T00:00:00+00:00",
+      "last_utc": "2024-01-01T00:04:47+00:00",
+      "readiness": "pending_scorer_installation"
+    },
+    "install_status": 422,
+    "installation": {
+      "detail": "Scorer snapshot installation unavailable"
+    }
+  },
+  "diagnostic_result": {
+    "materialization": {
+      "passed": true,
+      "window": 10,
+      "rows": 86
+    },
+    "role": "swapp_lab_scorer",
+    "insert_grants": {
+      "scorer.dataset_profiles": false,
+      "scorer.dataset_labels": false,
+      "scorer.dataset_task_semantics": false
+    }
+  },
+  "artifacts": {
+    "/tmp/ai-scientist-console045/progress.json": "68d22b29a4563912f31f163259792d9f1a83234ba2707ebd73eaa725ff666e98",
+    "/tmp/ai-scientist-console045/statistics-download.json": "91ec1d82d37a63562cd27c1c4d4fba0ff52ffc6f842cdf4a2c07b0cc153da8e4",
+    "/tmp/ai-scientist-console045/database-statistics.png": "b8b750cc851200b419d1ea831a0c7f58af9a793f6ec2f11ca06854840e0f954b",
+    "/tmp/ai-scientist-console034/check_modes045.py": "5ae8e24cb8df1e25cbde1e16971310571cb06bb10daabda6a46226b305f0af06",
+    "data/runtime/console-bootstrap-034/mode045-installer-diagnosis.json": "97442405a8d64b6bd53134e0cb8d8869669476b7ab4f92a9f73c0bdbd8a3da27"
+  },
+  "scope": "Actual browser and PostgreSQL transport with synthetic data. Database statistics passed; synthetic Scorer registration failed before grid admission. No model or AOS acceptance."
+}

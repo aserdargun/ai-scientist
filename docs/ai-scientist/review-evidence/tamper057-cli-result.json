@@ -1,0 +1,32 @@
+{
+  "run_id": "47013410-a351-49e0-9ecc-5288ea7abf19",
+  "cases": [
+    {
+      "path": "harness/VERSION",
+      "cli_exit_code": 1,
+      "original_execution_deadline_budget_generation_unchanged": true,
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "lab/scorer/service.py",
+      "cli_exit_code": 1,
+      "original_execution_deadline_budget_generation_unchanged": true,
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "ops/sandbox-image.lock",
+      "cli_exit_code": 1,
+      "original_execution_deadline_budget_generation_unchanged": true,
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "docker/sandbox/requirements.txt",
+      "cli_exit_code": 1,
+      "original_execution_deadline_budget_generation_unchanged": true,
+      "no_new_scores_or_jobs": true
+    }
+  ],
+  "harness_restored": true,
+  "actual_baseline_scores": 9,
+  "all_passed": true
+}

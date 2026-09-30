@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-09-24T09:46:49.162909+00:00",
+  "check": {
+    "command": [
+      "/home/cachyos/.local/bin/uv",
+      "pip",
+      "check",
+      "--python",
+      "/home/cachyos/ai-scientist/data/runtime/train/.venv/bin/python"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Using Python 3.12.13 environment at: data/runtime/train/.venv\nChecked 101 packages in 0.92ms\nAll installed packages are compatible\n"
+  },
+  "metadata_check": {
+    "command": [
+      "/home/cachyos/ai-scientist/data/runtime/train/.venv/bin/python",
+      "-c",
+      "import importlib.metadata as m,json,sys; print(json.dumps({\"python\":sys.version,\"packages\":{x:m.version(x) for x in [\"unsloth\",\"unsloth-zoo\",\"torch\",\"transformers\",\"trl\",\"peft\",\"bitsandbytes\",\"datasets\",\"accelerate\",\"numpy\"]}}))"
+    ],
+    "exit_code": 0,
+    "result": {
+      "python": "3.12.13 (main, Jun 23 2026, 15:18:55) [Clang 22.1.3 ]",
+      "packages": {
+        "unsloth": "2026.9.11",
+        "unsloth-zoo": "2026.9.7",
+        "torch": "2.12.1+cu130",
+        "transformers": "5.5.0",
+        "trl": "0.24.0",
+        "peft": "0.21.0",
+        "bitsandbytes": "0.50.2",
+        "datasets": "4.3.0",
+        "accelerate": "1.15.0",
+        "numpy": "2.5.3"
+      }
+    },
+    "stderr": ""
+  },
+  "requirements_lock": {
+    "path": "docs/ai-scientist/review-evidence/training-requirements.lock",
+    "size_bytes": 201918,
+    "sha256": "cdf0390c761fa7170f62453cc03fabfba82a02b432f7f8090b3d1d3d118e8e0b"
+  },
+  "gpu_or_training_started": false,
+  "unsloth_import_tested": false,
+  "claim": "Installed package metadata and dependency resolver compatibility only; model loading, kernels and training remain untested."
+}

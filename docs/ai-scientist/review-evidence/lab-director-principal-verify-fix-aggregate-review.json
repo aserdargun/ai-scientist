@@ -1,0 +1,74 @@
+{
+  "schema": "lab-director-principal-fix-review.v2",
+  "scope": "Allow the exact run-bound Director dispatch unit as a Lab-only shared-GPU principal; preserve all runtime process identity checks.",
+  "base_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "patch": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/lab-director-principal-fix.patch",
+    "sha256": "5a3263048d7560c2bd5dd8e7120ddecb236308a36bcd61ba677c4583fa32b28d",
+    "bytes": 6212,
+    "git_apply_check_exit": 0,
+    "source_byte_parity": "2/2"
+  },
+  "changed_files": [
+    {
+      "path": "lab/llm/gpu_scheduler.py",
+      "base_sha256": "de7305f448adfceffcc9a3934652f04ffcc9b5407d5509f179a97304416ad320",
+      "final_sha256": "f2c5e55016b37f5ba34c50e59a8ec3bb49e6146dce5ae39d9733f2721e335b2a"
+    },
+    {
+      "path": "tests/test_gpu_scheduler.py",
+      "base_sha256": "581a887070c462e4e08f08fdc5b89e13c45bd62fb084c2276b83e9c72eb8795d",
+      "final_sha256": "cd1b419341d18659961fb84c29e74406a3ec1031dc5dc694b8467214925b5de5"
+    }
+  ],
+  "behavior": {
+    "canonical_lab_unit": "swapp-ai-scientist-director-dispatch-{32 lowercase hex}.service",
+    "owner_scope": "The extra form is Lab-only; AOS still accepts only swapp-aos-gpu-* units.",
+    "runtime_identity": "resolve and verify retain exact owner/unit, live process start ticks, boot ID, systemd MainPID, InvocationID, ControlGroup, swapp-gpu.slice, and caller cgroup checks."
+  },
+  "targeted_validation": {
+    "unit": "luna-director-principal-final.service",
+    "command": "PYTHONPATH=. /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q tests/test_gpu_scheduler.py && /home/cachyos/ai-scientist/.venv/bin/ruff check lab/llm/gpu_scheduler.py tests/test_gpu_scheduler.py && /home/cachyos/ai-scientist/.venv/bin/python -m py_compile lab/llm/gpu_scheduler.py tests/test_gpu_scheduler.py",
+    "exit_code": 0,
+    "stdout": "17 passed in 0.25s; Ruff clean; py_compile clean; runtime 428ms; CPU 433ms; peak 72.1M; swap 0B",
+    "log": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/lab-director-principal-final-validation.log",
+      "sha256": "c08cb0a1e7c1df28b46386b875534c59837b44740c55ac0cfa5ed2bbd3bf8feb"
+    },
+    "lock": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock; MemoryMax=2G, MemorySwapMax=0, CPUQuota=100%, TasksMax=128, RuntimeMaxSec=240s"
+  },
+  "real_systemd_probe": {
+    "unit": "swapp-ai-scientist-director-dispatch-a7742015b0494fba81c9d888ef872578.service",
+    "exit_code": 0,
+    "verified": true,
+    "owner": "lab",
+    "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-a7742015b0494fba81c9d888ef872578.service",
+    "database_opened": false,
+    "gpu_requested": false,
+    "resource_limits": "MemoryMax=512M, MemorySwapMax=0, CPUQuota=100%, TasksMax=32, RuntimeMaxSec=60s",
+    "cleanup_after_exit": "LoadState=not-found; ActiveState=inactive; systemd-run --collect; unit completed code 0",
+    "helper": {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/probe_lab_director_dispatch_principal.py",
+      "sha256": "95c03331551d61fd348ba1e13febd4261c156919656279391bca341077955f77"
+    },
+    "log": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/lab-director-principal-systemd-probe.log",
+      "sha256": "6c97d0bd90180130af84e0d3a519a1f8c7bb1e5bae7fadcea07f153a67419d69"
+    }
+  },
+  "development_failures": [
+    {
+      "exit_code": 1,
+      "reason": "Initial Ruff run found import ordering in the new test; fixed before final validation.",
+      "log": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/lab-director-principal-validation-import-order-failure.log"
+    },
+    {
+      "exit_code": 1,
+      "reason": "First final fixture simulated a process outside swapp-gpu.slice, so the preserved verification correctly rejected it; updated fixture to model the configured slice.",
+      "log": null
+    }
+  ],
+  "limitations": [
+    "No Director CLI claim, database open, model inference or GPU use occurred. Production AOS+Lab coexistence acceptance remains pending."
+  ]
+}

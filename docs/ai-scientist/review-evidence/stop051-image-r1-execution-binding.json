@@ -1,0 +1,8 @@
+{
+  "schema": "stop051-image-r1-execution-binding.v1",
+  "tool_chunk": "224712",
+  "exit_code": 1,
+  "elapsed_seconds": 0.09748547200433677,
+  "source_unchanged": true,
+  "reason": "Image review helper absent from private staged source; pre-build failure. Trusted tracked auxiliary files copied separately without modifying frozen272 sources."
+}

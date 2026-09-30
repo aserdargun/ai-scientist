@@ -1,0 +1,38 @@
+{
+  "schema": "public056-calibration-progress.v1",
+  "captured_at": "2026-09-29T21:30:06.471095+00:00",
+  "scope": "isolated real-data acceptance calibration",
+  "usage_profile": "noncommercial_research",
+  "public_development_tasks": 27,
+  "holdout_tasks": 15,
+  "measured_cells": 135,
+  "expected_cells": 135,
+  "failed_claims": 0,
+  "state": "complete",
+  "reserved_wall_seconds": 13500,
+  "deadline_at": "2026-09-30T01:00:05.999077+00:00",
+  "calibration_id": "fe7c1350-0c16-4a56-a056-000000000002",
+  "suite_version": 2,
+  "parent_attempt": {
+    "state": "incomplete",
+    "charged_seconds": 100,
+    "deadline_at": "2026-09-30T01:00:16.500812+00:00",
+    "preserved": true
+  },
+  "real_model_acceptance": false,
+  "whole_m0_complete": false,
+  "numeric_holdout_scores_exposed": false,
+  "calibration_launcher_exit_code": 1,
+  "calibration_unit_main_exit_status": 120,
+  "calibration_launcher_succeeded": false,
+  "trusted_suite_binding_complete": false,
+  "actual135_proof_complete": false,
+  "research_admitted": false,
+  "status": "measurements_complete_launcher_failed_binding_unverified",
+  "final_registration_error": {
+    "type": "ProgrammingError",
+    "sqlstate": "42501",
+    "operation": "immutable holdout suite registration",
+    "cause": "row locking requires a table privilege absent from Scorer role"
+  }
+}

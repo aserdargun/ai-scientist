@@ -1,0 +1,66 @@
+{
+  "schema": "public050-browser-execution.v1",
+  "command": [
+    "flock",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--unit=swapp-public050-browser-progress-r3",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--property=MemoryMax=512M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=50%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=90",
+    "--setenv=TMPDIR=/home/cachyos/.m0r10",
+    "--setenv=PYTHONPATH=/home/cachyos/.cache/uv/archive-v0/erDyh8-eeLPFRvqx:/home/cachyos/.cache/uv/archive-v0/zb1H4ZkTphJnPKiN",
+    "--setenv=PLAYWRIGHT_BROWSERS_PATH=/home/cachyos/ai-scientist/data/runtime/console-browser",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/tmp/ai-scientist-public050-browser/check_public050.py"
+  ],
+  "attempts": [
+    {
+      "attempt": 1,
+      "session_id": 50916,
+      "launch_chunk": "53b29b",
+      "final_chunk": "f79c37",
+      "exit_code": 1,
+      "reason": "driver exact Suite label selector timeout"
+    },
+    {
+      "attempt": 2,
+      "session_id": 95145,
+      "launch_chunk": "7a41e6",
+      "final_chunk": "010c75",
+      "exit_code": 1,
+      "reason": "watch purpose absent; drawer shows unknown type"
+    },
+    {
+      "attempt": 3,
+      "session_id": 74938,
+      "launch_chunk": "25d899",
+      "final_chunk": "cc4da1",
+      "exit_code": 0,
+      "checks_passed": 3,
+      "terminal": "pending"
+    }
+  ],
+  "artifacts": {
+    "check_public050.py": "0dd65d05dab701cbd57f175f6ba216b95e18be65128dc5ca42bbc0dbd522b062",
+    "progress-r1-failed.json": "6d5e8ab38dac64ba75187c8527632f91e9a8bcb6e6efae442e2dac48b8b9c333",
+    "progress-r2-failed.json": "afdc7df5e4966c786538c42719c3a8427d28f9c0a2658336503242a7111e15d3",
+    "progress-result.json": "fbd598566d2404d4d728f0fadb427b10ed3810adf67102025d2903873edf6f41",
+    "status-dom.txt": "50ada2d0690de74b6f23695bb8d9ba248816280e1dc27839e8db22610beed3bd",
+    "status.png": "586bb5e6b30594d85eae498a739c809c74486cf246f986befc8731088f020a83",
+    "suite.png": "c4c41489a5afb18612f56fc86fb60498c971bac4a606f63e7278e758dcfd1119"
+  },
+  "no_new_run": true,
+  "no_stop": true,
+  "no_product_edits": true,
+  "purpose_metadata_gap": true
+}

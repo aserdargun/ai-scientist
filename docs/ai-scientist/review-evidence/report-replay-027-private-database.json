@@ -1,0 +1,14 @@
+{
+  "schema": "report-replay-private-database-provision.v1",
+  "checked_at": "2026-09-25T11:14:34.949257+00:00",
+  "database": "swapp_lab_m0_report_027_1e946abd",
+  "dsn_directory": "data/runtime/parallel-m0/report-replay-027/data/runtime/postgres",
+  "migration_exit_code": 0,
+  "revision": "0018_public_task_semantics",
+  "migration_log": "data/runtime/parallel-m0/report-replay-027-provision.log",
+  "migration_log_sha256": "3d84e303a14723ea73c29244aad6dcc740e6fe76029b0815a9d7ad4996078c2c",
+  "existing_databases_modified": false,
+  "roles_or_passwords_modified": false,
+  "credentials_mode": "0600",
+  "scope": "Frozen 0.27 report/replay fixture database; no holdout migration."
+}

@@ -1,0 +1,807 @@
+{
+  "schema": "care-dev-clock-review.v1",
+  "checked_at": "2026-09-24T11:11:55.437562+00:00",
+  "archive_sha256_previously_verified": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+  "manifest_sha256": "55433394759fee3782eb51c8350446561268acd837f2d44624d07a8b1505ec20",
+  "scope": "Only farm A development source members. Farm B holdout and farm C sealed members are not opened. Source structure/clock review only; no production split, grid, mask, feature-selection or public-data acceptance.",
+  "files": [
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/0.csv",
+      "bytes": 36891572,
+      "sha256": "f0a8365b2b60845b9ad78cf4deb167a2da500abef66199a55c381e8fff2bb26b",
+      "rows": 54986,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52148,
+        "prediction": 2838
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 18,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 15,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 47252,
+        "4": 4032,
+        "3": 864
+      },
+      "eval_status_counts": {
+        "4": 2207,
+        "3": 343,
+        "0": 288
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/10.csv",
+      "bytes": 35826430,
+      "sha256": "16a5bdaaf9afb5ce9b02e456c60e8ed7a6b6943c5e517d4866d7eedf31568914",
+      "rows": 53592,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52323,
+        "prediction": 1269
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 31,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 30,
+      "train_avg_nonfinite_values": 6,
+      "train_avg_rows_with_nonfinite": 3,
+      "train_status_counts": {
+        "0": 45171,
+        "4": 5861,
+        "3": 1291
+      },
+      "eval_status_counts": {
+        "4": 1268,
+        "3": 1
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/13.csv",
+      "bytes": 36217983,
+      "sha256": "fb3c996efd634e0422d95876a28dc6c777470a07816cc5f5894a3d18ccc32dbd",
+      "rows": 54010,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 50427,
+        "prediction": 3583
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 34,
+      "maximum_interval_seconds": 823800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 34,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 40642,
+        "4": 8175,
+        "3": 1610
+      },
+      "eval_status_counts": {
+        "0": 3583
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/14.csv",
+      "bytes": 36614003,
+      "sha256": "93bee35d6a6fa0b6d01961cd0980a53561184da36a80118b964750294be0f6ce",
+      "rows": 54197,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52296,
+        "prediction": 1901
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 15,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 15,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 49422,
+        "4": 2010,
+        "3": 864
+      },
+      "eval_status_counts": {
+        "0": 1901
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/17.csv",
+      "bytes": 36850928,
+      "sha256": "54237f22c32ff0b5dcedb8d3eb5dc452424baad2cdc4d599ca3215605eab6c8f",
+      "rows": 55090,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52309,
+        "prediction": 2781
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 29,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 27,
+      "train_avg_nonfinite_values": 6,
+      "train_avg_rows_with_nonfinite": 3,
+      "train_status_counts": {
+        "0": 45031,
+        "4": 5987,
+        "3": 1291
+      },
+      "eval_status_counts": {
+        "0": 2781
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/22.csv",
+      "bytes": 35472117,
+      "sha256": "06b0745cc1b5ed3ec9bd0e34a81b1074bc23c4f76f854c8b395ea625237a76a3",
+      "rows": 53036,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 51888,
+        "prediction": 1148
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 24,
+      "maximum_interval_seconds": 107400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 22,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 43803,
+        "4": 6906,
+        "3": 1179
+      },
+      "eval_status_counts": {
+        "4": 1004,
+        "3": 144
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/24.csv",
+      "bytes": 36979351,
+      "sha256": "310c27badde12582045627ae22a29d79d642b58f1379e2676bd3f21f46ac697e",
+      "rows": 55003,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52289,
+        "prediction": 2714
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 11,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 10,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 46110,
+        "4": 4882,
+        "3": 1297
+      },
+      "eval_status_counts": {
+        "0": 2714
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/25.csv",
+      "bytes": 36624095,
+      "sha256": "f09afa3bfea796bb2bb52058830981554734a2a2b6085e3415f20d67b91defc6",
+      "rows": 54712,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52289,
+        "prediction": 2423
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 12,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 12,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 49844,
+        "4": 2016,
+        "3": 429
+      },
+      "eval_status_counts": {
+        "0": 2423
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/26.csv",
+      "bytes": 36068832,
+      "sha256": "6bf52430a8102d198c9bea3986e4bf81a120f7e86c8acc859ca1b606a3f08d35",
+      "rows": 53702,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52261,
+        "prediction": 1441
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 19,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 19,
+      "train_avg_nonfinite_values": 2,
+      "train_avg_rows_with_nonfinite": 1,
+      "train_status_counts": {
+        "0": 46204,
+        "4": 5231,
+        "3": 826
+      },
+      "eval_status_counts": {
+        "4": 1008,
+        "3": 432,
+        "0": 1
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/3.csv",
+      "bytes": 37088823,
+      "sha256": "af3e8a8b9907183edecb763f60b1a5a79bb437228cbaa158be0a6dde24e93910",
+      "rows": 55487,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52185,
+        "prediction": 3302
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 41,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 41,
+      "train_avg_nonfinite_values": 4,
+      "train_avg_rows_with_nonfinite": 2,
+      "train_status_counts": {
+        "0": 41635,
+        "4": 8827,
+        "3": 1723
+      },
+      "eval_status_counts": {
+        "0": 3302
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/38.csv",
+      "bytes": 37275500,
+      "sha256": "085324d3dffe3fa12d37a2d95b71d439d8ba7085839dca644192b2b4ee360775",
+      "rows": 54835,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52291,
+        "prediction": 2544
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 15,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 13,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 47430,
+        "4": 3997,
+        "3": 864
+      },
+      "eval_status_counts": {
+        "0": 2544
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/40.csv",
+      "bytes": 37308306,
+      "sha256": "59a051d79baac85548922248013e1136407514d8bd7a2f374670865e6a6cf2ef",
+      "rows": 56158,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 51219,
+        "prediction": 4939
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 41,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 28,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 43081,
+        "4": 6842,
+        "3": 1296
+      },
+      "eval_status_counts": {
+        "0": 2666,
+        "4": 1985,
+        "3": 288
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/42.csv",
+      "bytes": 35944110,
+      "sha256": "22af8df47d9d9844f15506980847ed27dca3b8148167073ee6e85e6faada5b4a",
+      "rows": 53886,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52303,
+        "prediction": 1583
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 31,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 29,
+      "train_avg_nonfinite_values": 6,
+      "train_avg_rows_with_nonfinite": 3,
+      "train_status_counts": {
+        "0": 45600,
+        "4": 5844,
+        "3": 859
+      },
+      "eval_status_counts": {
+        "4": 1006,
+        "3": 432,
+        "0": 145
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/45.csv",
+      "bytes": 36479816,
+      "sha256": "cc51aeabe485286e2fee4df23f39caf77c19ce5fdc34f1e16b01097209f4aa1b",
+      "rows": 53739,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52299,
+        "prediction": 1440
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 14,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 13,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 49309,
+        "4": 2558,
+        "3": 432
+      },
+      "eval_status_counts": {
+        "4": 1439,
+        "3": 1
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/51.csv",
+      "bytes": 36496359,
+      "sha256": "cc4eaa53400424e1044f68379da070215d311d92f940b7050affbf2f289d0ebc",
+      "rows": 54436,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52043,
+        "prediction": 2393
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 25,
+      "maximum_interval_seconds": 107400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 25,
+      "train_avg_nonfinite_values": 2,
+      "train_avg_rows_with_nonfinite": 1,
+      "train_status_counts": {
+        "0": 46912,
+        "4": 4129,
+        "3": 1002
+      },
+      "eval_status_counts": {
+        "4": 1915,
+        "3": 432,
+        "0": 46
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/68.csv",
+      "bytes": 36380960,
+      "sha256": "ab1db0f9a261c525572e09067def2c2876b2002335ec9d5c9c268246573bbcc3",
+      "rows": 54358,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52063,
+        "prediction": 2295
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 15,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 13,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 52063
+      },
+      "eval_status_counts": {
+        "4": 2014,
+        "3": 281
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/69.csv",
+      "bytes": 36686027,
+      "sha256": "fa66f3fc0e9af250cbc23b409a78b3d76e5b9a8526a0f138ee5efaf7b9508d9b",
+      "rows": 54813,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52220,
+        "prediction": 2593
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 14,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 14,
+      "train_avg_nonfinite_values": 2,
+      "train_avg_rows_with_nonfinite": 1,
+      "train_status_counts": {
+        "0": 49782,
+        "4": 2014,
+        "3": 424
+      },
+      "eval_status_counts": {
+        "0": 2593
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/71.csv",
+      "bytes": 36547342,
+      "sha256": "540b1b258c234ef898b087af4626aa46a86f08dc539f30836c2417f95a83533e",
+      "rows": 54744,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52295,
+        "prediction": 2449
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 10,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 10,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 44950,
+        "4": 6048,
+        "3": 1297
+      },
+      "eval_status_counts": {
+        "0": 2449
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/72.csv",
+      "bytes": 36248659,
+      "sha256": "18964bc4ff606b77e7313427df81080d5651dfd6a9dd619be7657947ab42600f",
+      "rows": 54082,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52065,
+        "prediction": 2017
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 24,
+      "maximum_interval_seconds": 107400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 24,
+      "train_avg_nonfinite_values": 2,
+      "train_avg_rows_with_nonfinite": 1,
+      "train_status_counts": {
+        "0": 46697,
+        "4": 4604,
+        "3": 764
+      },
+      "eval_status_counts": {
+        "4": 1440,
+        "3": 432,
+        "0": 145
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/73.csv",
+      "bytes": 36314694,
+      "sha256": "d6071fe582077dd0ee1900597548497e17344f61c2ab4a784ecdd57529881db0",
+      "rows": 54042,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52313,
+        "prediction": 1729
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 10,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 10,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 46841,
+        "4": 4608,
+        "3": 864
+      },
+      "eval_status_counts": {
+        "4": 1440,
+        "3": 289
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/84.csv",
+      "bytes": 36479271,
+      "sha256": "ac88e2141ec5c87c38bb3cee2c0fc084310b238f59464f1d9380cca0537c025a",
+      "rows": 53772,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52335,
+        "prediction": 1437
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 15,
+      "maximum_interval_seconds": 44400.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 11,
+      "train_avg_nonfinite_values": 2,
+      "train_avg_rows_with_nonfinite": 1,
+      "train_status_counts": {
+        "0": 46754,
+        "4": 4717,
+        "3": 864
+      },
+      "eval_status_counts": {
+        "4": 1292,
+        "3": 145
+      },
+      "source_event_label": "anomaly",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    },
+    {
+      "member": "CARE_To_Compare/Wind Farm A/datasets/92.csv",
+      "bytes": 36069145,
+      "sha256": "a979ae914688dd4f4f5f3e3abd0d3ea2d607343363bca39292ad8e2de1c0a01d",
+      "rows": 54067,
+      "avg_sensor_count": 46,
+      "source_timezone": null,
+      "split_counts": {
+        "train": 52293,
+        "prediction": 1774
+      },
+      "split_transitions": 1,
+      "train_prefix_then_prediction_suffix": true,
+      "timestamp_nonpositive_steps": 0,
+      "timestamp_non_600s_steps": 12,
+      "maximum_interval_seconds": 46800.0,
+      "timestamp_off_600s_grid_steps": 0,
+      "id_nonunit_steps": 0,
+      "source_split_gap_seconds": 600.0,
+      "train_median_interval_seconds": 600.0,
+      "train_grid_gap_count": 12,
+      "train_avg_nonfinite_values": 0,
+      "train_avg_rows_with_nonfinite": 0,
+      "train_status_counts": {
+        "0": 49848,
+        "4": 2016,
+        "3": 429
+      },
+      "eval_status_counts": {
+        "0": 1774
+      },
+      "source_event_label": "normal",
+      "event_start_id_timestamp_matches": true,
+      "event_end_id_timestamp_matches": true
+    }
+  ],
+  "archive_stat_unchanged": true,
+  "summary": {
+    "files": 22,
+    "rows": 1196747,
+    "all_train_then_prediction": true,
+    "all_event_id_timestamp_matches": true,
+    "files_with_non_600s_intervals": 22,
+    "files_with_train_nonfinite_avg_values": 9
+  },
+  "elapsed_seconds": 6.444,
+  "script_sha256": "4ddbf59200d3f58c26def591224a4ba8464c22606cb282b216e9495b7abdce43",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_care_dev_clock.py (owned transient cgroup: 512MiB, swap0, 1CPU, 24Tasks, 120s)"
+}

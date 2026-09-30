@@ -1,0 +1,84 @@
+{
+  "schema": "statistics040-freeze.v1",
+  "files": {
+    "lab/analytics/__init__.py": "783ce79c61a11faffbe724639b6aa145146f78dd484f23b09ae3185e17ad9c3b",
+    "lab/analytics/statistics.py": "ba10984d03eebcc80acca33c27e83ecf629c402c9a4f61961e4c92956fcc782a",
+    "tests/test_analytics_statistics.py": "ee0c20d0f1c2388960d09768ba2a7728dbcaa2a0919adcc0002997b624d003d0"
+  },
+  "checks": [
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/ruff",
+        "check",
+        "--config",
+        "/home/cachyos/ai-scientist/pyproject.toml",
+        "lab/analytics",
+        "tests/test_analytics_statistics.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/mypy",
+        "--strict",
+        "--config-file",
+        "/home/cachyos/ai-scientist/pyproject.toml",
+        "lab/analytics"
+      ],
+      "exit_code": 0,
+      "stdout": "Success: no issues found in 2 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/pylint",
+        "--rcfile",
+        "/home/cachyos/ai-scientist/pyproject.toml",
+        "lab/analytics"
+      ],
+      "exit_code": 0,
+      "stdout": "************* Module lab.analytics.statistics\nlab/analytics/statistics.py:95:0: R0914: Too many local variables (18/15) (too-many-locals)\nlab/analytics/statistics.py:174:0: R0914: Too many local variables (18/15) (too-many-locals)\nlab/analytics/statistics.py:194:7: C1802: Do not use `len(SEQUENCE)` without comparison to determine if a sequence is empty (use-implicit-booleaness-not-len)\nlab/analytics/statistics.py:251:0: R0914: Too many local variables (26/15) (too-many-locals)\nlab/analytics/statistics.py:300:55: C1802: Do not use `len(SEQUENCE)` without comparison to determine if a sequence is empty (use-implicit-booleaness-not-len)\nlab/analytics/statistics.py:251:0: R0912: Too many branches (16/12) (too-many-branches)\n\n------------------------------------------------------------------\nYour code has been rated at 9.67/10 (previous run: 9.67/10, +0.00)\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/bandit",
+        "-q",
+        "-r",
+        "lab/analytics"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import pathlib,lab,pytest; assert pathlib.Path(lab.__file__).resolve().is_relative_to(pathlib.Path.cwd()); raise SystemExit(pytest.main(['-q','tests/test_analytics_statistics.py']))"
+      ],
+      "exit_code": 0,
+      "stdout": "............                                                             [100%]\n12 passed in 0.20s\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Only three payload files; private lab/__init__.py is not payload.",
+  "test_change": "Import-group whitespace only after 12 actual passing tests. Runtime bytes unchanged after full focused checks.",
+  "test_evidence": {
+    "session": 52149,
+    "initial_chunk": "8c8735",
+    "final_chunk": "0d4f50",
+    "pytest_exit_code": 0,
+    "outer_exit_code": 1,
+    "reason": "Ruff first-party import grouping depended on cwd; final Ruff corrected and exit0."
+  },
+  "limitations": [
+    "Not yet integrated into UI or full M0 gate."
+  ],
+  "private_source": "data/runtime/parallel-m0/statistics-040",
+  "freeze_sha256": "e2a19cbdb71d7a251d5810a160a099813f275f752be7af2eb894602a275f7cca",
+  "final_ruff_tool_chunk": "465aaf",
+  "final_ruff_exit_code": 0
+}

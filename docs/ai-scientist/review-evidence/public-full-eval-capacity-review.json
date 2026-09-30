@@ -1,0 +1,51 @@
+{
+  "schema": "public-full-eval-capacity-review.v1",
+  "scope": "Full fixed source-prefix/embargo evaluations, review-only JSON cap override; no DB, scoring or model execution.",
+  "json_cap_before": 67108864,
+  "review_json_cap": 134217728,
+  "matrix_cap": 67108864,
+  "manifest_bytes": 72329043,
+  "manifest_sha256": "5fc2187d674929ca4deeb1b73319d457b42dc70f8cfb4badcd224ebd89a0a3a3",
+  "matrix_bytes": 52126816,
+  "task_count": 27,
+  "evt_eligibility": [
+    {
+      "dataset_id": "SKAB",
+      "profile_sha256": "d70d9430df95df86426129452dd05229b096f737f0a13f46f23493d34d081296",
+      "evaluation_rows": 470,
+      "has_both_label_classes_after_mask": true,
+      "enough_points_for_fixed_window": true
+    },
+    {
+      "dataset_id": "SMD",
+      "profile_sha256": "673c8c0f22132f10e125f02bf9e3291fa1f959efca8d2eca32b44a77f601f510",
+      "evaluation_rows": 12000,
+      "has_both_label_classes_after_mask": true,
+      "enough_points_for_fixed_window": true
+    },
+    {
+      "dataset_id": "TSB-AD-M-Genesis",
+      "profile_sha256": "c9d5761faca4d248bc5ecf146ab2b77ca882f73893d862229c8a6133b268d083",
+      "evaluation_rows": 12138,
+      "has_both_label_classes_after_mask": true,
+      "enough_points_for_fixed_window": true
+    },
+    {
+      "dataset_id": "TSB-AD-M-GECCO",
+      "profile_sha256": "fdfa8c3e65ddbb00f5807b20fce38ded7371255b934b3f101c45d7983cdb69d7",
+      "evaluation_rows": 123301,
+      "has_both_label_classes_after_mask": true,
+      "enough_points_for_fixed_window": true
+    },
+    {
+      "dataset_id": "TSB-AD-M-CATSv2",
+      "profile_sha256": "13577888cf3f2b6c330d655942e66ef9ec5f8e7e927b9018cb942fd47037e6df",
+      "evaluation_rows": 83332,
+      "has_both_label_classes_after_mask": true,
+      "enough_points_for_fixed_window": true
+    }
+  ],
+  "max_rss_bytes": 822964224,
+  "all_evt_eligible": true,
+  "driver_sha256": "dc73274d9df0e548d9b25f6bd609d16643886fead2ebc94627a6efc35fa41341"
+}

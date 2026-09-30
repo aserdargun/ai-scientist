@@ -1,0 +1,36 @@
+{
+  "schema": "local-qwen-abandonment-review.v1",
+  "scope": "Check malformed-episode continuation and crash recovery with actual PG journals.\n\nModel/tokenizer, calibration and suite identity are fixtures. Production provider,\nproposal budget reconciliation, Director loop/state recovery and PostgreSQL run\nevents/blob storage execute. No Docker, Scorer, GPU or public-data acceptance.\n",
+  "checked_at": "2026-09-25T02:54:08.646200+00:00",
+  "source_sha256": {
+    "lab/director/local_llm.py": "5c7c2b44779a282b6d1b6a7ea66bc64a0665e313aa77bf24b19be0b0696a692e",
+    "lab/director/runner.py": "331643900bd159da8871efc48f0c71be303c5a588b2ecc57eeda33f0e332a725",
+    "lab/director/loop.py": "64be696905fe5d319b28f1865b9edf9a08672ff2dd71679782ae3cb00d0f97de",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "782bbe3c9f80a1ea31147a31b2069760791db4a1606b2b920055cda33a8df3e0",
+    "docs/ai-scientist/review-evidence/review_local_qwen_abandonment.py": "21da1c11aa1b72e1d5c82868b6a11b0201b4caa0c5b756cd8bf49512f36a6e38",
+    "tests/test_local_qwen_provider.py": "0a19bc1e164492514a2bdc9a5b39d40b80efe783468f6e65dde5827101871191",
+    "docs/ai-scientist/review-evidence/review_local_qwen_attempt_recovery.py": "aabc05d71a61bb1c523dd92cd982eeae503cd3262de096d4a8ff284a268b2d4c"
+  },
+  "checks": {
+    "sources_unchanged": true
+  },
+  "scenarios": [],
+  "error": {
+    "type": "ValidationError",
+    "message": "1 validation error for DirectorLoopState\nschema\n  Field required [type=missing, input_value={'schema_version': 'direc...51, 'reservations': []}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+  },
+  "source_after_sha256": {
+    "lab/director/local_llm.py": "5c7c2b44779a282b6d1b6a7ea66bc64a0665e313aa77bf24b19be0b0696a692e",
+    "lab/director/runner.py": "331643900bd159da8871efc48f0c71be303c5a588b2ecc57eeda33f0e332a725",
+    "lab/director/loop.py": "64be696905fe5d319b28f1865b9edf9a08672ff2dd71679782ae3cb00d0f97de",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "782bbe3c9f80a1ea31147a31b2069760791db4a1606b2b920055cda33a8df3e0",
+    "docs/ai-scientist/review-evidence/review_local_qwen_abandonment.py": "21da1c11aa1b72e1d5c82868b6a11b0201b4caa0c5b756cd8bf49512f36a6e38",
+    "tests/test_local_qwen_provider.py": "0a19bc1e164492514a2bdc9a5b39d40b80efe783468f6e65dde5827101871191",
+    "docs/ai-scientist/review-evidence/review_local_qwen_attempt_recovery.py": "aabc05d71a61bb1c523dd92cd982eeae503cd3262de096d4a8ff284a268b2d4c"
+  },
+  "overall_exit_code": 1
+}

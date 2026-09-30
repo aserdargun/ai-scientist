@@ -1,0 +1,102 @@
+{
+  "schema": "local-qwen-s2-cpu-diagnosis.v1",
+  "scope": "Pinned local source diagnosis and one-call probe plan; no model/GPU invocation.",
+  "checked_at_utc": "2026-09-25T05:53:04Z",
+  "installed_versions": {
+    "vllm": "0.30.0",
+    "transformers": "5.17.0",
+    "xgrammar": "0.2.7",
+    "torch": "2.13.0+cu132"
+  },
+  "profile": {
+    "profile_id": "qwen3.5-9b-fp8-per-tensor.s2-bounded-smoke.v1",
+    "system": "S2",
+    "max_context_tokens": 2048,
+    "max_output_tokens": 2048,
+    "model_max_len": 4096,
+    "enable_thinking": true,
+    "thinking_token_budget": 512,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "activation_seconds": 120,
+    "inference_seconds": 60,
+    "total_seconds": 180
+  },
+  "profile_validation": {
+    "native_profile_equal": true,
+    "thinking_budget_strictly_below_output": true,
+    "queue_startup_inference_share_one_total_deadline": true
+  },
+  "vllm_semantics": {
+    "source": "installed pinned vLLM package",
+    "protocol_path": "entrypoints/openai/chat_completion/protocol.py",
+    "sampling_path": "sampling_params.py",
+    "sampler_path": "v1/sample/thinking_budget_state.py",
+    "verified": [
+      "thinking_token_budget is a nonnegative integer forwarded into SamplingParams",
+      "the sampler caps thinking tokens by forcing the end-of-thinking marker",
+      "max_tokens separately bounds total completion tokens including reasoning",
+      "finish_reason=length is a total-output truncation and must fail closed"
+    ]
+  },
+  "previous_bounded_512_metadata": [
+    {
+      "evidence": "native-qwen-s2-bounded-response-review.json",
+      "finish_reason": "length",
+      "prompt_tokens": 38,
+      "completion_tokens": 512,
+      "content_length_chars": null,
+      "reasoning_length_chars": 1807
+    },
+    {
+      "evidence": "native-qwen-s2-thinking-budget-review.json",
+      "finish_reason": "length",
+      "prompt_tokens": 38,
+      "completion_tokens": 512,
+      "content_length_chars": 1315,
+      "reasoning_length_chars": 454
+    }
+  ],
+  "output_schema": {
+    "name": "candidate-proposal-v1",
+    "sha256": "5e41218eeb0ef7e20f262a85780b7bd479ebbdc7f89b7118888c2b997ac63ed0",
+    "matches_current_candidate_model": true
+  },
+  "provider_config_sha256": "3c65cd5585625f5a56fb63a0b0506d87d730f24485f9057a980fe4b9efa717a0",
+  "synthetic_context_sha256": "e8c1efc7661b5d8b480fd59de7709bcdfcc1f9f6cde65bf1ee7a375a8f7c3e94",
+  "source_sha256": {
+    "lab/director/contracts.py": "a5465678f5a6239e7fb110d560c635cf03c4429a98e112d436fc15d3ca0f31eb",
+    "lab/director/fake_llm.py": "782bbe3c9f80a1ea31147a31b2069760791db4a1606b2b920055cda33a8df3e0",
+    "lab/director/local_llm.py": "eb6b9213934f52f83e2ec238c8775c0fe14a6a117efc7243743f974aebbfeea5",
+    "lab/llm/native_runtime.py": "a70e7889afec72473925fb0e6ab8390d3c372dbce323979f86fdcf0b8dc9520d",
+    "lab/llm/gpu_scheduler.py": "de7305f448adfceffcc9a3934652f04ffcc9b5407d5509f179a97304416ad320",
+    "harness/VERSION": "06c53dd4f22b2e0038ca2bb9af32cc1ab7e69898d99cc3bfa22bd965f21aac8f",
+    "ops/sandbox-image.lock": "ea1050f870d9bdd7582d03fe44babce054c4f915329d54afa544836ce64dd7b3",
+    "docs/ai-scientist/review-evidence/qwen-model-source.json": "8176b301ced9fa1a2983801e0cbbceb2564cc8ea1141635fe699d10bfe36f529",
+    "docs/ai-scientist/review-evidence/vllm-cuda132-resolved.lock": "8e12fa7f848df8a786afc173e18bbf93b437a83763220b58f1f4e6d1e40f4691"
+  },
+  "probe_driver_sha256": "68176a76897cfef7ee9903fe52bec09a2d95b494d50e9e81f4dde7d177da77d5",
+  "probe_contract": {
+    "calls": 1,
+    "strict_candidate_parse": true,
+    "trusted_move_type": "features",
+    "max_output_tokens": 2048,
+    "thinking_token_budget": 512,
+    "activation_seconds": 120,
+    "inference_seconds": 60,
+    "total_seconds_including_queue": 180,
+    "failure_receipt_fields": [
+      "completion_tokens",
+      "content_length_bytes",
+      "content_length_chars",
+      "finish_reason",
+      "http_content_type",
+      "message_content_type",
+      "prompt_tokens",
+      "reasoning_length_chars",
+      "reasoning_present",
+      "usage_valid"
+    ],
+    "raw_response_or_reasoning_persisted": false
+  }
+}

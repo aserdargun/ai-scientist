@@ -1,0 +1,9 @@
+{
+  "schema": "referee-reference-attempt.v1",
+  "actual_exit_code": 1,
+  "tool_chunk_id": "f9c2b1",
+  "elapsed_seconds": 0.157472601,
+  "original_driver_sha256": "b1564b05b24ebd7304689e4629fc0bb13b1fab659157bab11d1e66a241a8954f",
+  "reason": "Review driver incorrectly required Appendix C reference delta/ci to be bit-identical. M0.8 requires its fixture assertions; M0.12 separately requires same-production decision/replay bit parity. Production stable-weight arithmetic can differ from the original formula at rounding bits. A new v2 driver checks the six verdict assertions and the exact printed four-decimal outputs, recording full finite hexadecimal values and differences.",
+  "product_source_changed": false
+}

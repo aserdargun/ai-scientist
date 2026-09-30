@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-09-24T17:05:03.063245+00:00",
+  "scope": "Owned PostgreSQL run and two Director sessions; explicit local invalidation only. No live AOS, Docker, GPU, model, or unrelated session changes.",
+  "run_id": "d7578cd4-9bb8-48ed-9c21-3fee6c2d8d36",
+  "source_sha256": "7cf2afc0c86fc9baf14207c1f4b6bd57a202cfda4c20ef7e79a20d94e24d4f0a",
+  "checks": {
+    "old_connection_invalidated": true,
+    "replacement_acquired": true,
+    "stale_owner_append_rejected": true,
+    "no_stale_checkpoint_inserted": true,
+    "no_stale_blob_written": true
+  },
+  "stale_append_error": "director_ownership_lost",
+  "source_unchanged": true,
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_director_owner_reconnect.py",
+  "script_sha256": "fa58b6905be67f4a43be7f4f546733e8fe8c00bff27539b179e43324ab178358"
+}

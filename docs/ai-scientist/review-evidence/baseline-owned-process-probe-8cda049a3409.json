@@ -1,0 +1,117 @@
+{
+  "cases": [
+    {
+      "name": "wrong_start_rejected_without_signal",
+      "passed": true
+    },
+    {
+      "caught": null,
+      "name": "normal_scope",
+      "passed": true,
+      "trace": [
+        {
+          "event": "sigstop_sent",
+          "monotonic": 28235.871667383,
+          "pid": 924613
+        },
+        {
+          "event": "pause_observed",
+          "monotonic": 28235.948119509,
+          "pid": 924613,
+          "state": "T"
+        },
+        {
+          "event": "sigcont_sent",
+          "monotonic": 28235.94814654,
+          "pid": 924613
+        }
+      ]
+    },
+    {
+      "caught": "LookupError",
+      "name": "caller_exception",
+      "passed": true,
+      "trace": [
+        {
+          "event": "sigstop_sent",
+          "monotonic": 28235.957465917,
+          "pid": 924613
+        },
+        {
+          "event": "pause_observed",
+          "monotonic": 28235.962320128,
+          "pid": 924613,
+          "state": "T"
+        },
+        {
+          "event": "sigcont_sent",
+          "monotonic": 28235.962351727,
+          "pid": 924613
+        }
+      ]
+    },
+    {
+      "caught": "TimeoutError",
+      "name": "expired_deadline",
+      "passed": true,
+      "trace": [
+        {
+          "event": "sigstop_sent",
+          "monotonic": 28235.97201733,
+          "pid": 924613
+        },
+        {
+          "event": "pause_observed",
+          "monotonic": 28235.977115286,
+          "pid": 924613,
+          "state": "T"
+        },
+        {
+          "event": "sigcont_sent",
+          "monotonic": 28236.477503416,
+          "pid": 924613
+        }
+      ]
+    }
+  ],
+  "child_cgroup": {
+    "cpu_period": 100000,
+    "cpu_quota": 10000,
+    "memory_max": 67108864,
+    "swap_max": 0,
+    "tasks_max": 8
+  },
+  "created_at": "2026-09-27T03:41:19.622810+00:00",
+  "driver_sha256": "0091ba667c0a957a95c256fa60fa266a865fdada6a4316966862ddb315f3a09d",
+  "exit_code": 0,
+  "fixture_run_id": "8cda049a-3409-474e-b719-36f3297966d7",
+  "helper_sha256": "898fe09abbfd4a55d38e727a9259250eabd923fb22081de3def3d2bd62e054ae",
+  "helper_unchanged": true,
+  "identity": {
+    "run_id": "8cda049a-3409-474e-b719-36f3297966d7",
+    "worker_boot_id": "24ce6302-3913-4b99-9aea-3a5de341dfd1",
+    "worker_cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-dispatch-8cda049a3409474eb71936f3297966d7.service",
+    "worker_invocation_id": "1e11417708f04685a1288f0667042559",
+    "worker_pid": 924613,
+    "worker_start_ticks": 2823584,
+    "worker_unit": "swapp-ai-scientist-director-dispatch-8cda049a3409474eb71936f3297966d7.service"
+  },
+  "launch_exit_code": 0,
+  "observer_executable": "/usr/bin/python",
+  "observer_python": "3.14.7 (main, Aug 13 2026, 07:40:04) [GCC 16.2.1 20260810]",
+  "outer_cgroup": {
+    "cpu_period": 100000,
+    "cpu_quota": 50000,
+    "memory_max": 1073741824,
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-baseline-observer033-20260927-r2.service",
+    "swap_max": 0,
+    "tasks_max": 64
+  },
+  "owned_cgroup_populated_after_cleanup": false,
+  "owned_sleeper_drained": true,
+  "probe_passed": true,
+  "schema": "baseline-owned-process-observer-probe.v1",
+  "scope": "One synthetic CPU sleeper; observer instrumentation only. No database, Director workload, baseline score, API, Docker, model, GPU or AOS execution.",
+  "sleeper_executable": "/home/cachyos/ai-scientist/.venv/bin/python",
+  "unit": "swapp-ai-scientist-director-dispatch-8cda049a3409474eb71936f3297966d7.service"
+}

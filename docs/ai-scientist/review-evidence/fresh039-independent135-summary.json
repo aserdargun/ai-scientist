@@ -1,0 +1,41 @@
+{
+  "acceptance": {
+    "development243_complete": false,
+    "full_m0": false,
+    "gpu": false,
+    "holdout": false,
+    "local_llm": false
+  },
+  "actual_verifier_outer_exit_code": 0,
+  "actual_verifier_session": 39840,
+  "calibration_outer_exit_status": 120,
+  "calibration_outer_success": false,
+  "cells": 135,
+  "claims": 135,
+  "context_sha256": "abc06e7220097b6e11fdd83d28fc7c61bb290ddcc0cd801c99cd4e194808d337",
+  "holdout_acceptance": false,
+  "individual_worker_exit_receipts": "unverifiable if not retained; product CLI completion and generation drain checked",
+  "matrix_verified": true,
+  "means_equal_weights_verified": true,
+  "phase_lineage": {
+    "original_calibration_child_exit_code": 0,
+    "original_calibration_inner_exit_code": 0,
+    "original_calibration_outer_exit_status": 120,
+    "r1": "prelaunch rejected JSONL journal shape; not executed",
+    "r2": "actual outer1/TypeError; SQL worker_start_ticks String32 compared with integer",
+    "r2_private_failure_receipt_sha256": "6bbc83d794b97ce21ba9aa20c92b993c22cb53f0cb4012f4be59910bc2cb847c",
+    "r3": "diagnostic-only source retained; not launched",
+    "r4": "strict positive digit-string/int parsed locally; original SQL metadata unchanged; actual outer0"
+  },
+  "private_receipt_sha256": "9306231d53fe93a6f0dfd569bddcfd94f0ce661f15b6cb52b918dc916d711268",
+  "real_model_acceptance": false,
+  "registration_artifact_equal": true,
+  "runtime_image_pin": "sha256:db696e98a3d615b3151bc17614beaff35819e7fbc1a193f5ecd5141d90c7cf50",
+  "schema": "fresh039-independent135-public-summary.v1",
+  "scientific_image_sha256": "db696e98a3d615b3151bc17614beaff35819e7fbc1a193f5ecd5141d90c7cf50",
+  "source_only_terminal_worker_limitation": "Historical per-worker exit0 receipts not retained/independently proven; current generation quiescence and product calibration CLI completion are separate facts",
+  "state": "independent_measurements_verified",
+  "tasks": 15,
+  "verifier_source_sha256": "727945778c74f0e84cccd8e316347c8eada5526fc10787e0d71f68b55e36b222",
+  "worker_generation_quiescence_verified": true
+}

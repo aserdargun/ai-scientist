@@ -1,0 +1,18 @@
+{
+  "scope": "Format private verification helper only; preserve imported names/order and normalized AST",
+  "before_sha256": "2e145f5fc012cd7f986e8b423cfcfa37ccc54e7e62e433e88409483fb866830d",
+  "after_sha256": "272ad026c6f6da26fd88bdfdda90b85638ed0a939199a7aa32800410776c70cf",
+  "normalized_ast_equal": true,
+  "mapped272_unchanged": true,
+  "initial_gate": {
+    "session": 33521,
+    "launch_chunk": "4a81fd",
+    "final_chunk": "f2b973",
+    "exit_code": 1,
+    "pytest_passed": 879,
+    "pytest_skipped": 7,
+    "pytest_deselected": 100,
+    "failed_command": "ruff check .",
+    "reason": "Private check helper formatting"
+  }
+}

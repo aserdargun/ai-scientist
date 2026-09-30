@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-09-24T18:14:54.845074+00:00",
+  "scope": "Unit fault injection: completed measured/crashed/timed-out seed resumed from an immutable in-memory checkpoint store. SQL and Docker are replaced; this is not actual process restart acceptance.",
+  "source_sha256": {
+    "lab/director/runner.py": "79fdfe66f213019cb177323a4fd3ee7ed98cf4f044058307ef8e57b9638d7c35",
+    "lab/director/budget.py": "e5763bbbe1e958aa79add24aaeadda9677418adad6082f604fc3fd21c108c1ec",
+    "tests/test_director_seed_resume_review.py": "ce5f4392a6abf39744ff2dff9b213a844dfe9ce5b9df34be25bec8c69cedb6c1"
+  },
+  "source_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "tests/test_director_seed_resume_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "-q",
+        "--tb=short",
+        "tests/test_director_seed_resume_review.py"
+      ],
+      "exit_code": 1,
+      "stdout": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_ test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[measured] _\ntests/test_director_seed_resume_review.py:143: in test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation\n    recovered = module.execute_candidate_seed(**arguments, budget=resumed_budget)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlab/director/runner.py:575: in execute_candidate_seed\n    _append_next_checkpoint(\ntests/test_director_seed_resume_review.py:35: in append\n    raise RuntimeError(\"immutable checkpoint payload conflict\")\nE   RuntimeError: immutable checkpoint payload conflict\n_ test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[candidate_crash] _\ntests/test_director_seed_resume_review.py:143: in test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation\n    recovered = module.execute_candidate_seed(**arguments, budget=resumed_budget)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlab/director/runner.py:480: in execute_candidate_seed\n    raise RuntimeError(\"primary task already has a durable terminal outcome\")\nE   RuntimeError: primary task already has a durable terminal outcome\n_ test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[timeout] _\ntests/test_director_seed_resume_review.py:143: in test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation\n    recovered = module.execute_candidate_seed(**arguments, budget=resumed_budget)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlab/director/runner.py:480: in execute_candidate_seed\n    raise RuntimeError(\"primary task already has a durable terminal outcome\")\nE   RuntimeError: primary task already has a durable terminal outcome\n=========================== short test summary info ============================\nFAILED tests/test_director_seed_resume_review.py::test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[measured]\nFAILED tests/test_director_seed_resume_review.py::test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[candidate_crash]\nFAILED tests/test_director_seed_resume_review.py::test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation[timeout]\n3 failed in 0.81s\n",
+      "stderr": ""
+    }
+  ],
+  "all_passed": false
+}

@@ -1,0 +1,66 @@
+All checks passed!
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+usage: review_aos_lab_coexistence_v3.py [-h] --aos-source AOS_SOURCE
+                                        [--aos-python AOS_PYTHON]
+                                        [--desktop-manifest DESKTOP_MANIFEST]
+                                        [--decider-manifest DECIDER_MANIFEST]
+                                        [--model-python MODEL_PYTHON]
+                                        --aos-unit AOS_UNIT --lab-root
+                                        LAB_ROOT --lab-python LAB_PYTHON
+                                        --lab-api-url LAB_API_URL
+                                        --lab-token-file LAB_TOKEN_FILE
+                                        --suite-registry SUITE_REGISTRY
+                                        --suite-runtime-root
+                                        SUITE_RUNTIME_ROOT --director-dsn-file
+                                        DIRECTOR_DSN_FILE --planner-dsn-file
+                                        PLANNER_DSN_FILE
+                                        [--gpu-runtime-db GPU_RUNTIME_DB]
+                                        [--lab-maintenance-unit LAB_MAINTENANCE_UNIT]
+                                        --suite SUITE --experiments
+                                        EXPERIMENTS --wall-seconds
+                                        WALL_SECONDS --model-tokens
+                                        MODEL_TOKENS
+                                        [--phase {coexistence,restart-recovery}]
+                                        --output-dir OUTPUT_DIR
+                                        [--startup-seconds STARTUP_SECONDS]
+                                        [--poll-seconds POLL_SECONDS]
+                                        [--foreground-task-limit FOREGROUND_TASK_LIMIT]
+                                        [--execute]
+
+Drive an isolated real AOS + Lab coexistence acceptance run. Default mode is
+preflight only. `--execute` is an explicit root-operated gate; it starts only
+the named isolated AOS/Lab run-bound units supplied here.
+
+options:
+  -h, --help            show this help message and exit
+  --aos-source AOS_SOURCE
+  --aos-python AOS_PYTHON
+  --desktop-manifest DESKTOP_MANIFEST
+  --decider-manifest DECIDER_MANIFEST
+  --model-python MODEL_PYTHON
+  --aos-unit AOS_UNIT
+  --lab-root LAB_ROOT
+  --lab-python LAB_PYTHON
+  --lab-api-url LAB_API_URL
+  --lab-token-file LAB_TOKEN_FILE
+  --suite-registry SUITE_REGISTRY
+  --suite-runtime-root SUITE_RUNTIME_ROOT
+  --director-dsn-file DIRECTOR_DSN_FILE
+  --planner-dsn-file PLANNER_DSN_FILE
+  --gpu-runtime-db GPU_RUNTIME_DB
+  --lab-maintenance-unit LAB_MAINTENANCE_UNIT
+  --suite SUITE
+  --experiments EXPERIMENTS
+  --wall-seconds WALL_SECONDS
+  --model-tokens MODEL_TOKENS
+  --phase {coexistence,restart-recovery}
+  --output-dir OUTPUT_DIR
+  --startup-seconds STARTUP_SECONDS
+  --poll-seconds POLL_SECONDS
+  --foreground-task-limit FOREGROUND_TASK_LIMIT
+  --execute             start the isolated actual AOS/Lab acceptance services
+EXIT_CODE=0

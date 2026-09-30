@@ -1,0 +1,21 @@
+{
+  "schema": "baseline-numeric-guard-execution-binding.v1",
+  "session_id": 30390,
+  "completion_chunk": "e36911",
+  "exit_code": 0,
+  "phase": "after_fix",
+  "source_head": "800e5ff27d50577933aea447a8c6d1fc3bf5187a",
+  "runtime_version": "0.33.1",
+  "driver_sha256": "d73e8f4d1956e82df9efe1baec3eb6ce43dd7720f1e02216a49bf4ba6ec62332",
+  "sql_companion_sha256": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2",
+  "diagnostic_evidence": "baseline-ownership-sql-diagnostic-033-672cd98284df.json",
+  "diagnostic_evidence_sha256": "535da546efd89a154dca57fd8618de7810788d389cd364caa44517bf379a2cff",
+  "verified_case_count": 33,
+  "cleanup": {
+    "run_cleanup_verified": true,
+    "api_process_reaped": true,
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "scope": "Direct PostgreSQL numeric budget guard regression on claimed unsealed fixtures. Valid numeric zeros pass guard; invalid forms rejected atomically. Full baseline registration/report still unproven."
+}

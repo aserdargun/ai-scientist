@@ -1,0 +1,52 @@
+{
+  "schema": "public-source-publication-review.v1",
+  "date": "2026-09-30",
+  "publication_complete": false,
+  "target": "aserdargun/ai-scientist",
+  "strategy": "sanitized initial source snapshot; original local Git history retained privately",
+  "review": {
+    "local_commits_examined": 104,
+    "unique_git_blobs_examined": 2409,
+    "current_tracked_files_examined": 1600,
+    "additional_document_examined": "64-automatic-stop-and-publication.md",
+    "screenshots_visually_examined": 14,
+    "current_private_credential_values_checked": 14,
+    "current_private_credential_matches": 0,
+    "retired_worker_token_current_match": false,
+    "history_retired_worker_token_match": true,
+    "history_published": false,
+    "redaction_count": 1,
+    "synthetic_npz_provenance_verified": true
+  },
+  "quality_gate": {
+    "actual_outer_exit_code": 0,
+    "tool_terminal_chunk": "6d6c03",
+    "unit": "lab-publication041-quality-r2",
+    "command_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "tests_passed": 1247,
+    "tests_skipped": 7,
+    "tests_deselected": 120,
+    "prior_attempt": {
+      "actual_exit_code": 1,
+      "reason": "Tool PATH omitted ruff; no gate command executed successfully",
+      "preserved_privately": true
+    }
+  },
+  "runtime": "0.41.0",
+  "unpublished_candidates": [
+    "automatic stop R4",
+    "synthetic pool044"
+  ],
+  "license_selected": false,
+  "github_authentication": "Local CLI token invalid; first device flow expired; refreshed login required",
+  "remote_commit_verified": false,
+  "private_original_receipt_retained": true
+}

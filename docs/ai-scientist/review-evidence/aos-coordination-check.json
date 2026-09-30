@@ -1,0 +1,22 @@
+{
+  "schema": "coordination-check.v1",
+  "checked_at": "2026-09-24T08:55:36.044731+00:00",
+  "new_note": "/home/cachyos/aos/AI_SCIENTIST_COORDINATION.md",
+  "note_sha256": "334f2165d01b7f1d8d2dba5e5881c662341c189e914acb49aff01783071a376d",
+  "other_session_acknowledgement": "unconfirmed",
+  "command": [
+    ".venv/bin/python",
+    "scripts/validate_package.py"
+  ],
+  "cwd": "/home/cachyos/aos",
+  "exit_code": 1,
+  "error": "AssertionError: Manifest hash: tests/test_web_https_relay.py",
+  "manifest_sha256": "2cb2852d1a05935ff3a9e49ebb7812c8d2987edc6723af10acfc8bb719f20ca0",
+  "first_reported_mismatch": {
+    "path": "tests/test_web_https_relay.py",
+    "expected": "791a353fc9e872b0b46ac8e9fc3925c2380410183a7e480c19d848b3f8ad528c",
+    "observed_now": "3a3023ff8eac22f9e98a859cb1af6ab4b7a38c35117d3ddaa3b95afa2e515654"
+  },
+  "existing_aos_files_changed_by_this_session": false,
+  "managed_runtime_restarted": false
+}

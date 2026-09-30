@@ -1,0 +1,260 @@
+{
+  "checked_at": "2026-09-24T13:19:45.622374+00:00",
+  "source_sha256": {
+    "lab/scorer/worker.py": "e9d1f956920b135cbfcdf41e4269aa3b44c80d370012f6b50e8cd14d87281e7a",
+    "lab/scorer/supervisor.py": "322b4f43b709f85225541c990ae2839abbe95719654a44e079e57979327f08ee"
+  },
+  "cases": [
+    {
+      "mode": "valid",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-1b298425500a4576a9ffa674ee5d359f.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "valid",
+        "swapp-ai-scientist-scorer-1b298425500a4576a9ffa674ee5d359f.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "unit": "swapp-ai-scientist-scorer-1b298425500a4576a9ffa674ee5d359f.service",
+        "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-1b298425500a4576a9ffa674ee5d359f.service",
+        "invocation_id": "b1f8f433800947bc9f680931defc4591"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    },
+    {
+      "mode": "wrong_expected_unit",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-e7405fb7a01143cb8d7fa5cf0bbeeb9d.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "wrong_expected_unit",
+        "swapp-ai-scientist-scorer-e7405fb7a01143cb8d7fa5cf0bbeeb9d.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": false,
+        "error_type": "RuntimeError",
+        "error": "Scorer process is not the main process of its exact active unit"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    },
+    {
+      "mode": "wrong_invocation",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-5c171d1f2a8c49c0baa5c17d36f8db00.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "wrong_invocation",
+        "swapp-ai-scientist-scorer-5c171d1f2a8c49c0baa5c17d36f8db00.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": false,
+        "error_type": "RuntimeError",
+        "error": "Scorer process is not the main process of its exact active unit"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    },
+    {
+      "mode": "missing_invocation",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-5ab7315ba5ee4991b57ad4b2a9aa9053.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "missing_invocation",
+        "swapp-ai-scientist-scorer-5ab7315ba5ee4991b57ad4b2a9aa9053.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": false,
+        "error_type": "RuntimeError",
+        "error": "Scorer requires a systemd invocation identity"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    },
+    {
+      "mode": "unavailable_manager",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-2c92f4bb24054ec691eb46f46a5a847c.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "unavailable_manager",
+        "swapp-ai-scientist-scorer-2c92f4bb24054ec691eb46f46a5a847c.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": false,
+        "error_type": "RuntimeError",
+        "error": "Scorer systemd unit inspection failed"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    },
+    {
+      "mode": "wrong_slice",
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-ai-scientist-scorer-8d8d593b00db4fb2a15945d84d94ae42.service",
+        "--slice=app.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=10",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_invocation_identity.py",
+        "child",
+        "wrong_slice",
+        "swapp-ai-scientist-scorer-8d8d593b00db4fb2a15945d84d94ae42.service"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": false,
+        "error_type": "RuntimeError",
+        "error": "Scorer process escaped the aggregate Scorer slice"
+      },
+      "unit_state": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "MainPID": "0"
+      },
+      "unit_inactive": true,
+      "passed": true
+    }
+  ],
+  "scope": "Production systemd identity verifier in six actual owned processes. Correct identity and five invalid contexts; no credentials, PostgreSQL claims, Scorer metrics, recovery writer, GPU or AOS runtime used.",
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "ae74f40a53c6f8ce290fa85ab733ffe354f24a89ffc51a61da49985c2ec7a208"
+}

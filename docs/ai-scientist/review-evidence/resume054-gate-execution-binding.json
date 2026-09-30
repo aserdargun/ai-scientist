@@ -1,0 +1,30 @@
+{
+  "schema": "resume054-verified-executions.v1",
+  "image": {
+    "session": 32752,
+    "launch_chunk": "9e5514",
+    "final_chunk": "5f7bbd",
+    "exit_code": 0,
+    "authorized_source_delta": [
+      "ops/sandbox-image.lock"
+    ]
+  },
+  "gate": {
+    "session": 34150,
+    "launch_chunk": "2c587e",
+    "final_chunk": "5814f2",
+    "exit_code": 0,
+    "pytest": "926 passed / 7 skipped / 100 deselected"
+  },
+  "files": {
+    "resume054-source-freeze.json": "ceefeda72fbda1201cbf367033176a9df2033e5bbb49aa2bf90b9f8ceb50010f",
+    "resume054-focused-checks.json": "e2f81a5fae0f184c70c7f4cee01c810b02a07e4afc5dde8c473941965d62fb86",
+    "resume054-release-preparation.json": "011f62ffa35a2e9a496e44354fd5e7e44221d42c10a95a88fba82e6825ab5d54",
+    "resume054-image-b7f5b1892a61.json": "7aeed8d6ff1d4dd1deba9268953fbf0f0d766b3c6c2f1583ae3c6d67f97e5d5a",
+    "resume054-gate-718192a1a2ff.json": "8f9fbd0971e4d58e561430addb51fd016e5853984a9ee81257ad9143a19c72eb",
+    "resume054-gate-718192a1a2ff-commands.json": "d700db1298ff3f437759dafc30f78ddf6bf0081cd6c31c27ce6431b94109b7a4",
+    "review_resume054_gate.py": "9c10a28d9741a01f855d452d336ca13cb902925c2da599e29992f77d17b62a33",
+    "review_deployment0362.py": "e0bab754d9ea01ae9bd4ea438db3d79aa18b24d8f9ccb75fe4953a4707f52968",
+    "resume054-image-parity.json": "c215400f0469af9c28a4848c70fd4d5019426b198f2effc5299c8fa74fcfba11"
+  }
+}

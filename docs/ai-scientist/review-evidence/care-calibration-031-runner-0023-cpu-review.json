@@ -1,0 +1,35 @@
+{
+  "schema": "review-cpu-execution.v1",
+  "scope": "Updated disposable SQL review runner safety checks and inert plan; no PostgreSQL execution",
+  "migration_target": "0023_care_calibration_execution",
+  "unit": "swapp-calibration031-runner-cpu-20260927-r2.service",
+  "exec_chunk": "059985",
+  "exit_code": 0,
+  "checks": {
+    "ruff_exit_code": 0,
+    "pytest_exit_code": 0,
+    "pytest_passed": 3,
+    "pytest_seconds": 0.22,
+    "inert_print_plan_exit_code": 0,
+    "starts_nothing": true
+  },
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_care_calibration031_pg.py": "444f625efd67295a60973bf29ca92efb3f476022f482aeb980814d3b4a7976db",
+    "tests/test_care_calibration031_pg_runner_safety.py": "cd3975070da9fba6f1d25df5fe00986d699a6ce39c933b3ea38fe91c814244bc"
+  },
+  "sources_unchanged": true,
+  "bounds": {
+    "memory_max_bytes": 1073741824,
+    "cpu_quota_percent": 50,
+    "tasks_max": 64,
+    "swap_max_bytes": 0,
+    "runtime_max_seconds": 120
+  },
+  "remaining": [
+    "Frozen calibration source review",
+    "Actual isolated 0023 PostgreSQL proof",
+    "Runtime worker/sandbox and measured full Farm B calibration"
+  ],
+  "historical_0022_proof": "care-calibration-031-pg-execution-binding.json",
+  "acceptance_changed": false
+}

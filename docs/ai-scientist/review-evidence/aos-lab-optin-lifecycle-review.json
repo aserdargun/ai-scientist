@@ -1,0 +1,146 @@
+{
+  "schema": "aos-lab-optin-lifecycle-review.v1",
+  "scope": "Detached Lab opt-in startup fencing, idempotent dispatch, admission cap, and restart drain/recovery; no live AOS mutation.",
+  "isolated_worktree": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/lab-external-optin",
+  "branch": "feat/aos-lab-external-optin",
+  "base_commit": "c33325349e856edf52d1ab37da394388eb0607c2",
+  "base_manifest_sha256": "4f22d2ff8689f16a7d5f407a8d0bb2862a6d0c15f452a374842406f3e6b79df8",
+  "working_tree_commit_tree": "d189ccc2b6f27cbaf9cfc4819b04be3bb32b7fbf",
+  "final_source_manifest_sha256": "069dc73c2cdd0447d7a7417b4d00b4905976be7597afe578ffb7195bed44e75f",
+  "source_manifest_entries": 803,
+  "changed_files": [
+    {
+      "path": "MANIFEST.sha256",
+      "status": "M",
+      "base_sha256": "4f22d2ff8689f16a7d5f407a8d0bb2862a6d0c15f452a374842406f3e6b79df8",
+      "working_sha256": "069dc73c2cdd0447d7a7417b4d00b4905976be7597afe578ffb7195bed44e75f"
+    },
+    {
+      "path": "README.md",
+      "status": "M",
+      "base_sha256": "70e44bfc7343c2f02f29287a7b09f1dca1f9274b7eafb9ae337fb420559b112c",
+      "working_sha256": "8293eadaa4e85eeefd00c9d0d74dbc44e62f6aa0a20de042726e09794068a05a"
+    },
+    {
+      "path": "docs/DETACHED_LAB_RUNTIME.md",
+      "status": "A",
+      "base_sha256": null,
+      "working_sha256": "ba389297667c671e9ef77a8f3a3d6ec0152c272e2d3ac756e563e0f6c7af06b0"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "status": "M",
+      "base_sha256": "aba8444f82239ff625481125e735060dde66dc1f56aca10bce71f41bc1eddd27",
+      "working_sha256": "7ac0c82b2fa261d90081efceffa81a02eea06ffa23354db606fb37f4e401f3d7"
+    },
+    {
+      "path": "scripts/serve_desktop.py",
+      "status": "M",
+      "base_sha256": "83ce3fda98e29924c74e5c749bbf69f8719841b8db8a3d1f97d4e9ee5de6a632",
+      "working_sha256": "aa35d8e0c31678eb509a104fc5d94733b250125ecd553d290e85a2a728004fed"
+    },
+    {
+      "path": "src/aos/desktop_console.py",
+      "status": "M",
+      "base_sha256": "ed2144a431c6394802dbcffa9c9d779c78c9cc7009fb5b9800014b7ede3e2f88",
+      "working_sha256": "2992028941452507797bbbadeb0b129559232ad5c72e0c61616b582f41f44224"
+    },
+    {
+      "path": "src/aos/lab_external.py",
+      "status": "M",
+      "base_sha256": "6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1",
+      "working_sha256": "68e193583a9279638bc63adda62c4b402fc32ccc3e12b72690627584dcc414dc"
+    },
+    {
+      "path": "tests/test_lab_external_jobs.py",
+      "status": "M",
+      "base_sha256": "612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6",
+      "working_sha256": "e54be520fef8721628422623a456e639e0efb67e0a4687199d75d32c67591c5e"
+    },
+    {
+      "path": "tests/test_task_sequence.py",
+      "status": "M",
+      "base_sha256": "c3ced370a2f036f3b6afa9c807e5b6cc6f74f05b716a216549a635f6ca523478",
+      "working_sha256": "770a3e1a4e548b4432a361b6dc29d42e39536b6f4a038b08ea7e62797af1760c"
+    }
+  ],
+  "patch": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-lab-optin-lifecycle.patch",
+    "sha256": "c57a95d361353c87a89fb56a05eaf7f155cd62907e3b7afd449f07e5dbc00f42",
+    "bytes": 56404,
+    "git_diff_check_exit": 0,
+    "git_apply_check_against_frozen_source_exit": 0
+  },
+  "source_copy_provenance": {
+    "reviewed_frozen_source": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged",
+    "reviewed_frozen_manifest_sha256": "4f22d2ff8689f16a7d5f407a8d0bb2862a6d0c15f452a374842406f3e6b79df8",
+    "prior_broker_patch_head_file_hash_parity": "24/24",
+    "private_artifacts_copied": false,
+    "local_browser_pin_reason_excluded": "The runtime manifest contains hashes for local Chromium artifacts plus host-local browser_root; it is not a public package pin."
+  },
+  "checks": {
+    "focused_tests": {
+      "unit": "aos-lab-optin-focused-archive.service",
+      "exit_code": 0,
+      "command": "PYTHONPATH=src /home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python -m pytest -q tests/test_lab_external_jobs.py tests/test_task_sequence.py::TaskSequenceTests::test_restart_quiesce_drains_detached_lab_and_explicitly_recovers_it",
+      "stdout_summary": "24 passed in 6.16s; systemd runtime 6.361s; CPU 0.804s; peak RAM 67.8M; swap 0B.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-focused-success.log",
+        "sha256": "ffe5ed0dbb9d7046de2fbee9813b4feb5f586e645b236013f3c4c44a9cd18de4"
+      }
+    },
+    "package_validation": {
+      "unit": "aos-lab-optin-package-archive-correct.service",
+      "exit_code": 0,
+      "command": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python scripts/validate_package.py",
+      "stdout_summary": "PASS: 4100 package checks. No model/runtime/training tests were run.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-package-success.log",
+        "sha256": "fb768e0f65d720feae2aeb4e433c8386a62576ba12c567530b3af52aae88adb8"
+      }
+    },
+    "wide_focused_tests": {
+      "unit": "aos-lab-optin-env-limit-archive.service",
+      "exit_code": 1,
+      "command": "PYTHONPATH=src /home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python -m pytest -q --tb=short tests/test_lab_external_jobs.py tests/test_task_sequence.py",
+      "stdout_summary": "12 failed, 26 passed, 1 skipped in 7.03s. All 12 failures are FileNotFoundError for models/browser-manifest.json before immutable pinned BrowserRuntime identity can be built. No manifest copied or synthesized. The new restart API test passed and also passed in the focused run.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-full-focused-failure.log",
+        "sha256": "e28ff1d8bac23038fbe84e61591c70b92b91fb31701788822a982efe969766fc"
+      }
+    },
+    "ruff_legacy_file_scan": {
+      "unit": "aos-lab-optin-ruff-archive.service",
+      "exit_code": 1,
+      "command": "/home/cachyos/ai-scientist/.venv/bin/ruff check src/aos/lab_external.py src/aos/desktop_console.py scripts/serve_desktop.py tests/test_lab_external_jobs.py tests/test_task_sequence.py",
+      "stdout_summary": "206 whole-file diagnostics; a git-diff hunk filter found 0 diagnostics on added/modified lines.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-ruff-filewide.log",
+        "sha256": "f05864efa786457aa5ce950d437f8e0b6dbff6691d436f72bebb4f57e2a29c0d"
+      }
+    },
+    "initial_wrong_workdir_test_invocation": {
+      "unit": "aos-lab-external-race-test.service",
+      "exit_code": 4,
+      "stdout_summary": "Initial systemd test invocation omitted WorkingDirectory and ended with process status 4. Journal preserves command and status; raw pytest stdout was not retained. Corrected workdir run is green above.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-initial-exit4-journal.log",
+        "sha256": "a9e49e3f92a48cb54286d9a624b9f0aca98daff9c4e71ae21703e3934e2efa0d"
+      }
+    },
+    "initial_wrong_python_package_invocation": {
+      "unit": "aos-lab-optin-package-archive.service",
+      "exit_code": 1,
+      "stdout_summary": "Wrong interpreter lacked jsonschema (ModuleNotFoundError); corrected isolated AOS venv invocation passed 4100 checks.",
+      "log": {
+        "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/aos-lab-optin-package-wrong-env.log",
+        "sha256": "364265d34ff3d95c3e036f47e8c4a762321a3e3bbb1f939b93a0d0fd2968e2af"
+      }
+    }
+  },
+  "limitations": [
+    "No real shared-broker Decider turn or concurrent AOS/Lab GPU acceptance was run.",
+    "Full TaskSequence suite requires excluded host-local pinned Chromium artifact manifest.",
+    "No main AOS source or live /home/cachyos/aos path was edited."
+  ]
+}

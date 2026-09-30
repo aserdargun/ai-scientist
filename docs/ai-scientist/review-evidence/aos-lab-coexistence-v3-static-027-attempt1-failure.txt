@@ -1,0 +1,25 @@
+Running as unit: luna-aos-v3-static-027c.service
+All checks passed!
+E
+======================================================================
+ERROR: ai_scientist (unittest.loader._FailedTest.ai_scientist)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: ai_scientist
+Traceback (most recent call last):
+  File "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'docs.ai_scientist'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+          Finished with result: exit-code
+Main processes terminated with: code=exited, status=1/FAILURE
+               Service runtime: 107ms
+             CPU time consumed: 74ms
+                   Memory peak: 16.2M (swap: 0B)
+
+The unittest module path was wrong. The corrected discovery invocation is recorded in
+aos-lab-coexistence-v3-static-027.stdout.txt and passed all seven tests.

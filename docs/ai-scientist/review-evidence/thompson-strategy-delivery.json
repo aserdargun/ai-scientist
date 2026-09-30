@@ -1,0 +1,94 @@
+{
+  "api": [
+    "initial_strategy_state(seed) -> StrategyState",
+    "select_strategy_move(state, proposal_ordinal) -> (post-selection StrategyState, StrategySelection)",
+    "resolve_strategy_selection(state, proposal_ordinal, outcome) -> StrategyState",
+    "strategy_state_json(state) -> canonical bytes",
+    "parse_strategy_state_json(bytes_or_str) -> validated StrategyState",
+    "strategy_state_sha256(state) -> lowercase SHA-256",
+    "verify_strategy_state_sha256(state, expected_sha256) -> deep validated StrategyState"
+  ],
+  "base_commit": "2fee93fa71cb9e56cf777e36a25c6589f6fe5c88",
+  "branch": "feat/luna-m0-thompson",
+  "checks": {
+    "bounded_focused_pytest": {
+      "command": "uv run --frozen --extra dev pytest tests/test_director_strategy.py -q -W error",
+      "exit_code": 0,
+      "result": "11 passed",
+      "service": "swapp-luna-strategy-receipt-pytest-1790452773.service"
+    },
+    "bounded_mypy": {
+      "command": "uv run --frozen --extra dev mypy --strict lab/director/strategy.py",
+      "exit_code": 0,
+      "result": "Success: no issues found in 1 source file"
+    },
+    "bounded_ruff": {
+      "command": "uv run --frozen --extra dev ruff check lab/director/strategy.py tests/test_director_strategy.py",
+      "exit_code": 0
+    },
+    "bounded_ruff_format": {
+      "command": "uv run --frozen --extra dev ruff format --check lab/director/strategy.py tests/test_director_strategy.py",
+      "exit_code": 0,
+      "result": "2 files already formatted"
+    },
+    "clean_base_patch_apply_check_exit_code": 0,
+    "clean_base_patch_stderr": "",
+    "diff_check_exit_code": 0,
+    "unit_limits": "MemoryMax=1G, MemorySwapMax=0, CPUQuota=50%, TasksMax=64, RuntimeMaxSec=240; one bounded systemd user unit per check"
+  },
+  "files": {
+    "docs/ai-scientist/adr/0016-replayable-thompson-strategy.md": "602b40c4b2c2e90e3c61b92638b9c28eb74c3455c457e75c53c992d0ea8d82bb",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "tests/test_director_strategy.py": "b956eb4ffb3774f5087b91b387ba32ef1445f082eb316c5ed4b4dd19516ea5d1"
+  },
+  "integration_boundary": {
+    "explore_family_proof": "phase-entry family change via trusted candidate AST/import lineage; no ten-distinct-family requirement",
+    "loop_or_cli_modified": false,
+    "loop_persistence_and_provider_wiring": "separate integration required"
+  },
+  "patch": {
+    "bytes": 36845,
+    "clean_base_apply_check_exit_code": 0,
+    "path": "docs/ai-scientist/review-evidence/thompson-strategy-final.patch",
+    "sha256": "0fcfcb905fc7af9bf18f5543b9d765d8db21d9344850bd84f90d802070f07297"
+  },
+  "policy": {
+    "abandonment": "decay only; consumes one resolved experiment; no reward",
+    "fairness": "initial one-per-type warmup; then force oldest-due missing type from prior 19 selections so each rolling 20 contains all nine",
+    "gamma": 0.97,
+    "gamma_step": "once per completed candidate/policy outcome or explicit abandonment",
+    "infrastructure": "no resolution API value; preserve pending intent and posterior",
+    "prior": "Beta(1,1) per type",
+    "types": [
+      "hparam",
+      "preprocess",
+      "features",
+      "regime",
+      "detector",
+      "fusion",
+      "alarm_policy",
+      "simplify",
+      "skill_reuse"
+    ]
+  },
+  "rng": {
+    "algorithm": "versioned SplitMix64, Marsaglia-Tsang Gamma, Box-Muller normal sampler",
+    "all_thompson_scores_persisted": true,
+    "known_vector": "SplitMix64(0) -> state 0x9e3779b97f4a7c15, output 0xe220a8397b1dcdaf",
+    "pending_intent_persisted_before_provider": "caller boundary documented; loop wiring deferred",
+    "seed_and_before_after_state_persisted": true
+  },
+  "schema": "thompson-strategy-delivery.v2",
+  "state_contract": {
+    "canonical_json_sha256": true,
+    "deep_validated_copy_on_hash_verification": true,
+    "initial_coverage_states_9_through_20_guard": true,
+    "nested_state_revalidated_at_transition_boundaries": true,
+    "persisted_window_coverage_guard": true
+  },
+  "status": "pure_strategy_frozen_pending_root_integration",
+  "stdout": {
+    "path": "docs/ai-scientist/review-evidence/thompson-strategy-final-stdout.txt",
+    "sha256": "a9ac8d942ef5658d54af7fced9ae2d3159a018713c46a64317369ac6c7dd879e"
+  }
+}

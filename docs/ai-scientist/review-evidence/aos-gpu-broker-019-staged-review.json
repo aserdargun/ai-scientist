@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-09-25T05:40:50.066860+00:00",
+  "scope": "Pre-commit staged source hashes and whitespace check. Unified patch blank context lines require one leading space; preserve exact patch bytes. No global whitespace rule change.",
+  "full_diff_check_exit_code": 2,
+  "patch_blank_context_line_numbers": [
+    1102,
+    1104,
+    1548,
+    1774,
+    1775,
+    1794,
+    1795,
+    1860,
+    3672,
+    3673,
+    3691,
+    3724,
+    3725,
+    3739,
+    3766,
+    3767,
+    3786
+  ],
+  "all_flags_are_required_blank_patch_context": true,
+  "non_patch_diff_check_exit_code": 0,
+  "non_patch_stdout": "",
+  "non_patch_stderr": "",
+  "staged_gated_source_differences": [],
+  "all_passed": true
+}

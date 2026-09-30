@@ -1,0 +1,109 @@
+{
+  "schema": "swapp-review-evidence.v1",
+  "task": "care-calibration-031-lifecycle-and-isolated-sql-proof-source-review",
+  "reviewer": "GPT-6 Astra / high",
+  "review_date": "2026-09-27",
+  "execution": false,
+  "worktree": "data/runtime/parallel-m0/calibration-031",
+  "integration_decision": "changes_required_pending_refreeze",
+  "source_hashes_reviewed": {
+    "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+    "lab/db/migrations/versions/0023_care_calibration_execution.py": "df6feda634500c707fa423cb0cb5cd4984ecb3745dae55c3805191e5aacbd88f",
+    "lab/scorer/care_calibration.py": "ca34ad87b89e92ccc7ea360cee070b78991527e9eda4cb3d032baf86cbf3a619",
+    "lab/scorer/care_calibration_supervisor.py": "bf4e854995734ce630033084f48705d8e42f2e2b94994b6ab214b830bd9060dd",
+    "lab/scorer/care_calibration_worker.py": "aeff7541396454924e8434ea76170e750cf06e4bd351ee65d9426b0485aa53ea",
+    "tests/test_postgres_care_calibration.py": "ec360ba4357dd27fffdd0fca7af8ee6bb142cb6a6cc04a21f1d3898105602277"
+  },
+  "review_runner": {
+    "path": "docs/ai-scientist/review-evidence/review_care_calibration031_pg.py",
+    "sha256": "444f625efd67295a60973bf29ca92efb3f476022f482aeb980814d3b4a7976db",
+    "source_decision": "no_additional_runner_source_blocker_found",
+    "controls": [
+      "Explicit execution flag; fixed private source and single live-marked SQL target; byte-verified source snapshot and post-run parity.",
+      "New UUID-named and labeled container, local PostgreSQL image resolved to immutable image ID, loopback-only dynamic host port.",
+      "Private generated credentials and four independent roles; database, role, server address, port and postmaster generation checked before test.",
+      "PostgreSQL: 512 MiB RAM, no additional swap, 0.5 CPU, 64 pids, 256 MiB data tmpfs, bounded statement and lock timeout.",
+      "Runner verifies outer 1 GiB RAM, zero swap, 0.5 CPU, 64 tasks; 300-second total deadline with 45-second cleanup reserve.",
+      "Cleanup verifies exact ID and ownership label before stopping/removing only the fixture container. Cleanup failure preserves failing exit status."
+    ],
+    "execution_authorized_by_this_artifact": false,
+    "scope": "Synthetic role-separated SQL contract only. No candidate training, baseline measurement, Scorer service, GPU, local model or AOS proof."
+  },
+  "findings": [
+    {
+      "id": "null-generation-sql-fence",
+      "severity": "blocking_product_contract",
+      "source": "lab/db/migrations/versions/0023_care_calibration_execution.py",
+      "locations": [390, 457, 514],
+      "finding": "bind, fail and complete compare claim.generation <> p_generation. SQL NULL yields UNKNOWN and fails to reject a missing expected generation. Python adapters do not repair the SQL authorization boundary.",
+      "minimal_fix": "Use IS DISTINCT FROM and reject malformed required identity arguments. Add direct Scorer-role NULL-generation tests asserting rejection and unchanged claim, budget, receipt and control rows."
+    },
+    {
+      "id": "terminal-receipt-before-worker-drain",
+      "severity": "blocking_product_lifecycle",
+      "source": "lab/scorer/care_calibration_supervisor.py:203",
+      "finding": "Recovery returns succeeded/failed solely from claim state before observing the recorded worker. After receipt commit but before worker teardown, a resumed grid driver can start the next claim while the old worker still holds the process admission lock. capacity_busy then terminally fails that next claim and the calibration.",
+      "minimal_fix": "Retain the committed terminal receipt, but return pending until exact recorded worker/cgroup/sandbox drain is verified; then report terminal success/failure to the grid driver. Cover live-terminal, drained-terminal and uncertain-identity observations without rewriting the terminal receipt."
+    },
+    {
+      "id": "transient-scorer-contention",
+      "severity": "blocking_shared_host_progress",
+      "source": "lab/scorer/care_calibration_worker.py:65",
+      "finding": "Neither the CLI calibration driver nor the supervisor guarantees that the host Scorer P1 admission lock is free. One legitimate busy observation immediately returns capacity_busy; the supervisor then fails the reserved cell and entire calibration.",
+      "minimal_fix": "Wait for the same host process admission lock in a bounded short-sleep loop before heavy imports and binding, using the original worker monotonic deadline already clamped to claim/job deadlines. Recompute remaining time after acquisition. Do not reserve again, refund budget, increment generation or introduce another attempt. Test busy-to-available and busy-through-original-deadline."
+    },
+    {
+      "id": "worker-result-calibration-identity",
+      "severity": "nonblocking_consistency",
+      "source": "lab/scorer/care_calibration_supervisor.py:119",
+      "finding": "Worker result parser requires a calibration_id key but does not compare its value to the expected calibration. Authoritative database checks already bind actual execution to calibration_id, so no cross-calibration execution bypass was demonstrated.",
+      "minimal_fix": "Pass the expected calibration_id to the parser and compare it alongside claim_id and generation."
+    },
+    {
+      "id": "freeze-conflict-fixture-exception",
+      "severity": "blocking_sql_fixture",
+      "source": "tests/test_postgres_care_calibration.py:417",
+      "finding": "Fixture expects ValueError for conflicting freeze. The new SQL finalizer raises P0001 through SQLAlchemy DBAPIError and the Python helper does not translate it.",
+      "minimal_fix": "Assert DBAPIError plus P0001 and the exact freeze-conflict message."
+    },
+    {
+      "id": "direct-cell-insert-fixture-privilege",
+      "severity": "blocking_sql_fixture",
+      "source": "tests/test_postgres_care_calibration.py:542",
+      "finding": "Fixture expects direct Scorer INSERT to reach the sealed-cell trigger. Migration 0023 revokes this INSERT permission, so PostgreSQL returns 42501 before trigger execution.",
+      "minimal_fix": "Assert privilege denial for direct insertion. Exercise immutable receipt conflict separately through the authorized completion function."
+    }
+  ],
+  "positive_source_findings": [
+    "Exact task/algorithm/seed unique claim prevents a second reservation for the same cell. Existing-claim replay does not refund or charge again.",
+    "15 immutable tasks times three fixed algorithms times seeds 0,1,2 bounds the grid at 135 claims; fixed 100-second reservations total 13500 seconds within the 14400-second job cap.",
+    "Reservation, binding, receipt publication and finalization use the persisted absolute database deadline. Repeated provision does not create a new deadline.",
+    "Control/job/claim row locking serializes admission and terminal receipt publication. A receipt and its succeeded claim are committed atomically.",
+    "Completion validates generation, invocation, task provenance, deadline and control eligibility; exact previously committed receipt replay is allowed after deadline without producing another row.",
+    "Worker runs in the aggregate Scorer slice with 2 GiB memory, zero swap, one CPU, 32 tasks, fixed runtime bound and host process admission lock. Candidate container has independent 2 GiB/one CPU/64-pid bounds and fixed pinned image.",
+    "Claim execution rereads durable time after loading inputs and checks admission before sandbox phases. SQL rejects late publication.",
+    "Failure reconciliation uses recorded boot/PID/start identity, exact systemd invocation/cgroup and owned sandbox marker protocol. Unavailable boot identity remains unresolved."
+  ],
+  "verification_status": {
+    "worker_reported": "14 pure tests, Ruff, py_compile and strict mypy of seven runtime files passed using explicit private PYTHONPATH.",
+    "reviewer_test_execution": false,
+    "isolated_postgresql_execution": false,
+    "real_calibration_execution": false,
+    "note": "Initial freeze was lifted by root for these findings. Corrections require fresh source hashes and follow-up source review before an integration approval."
+  },
+  "next_required_research_restart_slice": {
+    "basis": "docs/ai-scientist/35-director-restart-scope-review.md",
+    "first_slice": "Unify queued dispatch and raw lab run behind one owner-aware entrypoint. Add immutable owner-generation history and a current-owner pointer for the same admitted research intent, with a migration numbered after the reserved 0024 baseline migration.",
+    "transaction_boundary": "Every Director mutation, Planner admission and late completion/failure must verify the expected generation in its committing transaction under the same lock order as takeover. Heartbeat on another connection is insufficient.",
+    "recovery_boundary": "Permit a new generation only after exact old-owner and owned-child drain, current-run/nonterminal/no-stop checks and unchanged suite/harness/image/provider pins. Preserve global admission limits.",
+    "rollout": "Keep continuation unavailable until all mutation sites are fenced. Then wire durable absolute deadline, nonrefundable one-retry reservation and pre-Scorer evaluation evidence into existing component checkpoint replay.",
+    "minimal_acceptance": [
+      "Two recovery contenders yield one new generation.",
+      "Old generation cannot append, dispatch or terminalize after takeover.",
+      "Stop wins against recovery and prevents new work.",
+      "Raw CLI cannot bypass current owner/global admission.",
+      "Subsequent continuation proof preserves budget and retry allowance across real process loss."
+    ],
+    "scope_note": "Standalone baseline admission/CLI is independent work. Existing component checkpoint replay does not close the required research restart/reconcile obligation."
+  }
+}

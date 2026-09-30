@@ -1,0 +1,17 @@
+{
+  "schema": "parallel-source-copy.v1",
+  "source_worktree": "data/runtime/parallel-m0/recovery",
+  "source_sha256": {
+    "lab/cli.py": "fe5c9e7ad9bd18a5f8a54266641c3b6fd7d4813e10452663b8e008671c0a3e31",
+    "lab/director/recovery.py": "f4ff16b1c15650d742b4e18cf74e97a5ff5e60a5156440dcaff804f362d08c12",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "tests/test_director_dispatch_owner.py": "ef0af84295ed9f2c776f595cd138da4090f5f2bf4f3358d035df8e37d3723a24",
+    "tests/test_director_recovery_identity.py": "3b092c3729463b1a00c3e3c5ed3872de0b9e48e513c1a7e1c9695471f361c656",
+    "tests/test_director_recovery_pg_review.py": "9671220d6e5d5761cb2fd6c0eba0d8a97f195c2905050cd48627ba02f8a99ce7",
+    "tests/director_recovery_owner.py": "39546a578338de5154cb821108254e13ae84a8b027f0d3a9d4c3fe1a109dff0d",
+    "tests/director_dispatch_owner_review.py": "bfb556a9be13dfc91d87720841cf416721e7348d1d186e61063a3f3cd5b42054"
+  },
+  "byte_parity": true,
+  "quality_gate": "pending",
+  "scope": "Recovery slice only; no main database migration performed."
+}

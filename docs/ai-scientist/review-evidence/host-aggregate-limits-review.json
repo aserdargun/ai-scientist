@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-09-24T11:06:53.610674+00:00",
+  "slice": "swapp_review_aggregate_296e17579d664fefa308987c7ec5014b.slice",
+  "units": [
+    "swapp-review-aggregate-296e17579d664fefa308987c7ec5014b-0.service",
+    "swapp-review-aggregate-296e17579d664fefa308987c7ec5014b-1.service"
+  ],
+  "scope": "Only two owned CPU fixture services. Measures effective parent cgroup limits; no AOS, model, GPU or database changes.",
+  "checks": {
+    "parent_memory_cap": true,
+    "parent_swap_disabled": true,
+    "parent_cpu_cap": true,
+    "parent_tasks_cap": true,
+    "distinct_workers": true,
+    "both_share_capped_parent": true,
+    "both_alive": true,
+    "workers_finished": true,
+    "own_cgroup_removed": true
+  },
+  "create_exit_code": 0,
+  "workers": [
+    {
+      "pid": 823190,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp_review_aggregate_296e17579d664fefa308987c7ec5014b.slice/swapp-review-aggregate-296e17579d664fefa308987c7ec5014b-0.service"
+    },
+    {
+      "pid": 823191,
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp_review_aggregate_296e17579d664fefa308987c7ec5014b.slice/swapp-review-aggregate-296e17579d664fefa308987c7ec5014b-1.service"
+    }
+  ],
+  "aggregate_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp_review_aggregate_296e17579d664fefa308987c7ec5014b.slice",
+  "aggregate_values": {
+    "memory.max": "134217728",
+    "memory.swap.max": "0",
+    "cpu.max": "25000 100000",
+    "pids.max": "24",
+    "memory.current": "45830144",
+    "pids.current": "2"
+  },
+  "worker_exit_codes": [
+    0,
+    0
+  ],
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_host_aggregate_limits.py",
+  "script_sha256": "1f86b72d7ee64d0f6b66442c87f7e5e76dbd02688836ffe158b79a52e5673e0a"
+}

@@ -1,0 +1,36 @@
+{
+  "task": "SWAPP AI Scientist local console frontend",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lab-console",
+  "base_commit": "e35ff20bdbe8e8ab6d59f3804b64feda6a092679",
+  "source_root": "console/web",
+  "changes_after_browser_qa_v2": [
+    "At mobile widths up to 640 px, render navigation in a two-column grid so all four destinations are visible.",
+    "Simplify the CPU check start notice; the user is already taken to the System screen."
+  ],
+  "build": {
+    "command": "systemd-run --user --scope --quiet -p MemoryMax=1G -p CPUQuota=50% -p TasksMax=64 npm run build",
+    "working_directory": "console/web",
+    "exit_code": 0,
+    "result": "passed (tsc -b and Vite production build)",
+    "stdout_file": "delivery/console-web-build.stdout.txt",
+    "resource_limits": { "memory_max": "1G", "cpu_quota": "50%", "tasks_max": 64 }
+  },
+  "files_sha256": {
+    "console/web/index.html": "60e857d16565218bc2a321d33b284b2b8b531ca6c271b33668b283063f0f8f39",
+    "console/web/package.json": "054bc80acbd8219fdea42dcd90792e167777a72f3369c47e23b58c8b6ac6d8f5",
+    "console/web/package-lock.json": "7a74829c6b4831772dc37de8b4ca5b450f3346bdc4fc9f22e7dadde827e57d6e",
+    "console/web/vite.config.ts": "9862e2a11c19c935b17845ae1279b5538027f5f11f14498f7917edace1581d84",
+    "console/web/tsconfig.json": "b6d51d37a8d51b993bd758b7043fa9233eea24d34a4041198ff73c063d9ed66c",
+    "console/web/tsconfig.app.json": "91404fc532d648f70245d8e2025abac3e551db6620dcea8b6bd22674ebb75186",
+    "console/web/src/main.tsx": "ccf1fc2573a4c95438256256e8e415cc3fd674ffb4fa409258d3bc72561c900e",
+    "console/web/src/ui/App.tsx": "6b7634f0e65493427cb686f4e61759822b97ea71b91ada68d14b8ee177f78e12",
+    "console/web/src/ui/api.ts": "b2061e79bf6b737bffc0fbdd954f8b3cded5e9123bc2211b30e6d5623caa3c12",
+    "console/web/src/ui/styles.css": "537f08cb22b158324a707cd81dc0ae4814a03e0d7c0e268def20dedfacb52f09",
+    "console/web/src/ui/types.ts": "2852573856a2320ff9e254a3d88e3b7f265e55b5292f8d7cc3625bc89e8bbaa4",
+    "console/web/dist/index.html": "273c56b1b4143017b1accd34cafd8ca809d366a0bfc8360c9d4dc71a20b03b11",
+    "console/web/dist/assets/index-BI2AH9qC.js": "f210ab0a31b965d60195747e231910d7c119dd5cc3af21a693da351854e2bbfc",
+    "console/web/dist/assets/index-CMCPyCez.css": "f948cc3361438199ba9d536eb4fa4db53254edb13fa256285848916be31d11cf"
+  },
+  "excluded": ["node_modules"],
+  "commit_created": false
+}

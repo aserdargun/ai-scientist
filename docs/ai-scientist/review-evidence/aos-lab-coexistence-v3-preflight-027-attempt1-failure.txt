@@ -1,0 +1,7 @@
+{"status": "failed", "error_type": "ValueError", "gpu_called": false}
+DRIVER_EXIT_CODE=1
+
+Preflight used relative paths for the AOS interpreter. The driver requires its exact reviewed
+absolute interpreter pin. The corrected absolute-path invocation is recorded in
+aos-lab-coexistence-v3-final-preflight-after-quarantine-027.stdout.txt and passed with only
+the expected shared-broker blockers.

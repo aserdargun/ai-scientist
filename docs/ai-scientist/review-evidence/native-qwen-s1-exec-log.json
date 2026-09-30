@@ -1,0 +1,6 @@
+{
+  "source_review_sha256": "e711d35a9926f0c6a41c90d056d947c3b3c5ce8070c87fde9f2ea6fe30e6193a",
+  "log_sha256": "af7c55964ca314852fd13872d99b306a9d1d45887c573390573c37fee039403f",
+  "log_text": "usage: vllm [-h] [-v]\n            {chat,complete,serve,launch,bench,collect-env,run-batch} ...\nvllm: error: unrecognized arguments: --disable-log-requests\n",
+  "scope": "Exact short local vLLM CLI error; no model loaded."
+}

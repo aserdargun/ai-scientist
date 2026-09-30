@@ -1,0 +1,211 @@
+{
+  "schema": "parallel-migration-chain-main-integration.v1",
+  "scope": "Apply rehearsed 0015->0016->0018 chain; preserve all historical run/data rows.",
+  "database": "swapp_lab",
+  "backup_sha256": "fde25ec8f1a0088b27a8942ab3da3545d5f7fca4ca860fbe23dfd949dd6c8fcf",
+  "rehearsal_sha256": "a3ccdec115663e7a9e52c120740466ab8cb5c8a25494a4d208d89e7c1106f5e5",
+  "source_sha256": {
+    "0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae"
+  },
+  "migration_semantic_parity": {
+    "0016_director_recovery.py": {
+      "rehearsed_sha256": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+      "integrated_sha256": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+      "exact_python_ast_parity": true
+    },
+    "0018_public_task_semantics.py": {
+      "rehearsed_sha256": "b22838af02241fcfd03a282552536b06712595462da62eb93cff99d3b3556b17",
+      "integrated_sha256": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+      "exact_python_ast_parity": true
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "alembic",
+        "-c",
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/main-migration-006350c2f1b54cd3987f442ed81e35f5/alembic.ini",
+        "downgrade",
+        "0015_external_run_mapping"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running downgrade 0018_public_task_semantics -> 0015_external_run_mapping, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running downgrade 0018_public_task_semantics -> 0015_external_run_mapping, Store family-specific public task timing and masks behind the Scorer role.\n"
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "alembic",
+        "-c",
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/main-migration-006350c2f1b54cd3987f442ed81e35f5/alembic.ini",
+        "upgrade",
+        "0018_public_task_semantics"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\n"
+    }
+  ],
+  "checks": {
+    "all_commands_exit_zero": true,
+    "exact_rehearsed_final_state": true,
+    "all_original_table_bytes_preserved": true,
+    "both_new_recovery_tables_empty": true,
+    "director_view_grant_preserved": true
+  },
+  "before": {
+    "tables": {
+      "lab.alembic_version": {
+        "count": 1,
+        "sha256": "7808c00d18c5421e04f3f55a6e73702bc09ce1ebcf2b56620dc05660e0eb7de1"
+      },
+      "lab.baseline_calibrations": {
+        "count": 1,
+        "sha256": "96b4019f55c8084661e80a2a220d1afc5756b1f535bf9f96cdf61be68c4c6eb8"
+      },
+      "lab.experiment_records": {
+        "count": 6,
+        "sha256": "071c857465d45c00cdfe527a75cf4f827b064980a3c9a9e3b02c56a05a8b69ad"
+      },
+      "lab.experiments": {
+        "count": 7,
+        "sha256": "acf302c4e72b4b7387f5d9d080171b50c71541eecdac45627fd60ddf8d665522"
+      },
+      "lab.reports": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "lab.run_events": {
+        "count": 119,
+        "sha256": "7c8273a8ead1d92e9c8a4165a0f6f5163295cb6c9541159c49b2cc397976cf77"
+      },
+      "lab.runs": {
+        "count": 2,
+        "sha256": "29bfff2db4820186e51aacf69e1307668e2d378474540402f5037f576b71ddd5"
+      },
+      "lab.trajectory_records": {
+        "count": 6,
+        "sha256": "5f9c8ed20e1fef9e353deb96ab2551f7fc19fdde92d5b06d04663551759d01be"
+      },
+      "scorer.dataset_labels": {
+        "count": 1024,
+        "sha256": "e0936123b2b8f3acf610e940fd8e88c15bea9005cff8b9db51e1950928ba3d08"
+      },
+      "scorer.dataset_profiles": {
+        "count": 8,
+        "sha256": "f7d81e95f6dc6f0b9b49310522a5553ee5724d00a709819a734fca66d621a638"
+      },
+      "scorer.dataset_task_semantics": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scorer.run_tasks": {
+        "count": 68,
+        "sha256": "36a6f64cbda84f5137e4ddc4d7bb1bd0454c5f5d5cdfe423b837b0021f4a2dd9"
+      },
+      "scorer.score_jobs": {
+        "count": 67,
+        "sha256": "ff078165a613ba81d47d7dd82d80c0c05d8f717e70bb2f1f4458994a183ed772"
+      },
+      "scorer.task_completions": {
+        "count": 67,
+        "sha256": "cd6c2d97eece6b05632e2fa40698e0c83e524ebeeb7403fc4cc9d0916524297d"
+      },
+      "scorer.task_scores": {
+        "count": 67,
+        "sha256": "db3b16259c352120ae4f22ad76fd8cad13585a775eca6282b478be7d773c3d31"
+      },
+      "scorer.task_terminal_outcomes": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "revision": "0018_public_task_semantics",
+    "director_view_grant": true
+  },
+  "temporary_directory": "data/runtime/parallel-m0/main-migration-006350c2f1b54cd3987f442ed81e35f5",
+  "after": {
+    "tables": {
+      "lab.alembic_version": {
+        "count": 1,
+        "sha256": "7808c00d18c5421e04f3f55a6e73702bc09ce1ebcf2b56620dc05660e0eb7de1"
+      },
+      "lab.baseline_calibrations": {
+        "count": 1,
+        "sha256": "96b4019f55c8084661e80a2a220d1afc5756b1f535bf9f96cdf61be68c4c6eb8"
+      },
+      "lab.director_recoveries": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "lab.director_run_owners": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "lab.experiment_records": {
+        "count": 6,
+        "sha256": "071c857465d45c00cdfe527a75cf4f827b064980a3c9a9e3b02c56a05a8b69ad"
+      },
+      "lab.experiments": {
+        "count": 7,
+        "sha256": "acf302c4e72b4b7387f5d9d080171b50c71541eecdac45627fd60ddf8d665522"
+      },
+      "lab.reports": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "lab.run_events": {
+        "count": 119,
+        "sha256": "7c8273a8ead1d92e9c8a4165a0f6f5163295cb6c9541159c49b2cc397976cf77"
+      },
+      "lab.runs": {
+        "count": 2,
+        "sha256": "29bfff2db4820186e51aacf69e1307668e2d378474540402f5037f576b71ddd5"
+      },
+      "lab.trajectory_records": {
+        "count": 6,
+        "sha256": "5f9c8ed20e1fef9e353deb96ab2551f7fc19fdde92d5b06d04663551759d01be"
+      },
+      "scorer.dataset_labels": {
+        "count": 1024,
+        "sha256": "e0936123b2b8f3acf610e940fd8e88c15bea9005cff8b9db51e1950928ba3d08"
+      },
+      "scorer.dataset_profiles": {
+        "count": 8,
+        "sha256": "f7d81e95f6dc6f0b9b49310522a5553ee5724d00a709819a734fca66d621a638"
+      },
+      "scorer.dataset_task_semantics": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scorer.run_tasks": {
+        "count": 68,
+        "sha256": "36a6f64cbda84f5137e4ddc4d7bb1bd0454c5f5d5cdfe423b837b0021f4a2dd9"
+      },
+      "scorer.score_jobs": {
+        "count": 67,
+        "sha256": "ff078165a613ba81d47d7dd82d80c0c05d8f717e70bb2f1f4458994a183ed772"
+      },
+      "scorer.task_completions": {
+        "count": 67,
+        "sha256": "cd6c2d97eece6b05632e2fa40698e0c83e524ebeeb7403fc4cc9d0916524297d"
+      },
+      "scorer.task_scores": {
+        "count": 67,
+        "sha256": "db3b16259c352120ae4f22ad76fd8cad13585a775eca6282b478be7d773c3d31"
+      },
+      "scorer.task_terminal_outcomes": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "revision": "0018_public_task_semantics",
+    "director_view_grant": true
+  },
+  "passed": true,
+  "script_sha256": "c98fcf1f22d18a8c7e2169b79a4f7297bdc5bf1749780b6c4d9a4589252de3c9"
+}

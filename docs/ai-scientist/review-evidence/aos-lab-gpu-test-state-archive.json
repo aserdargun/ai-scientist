@@ -1,0 +1,20 @@
+{
+  "scope": "Only owned, stopped test state archived; all four model cgroups empty, all test units absent, four tickets done and no active owner. Databases preserved byte-for-byte.",
+  "review_owner": "81beb84d89ec4783a457b9c627507904",
+  "archives": {
+    "runtime": {
+      "path": "data/runtime/gpu-model-review-81beb84d89ec4783a457b9c627507904/owned-state-after/runtime",
+      "files_sha256": {
+        "review-owner": "7f3135a58c5fe3d4306e661830b1a7d0be0460ee25d2271f6807413bc49e285a"
+      }
+    },
+    "persistent": {
+      "path": "data/runtime/gpu-model-review-81beb84d89ec4783a457b9c627507904/owned-state-after/persistent",
+      "files_sha256": {
+        "review-owner": "7f3135a58c5fe3d4306e661830b1a7d0be0460ee25d2271f6807413bc49e285a",
+        "arbiter.sqlite3": "28e99527c93162ffaa69bba5254f48173e59df5b9ca78f8bbd7d3d2652e06169"
+      }
+    }
+  },
+  "source_evidence_sha256": "2f624eb8888123bc7b63371280367d43ce7d2caa63af1fc861adfacd6709e937"
+}

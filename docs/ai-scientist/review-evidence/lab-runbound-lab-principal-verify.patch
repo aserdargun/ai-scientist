@@ -1,0 +1,178 @@
+diff --git a/lab/llm/gpu_scheduler.py b/lab/llm/gpu_scheduler.py
+index ace5fe0..7a1c82e 100644
+--- a/lab/llm/gpu_scheduler.py
++++ b/lab/llm/gpu_scheduler.py
+@@ -241,7 +241,15 @@ class SystemdPrincipalResolver:
+         return PrincipalReceipt(owner, identity, self._units[owner], invocation)
+ 
+     def verify(self, receipt: PrincipalReceipt) -> bool:
+-        if receipt.owner not in self._units or receipt.unit != self._units[receipt.owner]:
++        if receipt.owner not in self._units:
++            return False
++        if receipt.unit != self._units[receipt.owner] and not (
++            receipt.owner == "lab"
++            and re.fullmatch(
++                r"swapp-ai-scientist-director-dispatch-[0-9a-f]{32}\.service",
++                receipt.unit,
++            )
++        ):
+             return False
+         if not _process_identity_alive(receipt.identity):
+             return False
+diff --git a/tests/test_gpu_scheduler.py b/tests/test_gpu_scheduler.py
+index 22ae3a7..d80686f 100644
+--- a/tests/test_gpu_scheduler.py
++++ b/tests/test_gpu_scheduler.py
+@@ -127,9 +127,7 @@ def test_noncanonical_director_units_are_rejected(unit: str) -> None:
+ 
+ def test_principal_verification_keeps_owner_bound_unit_lookup(monkeypatch) -> None:
+     unit = "swapp-ai-scientist-director-dispatch-0123456789abcdef0123456789abcdef.service"
+-    resolver = SystemdPrincipalResolver(
+-        {"aos": "swapp-aos-gpu-review.service", "lab": unit}
+-    )
++    resolver = SystemdPrincipalResolver({"aos": "swapp-aos-gpu-review.service", "lab": unit})
+     identity = _current_process_identity()
+     receipt = PrincipalReceipt("lab", identity, unit, "a" * 32)
+     calls: list[tuple[str, str]] = []
+@@ -153,6 +151,141 @@ def test_principal_verification_keeps_owner_bound_unit_lookup(monkeypatch) -> No
+     assert calls == [(unit, "lab")]
+ 
+ 
++def test_broker_verifies_run_bound_lab_parent_without_changing_fixed_resolution(
++    monkeypatch,
++) -> None:
++    configured_lab = "swapp-lab-gpu-train-" + "1" * 32 + ".service"
++    run_unit = "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service"
++    resolver = SystemdPrincipalResolver(
++        {"aos": "swapp-aos-gpu-review.service", "lab": configured_lab}
++    )
++    identity = ProcessIdentity(31415, 27182, "a" * 36)
++    receipt = PrincipalReceipt("lab", identity, run_unit, "b" * 32)
++    cgroup = f"/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/{run_unit}"
++    calls: list[tuple[str, str]] = []
++
++    def fake_show(unit: str, *, owner: str) -> dict[str, str]:
++        calls.append((unit, owner))
++        return {
++            "LoadState": "loaded",
++            "ActiveState": "active",
++            "InvocationID": "b" * 32,
++            "ControlGroup": cgroup,
++            "MainPID": str(identity.pid),
++        }
++
++    monkeypatch.setattr("lab.llm.gpu_scheduler._systemctl_show", fake_show)
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_identity_alive", lambda seen: seen == identity
++    )
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_cgroup", lambda pid: cgroup if pid == identity.pid else ""
++    )
++
++    assert resolver._units["lab"] == configured_lab
++    assert resolver.verify(receipt)
++    assert calls == [(run_unit, "lab")]
++
++
++@pytest.mark.parametrize(
++    ("owner", "unit", "invocation", "unit_cgroup", "process_matches"),
++    [
++        (
++            "aos",
++            "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service",
++            "b" * 32,
++            None,
++            True,
++        ),
++        (
++            "lab",
++            "swapp-ai-scientist-director-dispatch-" + "2" * 31 + "G.service",
++            "b" * 32,
++            None,
++            True,
++        ),
++        ("lab", "swapp-lab-gpu-train-" + "3" * 32 + ".service", "b" * 32, None, True),
++        (
++            "lab",
++            "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service",
++            "c" * 32,
++            None,
++            True,
++        ),
++        (
++            "lab",
++            "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service",
++            "b" * 32,
++            "/user.slice/other",
++            True,
++        ),
++        (
++            "lab",
++            "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service",
++            "b" * 32,
++            None,
++            False,
++        ),
++    ],
++)
++def test_run_bound_lab_verification_rejects_wrong_identity_and_namespace(
++    monkeypatch, owner, unit, invocation, unit_cgroup, process_matches
++) -> None:
++    configured_lab = "swapp-lab-gpu-train-" + "1" * 32 + ".service"
++    resolver = SystemdPrincipalResolver(
++        {"aos": "swapp-aos-gpu-review.service", "lab": configured_lab}
++    )
++    identity = ProcessIdentity(31415, 27182, "a" * 36)
++    receipt = PrincipalReceipt(owner, identity, unit, "b" * 32)
++    expected_cgroup = (
++        f"/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/{unit}"
++    )
++
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._systemctl_show",
++        lambda _unit, *, owner: {
++            "LoadState": "loaded",
++            "ActiveState": "active",
++            "InvocationID": invocation,
++            "ControlGroup": unit_cgroup or expected_cgroup,
++            "MainPID": str(identity.pid),
++        },
++    )
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_identity_alive", lambda _seen: process_matches
++    )
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_cgroup",
++        lambda _pid: expected_cgroup if unit_cgroup is None else "/user.slice/other",
++    )
++
++    assert resolver.verify(receipt) is False
++
++
++@pytest.mark.parametrize(
++    "changed_identity",
++    [
++        ProcessIdentity(31416, 27182, "a" * 36),
++        ProcessIdentity(31415, 27183, "a" * 36),
++        ProcessIdentity(31415, 27182, "c" * 36),
++    ],
++)
++def test_run_bound_lab_verification_rejects_dead_or_reused_process_identity(
++    monkeypatch, changed_identity
++) -> None:
++    run_unit = "swapp-ai-scientist-director-dispatch-" + "2" * 32 + ".service"
++    resolver = SystemdPrincipalResolver(
++        {"aos": "swapp-aos-gpu-review.service", "lab": "swapp-lab-gpu-maint.service"}
++    )
++    receipt = PrincipalReceipt("lab", changed_identity, run_unit, "b" * 32)
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_identity_alive",
++        lambda seen: seen == ProcessIdentity(31415, 27182, "a" * 36),
++    )
++
++    assert resolver.verify(receipt) is False
++
++
+ def test_submission_is_idempotent_and_rejects_changed_terms(tmp_path: Path) -> None:
+     scheduler = _scheduler(tmp_path / "gpu.sqlite")
+     _at(scheduler, 10)

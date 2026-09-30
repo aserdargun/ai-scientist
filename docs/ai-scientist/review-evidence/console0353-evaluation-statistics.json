@@ -1,0 +1,407 @@
+{
+  "snapshot": {
+    "source_kind": "private_database",
+    "scoring_available": false,
+    "snapshot_sha256": "e1665e123bbd905b1a0a54bbcc6b05a7da21c6bcb5aea472e543324b700160f3",
+    "source": {
+      "source_id": "synthetic-db-fixture",
+      "source_version": "synthetic-healthy-multiple-seed42-v1",
+      "table": "approved_sensor_view",
+      "timestamp_column": "timestamp",
+      "entity_column": "machine",
+      "entity": "synthetic-machine-01",
+      "start_utc": "2024-01-01T00:00:00Z",
+      "end_utc": "2024-01-01T00:04:48Z",
+      "row_limit": 512,
+      "sampling_seconds": 1,
+      "units": [
+        "a.u.",
+        "a.u."
+      ]
+    },
+    "sensors": [
+      "sensor_a",
+      "sensor_b"
+    ],
+    "rows": 288,
+    "train_rows": 192,
+    "evaluation_rows": 96,
+    "first_utc": "2024-01-01T00:00:00+00:00",
+    "last_utc": "2024-01-01T00:04:47+00:00",
+    "readiness": "pending_scorer_installation"
+  },
+  "partition": "evaluation",
+  "summary": {
+    "schema_version": "descriptive-statistics.v1",
+    "rows": 96,
+    "sensors": [
+      {
+        "name": "sensor_a",
+        "rows": 96,
+        "valid": 96,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0,
+        "longest_constant_run": 1,
+        "statistics": {
+          "minimum": {
+            "value": -0.519699243596648,
+            "reason": null
+          },
+          "maximum": {
+            "value": 2.712797509369658,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.6544921199429261,
+            "reason": null
+          },
+          "median": {
+            "value": 0.09130955051719536,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.2888362117959883,
+            "reason": null
+          },
+          "iqr": {
+            "value": 1.7995570488692638,
+            "reason": null
+          },
+          "p01": {
+            "value": -0.43585976138340815,
+            "reason": null
+          },
+          "p05": {
+            "value": -0.2792262233366564,
+            "reason": null
+          },
+          "p25": {
+            "value": -0.05501117027479179,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.744545878594472,
+            "reason": null
+          },
+          "p95": {
+            "value": 2.411300819152061,
+            "reason": null
+          },
+          "p99": {
+            "value": 2.6523216047729283,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.9787598105997135,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.9579707668451871,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.7432575229141095,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -1.144629498558783,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": 0.000574504322497456,
+            "reason": null
+          }
+        },
+        "histogram_counts": [
+          10,
+          25,
+          22,
+          7,
+          0,
+          0,
+          0,
+          3,
+          13,
+          8,
+          3,
+          5
+        ],
+        "histogram_edges": [
+          -0.519699243596648,
+          -0.25032451418278917,
+          0.019050215231069645,
+          0.2884249446449284,
+          0.5577996740587873,
+          0.8271744034726461,
+          1.096549132886505,
+          1.3659238623003636,
+          1.6352985917142226,
+          1.9046733211280813,
+          2.1740480505419404,
+          2.443422779955799,
+          2.712797509369658
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": 0.8853520809023873,
+            "reason": null
+          },
+          "2": {
+            "value": 0.8253021029973878,
+            "reason": null
+          },
+          "3": {
+            "value": 0.7786413935209415,
+            "reason": null
+          },
+          "4": {
+            "value": 0.7133828238316889,
+            "reason": null
+          },
+          "5": {
+            "value": 0.6545004289584043,
+            "reason": null
+          },
+          "6": {
+            "value": 0.6092037897087274,
+            "reason": null
+          },
+          "7": {
+            "value": 0.5979228367879583,
+            "reason": null
+          },
+          "8": {
+            "value": 0.5272197072429453,
+            "reason": null
+          },
+          "9": {
+            "value": 0.47227345050416475,
+            "reason": null
+          },
+          "10": {
+            "value": 0.4281492680504901,
+            "reason": null
+          },
+          "11": {
+            "value": 0.3859500617021272,
+            "reason": null
+          },
+          "12": {
+            "value": 0.3278288201126228,
+            "reason": null
+          }
+        }
+      },
+      {
+        "name": "sensor_b",
+        "rows": 96,
+        "valid": 96,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0,
+        "longest_constant_run": 1,
+        "statistics": {
+          "minimum": {
+            "value": -0.4113143480016194,
+            "reason": null
+          },
+          "maximum": {
+            "value": 2.1344673050170186,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.526157273330845,
+            "reason": null
+          },
+          "median": {
+            "value": 0.0942950502734746,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.22109676669052908,
+            "reason": null
+          },
+          "iqr": {
+            "value": 1.4216145688175614,
+            "reason": null
+          },
+          "p01": {
+            "value": -0.34194411486106907,
+            "reason": null
+          },
+          "p05": {
+            "value": -0.22793802162146687,
+            "reason": null
+          },
+          "p25": {
+            "value": -0.04813799285557008,
+            "reason": null
+          },
+          "p75": {
+            "value": 1.3734765759619914,
+            "reason": null
+          },
+          "p95": {
+            "value": 1.9298733269810824,
+            "reason": null
+          },
+          "p99": {
+            "value": 2.113227798870117,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.7781042058554521,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.6054461551699438,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.7457202293967335,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -1.1369469759712734,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": 0.00047980247093131585,
+            "reason": null
+          }
+        },
+        "histogram_counts": [
+          8,
+          27,
+          23,
+          5,
+          1,
+          0,
+          0,
+          3,
+          11,
+          10,
+          3,
+          5
+        ],
+        "histogram_edges": [
+          -0.4113143480016194,
+          -0.1991658769167329,
+          0.012982594168153616,
+          0.2251310652530401,
+          0.43727953633792666,
+          0.6494280074228131,
+          0.8615764785076996,
+          1.0737249495925862,
+          1.2858734206774727,
+          1.4980218917623591,
+          1.7101703628472458,
+          1.9223188339321324,
+          2.1344673050170186
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": 0.8817247780804601,
+            "reason": null
+          },
+          "2": {
+            "value": 0.8236653404453607,
+            "reason": null
+          },
+          "3": {
+            "value": 0.7776828603479901,
+            "reason": null
+          },
+          "4": {
+            "value": 0.7133272457731596,
+            "reason": null
+          },
+          "5": {
+            "value": 0.6521961885525827,
+            "reason": null
+          },
+          "6": {
+            "value": 0.6000813851359049,
+            "reason": null
+          },
+          "7": {
+            "value": 0.590862966522082,
+            "reason": null
+          },
+          "8": {
+            "value": 0.5216171842883107,
+            "reason": null
+          },
+          "9": {
+            "value": 0.46704996717020064,
+            "reason": null
+          },
+          "10": {
+            "value": 0.4228011814646362,
+            "reason": null
+          },
+          "11": {
+            "value": 0.3816543612141988,
+            "reason": null
+          },
+          "12": {
+            "value": 0.32120960475582533,
+            "reason": null
+          }
+        }
+      }
+    ],
+    "pairs": [
+      {
+        "first": "sensor_a",
+        "second": "sensor_b",
+        "valid_pairs": 96,
+        "pearson": {
+          "value": 0.9992033362327462,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.9912371134020618,
+          "reason": null
+        }
+      }
+    ],
+    "timeline": {
+      "column": "timestamp",
+      "valid": 96,
+      "missing": 0,
+      "invalid": 0,
+      "naive": 0,
+      "duplicate_count": 0,
+      "backward_steps": 0,
+      "regular": true,
+      "interval_seconds": {
+        "value": 1,
+        "reason": null
+      },
+      "maximum_gap_seconds": {
+        "value": 1,
+        "reason": null
+      },
+      "gap_count": 0,
+      "reason": null
+    },
+    "notes": [
+      "Descriptive only; no model fitting, interpolation or missing-value imputation.",
+      "Sample standard deviation/variance use ddof=1; kurtosis is unbiased excess kurtosis.",
+      "Correlations use pairwise finite values and do not establish causality.",
+      "Autocorrelation requires an ordered regular UTC grid; missing sensor pairs stay missing."
+    ]
+  }
+}

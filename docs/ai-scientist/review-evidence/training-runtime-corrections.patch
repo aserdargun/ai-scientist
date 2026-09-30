@@ -1,0 +1,690 @@
+--- a/lab/training/maintenance.py
++++ b/lab/training/maintenance.py
+@@ -424,9 +424,8 @@
+         "--property=KillMode=control-group",
+         "--property=OOMPolicy=stop",
+         "--property=NoNewPrivileges=yes",
+-        "--property=PrivateTmp=yes",
+-        "--property=ProtectSystem=strict",
+-        "--property=ReadWritePaths=" + str(TRAIN_STATE_ROOT.resolve()),
++        f"--working-directory={PROJECT_ROOT}",
++        f"--setenv=PYTHONPATH={PROJECT_ROOT}",
+         f"--setenv=SWAPP_TRAIN_OPERATION_ID={operation_id}",
+         f"--setenv=SWAPP_TRAIN_OPERATION={operation}",
+         f"--setenv=SWAPP_LAB_GPU_UNIT={unit}",
+@@ -523,7 +522,7 @@
+     if operation not in {"train_noop", "train_dry_run"}:
+         raise ValueError("unknown training operation")
+     _private_runtime(TRAIN_STATE_ROOT)
+-    native_runtime = _prepare_native_doctor_runtime()
++    _prepare_native_doctor_runtime()
+     environment_identity = (
+         training_environment_identity(metadata_checker=metadata_checker)
+         if operation == "train_dry_run"
+@@ -561,16 +560,6 @@
+         or gpu_runtime_info.st_mode & 0o077
+     ):
+         raise MaintenanceError("private GPU runtime directory is unavailable")
+-    writable_paths = " ".join(
+-        str(path.resolve(strict=True))
+-        for path in (TRAIN_STATE_ROOT, GPU_RUNTIME, resolved_database.parent, native_runtime)
+-    )
+-    readwrite_index = next(
+-        index
+-        for index, argument in enumerate(argv)
+-        if argument.startswith("--property=ReadWritePaths=")
+-    )
+-    argv[readwrite_index] = f"--property=ReadWritePaths={writable_paths}"
+     python_index = argv.index(sys.executable)
+     argv[python_index:python_index] = [
+         f"--setenv=SWAPP_AOS_GPU_UNIT={aos_unit}",
+--- a/lab/training/worker.py
++++ b/lab/training/worker.py
+@@ -102,7 +102,7 @@
+         }
+ 
+ 
+-def _unit_properties(unit: str) -> dict[str, str] | None:
++def _unit_properties(unit: str) -> dict[str, str]:
+     if re.fullmatch(r"swapp-lab-train-job-[0-9a-f]{32}\.service", unit) is None:
+         raise ValueError("training child unit is outside the fixed namespace")
+     result = subprocess.run(  # nosec B603 -- fixed systemctl binary and strict unit allowlist.
+@@ -126,7 +126,7 @@
+         check=False,
+     )
+     if result.returncode != 0:
+-        return None
++        raise MaintenanceError("training child systemd inspection failed")
+     values = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
+     if set(values) != {
+         "LoadState",
+@@ -229,7 +229,7 @@
+                 values = _unit_properties(self.child_unit)
+             except (OSError, subprocess.SubprocessError, MaintenanceError):
+                 return False
+-            if values is None or values["LoadState"] == "not-found":
++            if values["LoadState"] == "not-found":
+                 if not (self.recovery_mode or self.child_finished):
+                     return False
+                 try:
+@@ -244,7 +244,7 @@
+                     if not (self.recovery_mode or self.child_finished):
+                         return False
+                     current = _unit_properties(self.child_unit)
+-                    if current is None or not _matches_generation(current, generation):
++                    if not _matches_generation(current, generation):
+                         return False
+                     stopped = subprocess.run(  # nosec B603 -- exact generation just revalidated.
+                         [SYSTEMCTL, "--user", "stop", self.child_unit],
+@@ -258,7 +258,7 @@
+                     deadline = boottime() + MAX_DRAIN_SECONDS
+                     while boottime() < deadline:
+                         current = _unit_properties(self.child_unit)
+-                        if current is None or current["LoadState"] == "not-found":
++                        if current["LoadState"] == "not-found":
+                             if self.units.cgroup_empty(generation.cgroup):
+                                 break
+                         elif (
+@@ -369,6 +369,19 @@
+     renewed = scheduler.heartbeat(lease)
+     if renewed is None:
+         raise MaintenanceError("training GPU lease expired or was fenced")
++    return renewed
++
++
++def _heartbeat_before_training_start(
++    scheduler: SharedGpuScheduler, lease: GpuLease, execution_deadline: float
++) -> GpuLease:
++    """Refresh ownership and reject a late child before opening its import gate."""
++    renewed = _heartbeat(scheduler, lease)
++    if (
++        boottime() >= execution_deadline
++        or boottime() >= min(renewed.inference_deadline, renewed.total_deadline) - MAX_DRAIN_SECONDS
++    ):
++        raise MaintenanceError("training child start gate is past its lease-bound deadline")
+     return renewed
+ 
+ 
+@@ -474,8 +487,10 @@
+ 
+ 
+ def _training_child_argv(
+-    operation_id: str, result_path: Path, gate_path: Path
++    operation_id: str, result_path: Path, gate_path: Path, *, runtime_seconds: int
+ ) -> tuple[str, list[str]]:
++    if isinstance(runtime_seconds, bool) or not 1 <= runtime_seconds <= _TRAIN_JOB_RUNTIME_SECONDS:
++        raise ValueError("training child runtime exceeds the fixed operation ceiling")
+     child_id = uuid4().hex
+     unit = f"swapp-lab-train-job-{child_id}.service"
+     if re.fullmatch(r"swapp-lab-train-job-[0-9a-f]{32}\.service", unit) is None:
+@@ -492,7 +507,7 @@
+         "--property=MemorySwapMax=0",
+         f"--property=CPUQuota={TRAIN_CPU_PERCENT}%",
+         f"--property=TasksMax={TRAIN_TASKS}",
+-        f"--property=RuntimeMaxSec={_TRAIN_JOB_RUNTIME_SECONDS}",
++        f"--property=RuntimeMaxSec={runtime_seconds}",
+         "--property=KillMode=control-group",
+         "--property=OOMPolicy=stop",
+         "--property=NoNewPrivileges=yes",
+@@ -529,6 +544,17 @@
+     return unit, argv
+ 
+ 
++def _training_child_execution_budget(lease: GpuLease) -> tuple[float, int]:
++    """Reserve drain time inside the scheduler's immutable hard lease deadline."""
++    lease_deadline = min(lease.inference_deadline, lease.total_deadline)
++    execution_deadline = lease_deadline - MAX_DRAIN_SECONDS
++    remaining = execution_deadline - boottime()
++    runtime_seconds = min(_TRAIN_JOB_RUNTIME_SECONDS, math.floor(remaining))
++    if runtime_seconds < 1:
++        raise MaintenanceError("GPU lease has insufficient remaining time for child drain reserve")
++    return execution_deadline, runtime_seconds
++
++
+ def _host_memory_preflight() -> dict[str, int]:
+     values: dict[str, int] = {}
+     try:
+@@ -559,6 +585,7 @@
+     child_unit: str,
+     argv: list[str],
+     operation_id: str,
++    execution_deadline: float,
+     gate_path: Path,
+     ledger: MaintenanceLedger,
+     *,
+@@ -575,16 +602,21 @@
+         close_fds=True,
+     )
+     bound: ChildUnitGeneration | None = None
+-    bind_deadline = boottime() + _CHILD_GATE_SECONDS
++    bind_deadline = min(boottime() + _CHILD_GATE_SECONDS, execution_deadline)
++    next_heartbeat = boottime() + _HEARTBEAT_SECONDS
+     while bound is None:
+         if boottime() >= bind_deadline:
+             raise MaintenanceError("training child generation binding timed out")
++        if boottime() >= next_heartbeat:
++            lease = _heartbeat(scheduler, lease)
++            next_heartbeat = boottime() + _HEARTBEAT_SECONDS
+         values = _unit_properties(child_unit)
+-        if values is not None and values["ActiveState"] in {"activating", "active"}:
++        if values["ActiveState"] in {"activating", "active"}:
+             bound = _child_generation(child_unit, values)
+             ledger.append_event(operation_id, "training_unit_bound", bound.as_json())
+             if isinstance(verifier, _TrainingDrainVerifier):
+                 verifier.generation = bound
++            lease = _heartbeat_before_training_start(scheduler, lease, execution_deadline)
+             _atomic_gate(gate_path, bound, operation_id)
+             break
+         time.sleep(_POLL_SECONDS)
+@@ -592,26 +624,26 @@
+     next_gpu_sample = 0.0
+     start_gpu_memory_mib: int | None = None
+     peak_gpu_memory_mib = 0
+-    deadline = boottime() + _TRAIN_JOB_RUNTIME_SECONDS + MAX_DRAIN_SECONDS
+     while True:
+         process.poll()  # reap the short-lived `systemd-run --no-block` launcher.
+         if not isinstance(verifier, _TrainingDrainVerifier) or bound is None:
+             raise MaintenanceError("training drain verifier or generation is unavailable")
+         values = _unit_properties(child_unit)
+-        if (
+-            values is not None
+-            and values["LoadState"] == "loaded"
+-            and not _matches_generation(values, bound)
+-        ):
++        if values["LoadState"] == "loaded" and not _matches_generation(values, bound):
+             raise MaintenanceError("training child systemd invocation disappeared or changed")
+         result_path = TRAIN_STATE_ROOT / f"{operation_id}.result.json"
+-        result_ready = result_path.exists() or result_path.is_symlink()
++        result_present = result_path.exists() or result_path.is_symlink()
++        result_ready = result_present and boottime() < execution_deadline
+         if result_ready:
+             _read_child_receipt(result_path)
+-        unit_gone = values is None or values["LoadState"] == "not-found"
++        unit_gone = values["LoadState"] == "not-found"
+         if result_ready or unit_gone:
+             verifier.child_finished = True
+-            drain_deadline = boottime() + MAX_DRAIN_SECONDS
++            drain_deadline = min(
++                boottime() + MAX_DRAIN_SECONDS,
++                lease.inference_deadline,
++                lease.total_deadline,
++            )
+             while boottime() < drain_deadline and not verifier(lease):
+                 time.sleep(_POLL_SECONDS)
+             if not verifier(lease):
+@@ -621,8 +653,22 @@
+                 start_gpu_memory_mib = final_gpu.used_memory_mib
+             peak_gpu_memory_mib = max(peak_gpu_memory_mib, final_gpu.used_memory_mib)
+             return lease, (0 if result_ready else 1), peak_gpu_memory_mib, start_gpu_memory_mib
+-        if boottime() >= deadline:
+-            raise MaintenanceError("training unit exceeded its bounded completion deadline")
++        if boottime() >= execution_deadline:
++            verifier.child_finished = True
++            drain_deadline = min(
++                boottime() + MAX_DRAIN_SECONDS,
++                lease.inference_deadline,
++                lease.total_deadline,
++            )
++            while boottime() < drain_deadline and not verifier(lease):
++                time.sleep(_POLL_SECONDS)
++            if verifier(lease):
++                final_gpu = verifier.gpu.snapshot()
++                if start_gpu_memory_mib is None:
++                    start_gpu_memory_mib = final_gpu.used_memory_mib
++                peak_gpu_memory_mib = max(peak_gpu_memory_mib, final_gpu.used_memory_mib)
++                return lease, 1, peak_gpu_memory_mib, start_gpu_memory_mib
++            raise MaintenanceError("training child exceeded its lease-bound execution deadline")
+         if boottime() >= next_heartbeat:
+             lease = _heartbeat(scheduler, lease)
+             next_heartbeat = boottime() + _HEARTBEAT_SECONDS
+@@ -634,7 +680,11 @@
+                 start_gpu_memory_mib = snapshot.used_memory_mib
+             peak_gpu_memory_mib = max(peak_gpu_memory_mib, snapshot.used_memory_mib)
+             child = _unit_properties(child_unit)
+-            if child is None or bound is None or not _matches_generation(child, bound):
++            if (
++                bound is None
++                or child["LoadState"] == "not-found"
++                or not _matches_generation(child, bound)
++            ):
+                 raise MaintenanceError("training child systemd generation changed while running")
+             compute_pids = set(snapshot.process_memory_mib) - set(snapshot.exempt_display_pids)
+             if compute_pids:
+@@ -642,7 +692,7 @@
+                 if not compute_pids <= owned_pids:
+                     # Stop only after rechecking the exact invocation, PID start, and cgroup.
+                     current = _unit_properties(child_unit)
+-                    if current is None or not _matches_generation(current, bound):
++                    if not _matches_generation(current, bound):
+                         raise MaintenanceError(
+                             "refusing to stop a changed training unit generation"
+                         )
+@@ -819,7 +869,13 @@
+                 )
+             if result_path.exists() or result_path.is_symlink():
+                 raise MaintenanceError("training result path already exists")
+-            child_unit, argv = _training_child_argv(operation_id, result_path, gate_path)
++            execution_deadline, child_runtime_seconds = _training_child_execution_budget(lease)
++            child_unit, argv = _training_child_argv(
++                operation_id,
++                result_path,
++                gate_path,
++                runtime_seconds=child_runtime_seconds,
++            )
+             ledger.advance(
+                 operation_id,
+                 expected=("active",),
+@@ -838,6 +894,7 @@
+                 child_unit,
+                 argv,
+                 operation_id=operation_id,
++                execution_deadline=execution_deadline,
+                 gate_path=gate_path,
+                 ledger=ledger,
+             )
+--- a/tests/test_training_maintenance.py
++++ b/tests/test_training_maintenance.py
+@@ -17,12 +17,16 @@
+ from lab.training.worker import (
+     ChildUnitGeneration,
+     _await_training_lease,
++    _heartbeat_before_training_start,
+     _host_memory_preflight,
+     _matches_generation,
+     _read_child_receipt,
+     _recover_orphaned_training,
+     _runtime_inputs,
++    _training_child_argv,
++    _training_child_execution_budget,
+     _TrainingDrainVerifier,
++    _unit_properties,
+ )
+ 
+ 
+@@ -41,6 +45,11 @@
+     assert "--property=CPUQuota=50%" in argv
+     assert "--property=TasksMax=32" in argv
+     assert "--property=NoNewPrivileges=yes" in argv
++    assert "--property=PrivateTmp=yes" not in argv
++    assert "--property=ProtectSystem=strict" not in argv
++    assert not any(argument.startswith("--property=ReadWritePaths=") for argument in argv)
++    assert f"--working-directory={maintenance.PROJECT_ROOT}" in argv
++    assert f"--setenv=PYTHONPATH={maintenance.PROJECT_ROOT}" in argv
+     assert argv[-3:] == [maintenance.sys.executable, "-m", "lab.training.worker"]
+ 
+ 
+@@ -145,9 +154,8 @@
+     with pytest.raises(MaintenanceError, match="completed trusted receipt"):
+         maintenance.dispatch("train_noop", runner=fake_runner)
+     assert len(captured) == 1
+-    rw_paths = next(arg for arg in captured[0] if arg.startswith("--property=ReadWritePaths="))
+-    for expected_path in (state, gpu_root, database.parent, native_runtime):
+-        assert str(expected_path) in rw_paths
++    assert not any(arg.startswith("--property=ReadWritePaths=") for arg in captured[0])
++    assert "--property=NoNewPrivileges=yes" in captured[0]
+ 
+ 
+ def test_wrong_fixed_lab_principal_fails_before_systemd_dispatch(
+@@ -337,6 +345,121 @@
+     )
+ 
+ 
++def test_systemd_inspection_error_is_not_treated_as_missing_unit(monkeypatch) -> None:
++    def failed_inspection(*args, **kwargs):
++        return subprocess.CompletedProcess(args[0], 5, stdout="", stderr="systemctl unavailable")
++
++    monkeypatch.setattr("lab.training.worker.subprocess.run", failed_inspection)
++    with pytest.raises(MaintenanceError, match="inspection failed"):
++        _unit_properties("swapp-lab-train-job-" + "a" * 32 + ".service")
++
++
++def test_explicit_systemd_not_found_is_the_only_missing_unit_signal(monkeypatch) -> None:
++    properties = {
++        "LoadState": "not-found",
++        "ActiveState": "inactive",
++        "ControlGroup": "",
++        "InvocationID": "",
++        "MainPID": "0",
++        "ExecMainCode": "0",
++        "ExecMainStatus": "0",
++    }
++    output = "\n".join(f"{key}={value}" for key, value in properties.items())
++    monkeypatch.setattr(
++        "lab.training.worker.subprocess.run",
++        lambda argv, **kwargs: subprocess.CompletedProcess(argv, 0, stdout=output, stderr=""),
++    )
++    assert _unit_properties("swapp-lab-train-job-" + "b" * 32 + ".service") == properties
++
++
++def test_drain_verifier_rejects_transient_systemd_inspection_failure(monkeypatch) -> None:
++    generation = ChildUnitGeneration(
++        unit="swapp-lab-train-job-" + "c" * 32 + ".service",
++        pid=1234,
++        start_ticks=123,
++        boot_id="d" * 36,
++        invocation_id="e" * 32,
++        cgroup="/swapp-gpu.slice/swapp-lab-train-job-" + "c" * 32 + ".service",
++    )
++
++    class FakeUnits:
++        @staticmethod
++        def cgroup_empty(_: str) -> bool:
++            return True
++
++    class FakeGpu:
++        @staticmethod
++        def snapshot():
++            pytest.fail("GPU snapshot is not read after unit inspection failure")
++
++    verifier = _TrainingDrainVerifier(FakeGpu(), FakeUnits())  # type: ignore[arg-type]
++    verifier.child_unit = generation.unit
++    verifier.generation = generation
++    verifier.child_finished = True
++
++    def failed_inspection(_: str) -> dict[str, str]:
++        raise MaintenanceError("training child systemd inspection failed")
++
++    monkeypatch.setattr("lab.training.worker._unit_properties", failed_inspection)
++    assert not verifier(SimpleNamespace(owner="lab"))  # type: ignore[arg-type]
++
++
++def test_child_runtime_is_limited_by_remaining_inference_lease(monkeypatch, tmp_path: Path) -> None:
++    monkeypatch.setattr("lab.training.worker.boottime", lambda: 100.0)
++    deadline, runtime_seconds = _training_child_execution_budget(
++        SimpleNamespace(inference_deadline=640.0, total_deadline=820.0)  # type: ignore[arg-type]
++    )
++    assert deadline == 640.0 - 30.0
++    assert runtime_seconds == 510
++    _, argv = _training_child_argv(
++        "f" * 32,
++        tmp_path / "result.json",
++        tmp_path / "gate.json",
++        runtime_seconds=runtime_seconds,
++    )
++    assert f"--property=RuntimeMaxSec={runtime_seconds}" in argv
++
++
++def test_child_does_not_launch_without_time_for_owned_drain(monkeypatch) -> None:
++    monkeypatch.setattr("lab.training.worker.boottime", lambda: 100.0)
++    lease = SimpleNamespace(inference_deadline=129.0, total_deadline=200.0)
++    with pytest.raises(MaintenanceError, match="drain reserve"):
++        _training_child_execution_budget(lease)  # type: ignore[arg-type]
++
++
++def test_child_start_gate_requires_live_refreshed_lease_and_remaining_drain_window(
++    monkeypatch,
++) -> None:
++    now = [100.0]
++    monkeypatch.setattr("lab.training.worker.boottime", lambda: now[0])
++    lease = SimpleNamespace(inference_deadline=640.0, total_deadline=820.0)
++
++    class Scheduler:
++        def __init__(self, renewed):
++            self.renewed = renewed
++            self.calls = 0
++
++        def heartbeat(self, supplied):
++            assert supplied is lease
++            self.calls += 1
++            return self.renewed
++
++    scheduler = Scheduler(lease)
++    assert _heartbeat_before_training_start(scheduler, lease, 610.0) is lease  # type: ignore[arg-type]
++    assert scheduler.calls == 1
++
++    late_scheduler = Scheduler(lease)
++    now[0] = 610.0
++    with pytest.raises(MaintenanceError, match="start gate"):
++        _heartbeat_before_training_start(late_scheduler, lease, 610.0)  # type: ignore[arg-type]
++    assert late_scheduler.calls == 1
++
++    fenced_scheduler = Scheduler(None)
++    now[0] = 100.0
++    with pytest.raises(MaintenanceError, match="expired or was fenced"):
++        _heartbeat_before_training_start(fenced_scheduler, lease, 610.0)  # type: ignore[arg-type]
++
++
+ def test_child_cannot_cross_start_gate_without_parent_generation_receipt(tmp_path: Path) -> None:
+     with pytest.raises(RuntimeError, match="did not durably bind"):
+         _await_start_gate(tmp_path / "missing-gate", "9" * 32, timeout_seconds=0)
+--- a/docs/ai-scientist/adr/0015-training-runtime-fencing-corrections.md
++++ b/docs/ai-scientist/adr/0015-training-runtime-fencing-corrections.md
+@@ -0,0 +1,44 @@
++# ADR 0015: Training worker runtime and deadline fencing corrections
++
++Status: implementation prepared; GPU/model acceptance remains pending.
++
++## Corrections
++
++The fixed training dispatcher binds its systemd working directory and
++`PYTHONPATH` to the exact source root discovered from the installed CLI module.
++The service therefore imports the same trusted worker source regardless of the
++caller's shell directory or systemd user-manager defaults. The CPU-only trusted
++maintenance parent retains its fixed principal, `NoNewPrivileges`, and all
++resource ceilings, while omitting mount-namespace properties that remap host
++path owners to UID 65534 and make the existing lexical shared-DB validator
++reject `/home` ancestors. Its DB path is still validated before dispatch and
++again inside the parent. The separate GPU training child retains its offline,
++read-only, private-temporary-directory sandbox.
++
++Child-unit inspection has two distinct outcomes: a successful `systemctl show`
++with `LoadState=not-found` is explicit evidence that a unit is absent; any
++nonzero `systemctl` exit is an inspection failure. Inspection failure blocks
++drain and lease release. It is never treated as an absent child.
++
++The QLoRA child's `RuntimeMaxSec` and parent execution deadline are derived
++from the remaining immutable scheduler inference/total deadline. The worker
++reserves the scheduler's existing maximum 30-second drain window and starts no
++child when less than one second of execution remains after that reserve. The
++shared scheduler limits are not extended. On deadline expiry, the worker
++stops only the persisted child generation and records no measurement unless a
++valid receipt was observed before the cutoff and the unit/GPU drain succeeds.
++
++## Validation boundary
++
++Focused tests cover working-directory/PYTHONPATH binding and the parent/child
++sandbox boundary, inspection
++errors versus explicit not-found, drain-verifier fail-closed behavior, child
++runtime calculation against an inference deadline, and no-launch when the
++drain reserve cannot be met. A separate bounded systemd CPU import probe checks
++the exact project root and shared DB path validator in the trusted parent
++context, with model libraries unimported. An earlier strict-mount probe failed
++closed because systemd presented host path owners as UID 65534; it did not
++weaken path validation. No GPU, model weights, database access, or Docker is
++used by these checks.
++The actual QLoRA path and post-training local S1 smoke still require root
++coordination and are not accepted by this supplement.
+--- a/docs/ai-scientist/review-evidence/training-runtime-import-probe.py
++++ b/docs/ai-scientist/review-evidence/training-runtime-import-probe.py
+@@ -0,0 +1,88 @@
++"""Bounded, model-free probe for the systemd worker import root."""
++
++from __future__ import annotations
++
++import argparse
++import json
++import pathlib
++import sys
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--expected-root", required=True, type=pathlib.Path)
++    args = parser.parse_args()
++
++    import lab.training.worker as worker
++    from lab.training.maintenance import GPU_RUNTIME, PROJECT_ROOT
++    from lab.training.runtime_paths import validated_gpu_runtime_database
++
++    expected_root = args.expected_root.resolve(strict=True)
++    module_path = pathlib.Path(worker.__file__).resolve(strict=True)
++    module_root = expected_root / "lab/training/worker.py"
++    if module_path != module_root:
++        raise RuntimeError("systemd imported the worker from another source root")
++    unexpected_libraries = sorted(
++        name for name in ("torch", "transformers", "unsloth", "vllm") if name in sys.modules
++    )
++    if unexpected_libraries:
++        raise RuntimeError("worker import unexpectedly loaded a model library")
++    gpu_runtime_root = PROJECT_ROOT / "data/runtime/gpu"
++    made_gpu_runtime = not gpu_runtime_root.exists()
++    gpu_runtime_root.mkdir(mode=0o700, parents=True, exist_ok=True)
++    if made_gpu_runtime:
++        gpu_runtime_root.chmod(0o700)
++    test_database = gpu_runtime_root / "arbiter.sqlite3"
++    validated_gpu_runtime_database(
++        test_database,
++        project_root=PROJECT_ROOT,
++        gpu_runtime_root=GPU_RUNTIME,
++    )
++    if test_database.exists() or test_database.is_symlink():
++        raise RuntimeError("path-only DB validation unexpectedly touched the database")
++    if made_gpu_runtime:
++        gpu_runtime_root.rmdir()
++
++    shared_database = pathlib.Path.home() / ".local/state/swapp-gpu/arbiter.sqlite3"
++    if shared_database.parent.exists():
++        try:
++            validated_gpu_runtime_database(
++                shared_database,
++                project_root=PROJECT_ROOT,
++                gpu_runtime_root=GPU_RUNTIME,
++            )
++            shared_status = "provisioned_and_valid"
++        except ValueError:
++            shared_status = "provisioned_but_rejected"
++    else:
++        try:
++            validated_gpu_runtime_database(
++                shared_database,
++                project_root=PROJECT_ROOT,
++                gpu_runtime_root=GPU_RUNTIME,
++            )
++        except ValueError:
++            shared_status = "not_provisioned_rejected"
++        else:
++            raise RuntimeError("absent shared DB directory unexpectedly validated")
++    print(
++        json.dumps(
++            {
++                "cwd": str(pathlib.Path.cwd()),
++                "model_libraries_imported": unexpected_libraries,
++                "module_path": str(module_path),
++                "private_project_database_path_valid": True,
++                "shared_runtime_database_status": shared_status,
++                "schema": "training-runtime-import-probe.v1",
++                "status": "pass",
++                "sys_executable": sys.executable,
++            },
++            sort_keys=True,
++            separators=(",", ":"),
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+--- a/docs/ai-scientist/review-evidence/training-runtime-import-probe.log
++++ b/docs/ai-scientist/review-evidence/training-runtime-import-probe.log
+@@ -0,0 +1,8 @@
++Running as unit: swapp-lab-train-job-881d6558b99c4ddaa87512ee2e2e00da.service
++{"cwd":"/home/cachyos/ai-scientist/data/runtime/parallel-m0/training-supplement-027","model_libraries_imported":[],"module_path":"/home/cachyos/ai-scientist/data/runtime/parallel-m0/training-supplement-027/lab/training/worker.py","private_project_database_path_valid":true,"schema":"training-runtime-import-probe.v1","shared_runtime_database_status":"not_provisioned_rejected","status":"pass","sys_executable":"/home/cachyos/ai-scientist/.venv/bin/python"}
++          Finished with result: success
++Main processes terminated with: code=exited, status=0/SUCCESS
++               Service runtime: 50ms
++             CPU time consumed: 40ms
++                   Memory peak: 11.6M (swap: 0B)
++exit_code=0
+--- a/docs/ai-scientist/review-evidence/training-runtime-focused-check.log
++++ b/docs/ai-scientist/review-evidence/training-runtime-focused-check.log
+@@ -0,0 +1,10 @@
++Running as unit: swapp-luna-train-supplement-final-check-97ae2d5a029548a28bcd3bb5c8a6ff49.service
++........................                                                 [100%]
++24 passed in 0.11s
++Success: no issues found in 6 source files
++          Finished with result: success
++Main processes terminated with: code=exited, status=0/SUCCESS
++               Service runtime: 555ms
++             CPU time consumed: 297ms
++                   Memory peak: 37.7M (swap: 0B)
++exit_code=0
+--- a/docs/ai-scientist/review-evidence/training-runtime-lint-check.log
++++ b/docs/ai-scientist/review-evidence/training-runtime-lint-check.log
+@@ -0,0 +1,64 @@
++Running as unit: swapp-luna-train-supplement-lint-6118ef91b2d047e795df26f9e82058f2.service
++************* Module lab.training.worker
++lab/training/worker.py:1:0: C0302: Too many lines in module (1090/1000) (too-many-lines)
++lab/training/worker.py:224:8: R1702: Too many nested blocks (6/5) (too-many-nested-blocks)
++************* Module lab.training.runtime_paths
++lab/training/runtime_paths.py:39:0: R0912: Too many branches (14/12) (too-many-branches)
++lab/training/runtime_paths.py:1:0: R0801: Similar lines in 2 files
++==lab.training.qlora_step_worker:[65:71]
++==lab.training.worker:[425:431]
++                "unit",
++                "pid",
++                "start_ticks",
++                "boot_id",
++                "invocation_id",
++                "cgroup", (duplicate-code)
++
++------------------------------------------------------------------
++Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
++
++[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: systemd is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: run is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: binary is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: argv is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: pinned is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: executable is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: metadata is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: script is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: deterministic is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: synthetic is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: input is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: systemd is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: Python is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: executables is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: systemctl is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: binary is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: strict is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: unit is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: allowlist is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: exact is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: generation is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: just is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: revalidated is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: exact is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: generation is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: was is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: just is not a test name or id, ignoring
++[manager]	WARNING	Test in comment: revalidated is not a test name or id, ignoring
++          Finished with result: success
++Main processes terminated with: code=exited, status=0/SUCCESS
++               Service runtime: 4.112s
++             CPU time consumed: 2.131s
++                   Memory peak: 100.7M (swap: 0B)
++exit_code=0
+--- a/docs/ai-scientist/review-evidence/training-runtime-strict-mount-negative-probe.log
++++ b/docs/ai-scientist/review-evidence/training-runtime-strict-mount-negative-probe.log
+@@ -0,0 +1,9 @@
++Running as unit: swapp-luna-strict-mount-negative-7c8341a90c944e3a9bb096f28fd81d13.service
++namespace_root_uid 65534 mode 0o555
++expected_validation_result GPU runtime path has an unsafe directory component
++          Finished with result: success
++Main processes terminated with: code=exited, status=0/SUCCESS
++               Service runtime: 33ms
++             CPU time consumed: 21ms
++                   Memory peak: 5.9M (swap: 0B)
++probe_command_exit_code=0 (0 means expected fail-closed rejection observed)

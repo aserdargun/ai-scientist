@@ -1,0 +1,12 @@
+{
+  "schema": "calibration-schema-dialect-review.v1",
+  "prior_schema_sha256": "d267fb761957fecb975020ac3cc994c833127f56d91e2afb9a5388b44abfddea",
+  "fixed_schema_sha256": "80edced3efa28a715a60687d741ec33754ef26e8c8273a6892bcc9f1b1be5115",
+  "postgresql_table_count": 34,
+  "postgresql_create_table_sql_identical": true,
+  "postgresql_ddl_sha256": "19bd14a48177f6579a15d60aeaa04bcab4df79460466e8da2b55765d3f4bb5c2",
+  "change": "Only17 CARE regex CheckConstraints use existing ddl_if(postgresql) pattern; production migrations and PostgreSQL DDL unchanged. SQLite tests exercise the portable metadata subset.",
+  "worker_reported_tests": "46 passed, exit0 under shared CPU cap/lock; root full gate pending",
+  "real_pg_source_evidence": "care-calibration-031-pg-522d4be1021e.json",
+  "no_new_pg_execution": true
+}

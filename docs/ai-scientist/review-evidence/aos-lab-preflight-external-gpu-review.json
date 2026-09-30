@@ -1,0 +1,12 @@
+{
+  "scope": "Read-only follow-up of the exact external PID observed at failed joint-test preflight; no source application attribution and no process signaling.",
+  "utc": "2026-09-25T05:20:05.814352+00:00",
+  "pid": 2705953,
+  "identity": null,
+  "still_present": false,
+  "gpu_mib": null,
+  "total_used_gpu_mib": 62,
+  "shared_test_runtime_exists": false,
+  "fixed_test_state_exists": false,
+  "preflight_evidence_sha256": "a8b1ee1f479b77e236d56ee46305e1cfe3bbcad07a467ddfb33d546958da1930"
+}

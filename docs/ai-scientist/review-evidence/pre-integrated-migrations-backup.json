@@ -1,0 +1,47 @@
+{
+  "schema": "pre-integrated-migrations-backup.v1",
+  "created_at_utc": "2026-09-25T07:21:15.642882+00:00",
+  "scope": "Local private read-only full database snapshot, no schema or role changes.",
+  "database": "swapp_lab",
+  "path": "data/runtime/postgres/pre-integrated-migrations-fecb307f669b427db7fe19346b803399/swapp_lab.dump",
+  "dump_exit_code": 0,
+  "bytes": 181384,
+  "sha256": "fde25ec8f1a0088b27a8942ab3da3545d5f7fca4ca860fbe23dfd949dd6c8fcf",
+  "elapsed_seconds": 0.1584343370050192,
+  "owner_mode": "0o600",
+  "container": "swapp-lab-postgres-m0",
+  "restore_tested": true,
+  "archive_list_exit_code": 0,
+  "archive_object_lines": 177,
+  "passed": true,
+  "restore_database": "swapp_lab_m0_migration_rehearsal_ab103ab3",
+  "create_private_database_exit_code": 0,
+  "restore_exit_code": 0,
+  "restore_counts": {
+    "swapp_lab": {
+      "lab.runs": 2,
+      "lab.experiments": 7,
+      "lab.reports": 0,
+      "scorer.dataset_profiles": 8,
+      "scorer.dataset_labels": 1024,
+      "scorer.task_scores": 67,
+      "scorer.dataset_task_semantics": 0,
+      "revision": [
+        "0018_public_task_semantics"
+      ]
+    },
+    "swapp_lab_m0_migration_rehearsal_ab103ab3": {
+      "lab.runs": 2,
+      "lab.experiments": 7,
+      "lab.reports": 0,
+      "scorer.dataset_profiles": 8,
+      "scorer.dataset_labels": 1024,
+      "scorer.task_scores": 67,
+      "scorer.dataset_task_semantics": 0,
+      "revision": [
+        "0018_public_task_semantics"
+      ]
+    }
+  },
+  "row_counts_and_revision_match": true
+}

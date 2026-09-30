@@ -1,0 +1,164 @@
+{
+  "run_id": "fac65252-e14d-4014-9744-333b88083963",
+  "restart_id": "ae8df360-7cb2-48f5-b57a-7d0c79ad577d",
+  "admission": {
+    "run_id": "fac65252-e14d-4014-9744-333b88083963",
+    "state": "queued",
+    "reused": false
+  },
+  "request": {
+    "idempotency_key": "resume053-848a0f19ed7e4871aeeecbb13bcffcdd",
+    "snapshot_sha256": "3d51ac1fc162901b479e94c47d908ab473ff517180935eab0ab6cba57887e359",
+    "configurations": [
+      {
+        "method": "lsh",
+        "seed": 0
+      },
+      {
+        "method": "lsh",
+        "seed": 1
+      },
+      {
+        "method": "lsh",
+        "seed": 2
+      },
+      {
+        "method": "lsh",
+        "seed": 3
+      },
+      {
+        "method": "lsh",
+        "seed": 4
+      },
+      {
+        "method": "lsh",
+        "seed": 5
+      },
+      {
+        "method": "lsh",
+        "seed": 6
+      },
+      {
+        "method": "lsh",
+        "seed": 7
+      },
+      {
+        "method": "lsh",
+        "seed": 8
+      },
+      {
+        "method": "lsh",
+        "seed": 9
+      },
+      {
+        "method": "lsh",
+        "seed": 10
+      },
+      {
+        "method": "lsh",
+        "seed": 11
+      },
+      {
+        "method": "lsh",
+        "seed": 12
+      },
+      {
+        "method": "lsh",
+        "seed": 13
+      },
+      {
+        "method": "lsh",
+        "seed": 14
+      },
+      {
+        "method": "lsh",
+        "seed": 15
+      },
+      {
+        "method": "lsh",
+        "seed": 16
+      },
+      {
+        "method": "lsh",
+        "seed": 17
+      },
+      {
+        "method": "lsh",
+        "seed": 18
+      },
+      {
+        "method": "lsh",
+        "seed": 19
+      },
+      {
+        "method": "lsh",
+        "seed": 20
+      },
+      {
+        "method": "lsh",
+        "seed": 21
+      },
+      {
+        "method": "lsh",
+        "seed": 22
+      },
+      {
+        "method": "lsh",
+        "seed": 23
+      },
+      {
+        "method": "lsh",
+        "seed": 24
+      },
+      {
+        "method": "lsh",
+        "seed": 25
+      },
+      {
+        "method": "lsh",
+        "seed": 26
+      },
+      {
+        "method": "lsh",
+        "seed": 27
+      },
+      {
+        "method": "lsh",
+        "seed": 28
+      },
+      {
+        "method": "lsh",
+        "seed": 29
+      },
+      {
+        "method": "lsh",
+        "seed": 30
+      },
+      {
+        "method": "lsh",
+        "seed": 31
+      },
+      {
+        "method": "lsh",
+        "seed": 32
+      },
+      {
+        "method": "lsh",
+        "seed": 33
+      },
+      {
+        "method": "lsh",
+        "seed": 34
+      }
+    ],
+    "wall_seconds": 3600
+  },
+  "drain_before": {
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "InvocationID": "d62225bf3d334150aac82a722d30e059",
+    "MainPID": "1711745",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service",
+    "WorkingDirectory": "/home/cachyos/ai-scientist"
+  }
+}

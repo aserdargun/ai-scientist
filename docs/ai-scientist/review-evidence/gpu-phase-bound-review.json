@@ -1,0 +1,22 @@
+{
+  "schema": "gpu-phase-bound-review.v2",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_gpu_phase_bounds.py --output docs/ai-scientist/review-evidence/gpu-phase-bound-review.json",
+  "script_sha256": "d3c0c0da63739f2bb4f2b9ac643abd2c41d9aa5a77a36d2febdf05d19c6c8ff8",
+  "source_sha256": "d24188a858c6027644cce080d8260baca6e45310dc135127afc7f7243ccd0885",
+  "scope": "Production scheduler, private SQLite, fake clock/principal resolver/no-drain observer; no GPU, model or systemd unit.",
+  "checks": {
+    "heartbeat_preserves_requested_inference_budget": true,
+    "ready_retry_keeps_original_deadline": true,
+    "expired_ready_retry_rejected": true,
+    "caller_receipt_cannot_extend_persisted_inference_budget": true,
+    "heartbeats_cannot_extend_activation_deadline": true,
+    "unverified_drain_blocks_recovery": true,
+    "production_source_unchanged_during_review": true
+  },
+  "observations": {
+    "initial_ready_deadline": 32.0,
+    "expired_retry_returned_receipt": false,
+    "modified_receipt_inference_deadline": 31.0
+  },
+  "passed": true
+}

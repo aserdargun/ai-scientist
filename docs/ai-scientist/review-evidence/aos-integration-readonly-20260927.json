@@ -1,0 +1,110 @@
+{
+  "schema": "aos-integration-readonly-revalidation.v1",
+  "recorded_at": "2026-09-27T02:38:29.058079+00:00",
+  "scope": "Read-only source/coordination observation; no service, model, database or AOS source change. No permission or acceptance inferred.",
+  "source_root": "/home/cachyos/aos",
+  "prior_review": "aos-integration-inputs-current.json",
+  "files": [
+    {
+      "path": "src/aos/contracts.py",
+      "sha256": "866ab8356324b32a6a3743f7b7c36d256ed416fd58925254381c8022dbf127db",
+      "prior_sha256": "2badc0b9c0ebb6a01891cbad5e95959d1d4381e68eca23769a6eec59d3f3d5c8",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/computer.py",
+      "sha256": "47d082319296ddc07e7723c577bc91628e9b0046494c6b2486f488f756d028fd",
+      "prior_sha256": "832f1a72f1fbb461693904f23dde1100c7e010ba1229a8a3cbe57d8851aeb5a5",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/desktop_tasks.py",
+      "sha256": "5ce9e221472c861bc19adc19e8833908ba983709861b0b1a6554db9990cb59f2",
+      "prior_sha256": "42acf3386903f60f60e212e66bfb86a9e622a334be13ee4645d86f95761bc435",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/decision.py",
+      "sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "prior_sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "changed_since_20260924": false
+    },
+    {
+      "path": "src/aos/reusable_decider.py",
+      "sha256": "6f34b907a83ce3e23bde479174cc9804215a1eadecf508bfbe3b89fb5be5bcdd",
+      "prior_sha256": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/supervisor.py",
+      "sha256": "659ee00f9943c00249e3362caecfee93e6af43842ad32c015a96c582be7cf771",
+      "prior_sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/vision.py",
+      "sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "prior_sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "changed_since_20260924": false
+    },
+    {
+      "path": "services/decider/worker.py",
+      "sha256": "ed7a523648817c3711cf59724b74784c01bab2986b54365e3ef3576ff1cc263e",
+      "prior_sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "changed_since_20260924": true
+    },
+    {
+      "path": "src/aos/task_intent.py",
+      "sha256": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+      "prior_sha256": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+      "changed_since_20260924": false
+    },
+    {
+      "path": "src/aos/goal_plan.py",
+      "sha256": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+      "prior_sha256": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+      "changed_since_20260924": false
+    },
+    {
+      "path": "src/aos/task_plan.py",
+      "sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "prior_sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "changed_since_20260924": false
+    },
+    {
+      "path": "src/aos/desktop_console.py",
+      "sha256": "592fab9c8215912831a6463d5db8d97b7b5c7cf32acab0a89cb1afe091cc6c12",
+      "prior_sha256": "a5e007523a9e356cbb43b168f873d769b061c8c6f58ad526bf5fdaeefcff39aa",
+      "changed_since_20260924": true
+    }
+  ],
+  "changed_count": 7,
+  "coordination_file_sha256": "d6c8aba310c702beafe5b1e3898457fec6bcf81f38b8269164980286f4734143",
+  "observations": [
+    {
+      "command": "rg -n 'ai_scientist|lab\\.start|lab\\.status|gpu_scheduler|gpu_broker|SharedGpu|shared_gpu' src/aos services scripts/serve_desktop.py",
+      "actual_exit_code": 1,
+      "stdout": "",
+      "stderr": "",
+      "tool_chunk": "690840",
+      "meaning": "No matches for these names in the searched paths. Does not prove absence of differently named integration."
+    },
+    {
+      "command": "rg --files -g '*COORDINAT*' -g '*SCIENTIST*' -g '*coordination*' -g '*scientist*' . docs",
+      "actual_exit_code": 0,
+      "stdout": "./AI_SCIENTIST_COORDINATION.md\n",
+      "stderr": "",
+      "tool_chunk": "c804b4",
+      "meaning": "Only the existing handoff note matches these filename patterns. No reply was found by this bounded search."
+    },
+    {
+      "command": "git rev-parse --verify HEAD",
+      "actual_exit_code": 128,
+      "stdout": "",
+      "stderr": "fatal: not a git repository (or any parent up to mount point /)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\n",
+      "tool_chunk": "b48762",
+      "meaning": "This source directory has no accessible Git HEAD; use explicit file hashes for future reconciliation."
+    }
+  ],
+  "next_action": "Keep existing isolated patches and CPU development; live GPU/model tests and AOS modifications still require the pending coordination response."
+}

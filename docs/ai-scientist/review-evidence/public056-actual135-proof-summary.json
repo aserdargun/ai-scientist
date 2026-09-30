@@ -1,0 +1,34 @@
+{
+  "schema": "public056-actual135-proof-summary.v1",
+  "checked_at": "2026-09-30T01:10:05.386971+03:00",
+  "private_proof_sha256": "74264d73236b2a1bcb46b0f0ede8628f17761480303fcaaeb7685345b86ad970",
+  "original_helper_sha256": "f5fb3a81c7f60d4feb5d1cf736c2b21b531c1adeec63df7ed8a5a5d777bdfc03",
+  "original_execution": {
+    "session_id": 58086,
+    "final_chunk": "ece730",
+    "exit_code": 0,
+    "provenance": "root execution report and resulting hash-verified private proof"
+  },
+  "measurement_harness_sha256": "a390f4a1838657d738bf590510f38a699b31fff663a6ece057c873b154fdae19",
+  "measurement_image_sha256": "3f915d48f39042e2261f218a9151981302d8d2cf29f983f2b1c73d5a183fb62f",
+  "active_attempt_sha256": "0b5a5658042f9c64719acf59b4241a7bbdc88210a4f62f19c339ae2f17b96cd4",
+  "repair_admission_sha256": "0b5a5658042f9c64719acf59b4241a7bbdc88210a4f62f19c339ae2f17b96cd4",
+  "actual135_proof_complete": true,
+  "exact_worker_generations": true,
+  "independent_receipt_checks": {
+    "original_artifact_sha256": true,
+    "original_helper_sha256": true,
+    "calibration_binding_matches_recovery": true,
+    "per_summary_base_reference_weight_arithmetic": true,
+    "aggregate_weighted_arithmetic": true,
+    "finite_bounded_algorithm_means": true
+  },
+  "raw_cells_requeried_by_this_review": false,
+  "numeric_holdout_scores_exposed": false,
+  "private_task_identifiers_exposed": false,
+  "source_labels_exposed_to_director": false,
+  "real_model_acceptance": false,
+  "research_admitted": false,
+  "m0_10_status": "OPEN",
+  "scope": "Hash-only summary; original read-only proof checked raw cells/three seeds/registrations, this review verified artifact binding and private receipt arithmetic without publishing values"
+}

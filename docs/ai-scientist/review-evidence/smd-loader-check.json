@@ -1,0 +1,300 @@
+{
+  "benchmark_acceptance": false,
+  "entities": [
+    {
+      "entity": "machine-1-1",
+      "eval_anomaly_samples": 2694,
+      "eval_samples": 28479,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-1",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28479
+    },
+    {
+      "entity": "machine-1-2",
+      "eval_anomaly_samples": 542,
+      "eval_samples": 23694,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-2",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23694
+    },
+    {
+      "entity": "machine-1-3",
+      "eval_anomaly_samples": 817,
+      "eval_samples": 23703,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-3",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23702
+    },
+    {
+      "entity": "machine-1-4",
+      "eval_anomaly_samples": 720,
+      "eval_samples": 23707,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-4",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23706
+    },
+    {
+      "entity": "machine-1-5",
+      "eval_anomaly_samples": 100,
+      "eval_samples": 23706,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-5",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23705
+    },
+    {
+      "entity": "machine-1-6",
+      "eval_anomaly_samples": 3708,
+      "eval_samples": 23689,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-6",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23688
+    },
+    {
+      "entity": "machine-1-7",
+      "eval_anomaly_samples": 2398,
+      "eval_samples": 23697,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-7",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23697
+    },
+    {
+      "entity": "machine-1-8",
+      "eval_anomaly_samples": 763,
+      "eval_samples": 23699,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-1-8",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23698
+    },
+    {
+      "entity": "machine-2-1",
+      "eval_anomaly_samples": 1170,
+      "eval_samples": 23694,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-1",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23693
+    },
+    {
+      "entity": "machine-2-2",
+      "eval_anomaly_samples": 2833,
+      "eval_samples": 23700,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-2",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23699
+    },
+    {
+      "entity": "machine-2-3",
+      "eval_anomaly_samples": 269,
+      "eval_samples": 23689,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-3",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23688
+    },
+    {
+      "entity": "machine-2-4",
+      "eval_anomaly_samples": 1694,
+      "eval_samples": 23689,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-4",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23689
+    },
+    {
+      "entity": "machine-2-5",
+      "eval_anomaly_samples": 980,
+      "eval_samples": 23689,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-5",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23688
+    },
+    {
+      "entity": "machine-2-6",
+      "eval_anomaly_samples": 424,
+      "eval_samples": 28743,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-6",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28743
+    },
+    {
+      "entity": "machine-2-7",
+      "eval_anomaly_samples": 417,
+      "eval_samples": 23696,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-7",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23696
+    },
+    {
+      "entity": "machine-2-8",
+      "eval_anomaly_samples": 161,
+      "eval_samples": 23703,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-8",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23702
+    },
+    {
+      "entity": "machine-2-9",
+      "eval_anomaly_samples": 1755,
+      "eval_samples": 28722,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-2-9",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28722
+    },
+    {
+      "entity": "machine-3-1",
+      "eval_anomaly_samples": 308,
+      "eval_samples": 28700,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-1",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28700
+    },
+    {
+      "entity": "machine-3-10",
+      "eval_anomaly_samples": 1047,
+      "eval_samples": 23693,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-10",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23692
+    },
+    {
+      "entity": "machine-3-11",
+      "eval_anomaly_samples": 198,
+      "eval_samples": 28696,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-11",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28695
+    },
+    {
+      "entity": "machine-3-2",
+      "eval_anomaly_samples": 1109,
+      "eval_samples": 23703,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-2",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23702
+    },
+    {
+      "entity": "machine-3-3",
+      "eval_anomaly_samples": 632,
+      "eval_samples": 23703,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-3",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23703
+    },
+    {
+      "entity": "machine-3-4",
+      "eval_anomaly_samples": 977,
+      "eval_samples": 23687,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-4",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23687
+    },
+    {
+      "entity": "machine-3-5",
+      "eval_anomaly_samples": 426,
+      "eval_samples": 23691,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-5",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 23690
+    },
+    {
+      "entity": "machine-3-6",
+      "eval_anomaly_samples": 1194,
+      "eval_samples": 28726,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-6",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28726
+    },
+    {
+      "entity": "machine-3-7",
+      "eval_anomaly_samples": 434,
+      "eval_samples": 28705,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-7",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28705
+    },
+    {
+      "entity": "machine-3-8",
+      "eval_anomaly_samples": 1371,
+      "eval_samples": 28704,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-8",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28703
+    },
+    {
+      "entity": "machine-3-9",
+      "eval_anomaly_samples": 303,
+      "eval_samples": 28713,
+      "sampling_seconds": 60.0,
+      "sensor_count": 38,
+      "session_id": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4:machine-3-9",
+      "time_axis_policy": "ordered_index_no_source_timestamps.v1",
+      "train_samples": 28713
+    }
+  ],
+  "entity_count": 28,
+  "eval_samples": 708420,
+  "loader_sha256": "9400240f7906487100053f9b0cab79bcb9cf86b60c7fe311e0e99c4a993108e7",
+  "manifest_sha256": "09f3a257b3e1e9d1e5803ebc9592835da68c741cd28677faba29c54eda620694",
+  "result": "pass",
+  "schema": "smd-production-loader-check.v1",
+  "sensor_counts": [
+    38
+  ],
+  "sliding_window": 100,
+  "time_axis_policies": [
+    "ordered_index_no_source_timestamps.v1"
+  ],
+  "train_samples": 708405,
+  "window_usage": "loader smoke only; benchmark window policy unresolved"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "blob-writer-crash-review.v1",
+  "checked_at": "2026-09-24T12:08:22.604909+00:00",
+  "scope": "A real SIGKILL of our own writer after file fsync, private temporary artifact root, two tiny numeric documents; no DB, AOS, GPU, shared blob store or public data changes.",
+  "source_sha256": {
+    "lab/scorer/jobs.py": "c27d9450e759077f837418da412330c22e64ab319e5c669ef071f24c493465a7"
+  },
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_blob_crash.py",
+  "script_sha256": "5fe021ee277c57f75d89aeee2892d2c55539820a4583414bee1ed6fb9c7ba992",
+  "writer_exit_code": -9,
+  "fsynced_temporary_files_after_kill": 1,
+  "temporary_bytes": 81,
+  "next_distinct_write": {
+    "state": "rejected",
+    "error_type": "ValueError",
+    "error_code": "unexpected artifact entry in content-addressed store"
+  },
+  "new_write_blocked_by_owned_orphan": true,
+  "private_fixture_cleaned": true,
+  "source_unchanged": true,
+  "violation_reproduced": true
+}

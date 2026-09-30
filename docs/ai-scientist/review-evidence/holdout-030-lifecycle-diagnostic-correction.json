@@ -1,0 +1,22 @@
+{
+  "schema": "lifecycle-diagnostic-correction.v1",
+  "created_at": "2026-09-27T00:32:13.061281+00:00",
+  "reason": "First real attempt lacked diagnostic stage/reason; preserve fixed code and phase labels without raw exception text.",
+  "source_hashes": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": {
+      "previous": "544ebe7feb2a7597dcb3152452d60b1e00cac48a7386c391903bbe4a97586fad",
+      "current": "dbf02263c72c19f017a8dc143e47b13688644d021e83bc80cbfcadcaee61f972"
+    },
+    "tests/test_holdout030_lifecycle_fixture_safety.py": {
+      "previous": "8c46521d5e760f952180680498b8344e50ee88d75c8d6ec2f066eae37b9217d6",
+      "current": "2aa1a4f5dad61e93b99c9590327762f2a17d02b9a17eb273e4c4cf9205032dc0"
+    }
+  },
+  "review": "Root inspected complete diff; resource budgets, process/database cleanup operations and task semantics unchanged.",
+  "worker_checks": {
+    "focused_safety_tests": 7,
+    "pytest_exit": 0,
+    "ruff_exit": 0
+  },
+  "runtime_changed": false
+}

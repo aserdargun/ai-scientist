@@ -1,0 +1,22 @@
+{
+  "schema": "holdout-registration029-freeze.v1",
+  "payload_files": {
+    "lab/db/migrations/versions/0029_holdout_registration.py": "136c279cb11a63f2e731e448d61d975a1fa31c30b392825b03be9e46298386fe",
+    "tests/test_postgres_holdout_registration029.py": "a2da5cf6bf10249ce5472ebd4dd47cd9887518e06ac32f8a333f74a0addc5fb0"
+  },
+  "revision": "0029_holdout_registration",
+  "down_revision": "0028_mode_snapshot_install",
+  "scope": "Replace only nonexistent version_row.holdout_manifest_sha256 with persisted version_row.manifest_sha256 in existing function; preserve ACL/session role guard/search path/all predicates. No table writes by migration. Synthetic disposable PG fixture only; no workers or services reachable.",
+  "checks": {
+    "ruff_exit": 0,
+    "ruff_chunk": "2529f0",
+    "sqlalchemy_bind_scan_exit": 0,
+    "bind_scan_chunk": "59ff05",
+    "collection_count": 6,
+    "collection_exit": 0,
+    "collection_chunk": "590f84",
+    "pg_execution": "pending"
+  },
+  "runner": "../operating-console-045-checks/run_registration0353_pg.py",
+  "runner_sha256": "ac9c57566a835f2a75e365465e2f4bef328d0c1c42a779675fc02deefea1eea8"
+}

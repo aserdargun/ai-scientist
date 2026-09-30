@@ -1,0 +1,141 @@
+{
+  "schema": "report-replay-cli-launch-wrapper.v1",
+  "provenance": {
+    "original_receipt_path": "tests/director-vertical-review.json",
+    "original_receipt_sha256": "41054a36b3fcafb5242efb749a67ce28c5fdd566f73155b7757e899cfc720d97",
+    "run_id": "1b3c7eec-7697-44d6-93ad-409b3636c925",
+    "driver_path": "tests/_review_report_replay_pg_once.py",
+    "driver_sha256": "c54ccf1a1f2cc77294760f69dce6c40276d83887e921d16fdb155356b867bcd8"
+  },
+  "systemd_wrapper": {
+    "unit": "luna-report-replay-pg-cli-proof.service",
+    "invocation_id": "dfe607d73fe04afaa2bdab8ce26055ed",
+    "unit_exec_main_status": 0,
+    "systemd_run_wait_exit_code": 0,
+    "runtime_limit_seconds": 420,
+    "memory_max_bytes": 2147483648,
+    "memory_swap_max_bytes": 0,
+    "cpu_quota": "100%",
+    "tasks_max": 128,
+    "wall_seconds": 181.472,
+    "memory_peak_bytes": 320300000,
+    "argv": [
+      "flock",
+      "-w",
+      "420",
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+      "systemd-run",
+      "--user",
+      "--wait",
+      "--collect",
+      "--service-type=exec",
+      "--unit=luna-report-replay-pg-cli-proof",
+      "--property=MemoryMax=2G",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=100%",
+      "--property=TasksMax=128",
+      "--property=RuntimeMaxSec=420s",
+      "--working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay",
+      "--setenv=PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay:/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/docs/ai-scientist/review-evidence",
+      "--setenv=OPENBLAS_NUM_THREADS=1",
+      "--setenv=OMP_NUM_THREADS=1",
+      "--setenv=MKL_NUM_THREADS=1",
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/.venv/bin/python",
+      "tests/_review_report_replay_pg_once.py"
+    ]
+  },
+  "cli_calls": {
+    "report": {
+      "argv": [
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "report",
+        "1b3c7eec-7697-44d6-93ad-409b3636c925",
+        "--artifact-root",
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/data/runtime/director-vertical-review/1b3c7eec-7697-44d6-93ad-409b3636c925/blobs"
+      ],
+      "exit_code": 0,
+      "stdout_json": {
+        "report": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/data/runtime/reports/1b3c7eec-7697-44d6-93ad-409b3636c925.html",
+        "run_id": "1b3c7eec-7697-44d6-93ad-409b3636c925",
+        "sha256": "79234737eccf752396ca101adc36d5798f3f978efd30d33225e7e16fd3aea0c5",
+        "summary": {
+          "baseline_count": 3,
+          "discard_count": 0,
+          "experiment_count": 2,
+          "keep_count": 1,
+          "keep_simpler_count": 1,
+          "reject_count": 0,
+          "run_id": "1b3c7eec-7697-44d6-93ad-409b3636c925"
+        }
+      },
+      "stdout_line": "{\"report\": \"/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/data/runtime/reports/1b3c7eec-7697-44d6-93ad-409b3636c925.html\", \"run_id\": \"1b3c7eec-7697-44d6-93ad-409b3636c925\", \"sha256\": \"79234737eccf752396ca101adc36d5798f3f978efd30d33225e7e16fd3aea0c5\", \"summary\": {\"baseline_count\": 3, \"discard_count\": 0, \"experiment_count\": 2, \"keep_count\": 1, \"keep_simpler_count\": 1, \"reject_count\": 0, \"run_id\": \"1b3c7eec-7697-44d6-93ad-409b3636c925\"}}\n",
+      "stdout_line_sha256": "8fc0881b910ada26b567978f29b68963b8f7e12be21d2cfca22bfb41d0a67b9d",
+      "report_html_sha256": "79234737eccf752396ca101adc36d5798f3f978efd30d33225e7e16fd3aea0c5"
+    },
+    "replay": {
+      "argv": [
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "replay",
+        "1b3c7eec-7697-44d6-93ad-409b3636c925",
+        "--artifact-root",
+        "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay/data/runtime/director-vertical-review/1b3c7eec-7697-44d6-93ad-409b3636c925/blobs"
+      ],
+      "exit_code": 0,
+      "stdout_json": {
+        "replayed_decisions": [
+          {
+            "ci_low": 3.0,
+            "configuration_sha256": "5c4dd1e2a24ce48a2763a82671b004e539a22261fc27cc7c41b2f976c4f42fe3",
+            "delta": 3.0,
+            "experiment_id": "exp_41af3fd5cdb75ab1869b075772ebe2e2",
+            "manifest_sha256": "e475ff6997f1f8c5ca4e022f330f575fcbc880d2c76453b78c844e8301d9afaa",
+            "noise_sd": 0.0,
+            "stage": "primary",
+            "verdict": "KEEP"
+          },
+          {
+            "ci_low": 3.0,
+            "configuration_sha256": "0c2efab3b2a70222239bca758cb2fca0bd708e175e3e67cf78d5ed4962491cb5",
+            "delta": 3.0,
+            "experiment_id": "exp_41af3fd5cdb75ab1869b075772ebe2e2",
+            "manifest_sha256": "e475ff6997f1f8c5ca4e022f330f575fcbc880d2c76453b78c844e8301d9afaa",
+            "noise_sd": 0.0,
+            "stage": "confirmed",
+            "verdict": "KEEP"
+          },
+          {
+            "ci_low": 0.0,
+            "configuration_sha256": "6359656f565f50192212c70f812d266f1641c5da44664311ad8bdf22b427e6e5",
+            "delta": 0.0,
+            "experiment_id": "exp_b8d6ad091f5b51d7a25a059858f61956",
+            "manifest_sha256": "253282d45194818282b25fa90d268258e6aa2bd69a6f84b161d9d8588093f189",
+            "noise_sd": 0.0,
+            "stage": "primary",
+            "verdict": "KEEP_SIMPLER"
+          },
+          {
+            "ci_low": 0.0,
+            "configuration_sha256": "772d20104387c0c42bd538222fa6eb4a37616bda54d554ffed9a8d1c9cf46333",
+            "delta": 0.0,
+            "experiment_id": "exp_b8d6ad091f5b51d7a25a059858f61956",
+            "manifest_sha256": "253282d45194818282b25fa90d268258e6aa2bd69a6f84b161d9d8588093f189",
+            "noise_sd": 0.0,
+            "stage": "confirmed",
+            "verdict": "KEEP_SIMPLER"
+          }
+        ],
+        "run_id": "1b3c7eec-7697-44d6-93ad-409b3636c925"
+      },
+      "stdout_line": "{\"replayed_decisions\": [{\"ci_low\": 3.0, \"configuration_sha256\": \"5c4dd1e2a24ce48a2763a82671b004e539a22261fc27cc7c41b2f976c4f42fe3\", \"delta\": 3.0, \"experiment_id\": \"exp_41af3fd5cdb75ab1869b075772ebe2e2\", \"manifest_sha256\": \"e475ff6997f1f8c5ca4e022f330f575fcbc880d2c76453b78c844e8301d9afaa\", \"noise_sd\": 0.0, \"stage\": \"primary\", \"verdict\": \"KEEP\"}, {\"ci_low\": 3.0, \"configuration_sha256\": \"0c2efab3b2a70222239bca758cb2fca0bd708e175e3e67cf78d5ed4962491cb5\", \"delta\": 3.0, \"experiment_id\": \"exp_41af3fd5cdb75ab1869b075772ebe2e2\", \"manifest_sha256\": \"e475ff6997f1f8c5ca4e022f330f575fcbc880d2c76453b78c844e8301d9afaa\", \"noise_sd\": 0.0, \"stage\": \"confirmed\", \"verdict\": \"KEEP\"}, {\"ci_low\": 0.0, \"configuration_sha256\": \"6359656f565f50192212c70f812d266f1641c5da44664311ad8bdf22b427e6e5\", \"delta\": 0.0, \"experiment_id\": \"exp_b8d6ad091f5b51d7a25a059858f61956\", \"manifest_sha256\": \"253282d45194818282b25fa90d268258e6aa2bd69a6f84b161d9d8588093f189\", \"noise_sd\": 0.0, \"stage\": \"primary\", \"verdict\": \"KEEP_SIMPLER\"}, {\"ci_low\": 0.0, \"configuration_sha256\": \"772d20104387c0c42bd538222fa6eb4a37616bda54d554ffed9a8d1c9cf46333\", \"delta\": 0.0, \"experiment_id\": \"exp_b8d6ad091f5b51d7a25a059858f61956\", \"manifest_sha256\": \"253282d45194818282b25fa90d268258e6aa2bd69a6f84b161d9d8588093f189\", \"noise_sd\": 0.0, \"stage\": \"confirmed\", \"verdict\": \"KEEP_SIMPLER\"}], \"run_id\": \"1b3c7eec-7697-44d6-93ad-409b3636c925\"}\n",
+      "stdout_line_sha256": "bafd432d15511cc4c59d11ea00539a9461fd81a68d70e48851b67fbfd2f4b2a8",
+      "decision_count": 4
+    }
+  },
+  "stdout_capture_note": "Original subprocess stdout was JSON-decoded by the integration driver and stored as stdout_json; stdout_line is regenerated using lab.cli’s json.dumps(sort_keys=True) print format. No model source or hidden reasoning is included.",
+  "check": "production_cli_report_and_replay",
+  "check_passed": true
+}

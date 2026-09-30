@@ -1,0 +1,23 @@
+{
+  "schema": "baseline-proof-input-preparation-binding.v1",
+  "main_commit": "017d537",
+  "actual_session": 19023,
+  "actual_exit_code": 0,
+  "completion_chunk": "272a9f",
+  "unit": "swapp-baseline-inputs032-20260927-r1.service",
+  "artifact": "docs/ai-scientist/review-evidence/baseline-proof-input-preparation-e49b0286a157.json",
+  "artifact_sha256": "67d675408e0418b7b54a7a590f0c4e6c73e601d25c6655cf131bc20c80ff6a42",
+  "driver_sha256": "2d0fbaa127f27c60cb5d9967e9948410cf8bda3b7f6581915d7f1e26f6bb4f32",
+  "requested_limits": {
+    "memory_bytes": 1073741824,
+    "swap_bytes": 0,
+    "cpu_quota_percent": 50,
+    "tasks": 64,
+    "runtime_seconds": 120,
+    "stop_seconds": 10
+  },
+  "input_byte_parity": true,
+  "private_file_modes_verified": true,
+  "sources_unchanged": true,
+  "scope": "Production manifest/registry validation of four synthetic tasks, and rejection of an invalid two-family manifest. No PostgreSQL profile installation, Planner readback, measurement, API/provider/model/worker/Docker/GPU/AOS execution."
+}

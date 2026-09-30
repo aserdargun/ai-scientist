@@ -1,0 +1,8 @@
+{
+  "schema": "review-launcher-failure.v1",
+  "actual_exit_code": 1,
+  "tool_chunk_id": "410648",
+  "failure": "Root launcher double-replaced its private output path; no quality command started. Corrected in a new v2 launcher.",
+  "original_driver_sha256": "b425d22039205ead35be1f2ba695c88ebd86ceedcfe21be8a401e402f92544cf",
+  "corrected_driver_sha256": "ffcc7fc04e20736ec58a6e955882ae7ecbd5821f25237e8e9b1c4308058a4ffa"
+}

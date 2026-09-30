@@ -1,0 +1,184 @@
+{
+  "schema": "aos-lab-coexistence-v3-cpu-preflight.v1",
+  "scope": "CPU-only driver, input, and preflight review; no AOS/Lab service, API, broker, model, or GPU was started",
+  "driver": {
+    "path": "docs/ai-scientist/review-evidence/review_aos_lab_coexistence_v3.py",
+    "sha256": "1f6dd10c1c1f652e4b9f3a70d4aa9aea4e444c4c2e0e5806aa0a18043c03629b",
+    "contract_test_path": "docs/ai-scientist/review-evidence/test_aos_lab_coexistence_v3_contract.py",
+    "contract_test_sha256": "03252851a33347ec07985788c1c70a0bdfed6fa1ba6bdfde65c1fb8132d25e39",
+    "v2_unchanged_sha256": "e2b14a61d7c53912fd0672de7d997659c269f278f3c9818397a8d4fb293254d3"
+  },
+  "static_checks": {
+    "unit": "luna-aos-v3-static-027f.service",
+    "limits": {
+      "memory_max": "512M",
+      "memory_swap_max": 0,
+      "cpu_quota": "50%",
+      "tasks_max": 32,
+      "runtime_max": "240s"
+    },
+    "actual_exit_code": 0,
+    "checks": [
+      "Ruff clean",
+      "py_compile passed",
+      "7 CPU contract tests passed",
+      "CLI help passed"
+    ],
+    "stdout": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-static-final-027.stdout.txt",
+    "stdout_sha256": "67118a787909028ddaadbba338da5196c6fde794ca82adc0c15ffdc2e26c84f4",
+    "unit_after": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive"
+    }
+  },
+  "isolated_sources": {
+    "aos": {
+      "path": "data/runtime/aos-coexistence/lab-external-optin",
+      "head": "c33325349e856edf52d1ab37da394388eb0607c2",
+      "source_manifest_sha256": "f4aeae0b09815f4ca2c5d61b32aecd953189a05a6cc047244801d36d71946494",
+      "runtime_model_source_path": "data/runtime/aos-coexistence/lab-external-optin/models"
+    },
+    "lab": {
+      "path": "data/runtime/parallel-m0/public-execution-027",
+      "head": "390a6c25e94e5da339457dd17e88749ed07c7795",
+      "suite_manifest_sha256": "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c",
+      "image_digest": "sha256:ed0e5d4620ea1d8099590dfe2bd8d4ba3118dcd576ed914468b17ef169363a34",
+      "harness_sha256": "0c96264015cf32f8be9f7d4ef1de0572987203e97b1d044f69e9af9af780cb71"
+    }
+  },
+  "pinned_inputs": {
+    "decider_source_manifest": {
+      "path": "/home/cachyos/aos/models/decider-manifest.json",
+      "sha256": "7bd3135317a406a9be02e05dbc220935ada7c4f1db2ab1cf878114005bef0624",
+      "files_verified": 11,
+      "bytes_verified": 3783718831,
+      "source_verification_log": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-source-pin-verify-027.stdout.txt",
+      "source_verification_log_sha256": "f55cdb7be8f16dc7084570704fc4577d920c234f76c430a96a44f12197f80232",
+      "private_copy_verification_log": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-reflink-pin-copy-027.stdout.txt",
+      "private_copy_verification_log_sha256": "981da735163abb931f4ac7eca664e1e297cb3b92492149aafa0c4e9c1cf07343"
+    },
+    "private_decider_manifest": {
+      "path": "data/runtime/aos-coexistence/lab-external-optin/models/decider-manifest.json",
+      "sha256": "d1bd987166a1c2ae28a068049fe113d0c2b392341455ae502d515e9947de57a0",
+      "model_allowlist": {
+        "file_count": 7,
+        "total_bytes": 3783692446
+      },
+      "code_allowlist": {
+        "file_count": 4,
+        "total_bytes": 26385
+      },
+      "exact_allowlist_verification_log": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-input-verify-027b.stdout.txt",
+      "exact_allowlist_verification_log_sha256": "b0804db17683be289d9167c4c2cdac2185e4fc4d207c6b8b3db6e69de1eae1cf"
+    },
+    "desktop_manifest": {
+      "source_path": "/home/cachyos/aos/models/desktop-manifest.json",
+      "source_and_private_sha256": "9ed57db3e0797c41fd6cd83975a9f3b43270303b6a9ace86b26ac5eae7f180fb",
+      "private_path": "data/runtime/aos-coexistence/lab-external-optin/models/desktop-manifest.json",
+      "source_files_match_isolated_copy": true,
+      "source_code_sha256": "1140c28d9ea6bf66fbf89fe674a13bb3f850743a93b0446a0106d38ddc4568e1",
+      "pinned_image_id_present": true,
+      "image_id": "sha256:a06253a5b5854259289d24e300f95e3c985490fd8f6162a202653a0b35db4d9b"
+    },
+    "unlisted_bytecode": {
+      "action": "hash inventoried and moved out of the executable code root",
+      "quarantine_path": "data/runtime/aos-coexistence/lab-external-optin/unpinned-bytecode-quarantine-v3/decider-pycache",
+      "files": [
+        {
+          "path": "__init__.cpython-312.pyc",
+          "sha256": "fdcf098ccc552406ef15a99de3207a507eac5f851a21ef42df81cdf546a02f1c",
+          "bytes": 195
+        },
+        {
+          "path": "infer.cpython-312.pyc",
+          "sha256": "0aa3a153633f15f1262cb938b006750f225afa4f9d2c8203162bcd633c27877d",
+          "bytes": 24964
+        },
+        {
+          "path": "model.cpython-312.pyc",
+          "sha256": "e3f44c250caf62e81abe409df4279b4f69713ba4f8c1bb321dd333b7b78f9694",
+          "bytes": 4883
+        },
+        {
+          "path": "prompt.cpython-312.pyc",
+          "sha256": "9d54bdf6ef0bc710db20541b6a5163503f052e64105b20cab2f5a93f93a3cc3f",
+          "bytes": 12184
+        }
+      ],
+      "source_cache_removed": true
+    }
+  },
+  "preflight": {
+    "unit": "luna-aos-v3-preflight-027e.service",
+    "limits": {
+      "memory_max": "512M",
+      "memory_swap_max": 0,
+      "cpu_quota": "50%",
+      "tasks_max": 32,
+      "runtime_max": "240s"
+    },
+    "actual_exit_code": 0,
+    "stdout": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-final-preflight-027.stdout.txt",
+    "stdout_sha256": "ff78c0aa2f2592182887d9536906367ef1712065f77f09eb5141fd90c37540b8",
+    "ready_for_explicit_execute": false,
+    "gpu_called": false,
+    "service_or_api_started": false,
+    "future_aos_bytecode_cache": "per-run private desktop workspace via PYTHONPYCACHEPREFIX; broker child uses isolated per-turn /tmp cache roots",
+    "suite": {
+      "id": "public-ad-v1",
+      "tasks": 27,
+      "proposal_limit": 6,
+      "manifest_sha256": "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c"
+    },
+    "private_postgres_targets_same": true,
+    "private_postgres_target_sha256": "dcdbf93c46c8e3777c3f705dde53d0f545c0d4759e0b186ccaf9091fb23f4a46",
+    "broker": {
+      "unit": "swapp-lab-gpu-broker.service",
+      "unit_active": false,
+      "socket_ready": false,
+      "shared_database_exists": false,
+      "blockers": [
+        "fixed_gpu_broker_not_active",
+        "fixed_gpu_broker_socket_identity_unverified",
+        "shared_gpu_database_or_state_directory_missing"
+      ]
+    },
+    "preflight_unit_after": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive"
+    },
+    "unique_aos_owner_unit_after": {
+      "unit": "swapp-aos-gpu-review-027abc00000000000000000000000007.service",
+      "LoadState": "not-found",
+      "ActiveState": "inactive"
+    }
+  },
+  "failed_attempts": [
+    {
+      "path": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-preflight-027.stdout.txt",
+      "sha256": "a4ab7f44d3e3cf9b3842afab908cd437def3c02e7c402d6e7f77cd481e1d6dd3",
+      "exit_code": 1,
+      "reason": "relative AOS interpreter path did not match reviewed absolute pin"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-static-027-attempt1-failure.txt",
+      "sha256": "b6298a9b40981c93c3ba16ef69610167d7720f44e448f40bb6733695fbfe195a",
+      "exit_code": 1,
+      "reason": "incorrect unittest import module path; corrected discovery command passed 7 tests"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-input-verify-027-attempt1-oom.txt",
+      "sha256": "9ce31d5f85c79dd88ddf798ba822016abfb49d41600b505f03fb900be4d53b34",
+      "systemd_result": "oom-kill",
+      "reason": "first verifier used whole-file read for the large pinned model; replaced with bounded streaming SHA-256"
+    },
+    {
+      "reason": "first private-bytecode move crossed filesystem boundaries and hit read-only quarantine source permissions; copy was hash-verified, source bytecode removed, and the copy remains quarantined outside import path"
+    }
+  ],
+  "execution_acceptance": "not run; requires the fixed broker, socket, and shared database to be deployed and verified, followed by explicit GPU coordination",
+  "evidence": {
+    "invocation": "docs/ai-scientist/review-evidence/aos-lab-coexistence-v3-invocation-027.md",
+    "invocation_sha256": "3940e60f7319e8b3435a877c576de787d95a95f8bac0dff28708968f661bf528"
+  }
+}

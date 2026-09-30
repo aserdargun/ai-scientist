@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-09-24T10:45:43.048067+00:00",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-lab-worker-limit-review-ab3f2baba8274de69a89b8ecda0fe41b",
+    "--property=MemoryMax=128M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=16",
+    "--property=RuntimeMaxSec=10",
+    "--property=TimeoutStopSec=2",
+    "--property=KillMode=control-group",
+    "--property=OOMPolicy=stop",
+    "--property=NoNewPrivileges=yes",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_host_worker_limits.py",
+    "child",
+    "/home/cachyos/ai-scientist/data/runtime/worker-limit-review-mau32cor/child.json"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.2414834539995354,
+  "stdout": "probe-ready\n",
+  "stderr": "",
+  "scope": "One 128 MiB / 0.25 CPU / 16 task transient CPU fixture; no model, DB, AOS or GPU mutation. Not a measured Scorer/model memory budget.",
+  "script_sha256": "0aaa09b3f65aa114ae13d0365824b564d685127a28ddd9f5e649474c70f539ec",
+  "child": {
+    "pid": 801939,
+    "descendant": {
+      "pid": 801940,
+      "state": "R",
+      "start_ticks": "2136304"
+    },
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-lab-worker-limit-review-ab3f2baba8274de69a89b8ecda0fe41b.service",
+    "limits": {
+      "memory.max": "134217728",
+      "memory.swap.max": "0",
+      "cpu.max": "25000 100000",
+      "pids.max": "16",
+      "memory.current": "7892992"
+    },
+    "allocation_bytes": 16777216
+  },
+  "descendant_after_service_exit": null,
+  "descendant_not_running": true,
+  "cgroup_removed": true,
+  "limits_passed": true,
+  "all_passed": true
+}

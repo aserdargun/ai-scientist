@@ -1,0 +1,20 @@
+
+$ ruff check .
+Traceback (most recent call last):
+  File "/home/cachyos/ai-scientist/scripts/quality_gate.py", line 178, in <module>
+    sys.exit(run())
+             ^^^^^
+  File "/home/cachyos/ai-scientist/scripts/quality_gate.py", line 147, in run
+    record = _run_command(command)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cachyos/ai-scientist/scripts/quality_gate.py", line 47, in _run_command
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'ruff'

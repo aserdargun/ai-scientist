@@ -1,0 +1,48 @@
+{
+  "run_id": "404d9a45-f1fb-4f91-a842-0edcd44bc1b9",
+  "report_sha256": "c44bdfa29a379721f097c9a8f058c3b7650bd6a4ccbbb941bf307a6a9ade9bf5",
+  "report": {
+    "run_id": "404d9a45-f1fb-4f91-a842-0edcd44bc1b9",
+    "schema": "lab.report.v1",
+    "status": "stopped",
+    "provider": "mode-grid",
+    "study_kind": "single_snapshot_study",
+    "task_scores": [],
+    "execution_sha256": "87a1063787bfbc542f9b66200f1864dbb64100de9b450fe621d94e6da3fc17d6",
+    "admitted_generation": 1,
+    "benchmark_acceptance": false,
+    "task_terminal_outcomes": [
+      {
+        "seed": 0,
+        "outcome": "scorer_error",
+        "task_id": "mode-3d51ac1fc162901b",
+        "score_job_id": "b59868fd-577c-4758-9e1f-4d2cbf082208",
+        "experiment_id": "exp_dc8e977665e454878151b589a548148e",
+        "producer_role": "swapp_lab_scorer",
+        "evaluation_kind": "baseline",
+        "candidate_sha256": "d7a8c921024947ace26c33e980372bf2ab1bf3c7d9158b700340b9a51b412c0e"
+      },
+      {
+        "seed": 1,
+        "outcome": "infrastructure_unattempted",
+        "task_id": "mode-3d51ac1fc162901b",
+        "score_job_id": null,
+        "experiment_id": "exp_dc8e977665e454878151b589a548148e",
+        "producer_role": "swapp_lab_planner",
+        "evaluation_kind": "baseline",
+        "candidate_sha256": "d7a8c921024947ace26c33e980372bf2ab1bf3c7d9158b700340b9a51b412c0e"
+      },
+      {
+        "seed": 2,
+        "outcome": "infrastructure_unattempted",
+        "task_id": "mode-3d51ac1fc162901b",
+        "score_job_id": null,
+        "experiment_id": "exp_dc8e977665e454878151b589a548148e",
+        "producer_role": "swapp_lab_planner",
+        "evaluation_kind": "baseline",
+        "candidate_sha256": "d7a8c921024947ace26c33e980372bf2ab1bf3c7d9158b700340b9a51b412c0e"
+      }
+    ]
+  },
+  "verified_at": "2026-09-27T10:03:07.273421+00:00"
+}

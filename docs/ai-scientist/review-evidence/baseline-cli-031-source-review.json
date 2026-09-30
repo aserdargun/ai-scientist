@@ -1,0 +1,126 @@
+{
+  "schema": "baseline-cli-031-source-review.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "date": "2026-09-27",
+  "execution": false,
+  "scope": "Read-only source review of frozen private baseline candidate; no test, PostgreSQL, Docker, GPU, model or AOS execution by reviewer.",
+  "source": {
+    "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/baseline-cli-031",
+    "branch": "feat/luna-m0-baseline-cli-031",
+    "head": "d70dffc",
+    "file_count": 17,
+    "sha256": {
+      "lab/api/app.py": "364de6f5c122847bb52f9b5fb07188441470bd66c0098d6e61729af705db8dd4",
+      "lab/api/contracts.py": "7ab39e9bdc536d7bea0b91423d9a6eeb4731c14dd8e20a944e70b7ca13ed47ed",
+      "lab/cli.py": "054281bda39b9d7c7a2dc13927219d3eb3134e36e68d6bf1d7919d83b1456fc6",
+      "lab/db/schema.py": "24668e9b670ddc28ae4bd0747fd887768d624927eb3aeb4ee621c83b355f3547",
+      "lab/db/migrations/versions/0024_baseline_operation.py": "ef98c7782d046cf587a688bfc5060d4fbdf2969fa5a205292badbb87664c2684",
+      "lab/director/budget.py": "4a0fd39420c24915fbaf2bbcb3b102ac17386545490d5806840c865bea9ef067",
+      "lab/director/task_plan.py": "d326904ad37c367a056b4a736d2db589aa36e6bb8089134f6bc7482aaf7cd099",
+      "lab/director/baseline_operation.py": "f1cad5dd416fff4049225e05bc17ede46556b6ef28bbf6444e72917c3803deab",
+      "lab/reporting.py": "ec8bff41c3f9f0d39d5282cbe69b7931184832ddfec50fb075f13db6bdb991ba",
+      "lab/sandbox/docker_runner.py": "2127f6669064e36eb8168531db1384de8f99841d10e9c5600a8da203b64248ca",
+      "lab/scorer/service.py": "d0bbad5e497d6e68de3e44418bc50c61abdbb8d2f5cc13fdad0525a4095afcd2",
+      "lab/scorer/supervisor.py": "2404836cc8b78bc724cd013600dc875b3586404d466ccda13f5304c9f7a63494",
+      "lab/scorer/worker.py": "b131f0e5ddefae004e96d4a7d061b2fdf1dcd45efb794481cdcd63d09d01858f",
+      "lab/scorer/baseline_report.py": "1797cfd768e58a7252201d3d6e4317e94adedae7d97eaef01254ceea5aa5a763",
+      "tests/test_baseline_admission_cli.py": "db5ee20bea8e18c13d045500032c17b71b59e51d6d42b14ce62f1cc47308e52d",
+      "tests/test_baseline_dispatch.py": "b86d75b012fc4c6536c6aadd4792fc483763bd52eadc395f136ae635b1c3a06f",
+      "tests/test_baseline_stop_safety.py": "b52d17d766e5443436c61072d44c42ae65d7ba48914af56d288814d0f737403a"
+    }
+  },
+  "decision": "Reviewed baseline implementation is suitable for controlled integration work, subject to explicit API/0025 replacement obligations below. This is not unconditional whole-tree integration approval or runtime acceptance.",
+  "closed_source_findings": [
+    {
+      "paths": [
+        "lab/db/migrations/versions/0024_baseline_operation.py:49",
+        "lab/db/migrations/versions/0024_baseline_operation.py:97"
+      ],
+      "finding": "Purpose guards preserve legacy missing-purpose research. Budget registration rejects missing/null zero-use fields and nonobject/nonarray receipts."
+    },
+    {
+      "paths": [
+        "lab/db/migrations/versions/0024_baseline_operation.py:240"
+      ],
+      "finding": "Scorer-only ownerless-stop RPC uses the canonical plan advisory lock directly, then run lock; checks immutable payload, baseline purpose, zero proposals/model tokens and absence of legacy ownership/work. It seals only the canonical empty plan. Planner-only retry selector and narrow terminal-document RPC retain role separation."
+    },
+    {
+      "paths": [
+        "lab/cli.py:1148",
+        "lab/cli.py:1265"
+      ],
+      "finding": "CLI rejects userinfo and nonloopback origins, disables environment proxies and redirects, bounds response size/time, and verifies canonical report identity/status/hash plus strict typed contract."
+    },
+    {
+      "paths": [
+        "lab/director/baseline_operation.py:55",
+        "lab/director/baseline_operation.py:102"
+      ],
+      "finding": "Operation establishes one deadline; setup elapsed is charged, finalization reserve is not renewed, and sandbox stop reconciliation receives the same deadline."
+    },
+    {
+      "paths": [
+        "lab/sandbox/docker_runner.py:254"
+      ],
+      "finding": "Stopped sandbox reconciliation binds admitted run work_root/path/device/inode and captured Director PID/start/boot; it does not confuse random phase UUID with run UUID. Docker reconciliation subprocess timeouts are clamped to remaining allowance."
+    },
+    {
+      "paths": [
+        "lab/scorer/supervisor.py:126",
+        "lab/scorer/supervisor.py:519"
+      ],
+      "finding": "Terminal-job quiescence holds lifecycle lock; loaded unit requires exact invocation and absent/empty or drained expected cgroup. Not-found requires unambiguous inactive properties and absent/empty trusted expected cgroup. Both unit and aggregate-slice queries receive remaining allowance."
+    },
+    {
+      "paths": [
+        "lab/director/baseline_operation.py:500",
+        "lab/scorer/service.py:873",
+        "lab/scorer/baseline_report.py:54"
+      ],
+      "finding": "Stopped partial matrix preserves committed scores even without a later timing checkpoint, publishes only registered terminal pairs, and retains calibration_complete=false/budget_verified=false. Typed report requires sealed plan and all three zero model-usage counters. Scorer verifies terminal-pair identity through narrow RPC."
+    },
+    {
+      "paths": [
+        "lab/cli.py:670",
+        "lab/cli.py:757"
+      ],
+      "finding": "Baseline dispatch branches before provider construction/research loop. Immutable standalone intent and zero proposal/token budget are preserved; ordinary research default/request hash behavior is retained."
+    }
+  ],
+  "required_integration": [
+    {
+      "id": "B-INTEGRATE-API",
+      "status": "open",
+      "paths": [
+        "lab/api/app.py:65"
+      ],
+      "requirement": "Replace frozen API callback's Planner seal path with agreed Scorer-only no-execution preparation/finalization. API stop must use plan-before-run locking; distinguish ownerless from claimed stop. Frozen app.py is not approved verbatim for final integration."
+    },
+    {
+      "id": "B-INTEGRATE-0025",
+      "status": "open",
+      "paths": [
+        "lab/db/migrations/versions/0024_baseline_operation.py",
+        "lab/director/baseline_operation.py",
+        "lab/scorer/service.py"
+      ],
+      "requirement": "Extend ownerless RPC/selector to all 0025 execution/owner/control evidence. Bind baseline active writes, stopped closure, Scorer publication/report and late failure to appropriate captured/admitted generation. Do not apply active-only Director assertions blindly to legitimate Scorer or stop paths."
+    },
+    {
+      "id": "B-INTEGRATE-BASE",
+      "status": "open",
+      "requirement": "Preserve current main 0022/0023 calibration changes and Thompson changes; merge baseline hunks against main rather than copying old-base schema/CLI wholesale. Rechain private0024 from0021 to0023, then0025 after0024; verify merged source/image parity and required quality gate."
+    }
+  ],
+  "proof_limits": [
+    "Worker/root reported focused71 tests and Ruff before the final helper fix; final helper fix reported Ruff and2 tests exit0. Earlier99 tests/mypy14/offline0024 results belong to earlier source revisions. Reviewer did not rerun them or upgrade their scope.",
+    "Current focused tests cover helper/contract/dispatch tripwires, not complete execution of run_baseline_operation/_finish_stopped_baseline.",
+    "Actual PostgreSQL role-denial, canonical report readback, real sandbox baseline matrix, active stop/drain and score-commit/checkpoint-gap proof remain required under frozen plan39.",
+    "Same-original-deadline behavior and systemd cgroup observations are source-reviewed, not measured runtime proof. Fixed supervisor process-stop overhead is distinct from research work budget.",
+    "Full Director restart continuation, persistent infra retry, local model/GPU/public-data and AOS coexistence acceptance remain open."
+  ],
+  "related_scope_check": {
+    "document": "docs/ai-scientist/40-explore-current-gap-review.md",
+    "conclusion": "Accurately labels session50380 as injected-state CPU gap reproduction; acknowledges35-proposal ceiling and does not claim observed36th call, model acceptance or EXPLORE completion."
+  }
+}

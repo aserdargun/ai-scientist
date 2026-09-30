@@ -1,0 +1,101 @@
+{
+  "schema": "local-s2-review21-quality-binding.v1",
+  "source_commit": "92e2bdc",
+  "harness_version": "0.19.0",
+  "runtime_source_diff_exit_code": 0,
+  "gate_session_id": 89240,
+  "gate_actual_exit_code": 0,
+  "gate_archive": "docs/ai-scientist/evidence/quality-gate-local-s2-review21.json",
+  "gate_sha256": "8bb952bdc95a91d030e12c8c5d508a0f29fb524798d26a9e89e78babaa4799b4",
+  "gate_commands": [
+    {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pylint",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bandit",
+        "-q",
+        "-r",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pytest",
+        "-m",
+        "not gpu and not live"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mypy",
+        "--strict",
+        "harness",
+        "lab/referee",
+        "lab/llm",
+        "lab/sandbox",
+        "lab/api",
+        "lab/db",
+        "lab/director",
+        "lab/scorer",
+        "lab/cli.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "build",
+        "--wheel",
+        "--out-dir",
+        "/tmp/swapp-ai-scientist-wheel-egd_gvph"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "artifacts_sha256": {
+    "local-qwen-s2-candidate-019-review.json": "4217a39e52333fdbb7e946ee525d03df68d094fba11896f040611313438b14b9",
+    "local-qwen-s2-candidate-019-after-review.json": "24f6f054fdf8badfed33be25c6cba8edfc2929805cc942d1cd1eb35515f95d93",
+    "local-qwen-s2-token-boundary-review.json": "b3d8cfe3e71278fabbe61f01df1588dd459211f46d0a03171a7acab449505029",
+    "local-qwen-s2-topk20-diagnostic-review.json": "06553063ab11e07dd6cb5cda5903c35efd8f43a6ec6febfd38efc6b95a72687d",
+    "vllm-forced-token-sampler-review.json": "ad0b7cab4e084d094248332ab1671d4b1b98c1fef8de56bbcc5b5a7a27919c86",
+    "local-qwen-observer-exit-race-review.json": "dfeed7728df902787896d65eb43982320c7fdfdcb831898fe64fbcb30f9f0ebc",
+    "parallel-m0-isolated-databases.json": "4bf359b287ddba649aabcc91c859cc51eaa23e54c00a9f34a3615735000938f4",
+    "local-qwen-019-configuration-review.json": "287af598841f4779ef2f0e71114b48efc6beb6d4fb284ab5cf9a244fc40343a1",
+    "local-qwen-historical-recovery-state-review.json": "171f69547de7167f514468fc2e5fca6c6c7e336a9949ef35c372a0986ab363a3",
+    "review_local_qwen_s2_candidate.py": "f95c93276312d6f3de9eed2c5dbacf8a7a5a4972909255573d30a4b9c1a34a98",
+    "review_local_qwen_s2_token_boundaries.py": "752334515eb7e51b7865c5cb73304b57f6ba4721945de4335f98b8e0d345a492",
+    "review_local_qwen_s2_topk_diagnostic.py": "764d2e794a74e5bd85310b72275ad7113a1455114ba71243612ef2b669d93a7c",
+    "review_vllm_forced_token_sampler.py": "415a062192457e51a8f293e5ba872c7f4c16c47b9e639823dbc3a8526780e20d",
+    "review_local_qwen_observer.py": "e4f2d64f4e687efde7cd629006c71b81f8ef6509d9f881a3d41e2357addef4ba"
+  },
+  "unmodified_production_s2_passed": false,
+  "review_topk20_diagnostic_s2_passed": false,
+  "review_topk20_reasoning_boundary_observed": true,
+  "main_runtime_changed": false,
+  "parallel_worktrees_integrated": false
+}

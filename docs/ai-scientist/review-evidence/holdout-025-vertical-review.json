@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "command": "ruff check lab/cli.py lab/director/loop.py lab/director/holdout.py lab/scorer/holdout.py lab/scorer/holdout_supervisor.py lab/scorer/holdout_worker.py tests/test_holdout_privacy.py tests/test_postgres_holdout_api_identity.py",
+      "exit_code": 0,
+      "result": "All checks passed"
+    },
+    {
+      "command": "pytest -q tests/test_director_loop_core.py tests/test_loop_family_primary_score.py tests/test_holdout_privacy.py",
+      "exit_code": 0,
+      "limits": {
+        "cpu_quota_percent": 50,
+        "memory_bytes": 1073741824,
+        "runtime_seconds": 120,
+        "swap_bytes": 0,
+        "tasks": 64
+      },
+      "resource_unit": "swapp-luna-holdout-focused-final.service",
+      "result": "36 passed"
+    },
+    {
+      "command": "mypy --strict lab/director/loop.py lab/director/holdout.py lab/cli.py lab/scorer/holdout.py lab/scorer/holdout_supervisor.py lab/scorer/holdout_worker.py",
+      "exit_code": 0,
+      "resource_unit": "swapp-luna-holdout-mypy-final.service",
+      "result": "Success: no issues found in 6 source files"
+    },
+    {
+      "command": "pytest -q --tb=short tests/test_postgres_holdout_api_identity.py -m live",
+      "database": "swapp_lab_m0_holdout_025_f5ab9497",
+      "exit_code": 0,
+      "limitations": [
+        "This is not public holdout acceptance and does not prove public PDM/NRM/EVT metrics.",
+        "The synthetic baseline self-comparison is not an improvement claim.",
+        "The disposable test database retains immutable reservation rows; no historical/main database was touched.",
+        "No GPU, live AOS, or model call was involved."
+      ],
+      "limits": {
+        "cpu_quota_percent": 100,
+        "memory_bytes": 2147483648,
+        "runtime_seconds": 240,
+        "swap_bytes": 0,
+        "tasks": 128
+      },
+      "resource_unit": "swapp-luna-holdout-pg-vertical-14.service",
+      "result": "2 passed; actual API-created run and private Scorer/Docker holdout worker vertical",
+      "scope": "Synthetic EVT fixture only; distinct development/private manifest identities, real reservation, isolated worker generation, passed bit, durable Director application checkpoints."
+    }
+  ],
+  "migration": {
+    "note": "Failed records are earlier test iterations; immutable reservation rows were retained.",
+    "observed_revision": "0019_bounded_holdout",
+    "private_database": "swapp_lab_m0_holdout_025_f5ab9497",
+    "reservation_rows_after_iterations": {
+      "failed": 2,
+      "passed": 5
+    },
+    "revision": "0019_bounded_holdout"
+  },
+  "schema": "holdout-private-vertical-review.v1",
+  "source_base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "source_branch": "feat/luna-m0-holdout-025",
+  "source_sha256": {
+    "lab/cli.py": "0f6bbd4f305f721d416af9f90726c3f6d262b38100999fef8d0d19a0831dc097",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "8b0f3705070dd2d579a1a2d1eae0c0711a702eaa0d0249a36b4e58c0ef85db1d",
+    "lab/db/schema.py": "1e95ef7fc6e82d72571fc004ea95d995203e5ee369502d2f835d59688b48a78c",
+    "lab/director/holdout.py": "48ed9414dd756d51dc49495ae462b74195947dd1696b3e2618d9e5c3507427ee",
+    "lab/director/loop.py": "416e7fd84102ef5ac3069a5b546512c7f63714833aabb11ef1c9ebe1b9e4b352",
+    "lab/scorer/holdout.py": "27895a0431726b9d1f86ddc6254d05eb7f156136c459d42d642786a2af6a8ed3",
+    "lab/scorer/holdout_supervisor.py": "3d0d5b413723c847028c8e5fd85b6e10435472b1a81661c9b031949599d8d5f1",
+    "lab/scorer/holdout_worker.py": "aec3a89ca323e47541f1a99f5750de6c3cc875d4c6b3774bd9b9a470fe1bc874",
+    "tests/test_holdout_privacy.py": "c6163feb71e052ad6e81a645c62d0412a713aee8588e514e08429751c38b3b28",
+    "tests/test_postgres_holdout_api_identity.py": "7f3b936612013a5a19fe23b37fa220844eeb78e44712df53cd1af4a54affbd9f"
+  }
+}

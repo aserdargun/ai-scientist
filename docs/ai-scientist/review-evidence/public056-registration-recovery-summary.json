@@ -1,0 +1,41 @@
+{
+  "schema": "public056-registration-recovery-summary.v1",
+  "checked_at": "2026-09-30T01:10:05.386971+03:00",
+  "recovery_captured_at": "2026-09-29T21:59:41.989955+00:00",
+  "private_receipt_sha256": "6db1c6fbb1f25a92fd10e3cee9698a2c6e3abc8b54f51c63d41b46bf96cf7525",
+  "measurement_inventory_sha256": "2fe121c86a2d9586545e00553c38eb137901c9471d92e41b287d219193ffa83a",
+  "measurement_admission_sha256": "0b5a5658042f9c64719acf59b4241a7bbdc88210a4f62f19c339ae2f17b96cd4",
+  "registrar_release_sha256": "f8464c9a561bd454cdc0d5c745da9d39f1068143681ff72f093d81ac7175087c",
+  "registrar_code_sha256": "6885b119f8b33c4af82caa79670003957e20b86f4849aed9a363eb6e5703b45e",
+  "preservation_before_sha256": "0eb4d4337339ce310c09ff0e17ffb82ed9e53f6886a14cc2c763e7c83f0dfb74",
+  "preservation_after_sha256": "0eb4d4337339ce310c09ff0e17ffb82ed9e53f6886a14cc2c763e7c83f0dfb74",
+  "preserved_table_sha256": {
+    "care_baseline_calibration_jobs": "2efafd0f45e196e67040fc9f3b24d5481a91b26e488cb4b4b2b67a818c07fbdf",
+    "care_baseline_calibration_control": "df20801252924297f5391bfb2a8f6c600cca12e8f06d08d95f9a02eddefb84fa",
+    "care_baseline_calibration_claims": "bf53c59b1535d87f9a658bb3ae523e98d60f9580671caa9edece9aa5960279d0",
+    "care_baseline_calibration_cells": "c28878a275da9db8c05f164f22aeadd3717624f539f806f0b6bc7205d4eb9d4c",
+    "care_baseline_calibration_task_summaries": "cd2eef148fb374e6ef1fbe082c02687d4903933d76ebaf673ffd312d55ca34e6",
+    "care_baseline_calibration_tasks": "800627ab6bbd574a16c61c04885335675049e93c7c224f1be36da00c3992784c",
+    "care_baseline_calibration_freezes": "363a636634ec09ad457c3c447de23bec404f08d8a20fa6f85a27f44748c8c781",
+    "dataset_profiles": "deee3e98a14d9b75879366f9d50dfd052f75bf82ba9893ef32c1f73bbd67a669",
+    "dataset_task_semantics": "ded5b1daf17ab0a4a75dc5f6a875cd6ce8e06d2c5cd86494ec89456e16338aa8",
+    "feature_artifacts": "8914efe61c7630f79bc4c0a8a5f73b6057f7d39ddedbea5fdab33ff7d31d1361"
+  },
+  "independent_preservation_digest_recomputed": true,
+  "all_before_after_table_digests_identical": true,
+  "both_attempts_all_columns_unchanged": true,
+  "database_identity_unchanged": true,
+  "source_pins_changed": false,
+  "dispatches": false,
+  "trusted_suite_binding_complete": true,
+  "registration_manifest_sha256": [
+    "ec67b36dee74b1bb90168580a686be3b8dab7c65394889057784925ac39aeadf",
+    "ec67b36dee74b1bb90168580a686be3b8dab7c65394889057784925ac39aeadf"
+  ],
+  "development_manifest_sha256": [
+    "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c"
+  ],
+  "numeric_holdout_material_exposed": false,
+  "private_database_identity_exposed": false,
+  "scope": "Hash-only summary of original measured-attempt registration recovery; no recalibration, DB requery, model or research acceptance"
+}

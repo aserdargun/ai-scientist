@@ -1,0 +1,32 @@
+{
+  "schema": "blob-writer-crash-recovery-review.v1",
+  "checked_at": "2026-09-24T16:48:42.847176+00:00",
+  "scope": "A real SIGKILL of our own writer after file fsync, private temporary artifact root, three tiny numeric documents; no DB, AOS, GPU, shared blob store or public data changes.",
+  "source_sha256": {
+    "lab/scorer/jobs.py": "4e71d2cd3c5868e5ca698b40533f211b28c134c5916820866f1fc78dc6514647"
+  },
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_blob_crash_recovery.py",
+  "script_sha256": "c7723c0b11b96cfad8c50d23286c0b5d95fee4fa857cdd955e05db1ead03c388",
+  "writer_exit_code": -9,
+  "fsynced_temporary_files_after_kill": 1,
+  "temporary_bytes": 81,
+  "next_distinct_write": {
+    "state": "accepted",
+    "sha256": "e625f274821d91e6a3a54798b4a12335b9cf1ac25125d087d143eefe01da9d41"
+  },
+  "checks": {
+    "owned_writer_killed_after_fsync": true,
+    "one_fsynced_temp_left_after_kill": true,
+    "new_valid_write_succeeds": true,
+    "orphan_temp_removed": true,
+    "prior_finalized_blob_unchanged": true,
+    "adjacent_sentinel_unchanged": true,
+    "new_blob_hash_and_bytes_match": true,
+    "next_repeat_is_idempotent": true,
+    "private_fixture_cleaned": true,
+    "source_unchanged": true
+  },
+  "private_fixture_cleaned": true,
+  "source_unchanged": true,
+  "all_passed": true
+}

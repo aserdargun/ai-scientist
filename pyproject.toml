@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "swapp-ai-scientist"
+version = "0.1.0"
+description = "Local research harness and deterministic referee for SWAPP AI Scientist"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy>=2.2,<3",
+  "pandas>=2.2,<3",
+  "scikit-learn>=1.6,<2",
+  "pydantic>=2.10,<3",
+  "fastapi>=0.115,<1",
+  "sqlalchemy>=2.0,<3",
+  "alembic>=1.14,<2",
+  "pyarrow>=19,<24",
+  "psycopg[binary]>=3.2,<4",
+  "starlette>=0.46,<1",
+  "uvicorn>=0.34,<1",
+]
+
+[project.scripts]
+lab = "lab.cli:main"
+lab-gpu-doctor = "lab.llm.native_runtime:doctor_main"
+lab-aos-gpu-broker = "lab.llm.aos_gpu_service:main"
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.9,<1",
+  "pylint>=3.3,<4",
+  "bandit>=1.8,<2",
+  "pytest>=8.3,<9",
+  "mypy>=1.14,<2",
+  "pandas-stubs>=2.2,<3",
+  "types-python-dateutil>=2.9,<3",
+  "httpx>=0.27,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness", "lab", "vendor"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"vendor/tsb_ad_eval/basic_metrics.pyi" = "vendor/tsb_ad_eval/basic_metrics.pyi"
+"vendor/tsb_ad_eval/NOTICE.md" = "vendor/tsb_ad_eval/NOTICE.md"
+"vendor/tsb_ad_eval/LICENSE" = "vendor/tsb_ad_eval/LICENSE"
+"ops/sandbox-image.lock" = "lab/sandbox/image.lock"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["docs/ai-scientist/review-evidence", "vendor/tsb_ad_eval/basic_metrics.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["harness", "lab/referee", "lab/llm/router.py"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "gpu: requires an explicit local GPU/model opt-in",
+  "live: requires an explicit external service/model opt-in",
+]
+
+[tool.pylint.main]
+py-version = "3.12"
+fail-under = 9.0
+ignore-paths = ["docs/.*", ".venv/.*"]
+
+[tool.pylint.messages_control]
+disable = ["too-few-public-methods"]
+
+[tool.bandit]
+exclude_dirs = ["tests"]

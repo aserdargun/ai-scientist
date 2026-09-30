@@ -1,0 +1,25 @@
+{
+  "schema": "care-calibration-pg-execution-binding.v1",
+  "actual_session": 20829,
+  "actual_exit_code": 0,
+  "completion_chunk": "548c14",
+  "unit": "swapp-care-calibration-pg-20260927-r1a.service",
+  "wall_seconds": 28.08,
+  "cpu_seconds": 1.878,
+  "reported_driver_memory_peak": "183.3M",
+  "swap_bytes": 0,
+  "memory_scope": "Driver cgroup only; separate PG container excluded.",
+  "evidence_path": "docs/ai-scientist/review-evidence/care-calibration-031-pg-91e1c7e3ecb5.json",
+  "evidence_sha256": "5594499dd9e8e2eef2beb664876e28bdd32d9c85d511c5b090b3bcb3ef71e293",
+  "runner_sha256": "e62ff474d46dd00f3ee1c0b7b6a7f7b27f5f57e0c29b0fadd0fcce2a6465e969",
+  "test_sha256": "2c81d8d9ad53d39419eb8fcb63ea6400645e02ee0591ee9540b31cf47c8464d2",
+  "independent_container_absence_check": {
+    "completion_chunk": "bda3d7",
+    "actual_exit_code": 0,
+    "label": "swapp.review.care-calibration031",
+    "matching_containers": 0
+  },
+  "scope": "Synthetic SQL storage proof: 15 profiles and 135 synthetic receipts; no candidate, Scorer worker, GPU/model, actual Farm B calibration or main runtime integration.",
+  "source_snapshot_unchanged": true,
+  "source_matches_snapshot_at_completion": true
+}

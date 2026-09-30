@@ -1,0 +1,194 @@
+{
+  "accepted_scope": {
+    "CARE": {
+      "families": {
+        "NRM": 10,
+        "PDM": 12
+      },
+      "loader_exit_code": 0,
+      "peak_rss_bytes": 444387328,
+      "receipts_sha256": "323eae79d394bea49ed449b721776fc64c84c2c6449291421c4504019049efa1",
+      "tasks": 22
+    },
+    "SMD": {
+      "loader_exit_code": 0,
+      "official_test_rows": 12000,
+      "official_train_rows": 12000,
+      "peak_rss_bytes": 289112064,
+      "receipts_sha256": "540abca4829dab58f5e81eb5eae001455bd5d0c489e162c3354a073d2e545766",
+      "source_entity": "machine-1-1",
+      "tasks": 1
+    },
+    "migration_chain_roundtrip": {
+      "final_0018_sha256": "b22838af02241fcfd03a282552536b06712595462da62eb93cff99d3b3556b17",
+      "status": "root-confirmed separate-clone 0015->0016->0018 DDL, 6/6 checks exit 0"
+    },
+    "mypy": {
+      "exit_code": 0,
+      "result": "Success: no issues found in 17 source files"
+    },
+    "ruff": {
+      "exit_code": 0,
+      "result": "All checks passed"
+    },
+    "scorer_family_postgres": {
+      "case_families": [
+        "PDM",
+        "NRM"
+      ],
+      "db": "swapp_lab_m0_public_suite_3ddaa2d8",
+      "exit_code": 0,
+      "passed": 2,
+      "synthetic_fixture_labels": true
+    },
+    "suite_manifest": {
+      "matrix_and_json_limit_bytes": 67108864,
+      "real_complete_public_suite_manifest": "not yet accepted; missing independent source families",
+      "synthetic_roundtrip_test_exit_code": 0
+    },
+    "targeted_unit_api_baseline_manifest_suite": {
+      "command": "pytest -q tests/test_public_data.py tests/test_suite_weights.py tests/test_suite_guards.py tests/test_suite_manifest.py tests/test_loop_family_primary_score.py tests/test_public_scorer_families.py tests/test_baselines.py tests/test_api_and_scorer.py -m not live",
+      "exit_code": 0,
+      "passed": 43
+    }
+  },
+  "base_revision": "92e2bdc",
+  "files": [
+    {
+      "path": "harness/alarm.py",
+      "sha256": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103"
+    },
+    {
+      "path": "harness/public_data.py",
+      "sha256": "a58c317003bee844ca83442aabcdf111ee96fab8896e9c75df8b8b5eb03393a4"
+    },
+    {
+      "path": "lab/db/schema.py",
+      "sha256": "8534e30c93e342d3c645ac70b19a75b03a8a4b688ebaa177068cbbbbc2b72f70"
+    },
+    {
+      "path": "lab/db/migrations/versions/0018_public_task_semantics.py",
+      "sha256": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae"
+    },
+    {
+      "path": "lab/director/artifacts.py",
+      "sha256": "300c0f20c41c12d72e73cde0f6645b1831df60095d90975ea631ef51a00fbec5"
+    },
+    {
+      "path": "lab/director/baseline_runner.py",
+      "sha256": "f9b0897ed3130414d060f0167ab0512acf39ba8f87d6efe279358a0b679a637c"
+    },
+    {
+      "path": "lab/director/baselines.py",
+      "sha256": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9"
+    },
+    {
+      "path": "lab/director/executor.py",
+      "sha256": "149b0dce4a44362d6e7db2f6ad1eed2d20319cc6ac55aafef91c4d553c0d0ffb"
+    },
+    {
+      "path": "lab/director/loop.py",
+      "sha256": "7fa1b75bc8c172802a1ebf844de4094a3cca12fe18d47123f85e36308291f01e"
+    },
+    {
+      "path": "lab/director/suite.py",
+      "sha256": "eab5599364e19f654bcfd6e4aea4d6fab5be8f6bc7342d03efc4fae1a47e916d"
+    },
+    {
+      "path": "lab/director/suite_manifest.py",
+      "sha256": "ac47c1c1de1f18c0fa14da2f201b1787bff4f69be04b5d0116a98e7418c3b08d"
+    },
+    {
+      "path": "lab/director/public_suite.py",
+      "sha256": "9d81847cf4f588bcffe71ce1e760a34325ff0475c5f624958202b6d35771823a"
+    },
+    {
+      "path": "lab/director/suite_guards.py",
+      "sha256": "38916491f76a712bd2e46cf136c261cf0dd8da3cf07cadd98335b4237d81e0f7"
+    },
+    {
+      "path": "lab/director/suite_weights.py",
+      "sha256": "0a11df570070ba43af0acc6c8ce5ca3071cbecc0d55abf59d9f5653f1ee1eaf0"
+    },
+    {
+      "path": "lab/sandbox/candidate_entrypoint.py",
+      "sha256": "edbdc4d4263bbd6fa38c2964bb5ca14191933d522f9f6d3768309ca1ea7bb687"
+    },
+    {
+      "path": "lab/sandbox/evaluation.py",
+      "sha256": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c"
+    },
+    {
+      "path": "lab/scorer/service.py",
+      "sha256": "3203d4aa6219d35877b32d03f63c3e96aea2ac424ef6cc104eb86f89feee97b0"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/accept_care_public_materializer.py",
+      "sha256": "e4ec29ffe3e7270d2734b3337c7518a882a6020f56ae0dbf3ee83ef8591a0dbb"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/accept_smd_public_materializer.py",
+      "sha256": "b5cdb33f556784bcd1da284aaffaa283c2ed0e7cc2e3de1f3c95c7cb9600255c"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/care-public-materializer-check.json",
+      "sha256": "323eae79d394bea49ed449b721776fc64c84c2c6449291421c4504019049efa1"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/smd-public-materializer-check.json",
+      "sha256": "540abca4829dab58f5e81eb5eae001455bd5d0c489e162c3354a073d2e545766"
+    },
+    {
+      "path": "tests/test_public_data.py",
+      "sha256": "64189bee10b44e0d7fd7ceeeba1c8bcc158ee6b9f93722fc277d05550ea0043b"
+    },
+    {
+      "path": "tests/test_loop_family_primary_score.py",
+      "sha256": "cf976948e47f2bdb2b98064346e1f98606accb7e2882f6c771c74b38db0ae9a8"
+    },
+    {
+      "path": "tests/test_postgres_public_family_scorer.py",
+      "sha256": "c568fb72acd5885996bd9390cac4ab71d554c60351b821b810f3349e306f71a3"
+    },
+    {
+      "path": "tests/test_public_scorer_families.py",
+      "sha256": "09eac1af87d1492ea713d221a36e5caf82adc2f1d1e8511441c0130998d2dfb8"
+    },
+    {
+      "path": "tests/test_suite_guards.py",
+      "sha256": "0c037390db4fcefc8c3b4da267c6ec3537492279ae780e4e30dcee529150917c"
+    },
+    {
+      "path": "tests/test_suite_manifest.py",
+      "sha256": "86f11a1a2fb54c8271f843df77b4e8d0a444f6175a52bc06235ff734d2004f03"
+    },
+    {
+      "path": "tests/test_suite_weights.py",
+      "sha256": "c4626d46b3cfbe042ee56a9756f4af5e52683959ce2d48133d6d8e46367fc85d"
+    }
+  ],
+  "limitations": [
+    "No end-to-end full four-source public manifest or public-label PostgreSQL score has been claimed.",
+    "Scorer PostgreSQL rows are synthetic fixture labels; CARE/SMD source loaders were exercised separately.",
+    "Independent-family minimum and final full-suite water-fill remain unaccepted until required industrial sources have validated label-blind splits."
+  ],
+  "not_accepted": {
+    "SKAB": {
+      "status": "extra source only; fixed chosen valve1/0 materialization lacked evaluation anomalies; not a suite substitute"
+    },
+    "TSB-AD-M": {
+      "GHL_or_SWaT_included": false,
+      "SMD_industrial_label": false,
+      "loader_split_suite_acceptance": "pending",
+      "required_sources": [
+        "Genesis",
+        "GECCO",
+        "CATSv2"
+      ]
+    }
+  },
+  "schema": "public-suite-staged-freeze.v1",
+  "status": "verified-slice-ready-for-integration-review",
+  "usage_profile": "noncommercial_research",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/public-suite"
+}

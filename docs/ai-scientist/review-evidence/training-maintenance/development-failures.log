@@ -1,0 +1,7 @@
+Development failures preserved; all are superseded by final quality.log (all checks exit 0).
+
+1. Initial targeted pytest attempt exited 1: test_success_exit_without_durable_worker_receipt_fails_closed raised FileNotFoundError because the test created the temporary GPU runtime directory without parents. The fixture was corrected to mkdir(parents=True).
+
+2. Second targeted pytest attempt exited 1: the same test expected the missing-completion-receipt error but failed earlier because PROJECT_ROOT was monkeypatched and the fixture had no lab/director/runner.py. The fixture now supplies a deterministic agent_version_identity stub, keeping the test isolated to dispatch behavior.
+
+3. A quality command first waited on the shared CPU lock and timed out before its systemd unit started. No tests or checks ran in that attempt. Root later authorized GPU/model-free checks under an independent MemoryMax=1G, MemorySwapMax=0, CPUQuota=50%, TasksMax=64 unit; the final recorded run used those limits.

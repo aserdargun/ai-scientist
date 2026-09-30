@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-24T18:23:46.051116+00:00",
+  "scope": "Unit fault injection: completed measured/crashed/timed-out/constant-score-rejected seeds and a primary seed read after completed confirmation. Actual runner and budget with immutable in-memory checkpoints; SQL and Docker replaced. This does not prove real process restart or Director20.",
+  "source_sha256": {
+    "lab/director/runner.py": "6f350d0204bf368e3caffb6fc9dba887d1b61831980e18f9196ae6b3a9abf726",
+    "lab/director/budget.py": "e5763bbbe1e958aa79add24aaeadda9677418adad6082f604fc3fd21c108c1ec",
+    "tests/test_director_seed_resume_review.py": "402da6ea2063013141f481a681611f0aa85996c7d361a45e3f2c8dd8e1be628a"
+  },
+  "source_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "-q",
+        "--tb=short",
+        "tests/test_director_seed_resume_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": ".....                                                                    [100%]\n5 passed in 0.72s\n",
+      "stderr": ""
+    }
+  ],
+  "all_passed": true
+}

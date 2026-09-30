@@ -1,0 +1,9 @@
+{
+  "schema": "native-diagnostic-directory-setup.v1",
+  "path": "data/runtime/native-doctor",
+  "before_mode": "0o755",
+  "uid": 1000,
+  "scope": "Only this project owned doctor output directory; no existing file modified.",
+  "after_mode": "0o700",
+  "passed": true
+}

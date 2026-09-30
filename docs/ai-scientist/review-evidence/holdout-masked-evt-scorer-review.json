@@ -1,0 +1,47 @@
+{
+  "schema": "holdout-masked-evt-scorer-review.v1",
+  "scope": "EVT Scorer mask handling only; does not claim complete holdout support or acceptance for PDM/NRM.",
+  "private_database": "swapp_lab_m0_recovery_b1ef2b5e",
+  "production_path": {
+    "experiment_registration": "lab.director.ledger.register_experiment",
+    "task_plan": "lab.director.task_plan.plan_run_tasks",
+    "score_enqueue": "lab.scorer.jobs.enqueue_score_job",
+    "score_execution": "lab.scorer.worker in a unique bounded systemd scorer unit",
+    "result_verification": "Scorer task_scores readback compared with unmasked VUS calculation"
+  },
+  "postgres_review": {
+    "unit": "luna-mask-port-private-pg-final2.service",
+    "command": "flock /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock systemd-run --user --wait --collect --unit=luna-mask-port-private-pg-final2 --property=MemoryMax=2G --property=MemorySwapMax=0 --property=CPUQuota=100% --property=TasksMax=128 --property=RuntimeMaxSec=240 --property=UMask=0077 --setenv=PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/recovery --setenv=OPENBLAS_NUM_THREADS=1 --setenv=OMP_NUM_THREADS=1 --setenv=MKL_NUM_THREADS=1 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/recovery /home/cachyos/ai-scientist/data/runtime/parallel-m0/recovery/.venv/bin/python tests/review_holdout_masked_evt.py",
+    "actual_exit_code": 0,
+    "checks": 6,
+    "masked_samples": 1,
+    "scored_samples": 7,
+    "systemd_memory_peak_mib": 139.2,
+    "stdout_receipt": {
+      "checks": 6,
+      "masked_samples": 1,
+      "scored_samples": 7,
+      "exit_code": 0
+    }
+  },
+  "focused_unit_tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_evt_masks.py tests/test_api_and_scorer.py",
+    "actual_exit_code": 0,
+    "result": "16 passed, 9 warnings in 1.05s",
+    "systemd_unit": "luna-evt-mask-focused-tests-final.service",
+    "memory_peak_mib": 177.7
+  },
+  "static_checks": {
+    "ruff_command": ".venv/bin/ruff check lab/scorer/task_semantics.py lab/scorer/service.py tests/test_evt_masks.py tests/review_holdout_masked_evt.py",
+    "ruff_exit_code": 0,
+    "py_compile_exit_code": 0
+  },
+  "source_sha256": {
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/service.py": "0eb2306f2ce61dc8aac51e2504d8cde3c640488aea245ee07fca5265ee0ac246",
+    "tests/test_evt_masks.py": "f91a53480b8c365845169e8c7fac32038b94059f0ec4f86d2d7898c6edc7030a",
+    "tests/review_holdout_masked_evt.py": "4463fe3df0b3d8f5d75342c89c80cd2f547db62412481c54968341202235984d",
+    "lab/db/schema.py_current_main_dependency": "8534e30c93e342d3c645ac70b19a75b03a8a4b688ebaa177068cbbbbc2b72f70",
+    "harness/alarm.py_current_main_dependency": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103"
+  }
+}

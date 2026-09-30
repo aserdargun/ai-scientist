@@ -1,0 +1,17 @@
+{
+  "schema": "immutable-evidence-whitespace-check.v1",
+  "full_diff_check_exit_code": 2,
+  "source_and_documentation_check_exit_code": 0,
+  "artifact_paths": [
+    "docs/ai-scientist/review-evidence/m02-typed-reject/m02-typed-reject.patch",
+    "docs/ai-scientist/review-evidence/parallel-integration-029-gate-bound.stdout.txt"
+  ],
+  "reason": "Original unified patch context and raw command stdout retain their recorded bytes and hashes; runtime sources/tests/docs have no whitespace errors.",
+  "mandatory_full_quality_session": 92987,
+  "mandatory_full_quality_actual_exit_code": 0,
+  "first_classifier_attempt": {
+    "tool_chunk": "6e4da2",
+    "exit_code": 1,
+    "reason": "Added stdout warning lines were misidentified as diff-check headers; classification now excludes added content lines. No files were changed by that failed attempt."
+  }
+}

@@ -1,0 +1,678 @@
+diff --git a/lab/cli.py b/lab/cli.py
+index edd17ad..42143ae 100644
+--- a/lab/cli.py
++++ b/lab/cli.py
+@@ -13,6 +13,7 @@ import sys
+ import time
+ from datetime import UTC, datetime
+ from pathlib import Path
++from typing import Literal
+ from uuid import UUID
+ 
+ from sqlalchemy import Engine, case, create_engine, or_, select, text
+@@ -26,7 +27,11 @@ from lab.director.baselines import calibration_sha256
+ from lab.director.budget import MAX_PROPOSALS, MAX_RUN_MODEL_TOKENS, MAX_RUN_WALL_SECONDS, RunBudget
+ from lab.director.fake_llm import ProposalProvider
+ from lab.director.journal import DirectorRunLease
+-from lab.director.local_llm import LocalQwenProposalProvider, provider_config_sha256
++from lab.director.local_llm import (
++    LocalQwenProposalProvider,
++    provider_config_sha256,
++    provider_profile_set_for_sha256,
++)
+ from lab.director.loop import load_fake_provider, run_proposal_loop
+ from lab.director.recovery import (
+     apply_stop_and_finalize,
+@@ -66,7 +71,12 @@ DIRECTOR_DISPATCH_ENVIRONMENT = (
+ )
+ 
+ 
+-def _local_qwen_provider(run_id: UUID, registry_entry_sha256: str) -> LocalQwenProposalProvider:
++def _local_qwen_provider(
++    run_id: UUID,
++    registry_entry_sha256: str,
++    *,
++    profile_set: Literal["smoke", "research"] = "smoke",
++) -> LocalQwenProposalProvider:
+     """Build the fixed local provider from service-owned identity and runtime paths."""
+     if re.fullmatch(r"[0-9a-f]{64}", registry_entry_sha256) is None:
+         raise ValueError("trusted provider registry receipt is required")
+@@ -87,13 +97,14 @@ def _local_qwen_provider(run_id: UUID, registry_entry_sha256: str) -> LocalQwenP
+         raise ValueError("GPU runtime directory must be private to the service owner")
+     if database.exists() and (database.is_symlink() or not database.is_file()):
+         raise ValueError("GPU runtime database must be a regular file")
+-    expected_configuration = provider_config_sha256()
++    expected_configuration = provider_config_sha256(profile_set)
+     provider = LocalQwenProposalProvider(
+         run_id=run_id,
+         owner="lab",
+         principal_resolver=SystemdPrincipalResolver({"aos": aos_unit, "lab": lab_unit}),
+         runtime_database=database,
+         registry_entry_sha256=registry_entry_sha256,
++        profile_set=profile_set,
+     )
+     if provider.configuration_sha256 != expected_configuration:
+         raise RuntimeError("local provider configuration changed during construction")
+@@ -215,15 +226,21 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
+             entry_sha = getattr(args, "provider_registry_entry_sha256", None)
+             if not isinstance(entry_sha, str):
+                 entry_sha = request.get("provider_registry_entry_sha256")
++            config_sha = request.get("provider_config_sha256")
++            if not isinstance(config_sha, str):
++                raise ValueError("immutable local provider configuration digest is missing")
++            profile_set = provider_profile_set_for_sha256(config_sha)
+             if (
+                 not isinstance(entry_sha, str)
+                 or request.get("scenario_sha256") is not None
+-                or request.get("provider_config_sha256") != provider_config_sha256()
++                or config_sha != provider_config_sha256(profile_set)
+                 or request.get("provider_registry_entry_sha256") != entry_sha
+             ):
+                 raise ValueError("local provider configuration differs from immutable request")
+             injected_provider = getattr(args, "provider_instance", None)
+-            provider = injected_provider or _local_qwen_provider(args.run_id, entry_sha)
++            provider = injected_provider or _local_qwen_provider(
++                args.run_id, entry_sha, profile_set=profile_set
++            )
+             if (
+                 getattr(provider, "provider_id", None) != "local-qwen.v1"
+                 or getattr(provider, "configuration_sha256", None)
+@@ -458,10 +475,15 @@ def _dispatch_director_run(run_id: UUID) -> dict[str, object]:
+             if len(provider_instance) < proposal_limit:
+                 raise ValueError("registered fake scenario is shorter than the run budget")
+         else:
+-            current_config_sha = provider_config_sha256()
++            if entry.provider_config_sha256 is None:
++                raise ValueError("registered local provider configuration digest is missing")
++            profile_set = provider_profile_set_for_sha256(entry.provider_config_sha256)
++            current_config_sha = provider_config_sha256(profile_set)
+             if current_config_sha != entry.provider_config_sha256:
+                 raise ValueError("registered local provider profile differs from this worker")
+-            provider_instance = _local_qwen_provider(run_id, entry_sha)
++            provider_instance = _local_qwen_provider(
++                run_id, entry_sha, profile_set=profile_set
++            )
+         payload = json.dumps(
+             {key: value for key, value in request.items() if key != "idempotency_key"},
+             sort_keys=True,
+diff --git a/lab/director/fake_llm.py b/lab/director/fake_llm.py
+index 92e81ec..c619157 100644
+--- a/lab/director/fake_llm.py
++++ b/lab/director/fake_llm.py
+@@ -105,6 +105,7 @@ class ProviderReceipt(BaseModel):
+         "director.candidate-contract.metadata-only.v2",
+         "director.candidate-contract.metadata-only.v3",
+         "director.candidate-contract.metadata-only.v4",
++        "director.candidate-contract.metadata-only.v5",
+     ]
+     context_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
+     prompt_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
+diff --git a/lab/director/local_llm.py b/lab/director/local_llm.py
+index a6e0d5e..a40a5e4 100644
+--- a/lab/director/local_llm.py
++++ b/lab/director/local_llm.py
+@@ -36,6 +36,8 @@ from lab.director.fake_llm import (
+ from lab.director.journal import canonical_bytes
+ from lab.llm.gpu_scheduler import PrincipalResolver
+ from lab.llm.native_runtime import (
++    LOCAL_RESEARCH_S1_PROFILE,
++    LOCAL_RESEARCH_S2_PROFILE,
+     LOCAL_SMOKE_S1_PROFILE,
+     LOCAL_SMOKE_S2_PROFILE,
+     MODEL_REPOSITORY,
+@@ -49,8 +51,8 @@ from lab.llm.native_runtime import (
+ )
+ 
+ _RECEIPT_NAMESPACE = UUID("65c75b81-e98b-480f-a608-5389bb6bf8bf")
+-_PROMPT_TEMPLATE: Literal["director.candidate-contract.metadata-only.v4"] = (
+-    "director.candidate-contract.metadata-only.v4"
++_PROMPT_TEMPLATE: Literal["director.candidate-contract.metadata-only.v5"] = (
++    "director.candidate-contract.metadata-only.v5"
+ )
+ _PROVIDER_ID: Literal["local-qwen.v1"] = "local-qwen.v1"
+ _SYSTEM_PROMPT = (
+@@ -58,6 +60,10 @@ _SYSTEM_PROMPT = (
+     "Referee decides. Return exactly one compact JSON object with hypothesis (1..384 "
+     "characters), move_type (the preselected move), candidate_source (complete runnable "
+     "Python source, 1..6000 characters), and predicted_delta (finite number in [-4,4]). "
++    "candidate_source must contain the complete Python source as a JSON string. Encode "
++    "source line breaks as escaped JSON \\n sequences so decoding yields real newlines; "
++    "use normal indented multi-line Python with imports and method bodies on separate lines. "
++    "A one-line semicolon/comma approximation is not a complete implementation. "
+     "Keep the source concise: no markdown, code fences, prose, examples, docstrings, or "
+     "unused helpers. Do not omit executable behavior or truncate the implementation to fit. "
+     "Do not include scores, metric claims, verdicts, labels, or raw series. The source must "
+@@ -96,14 +102,22 @@ def _local_candidate_schema() -> dict[str, object]:
+     properties = schema.get("properties")
+     if not isinstance(properties, dict):
+         raise RuntimeError("CandidateProposal schema has no properties object")
+-    for field_name, maximum in (
+-        ("hypothesis", _LOCAL_HYPOTHESIS_MAX_LENGTH),
+-        ("candidate_source", _LOCAL_CANDIDATE_SOURCE_MAX_LENGTH),
+-    ):
+-        field = properties.get(field_name)
+-        if not isinstance(field, dict):
+-            raise RuntimeError(f"CandidateProposal schema has no {field_name} field")
+-        field["maxLength"] = maximum
++    hypothesis = properties.get("hypothesis")
++    if not isinstance(hypothesis, dict):
++        raise RuntimeError("CandidateProposal schema has no hypothesis field")
++    hypothesis["minLength"] = 1
++    hypothesis["maxLength"] = _LOCAL_HYPOTHESIS_MAX_LENGTH
++    source = properties.get("candidate_source")
++    if not isinstance(source, dict):
++        raise RuntimeError("CandidateProposal schema has no candidate_source field")
++    # Pinned xgrammar rejects escaped JSON newlines when a string has min/max
++    # length constraints. Enforce the stricter local source cap in _parse_proposal.
++    source.pop("minLength", None)
++    source.pop("maxLength", None)
++    source["description"] = (
++        "Complete runnable Python source. Encode line breaks as escaped JSON \\n sequences; "
++        "after decoding, the source must be normal indented multiline Python."
++    )
+     return schema
+ 
+ 
+@@ -116,7 +130,7 @@ _CANDIDATE_SCHEMA_BYTES = json.dumps(
+     allow_nan=False,
+ ).encode("utf-8")
+ _CANDIDATE_SCHEMA_SHA256 = hashlib.sha256(_CANDIDATE_SCHEMA_BYTES).hexdigest()
+-_CANDIDATE_SCHEMA_NAME = "candidate-proposal-local-compact-v1"
++_CANDIDATE_SCHEMA_NAME = "candidate-proposal-local-multiline-python.v3"
+ _MAX_TOKENIZER_INPUT_BYTES = 4 * 1024 * 1024
+ _MAX_TOKENIZER_TIMEOUT_SECONDS = 10
+ _MAX_PROMPT_BYTES_PER_TOKEN = 8
+@@ -233,33 +247,77 @@ class _AttemptRuntimeView:
+         }
+ 
+ 
+-def provider_profile_config() -> dict[str, object]:
+-    """Canonical trusted provider configuration to bind into run identity."""
++def provider_profile_config(
++    profile_set: Literal["smoke", "research"] = "smoke",
++) -> dict[str, object]:
++    """Canonical trusted provider configuration selected by immutable registry digest."""
+     pin = ModelPin.from_repository()
+-    return {
++    profiles = (
++        (LOCAL_SMOKE_S1_PROFILE, LOCAL_SMOKE_S2_PROFILE)
++        if profile_set == "smoke"
++        else (LOCAL_RESEARCH_S1_PROFILE, LOCAL_RESEARCH_S2_PROFILE)
++    )
++    config: dict[str, object] = {
+         "schema": "local-qwen-provider-config.v1",
+         "provider_id": _PROVIDER_ID,
+         "model_repository": MODEL_REPOSITORY,
+         "model_revision": MODEL_REVISION,
+         "model_manifest_sha256": pin.digest,
+-        "profiles": [asdict(LOCAL_SMOKE_S1_PROFILE), asdict(LOCAL_SMOKE_S2_PROFILE)],
++        "profiles": [asdict(profile) for profile in profiles],
+         "prompt_template": _PROMPT_TEMPLATE,
+         "prompt_admission": "pinned-qwen-chat-template.v1",
+         "prompt_trim_policy": "oldest-feedback-first",
+-        "output_schema": "candidate-proposal.local-compact.v1",
++        "output_schema": "candidate-proposal.local-multiline-python.v3",
+         "output_schema_sha256": _CANDIDATE_SCHEMA_SHA256,
+         "output_schema_enforcement": "vllm-json-schema-strict.v1",
+         "output_limits": {
+             "hypothesis_characters": _LOCAL_HYPOTHESIS_MAX_LENGTH,
+             "candidate_source_characters": _LOCAL_CANDIDATE_SOURCE_MAX_LENGTH,
+         },
+-        "repair_policy": "one-tokenizer-bounded-schema-and-python-syntax-repair.v3",
++        "repair_policy": "one-tokenizer-bounded-schema-and-python-syntax-repair.v4",
+         "fallback": "one-s2-budget-exhausted-to-s1",
+     }
++    if profile_set == "research":
++        config.update(
++            {
++                "schema": "local-qwen-provider-config.v2",
++                "profile_set": "bounded-research",
++                "episode_token_budget": {
++                    "input_tokens": MAX_EPISODE_CONTEXT_TOKENS,
++                    "output_tokens_by_system": MAX_EPISODE_OUTPUT_TOKENS,
++                    "total_model_tokens_by_system": {
++                        system: MAX_EPISODE_CONTEXT_TOKENS + output_tokens
++                        for system, output_tokens in MAX_EPISODE_OUTPUT_TOKENS.items()
++                    },
++                    "repair_uses_same_episode_budget": True,
++                },
++                "request_admission": "pinned-tokenizer-input-plus-output-within-model-max-len.v1",
++            }
++        )
++    elif profile_set != "smoke":
++        raise ValueError("unknown trusted local Qwen profile set")
++    return config
+ 
+ 
+-def provider_config_sha256() -> str:
+-    return hashlib.sha256(canonical_bytes(provider_profile_config())).hexdigest()
++def provider_config_sha256(profile_set: Literal["smoke", "research"] = "smoke") -> str:
++    return hashlib.sha256(canonical_bytes(provider_profile_config(profile_set))).hexdigest()
++
++
++def provider_profile_set_for_sha256(
++    expected_sha256: str,
++) -> Literal["smoke", "research"]:
++    """Resolve only the exact registered provider config; never accept a caller profile name."""
++    if re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None:
++        raise ValueError("trusted provider configuration digest is malformed")
++    profile_sets: tuple[Literal["smoke", "research"], ...] = ("smoke", "research")
++    matches = tuple(
++        profile_set
++        for profile_set in profile_sets
++        if provider_config_sha256(profile_set) == expected_sha256
++    )
++    if len(matches) != 1:
++        raise ValueError("trusted provider configuration digest is unknown or ambiguous")
++    return matches[0]
+ 
+ 
+ def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+@@ -284,6 +342,7 @@ class LocalQwenProposalProvider:
+         principal_resolver: PrincipalResolver,
+         runtime_database: Path,
+         registry_entry_sha256: str,
++        profile_set: Literal["smoke", "research"] = "smoke",
+     ) -> None:
+         if owner != "lab":
+             raise ValueError("local Director model calls must use the Lab GPU lane")
+@@ -297,7 +356,13 @@ class LocalQwenProposalProvider:
+         ):
+             raise ValueError("provider registry entry receipt must be a lowercase SHA-256")
+         self.registry_entry_sha256 = registry_entry_sha256
+-        self.configuration_sha256 = provider_config_sha256()
++        self.profile_set = profile_set
++        self.configuration_sha256 = provider_config_sha256(profile_set)
++
++    def _profile_for_system(self, system: Literal["S1", "S2"]) -> ModelTurnProfile:
++        if self.profile_set == "smoke":
++            return LOCAL_SMOKE_S1_PROFILE if system == "S1" else LOCAL_SMOKE_S2_PROFILE
++        return LOCAL_RESEARCH_S1_PROFILE if system == "S1" else LOCAL_RESEARCH_S2_PROFILE
+ 
+     @staticmethod
+     def _request_id(run_id: UUID, ordinal: int, system: str, attempt_index: int = 0) -> str:
+@@ -1091,7 +1156,7 @@ class LocalQwenProposalProvider:
+         raise ValueError("repair prompt context-token budget is exhausted")
+ 
+     def propose(self, context: AgentContext) -> ProposalTurn:
+-        profile = LOCAL_SMOKE_S1_PROFILE if context.system == "S1" else LOCAL_SMOKE_S2_PROFILE
++        profile = self._profile_for_system(context.system)
+         return self.propose_bounded(context, remaining_wall_seconds=profile.total_seconds)
+ 
+     def propose_bounded(
+@@ -1125,7 +1190,7 @@ class LocalQwenProposalProvider:
+         ):
+             raise ValueError("local proposal requires a bounded model-token reservation")
+         episode_deadline = time.monotonic() + float(remaining_wall_seconds)
+-        requested = LOCAL_SMOKE_S1_PROFILE if context.system == "S1" else LOCAL_SMOKE_S2_PROFILE
++        requested = self._profile_for_system(context.system)
+         profiles_attempted = [requested.profile_id]
+         attempts: list[ProviderRuntimeReceipt] = []
+         fallback_from: str | None = None
+@@ -1199,7 +1264,7 @@ class LocalQwenProposalProvider:
+                     reason_code="budget_exhausted",
+                 )
+             fallback_from = "S2"
+-            actual = LOCAL_SMOKE_S1_PROFILE
++            actual = self._profile_for_system("S1")
+             profiles_attempted.append(actual.profile_id)
+             if episode_deadline - time.monotonic() <= actual.activation_seconds:
+                 receipt = self._provider_receipt(
+diff --git a/lab/llm/native_runtime.py b/lab/llm/native_runtime.py
+index 8907fc1..ba32688 100644
+--- a/lab/llm/native_runtime.py
++++ b/lab/llm/native_runtime.py
+@@ -439,6 +439,36 @@ LOCAL_SMOKE_S2_PROFILE = ModelTurnProfile(
+     90,
+     210,
+ )
++LOCAL_RESEARCH_S1_PROFILE = ModelTurnProfile(
++    "qwen3.5-9b-fp8-per-tensor.s1-bounded-research.v1",
++    "S1",
++    8_192,
++    2_048,
++    10_240,
++    False,
++    None,
++    0.7,
++    0.8,
++    None,
++    120,
++    30,
++    150,
++)
++LOCAL_RESEARCH_S2_PROFILE = ModelTurnProfile(
++    "qwen3.5-9b-fp8-per-tensor.s2-bounded-research.v1",
++    "S2",
++    8_192,
++    8_192,
++    16_384,
++    True,
++    512,
++    0.6,
++    0.95,
++    20,
++    120,
++    90,
++    210,
++)
+ MODEL_TURN_PROFILES = {
+     profile.profile_id: profile
+     for profile in (
+@@ -446,6 +476,8 @@ MODEL_TURN_PROFILES = {
+         DIAGNOSTIC_S2_PROFILE,
+         LOCAL_SMOKE_S1_PROFILE,
+         LOCAL_SMOKE_S2_PROFILE,
++        LOCAL_RESEARCH_S1_PROFILE,
++        LOCAL_RESEARCH_S2_PROFILE,
+     )
+ }
+ 
+@@ -2307,6 +2339,20 @@ _DOCTOR_MESSAGES: dict[str, tuple[dict[str, str], ...]] = {
+         {"role": "system", "content": "Think briefly, then give one concise answer. No tools."},
+         {"role": "user", "content": "Name one safe way to verify a local file copy."},
+     ),
++    "research-s1": (
++        {"role": "system", "content": "Reply with one short sentence. Do not call tools."},
++        {"role": "user", "content": "What is 17 + 25? Give the answer in one short sentence."},
++    ),
++    "research-s2": (
++        {"role": "system", "content": "Think briefly, then give one concise answer. No tools."},
++        {"role": "user", "content": "Name one safe way to verify a local file copy."},
++    ),
++}
++_DOCTOR_PROFILES = {
++    "s1": DIAGNOSTIC_S1_PROFILE,
++    "s2": DIAGNOSTIC_S2_PROFILE,
++    "research-s1": LOCAL_RESEARCH_S1_PROFILE,
++    "research-s2": LOCAL_RESEARCH_S2_PROFILE,
+ }
+ 
+ 
+@@ -2434,7 +2480,7 @@ def doctor_main(argv: Sequence[str] | None = None) -> int:
+     try:
+         _prepare_doctor_directories()
+         resolver = SystemdPrincipalResolver({"aos": aos_unit, "lab": lab_unit})
+-        profile = DIAGNOSTIC_S1_PROFILE if args.profile == "s1" else DIAGNOSTIC_S2_PROFILE
++        profile = _DOCTOR_PROFILES[args.profile]
+         runtime = OwnedVllmRuntime(database, principal_resolver=resolver, profile=profile)
+         reply = runtime.run_turn(
+             "lab",
+@@ -2455,6 +2501,7 @@ def doctor_main(argv: Sequence[str] | None = None) -> int:
+         result_path = _write_doctor_result(args.request_id, args.profile, reply, diagnostics)
+         receipt = {
+             "status": "ok",
++            "capacity_status": "measurement_only_not_capacity_acceptance",
+             "request_id": args.request_id,
+             "profile": args.profile,
+             "result_path": result_path.relative_to(PROJECT_ROOT).as_posix(),
+@@ -2489,6 +2536,7 @@ def doctor_main(argv: Sequence[str] | None = None) -> int:
+                 if isinstance(exc, ModelOutputBudgetExceeded)
+                 else "runtime_failure"
+             ),
++            "capacity_status": "measurement_only_not_capacity_acceptance",
+             "error_type": type(exc).__name__,
+             "error_message": safe_message,
+             "diagnostics": diagnostics,
+diff --git a/tests/test_local_qwen_provider.py b/tests/test_local_qwen_provider.py
+index 70a5f97..1c33aca 100644
+--- a/tests/test_local_qwen_provider.py
++++ b/tests/test_local_qwen_provider.py
+@@ -1,8 +1,10 @@
+ from __future__ import annotations
+ 
++import ast
+ import hashlib
+ import json
+ from pathlib import Path
++from typing import Literal
+ from uuid import UUID
+ 
+ import pytest
+@@ -17,7 +19,9 @@ from lab.director.local_llm import (
+     _LOCAL_HYPOTHESIS_MAX_LENGTH,
+     _PROMPT_TEMPLATE,
+     LocalQwenProposalProvider,
++    provider_config_sha256,
+     provider_profile_config,
++    provider_profile_set_for_sha256,
+ )
+ from lab.llm import native_runtime
+ 
+@@ -143,13 +147,16 @@ def _reset_fake_runtime(monkeypatch: pytest.MonkeyPatch) -> None:
+     )
+ 
+ 
+-def _provider() -> LocalQwenProposalProvider:
++def _provider(
++    *, profile_set: Literal["smoke", "research"] = "smoke"
++) -> LocalQwenProposalProvider:
+     return LocalQwenProposalProvider(
+         run_id=UUID("7089275f-d7d2-4f46-b04b-27e809d15326"),
+         owner="lab",
+         principal_resolver=object(),
+         runtime_database=Path("private-arbiter.sqlite3"),
+         registry_entry_sha256="c" * 64,
++        profile_set=profile_set,
+     )
+ 
+ 
+@@ -171,8 +178,12 @@ def test_local_provider_emits_strict_proposal_and_host_receipt() -> None:
+     ) == turn.provider_receipt
+     historical_receipt = turn.provider_receipt.model_dump(mode="python")
+     historical_receipt["context_template"] = "director.candidate-contract.metadata-only.v2"
++    historical_attempts = historical_receipt["attempts"]
++    assert isinstance(historical_attempts, tuple)
++    historical_attempts[0]["response_schema_sha256"] = "d" * 64
+     historical = ProviderReceipt.model_validate(historical_receipt, strict=True)
+     assert historical.context_template.endswith(".v2")
++    assert historical.attempts[0].response_schema_sha256 == "d" * 64
+     assert type(turn).model_validate_json(turn.model_dump_json(), strict=True) == turn
+     request = (
+         {"role": "system", "content": turn.messages[0]},
+@@ -227,10 +238,7 @@ def test_local_provider_repairs_fenced_json_once_with_full_usage_and_transcripts
+         item.response_schema_sha256 == turn.provider_receipt.attempts[index].response_schema_sha256
+         for index, item in enumerate(turn.provider_attempts)
+     )
+-    assert all(
+-        name == "candidate-proposal-local-compact-v1"
+-        for name, _ in _FakeRuntime.request_schemas
+-    )
++    assert all(name == _CANDIDATE_SCHEMA_NAME for name, _ in _FakeRuntime.request_schemas)
+ 
+ 
+ def test_repair_output_limit_subtracts_primary_usage_from_episode_cap() -> None:
+@@ -332,22 +340,20 @@ def test_prompt_collector_discards_old_feedback_before_required_context() -> Non
+ def test_compact_local_schema_is_versioned_and_applied_to_primary_and_repair() -> None:
+     config = provider_profile_config()
+     properties = _CANDIDATE_PROPOSAL_SCHEMA["properties"]
+-    assert _PROMPT_TEMPLATE == "director.candidate-contract.metadata-only.v4"
+-    assert _CANDIDATE_SCHEMA_NAME == "candidate-proposal-local-compact-v1"
++    assert _PROMPT_TEMPLATE == "director.candidate-contract.metadata-only.v5"
++    assert _CANDIDATE_SCHEMA_NAME == "candidate-proposal-local-multiline-python.v3"
+     assert properties["hypothesis"]["maxLength"] == _LOCAL_HYPOTHESIS_MAX_LENGTH == 384
+-    assert (
+-        properties["candidate_source"]["maxLength"]
+-        == _LOCAL_CANDIDATE_SOURCE_MAX_LENGTH
+-        == 6_000
+-    )
++    assert "minLength" not in properties["candidate_source"]
++    assert "maxLength" not in properties["candidate_source"]
++    assert _LOCAL_CANDIDATE_SOURCE_MAX_LENGTH == 6_000
+     assert config["prompt_template"] == _PROMPT_TEMPLATE
+-    assert config["output_schema"] == "candidate-proposal.local-compact.v1"
++    assert config["output_schema"] == "candidate-proposal.local-multiline-python.v3"
+     assert config["output_schema_sha256"] != ""
+     assert config["output_limits"] == {
+         "hypothesis_characters": 384,
+         "candidate_source_characters": 6_000,
+     }
+-    assert config["repair_policy"] == "one-tokenizer-bounded-schema-and-python-syntax-repair.v3"
++    assert config["repair_policy"] == "one-tokenizer-bounded-schema-and-python-syntax-repair.v4"
+     _FakeRuntime.response_queue = [
+         "```json\n" + _proposal_json() + "\n```",
+         _proposal_json(),
+@@ -359,6 +365,8 @@ def test_compact_local_schema_is_versioned_and_applied_to_primary_and_repair() -
+     assert turn.provider_receipt.context_template == _PROMPT_TEMPLATE
+     prompt = turn.provider_attempts[0].prompt_messages[0].content
+     assert "1..6000 characters" in prompt
++    assert "escaped JSON \\n sequences" in prompt
++    assert "multi-line Python" in prompt
+     assert "no markdown, code fences" in prompt
+ 
+ 
+@@ -370,6 +378,98 @@ def test_fit_context_allows_only_positive_sampling_or_unknown_cadence_none() ->
+             FitContext(0, ("x",), (), invalid, 60.0)  # type: ignore[arg-type]
+ 
+ 
++def test_research_profiles_are_explicitly_digest_selected_and_budgeted() -> None:
++    s1 = native_runtime.LOCAL_RESEARCH_S1_PROFILE
++    s2 = native_runtime.LOCAL_RESEARCH_S2_PROFILE
++    assert (s1.max_context_tokens, s1.max_output_tokens, s1.model_max_len) == (
++        8_192,
++        2_048,
++        10_240,
++    )
++    assert s1.max_context_tokens + s1.max_output_tokens == s1.model_max_len
++    assert (s2.max_context_tokens, s2.max_output_tokens, s2.model_max_len) == (
++        8_192,
++        8_192,
++        16_384,
++    )
++    assert s2.max_context_tokens + s2.max_output_tokens == s2.model_max_len
++    assert native_runtime.MODEL_TURN_PROFILES[s1.profile_id] == s1
++    assert native_runtime.MODEL_TURN_PROFILES[s2.profile_id] == s2
++
++    research_config = provider_profile_config("research")
++    assert research_config["profile_set"] == "bounded-research"
++    assert research_config["episode_token_budget"] == {
++        "input_tokens": 16_384,
++        "output_tokens_by_system": {"S1": 2_048, "S2": 8_192},
++        "total_model_tokens_by_system": {"S1": 18_432, "S2": 24_576},
++        "repair_uses_same_episode_budget": True,
++    }
++    assert provider_profile_set_for_sha256(provider_config_sha256("smoke")) == "smoke"
++    assert provider_profile_set_for_sha256(provider_config_sha256("research")) == "research"
++    assert provider_config_sha256("smoke") != provider_config_sha256("research")
++
++    _FakeRuntime.response_text = _proposal_json("features")
++    turn = _provider(profile_set="research").propose(_context(system="S2", move_type="features"))
++    assert turn.provider_receipt is not None
++    assert turn.provider_receipt.profile_id == s2.profile_id
++    assert turn.provider_receipt.provider_config_sha256 == provider_config_sha256("research")
++
++
++def test_4259_token_public_context_admits_only_in_explicit_research_profile(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    provider = _provider(profile_set="research")
++    monkeypatch.setattr(
++        provider,
++        "_count_prompt_variants",
++        lambda variants, _profile, **_kwargs: tuple(4_259 for _ in variants),
++    )
++    messages, count = provider._select_messages(
++        _context(system="S2", move_type="features"),
++        native_runtime.LOCAL_RESEARCH_S2_PROFILE,
++        timeout_seconds=20.0,
++    )
++    assert count == 4_259
++    assert messages
++    assert count + native_runtime.LOCAL_RESEARCH_S2_PROFILE.max_output_tokens <= (
++        native_runtime.LOCAL_RESEARCH_S2_PROFILE.model_max_len
++    )
++    with pytest.raises(ValueError, match="tokenizer context cap"):
++        provider._select_messages(
++            _context(system="S2", move_type="features"),
++            native_runtime.LOCAL_SMOKE_S2_PROFILE,
++            timeout_seconds=20.0,
++        )
++
++
++def test_multiline_candidate_source_survives_json_schema_and_python_validation() -> None:
++    source = (
++        "import numpy as np\n\n"
++        "class Candidate:\n"
++        "    def fit(self, train, ctx):\n"
++        "        self.center = train.mean().to_numpy()\n"
++        "    def score(self, data):\n"
++        "        return np.abs(data.to_numpy() - self.center).mean(axis=1)\n"
++        "    def alarm_policy(self, train_scores):\n"
++        "        return AlarmPolicy(float(np.quantile(train_scores, 0.99)), 0.0, 1)\n"
++        "\n"
++        "def build_candidate():\n"
++        "    return Candidate()\n"
++    )
++    payload = json.dumps(
++        {
++            "hypothesis": "Use a robust sensor center",
++            "move_type": "features",
++            "candidate_source": source,
++            "predicted_delta": 0.0,
++        }
++    )
++    parsed = LocalQwenProposalProvider._parse_proposal(payload, "features")
++    assert parsed.candidate_source == source
++    assert parsed.candidate_source.count("\n") >= 7
++    ast.parse(parsed.candidate_source)
++
++
+ def test_repair_uses_compact_trusted_prompt_when_full_response_exceeds_context(
+     monkeypatch: pytest.MonkeyPatch,
+ ) -> None:
+@@ -425,14 +525,16 @@ def test_repair_validation_detail_is_closed_and_does_not_echo_input() -> None:
+     )
+ 
+ 
++@pytest.mark.parametrize("profile_set", ("smoke", "research"))
+ def test_completed_durable_repair_reuses_exact_prompt_without_tokenizer_or_model(
+     monkeypatch: pytest.MonkeyPatch,
++    profile_set: Literal["smoke", "research"],
+ ) -> None:
+     saved: dict[int, dict[str, object]] = {}
+     invalid = '{"not": "one proposal object"}'
+     _FakeRuntime.response_queue = [invalid, _proposal_json()]
+     context = _context(system="S2")
+-    first = _provider().propose_bounded(
++    first = _provider(profile_set=profile_set).propose_bounded(
+         context,
+         remaining_wall_seconds=200,
+         attempt_save=lambda index, _request_id, payload: saved.__setitem__(index, payload),
+@@ -445,7 +547,7 @@ def test_completed_durable_repair_reuses_exact_prompt_without_tokenizer_or_model
+         raise AssertionError("durable repair replay must not recount prompt tokens")
+ 
+     monkeypatch.setattr(LocalQwenProposalProvider, "_count_prompt_variants", forbid_tokenizer)
+-    replayed = _provider().propose_bounded(
++    replayed = _provider(profile_set=profile_set).propose_bounded(
+         context,
+         remaining_wall_seconds=200,
+         attempt_load=lambda index: saved.get(index),
+@@ -544,7 +646,8 @@ def test_repair_parser_rejects_source_above_compact_bound() -> None:
+     )
+     assert all(name == _CANDIDATE_SCHEMA_NAME for name, _ in _FakeRuntime.request_schemas)
+     assert all(
+-        schema["properties"]["candidate_source"]["maxLength"] == 6_000
++        "maxLength" not in schema["properties"]["candidate_source"]
++        and "minLength" not in schema["properties"]["candidate_source"]
+         for _, schema in _FakeRuntime.request_schemas
+     )
+ 
+diff --git a/tests/test_native_runtime.py b/tests/test_native_runtime.py
+index 0199f94..a1d3b53 100644
+--- a/tests/test_native_runtime.py
++++ b/tests/test_native_runtime.py
+@@ -1133,6 +1133,14 @@ def test_doctor_profile_is_fixed_and_result_receipt_omits_generated_text(
+         "top_p": 0.95,
+         "top_k": 20,
+     }
++    assert runtime.doctor_main(
++        ["--request-id", "f" * 32, "--profile", "research-s2"]
++    ) == 0
++    research_result = json.loads(capsys.readouterr().out)
++    assert research_result["capacity_status"] == "measurement_only_not_capacity_acceptance"
++    assert captured["profile"] == runtime.LOCAL_RESEARCH_S2_PROFILE
++    assert captured["max_output_tokens"] == 8_192
++    assert captured["enable_thinking"] is True
+ 
+ 
+ def test_doctor_diagnostics_root_is_private_before_any_model_launch(

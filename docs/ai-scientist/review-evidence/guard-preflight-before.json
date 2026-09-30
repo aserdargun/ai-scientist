@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-24T11:35:07.108342+00:00",
+  "source_sha256": {
+    "lab/sandbox/evaluation.py": "348ef6af2a0726f96ec1805fe270f0fa7d69f12e001ced35c76a812d65b08ced"
+  },
+  "scope": "Historical negative evidence against WIP evaluator; own three-row fake-label metadata fixture and AST/array checks only. No candidate execution, GPU or AOS changes.",
+  "observation": {
+    "metadata": {
+      "pandas": "{\"index_columns\": [], \"column_indexes\": [], \"columns\": [{\"name\": \"sensor_a\", \"field_name\": \"sensor_a\", \"pandas_type\": \"float64\", \"numpy_type\": \"float64\", \"metadata\": null}], \"attributes\": {\"eval_labels\": [0, 1, 0], \"private_marker\": \"owned-review-canary\"}, \"creator\": {\"library\": \"pyarrow\", \"version\": \"23.0.1\"}, \"pandas_version\": \"2.3.3\"}"
+    },
+    "restored_attrs": {
+      "eval_labels": [
+        0,
+        1,
+        0
+      ],
+      "private_marker": "owned-review-canary"
+    },
+    "difference_for_doubled_small_scores": 2e-12,
+    "negative64_guard": "hardcoding_pass",
+    "interior_time_guard": "hardcoding_pass"
+  },
+  "violations_reproduced": {
+    "private_attrs_survive_candidate_arrow": true,
+    "doubling_small_scores_passes_1e7_relative_gate": true,
+    "negative_numeric_literal_list_passes": true,
+    "timestamp_in_eval_interval_passes": true
+  },
+  "source_unchanged": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_guard_preflight.py",
+  "script_sha256": "263b32787cca3e899bc9ba9ec1a05c436e230853eccdba54d1628fe1b288e19a"
+}

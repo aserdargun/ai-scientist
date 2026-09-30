@@ -1,0 +1,18 @@
+{
+  "schema": "lifecycle-qualified-schema-integration.v1",
+  "source_snapshot": "data/runtime/parallel-m0/delivery/lifecycle-030-r4-launcher-review",
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py": {
+      "previous": "3330d618d7ce192f3a4286554b701805cb3bb300c6b49a3b90317cd7ad8af594",
+      "current": "af348e618845d2a71b6cc5de87fec32d91c5b43051a49e5011c7969a66aee1ad"
+    },
+    "tests/test_holdout030_lifecycle_review_preflight.py": {
+      "previous": "9de65ddc98365715aed32b18b2d3509ab8d872130890eafecfab941c3ffff9bd",
+      "current": "e11b8cefbbb88c4d51e584fa33800e54cd8a6a42c55a0a08e0b3891ff06af48e"
+    }
+  },
+  "change": "Stop driver reads the migration revision from lab.alembic_version; focused test includes qualified query fixture.",
+  "actual_lifecycle_execution": false,
+  "final_quality_gate_pending": true,
+  "runtime_changed": false
+}

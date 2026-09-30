@@ -1,0 +1,42 @@
+{
+  "actual_tool_session": {
+    "exit_code": 0,
+    "id": 52269
+  },
+  "archive_sha256": {
+    "arbiter.sqlite3": "9190983ab1f3ecb87fc543d8aaa3f437ca374b8df3c11338055cf015a1f34669",
+    "review-owner": "e54054a3c2b222bc26a7410f04e1843cbef25ed8016bbbfeef1fd794efed3313"
+  },
+  "checked_at_utc": "2026-09-25T07:14:48.699548+00:00",
+  "cleanup": "Only this review-owned stopped socket and owner marker removed; persistent state moved with byte parity. All owned services absent and four tickets done.",
+  "command": [
+    ".venv/bin/python",
+    "docs/ai-scientist/review-evidence/review_aos_broker_models.py",
+    "--output",
+    "docs/ai-scientist/review-evidence/aos-qwen-020-broker-model-review.json",
+    "--execute",
+    "--with-qwen",
+    "--production-broker"
+  ],
+  "elapsed_seconds": 211.18683381199662,
+  "evidence_sha256": "40803ed39307bd6c1af1e14d4aa985d5cd61b7c18ab6f7a2183f3051b5eb2634",
+  "final_gpu_mib": 62,
+  "harness_sha256": "785c50737d514718a6127646cedbf6d8807f9f9044c84259a73c9eb3ea4d7201",
+  "harness_version": "0.20.0",
+  "limitations": [
+    "Synthetic arithmetic and AOS task inputs; no candidate research or Scorer run.",
+    "AOS proposed tool actions were not executed.",
+    "No full interactive Desktop latency or crash/recovery acceptance.",
+    "Live AOS source and service unchanged."
+  ],
+  "maximum_gpu_temperature_c": 71.0,
+  "minimum_available_disk_bytes": 81158430720,
+  "minimum_available_ram_bytes": 19787816960,
+  "passed_checks": 12,
+  "peak_gpu_mib": 12754,
+  "quality_binding_sha256": "1d436e4c5efdca13b7730eb2da19795c617dd303b084a91360575614dd4e6cac",
+  "quality_scope": "Prior full 239-test seven-command gate remains bound to identical product source; review observer separately executed in this actual session.",
+  "schema": "aos-qwen-020-outcome.v1",
+  "source_commit": "7b9b191",
+  "state_archive": "data/runtime/gpu-model-review-36ba9fe7bdf14ff2a84df3094e6d0cb1/persistent-state-archive"
+}

@@ -1,0 +1,174 @@
+{
+  "schema": "remote_connect_quality.v1",
+  "created_at": "2026-09-30T05:38:35.460577+00:00",
+  "scope": "Client SSH connection scripts and README; runtime version remains 0.41.0.",
+  "limits": {
+    "memory_max_bytes": 2147483648,
+    "memory_swap_max_bytes": 0,
+    "cpu_quota_percent": 100,
+    "tasks_max": 128,
+    "runtime_max_seconds": 1800,
+    "outer_lock": "data/runtime/parallel-m0/cpu-check.lock",
+    "minimum_available_ram_bytes": 6442450944,
+    "minimum_free_disk_bytes": 21474836480
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "created_at": "2026-09-30T05:29:25.428536+00:00",
+      "terminal_exit_code": 1,
+      "systemd_exec_main_status": 1,
+      "unit": "lab-connect-quality-1790746083225019432",
+      "pytest": {
+        "failed": 1,
+        "passed": 1246,
+        "skipped": 7,
+        "deselected": 120,
+        "warnings": 33
+      },
+      "commands": [
+        {
+          "name": "ruff",
+          "exit_code": 0
+        },
+        {
+          "name": "pylint",
+          "exit_code": 0
+        },
+        {
+          "name": "bandit",
+          "exit_code": 0
+        },
+        {
+          "name": "pytest",
+          "exit_code": 1
+        },
+        {
+          "name": "mypy",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel build",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel import smoke",
+          "exit_code": 0
+        }
+      ],
+      "outcome": "Artifact reserve rejected /tmp tmpfs: filesystem total about16.38GB cannot satisfy20GiB reserve."
+    },
+    {
+      "attempt": 2,
+      "created_at": "2026-09-30T05:31:37.845907+00:00",
+      "terminal_exit_code": 1,
+      "systemd_exec_main_status": 1,
+      "unit": "lab-connect-quality-1790746224062248643",
+      "pytest": {
+        "failed": 4,
+        "passed": 1243,
+        "skipped": 7,
+        "deselected": 120,
+        "warnings": 33
+      },
+      "commands": [
+        {
+          "name": "ruff",
+          "exit_code": 0
+        },
+        {
+          "name": "pylint",
+          "exit_code": 0
+        },
+        {
+          "name": "bandit",
+          "exit_code": 0
+        },
+        {
+          "name": "pytest",
+          "exit_code": 1
+        },
+        {
+          "name": "mypy",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel build",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel import smoke",
+          "exit_code": 0
+        }
+      ],
+      "outcome": "Project-disk TMPDIR satisfies reserve, but long paths fail4 existing Unix socket length checks."
+    },
+    {
+      "attempt": 3,
+      "created_at": "2026-09-30T05:37:41.220756+00:00",
+      "terminal_exit_code": 0,
+      "systemd_exec_main_status": 0,
+      "unit": "lab-connect-quality-1790746578809568739",
+      "pytest": {
+        "passed": 1247,
+        "skipped": 7,
+        "deselected": 120,
+        "warnings": 33
+      },
+      "commands": [
+        {
+          "name": "ruff",
+          "exit_code": 0
+        },
+        {
+          "name": "pylint",
+          "exit_code": 0
+        },
+        {
+          "name": "bandit",
+          "exit_code": 0
+        },
+        {
+          "name": "pytest",
+          "exit_code": 0
+        },
+        {
+          "name": "mypy",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel build",
+          "exit_code": 0
+        },
+        {
+          "name": "wheel import smoke",
+          "exit_code": 0
+        }
+      ],
+      "outcome": "All required gates pass with fresh0700 short same-filesystem TMPDIR and explicit short pytest basetemp; no runtime guard weakened."
+    }
+  ],
+  "client_checks": {
+    "bash_syntax_exit_code": 0,
+    "git_diff_check_exit_code": 0,
+    "fake_ssh_cases_passed": [
+      "default remote launcher and loopback forwarding",
+      "browser opens after HTTP readiness while owned SSH alive",
+      "signal cleanup terminates exact owned SSH child",
+      "failed SSH does not open browser",
+      "occupied port prevents remote launch and browser",
+      "unsafe host/path and invalid port rejected before SSH"
+    ],
+    "windows_runtime": "unverified: PowerShell unavailable on this host",
+    "live_remote_client_connection": "not performed from aserdargun computer"
+  },
+  "sha256": {
+    "ops/connect-lab.sh": "82e6a9de40a5b5335798ef8ea600a16acf80d4135dcff127fc8b660cfce58578",
+    "ops/connect-lab.ps1": "20b6f9f7ae6455667f54205e6170209055538a95b013572d98b20f025aec013c",
+    "lab/scorer/jobs.py": "2a6f4b845b1ca6ed61dbf314dd0a7061d7829699f3840be84cd5cf0fac3c504a"
+  },
+  "latest_full_gate_evidence": "docs/ai-scientist/evidence/quality-gate-latest.json",
+  "raw_failed_logs": "retained privately; not published",
+  "runtime_code_changed": false,
+  "private_proxy_changed": false
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "native-http-deadline-review.v1",
+  "scope": "Actual private UDS HTTP function against a fixture server sending fixed JSON bytes every40ms; 100ms configured timeout,200ms acceptance tolerance. No production model or GPU.",
+  "source_sha256": "d6cc44287179ef0943384601f830e0d3996d164c548ecf4b0408fa67fbfaa397",
+  "frozen_source_path": "data/runtime/native-http-review/c342305283b343c3af51978b19441095/native_runtime.py",
+  "script_sha256": "01e6373818a04f103efb99e067828f8b74426a6bc6905221cf4d0983d42ba5be",
+  "timeout_seconds": 0.1,
+  "elapsed_seconds": 0.10009194400481647,
+  "response": null,
+  "error": "ModelRuntimeError: local model HTTP absolute deadline expired",
+  "server_errors": [],
+  "checks": {
+    "worker_finished": true,
+    "wall_deadline_bounded": true,
+    "slow_response_not_accepted_after_deadline": true
+  },
+  "passed": true
+}

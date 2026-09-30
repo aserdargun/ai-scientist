@@ -1,0 +1,28 @@
+{
+  "schema": "care-status-v3-main-integration.v1",
+  "source_base": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "patch_sha256": "baf59743a19d6a67b4e80994be57bcd36e484503ca255f350dea6c3c95591067",
+  "files": [
+    {
+      "path": "harness/public_data.py",
+      "base_sha256": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021",
+      "final_sha256": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f"
+    },
+    {
+      "path": "lab/director/public_suite.py",
+      "base_sha256": "8c1a037dae49022949ea0a02b004179389f2349fbc7ccd4b4484a64a99f2a992",
+      "final_sha256": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501"
+    },
+    {
+      "path": "tests/test_public_data.py",
+      "base_sha256": "64189bee10b44e0d7fd7ceeeba1c8bcc158ee6b9f93722fc277d05550ea0043b",
+      "final_sha256": "de78279f0df5234fad77419f3e18825c5f168c9a0e6a9fb7563c593bcb3099b4"
+    }
+  ],
+  "source_review_sha256": "e0f921e38de7ac4aa992a70896431f4b2586c81a2eaff44fb4ba041fc233fca7",
+  "limitations": [
+    "Source materialization only; Scorer acceptance pending.",
+    "Original receipt healthy_unmasked means total unmasked, not negative healthy exposure; supplemental corrected field evidence pending."
+  ],
+  "source_note_root_verified": "https://zenodo.org/records/15846963#notes"
+}

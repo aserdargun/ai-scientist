@@ -1,0 +1,20 @@
+{
+  "schema": "native-http-deadline-review.v1",
+  "scope": "Actual private UDS HTTP function against a fixture server sending fixed JSON bytes every40ms; 100ms configured timeout,200ms acceptance tolerance. No production model or GPU.",
+  "source_sha256": "c85dbee449d157a2a7ce0fbad7b3048f1890bfc5d8c03b97b57ee400fc76bd08",
+  "frozen_source_path": "data/runtime/native-http-review/20983e54c0c849b3b38d96421283af8e/native_runtime.py",
+  "script_sha256": "01e6373818a04f103efb99e067828f8b74426a6bc6905221cf4d0983d42ba5be",
+  "timeout_seconds": 0.1,
+  "elapsed_seconds": 0.44112296999810496,
+  "response": {
+    "ok": true
+  },
+  "error": null,
+  "server_errors": [],
+  "checks": {
+    "worker_finished": true,
+    "wall_deadline_bounded": false,
+    "slow_response_not_accepted_after_deadline": false
+  },
+  "passed": false
+}

@@ -1,0 +1,498 @@
+{
+  "checked_at": "2026-09-24T10:42:11.777367+00:00",
+  "source_revision": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4",
+  "archive_sha256": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d",
+  "source_manifest_sha256": "09f3a257b3e1e9d1e5803ebc9592835da68c741cd28677faba29c54eda620694",
+  "files": [
+    {
+      "archive_member": "TSB-AD-M/057_SMD_id_1_Facility_tr_4529_1st_4629.csv",
+      "sha256": "1679708d35fe5fae0d3592b429c0f0970ef36f3e95e686e0a2dda03f619dcc75",
+      "rows": 23694,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-2",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23694,
+          "source_test_rows": 23694,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 4529,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 542
+    },
+    {
+      "archive_member": "TSB-AD-M/058_SMD_id_2_Facility_tr_1087_1st_1187.csv",
+      "sha256": "3d87bc4bacd286e6d5296db9caa3fd642b6bd7ec7da7ca53939823929ec23984",
+      "rows": 28726,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-6",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28726,
+          "source_test_rows": 28726,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 1087,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1194
+    },
+    {
+      "archive_member": "TSB-AD-M/059_SMD_id_3_Facility_tr_757_1st_857.csv",
+      "sha256": "f024d779045d8934d38207a5b53c2a647a53ed5e876a3dcfb1e386f8c6f9b282",
+      "rows": 23689,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-3",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23689,
+          "source_test_rows": 23689,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 757,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 269
+    },
+    {
+      "archive_member": "TSB-AD-M/060_SMD_id_4_Facility_tr_7176_1st_10609.csv",
+      "sha256": "1d4faa37fc54af714d28c50cf7f8a59161699c6968291738c81e07335aa45a7b",
+      "rows": 28705,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-7",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28705,
+          "source_test_rows": 28705,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 7176,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 434
+    },
+    {
+      "archive_member": "TSB-AD-M/061_SMD_id_5_Facility_tr_7176_1st_15144.csv",
+      "sha256": "2d6efb2292a9109717c0a4967a266c79ed22137c0699c31d6bf45590b11ab76a",
+      "rows": 28704,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-8",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28704,
+          "source_test_rows": 28704,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 7176,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1371
+    },
+    {
+      "archive_member": "TSB-AD-M/062_SMD_id_6_Facility_tr_7180_1st_15131.csv",
+      "sha256": "dda20568da0041b19f12eaf05d6f5dc88f37283c83d4b2f3a3816212849de577",
+      "rows": 28722,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-9",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28722,
+          "source_test_rows": 28722,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 7180,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1755
+    },
+    {
+      "archive_member": "TSB-AD-M/063_SMD_id_7_Facility_tr_5923_1st_6506.csv",
+      "sha256": "489890d37b132e08a6bbf0dbfcbd0e4a1308b731b57b1fd415356808c099232f",
+      "rows": 23694,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-1",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23694,
+          "source_test_rows": 23694,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 5923,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1170
+    },
+    {
+      "archive_member": "TSB-AD-M/064_SMD_id_8_Facility_tr_2272_1st_2372.csv",
+      "sha256": "3e4d7d5fe959ecaf5c460665b3c65e329c381fc7f09d468d2a156808bd570cdb",
+      "rows": 21203,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-3",
+          "source_split": "test",
+          "source_start_index": 2500,
+          "source_end_index_exclusive": 23703,
+          "source_test_rows": 23703,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 2272,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 782
+    },
+    {
+      "archive_member": "TSB-AD-M/065_SMD_id_9_Facility_tr_737_1st_837.csv",
+      "sha256": "7203c302aff5fb34602711a6d4fd3dd27875e79f9cfd34fb2923bfde0a47ae60",
+      "rows": 23697,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-7",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23697,
+          "source_test_rows": 23697,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 737,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 2398
+    },
+    {
+      "archive_member": "TSB-AD-M/066_SMD_id_10_Facility_tr_2634_1st_2734.csv",
+      "sha256": "c49d7ed53527a336d5d74bb02af9c4d8781cfa3223e3bfb8c7139dd98967382e",
+      "rows": 23687,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-4",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23687,
+          "source_test_rows": 23687,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 2634,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 977
+    },
+    {
+      "archive_member": "TSB-AD-M/067_SMD_id_11_Facility_tr_1980_1st_2080.csv",
+      "sha256": "dfbdcf6c880f30166c0a923a7b681c7f09e9e17299aa514c88cbc8a6705e1e2e",
+      "rows": 22703,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-2",
+          "source_split": "test",
+          "source_start_index": 1000,
+          "source_end_index_exclusive": 23703,
+          "source_test_rows": 23703,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 1980,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1083
+    },
+    {
+      "archive_member": "TSB-AD-M/068_SMD_id_12_Facility_tr_1099_1st_1199.csv",
+      "sha256": "2bb10ac16ead67c9dc5b2257daa7f7eb1f99cc0408427cccf55c4ca030b03381",
+      "rows": 28713,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-9",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28713,
+          "source_test_rows": 28713,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 1099,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 303
+    },
+    {
+      "archive_member": "TSB-AD-M/069_SMD_id_13_Facility_tr_5925_1st_12760.csv",
+      "sha256": "4c6c6aa336934fcda9134941b283e8662817704615ad9ec6960a40f604f348d3",
+      "rows": 23700,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-2",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23700,
+          "source_test_rows": 23700,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 5925,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 2833
+    },
+    {
+      "archive_member": "TSB-AD-M/070_SMD_id_14_Facility_tr_1070_1st_1170.csv",
+      "sha256": "a886e44a52241b7b6f103148f47ff4e7784f597c8906a27ea87557517da824d3",
+      "rows": 28743,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-6",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28743,
+          "source_test_rows": 28743,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 1070,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 424
+    },
+    {
+      "archive_member": "TSB-AD-M/071_SMD_id_15_Facility_tr_1109_1st_1209.csv",
+      "sha256": "3dc64086ec366cc2c75a5bfce31b2afc47c3aca69976a0687b76ca058cfe1c41",
+      "rows": 28700,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-1",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28700,
+          "source_test_rows": 28700,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 1109,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 308
+    },
+    {
+      "archive_member": "TSB-AD-M/072_SMD_id_16_Facility_tr_7119_1st_15849.csv",
+      "sha256": "2c1a273cc2e8bb9742d00c8be0632217275053b528007d1430a59c1f01e3d8e9",
+      "rows": 28479,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-1",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28479,
+          "source_test_rows": 28479,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 7119,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 2694
+    },
+    {
+      "archive_member": "TSB-AD-M/073_SMD_id_17_Facility_tr_5926_1st_10620.csv",
+      "sha256": "e54f93c686a3eb460d9831de77efa760210ccc72f107bdc05813928b999c42c5",
+      "rows": 23706,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-5",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23706,
+          "source_test_rows": 23706,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 5926,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 100
+    },
+    {
+      "archive_member": "TSB-AD-M/074_SMD_id_18_Facility_tr_7174_1st_21230.csv",
+      "sha256": "3d9aef3071aa195e266a515922a88d964fbf84206bf5aafaf9d965c551cc27a9",
+      "rows": 28696,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-11",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 28696,
+          "source_test_rows": 28696,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 7174,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 198
+    },
+    {
+      "archive_member": "TSB-AD-M/075_SMD_id_19_Facility_tr_564_1st_664.csv",
+      "sha256": "2e898edb5b017b0156b645c7c72dc1711683ca7c00e6bdf3deb70f270651ec85",
+      "rows": 23696,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-7",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23696,
+          "source_test_rows": 23696,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 564,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 417
+    },
+    {
+      "archive_member": "TSB-AD-M/076_SMD_id_20_Facility_tr_5925_1st_17580.csv",
+      "sha256": "eacc2ed48af7f90df8c5bee6d1e9850eacc5c5776614ce7dfaed2301a7bd358c",
+      "rows": 23703,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-2-8",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23703,
+          "source_test_rows": 23703,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 5925,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 161
+    },
+    {
+      "archive_member": "TSB-AD-M/077_SMD_id_21_Facility_tr_3026_1st_3126.csv",
+      "sha256": "5d02602bd15d8550ff356a8f983a29a726698a9ea59a8c6e9e2069979a70f503",
+      "rows": 21207,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-1-4",
+          "source_split": "test",
+          "source_start_index": 2500,
+          "source_end_index_exclusive": 23707,
+          "source_test_rows": 23707,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 3026,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 688
+    },
+    {
+      "archive_member": "TSB-AD-M/078_SMD_id_22_Facility_tr_500_1st_326.csv",
+      "sha256": "de71151d9e55c8d563aabc5122af1f45b96f8b76b03b77e411eee24f1b85d1d9",
+      "rows": 23693,
+      "sensor_columns": 38,
+      "source_matches": [
+        {
+          "entity": "machine-3-10",
+          "source_split": "test",
+          "source_start_index": 0,
+          "source_end_index_exclusive": 23693,
+          "source_test_rows": 23693,
+          "max_abs_sensor_difference": 0.0,
+          "original_label_mismatches": 0
+        }
+      ],
+      "unique_match": true,
+      "tsb_source_protocol_train_end": 500,
+      "tsb_train_boundary_policy": "upstream curated protocol; label-derived metadata stays trusted",
+      "candidate_filename_policy": "opaque ID only; remove label-bearing original filename",
+      "tsb_anomaly_positive_rows": 1047
+    }
+  ],
+  "total_curated_rows": 560260,
+  "all_uniquely_mapped": true,
+  "source_split_semantics": "TSB source protocol boundary is not the original train/test boundary",
+  "scope": "source mapping only; trusted loader, actual split materialization and metric acceptance remain open",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python docs/ai-scientist/review-evidence/review_smd_mapping.py",
+  "script_sha256": "46a485fbf1a4cf2022e9cf8f7d415b6194d2e58821500ad1595f15f4f1bff475"
+}

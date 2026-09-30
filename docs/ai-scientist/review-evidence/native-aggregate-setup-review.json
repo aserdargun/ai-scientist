@@ -1,0 +1,58 @@
+{
+  "schema": "native-aggregate-setup-review.v1",
+  "scope": "Explicit opt-in setup of the empty GPU slice created by owned CPU reviews; no child/model/GPU/service restart. Runtime-only cgroup limits; does not establish combined host acceptance.",
+  "before": {
+    "Description": "Slice /swapp/gpu",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice",
+    "CPUQuotaPerSecUSec": "infinity",
+    "MemoryMax": "infinity",
+    "MemorySwapMax": "infinity",
+    "TasksMax": "infinity",
+    "kernel": {
+      "memory.max": "max",
+      "memory.swap.max": "max",
+      "cpu.max": "max 100000",
+      "pids.max": "max",
+      "cgroup.procs": "",
+      "cgroup.events": "populated 0\nfrozen 0"
+    },
+    "children": []
+  },
+  "command": [
+    "/usr/bin/systemctl",
+    "--user",
+    "set-property",
+    "--runtime",
+    "swapp-gpu.slice",
+    "MemoryMax=17179869184",
+    "MemorySwapMax=0",
+    "CPUQuota=200%",
+    "TasksMax=128"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "after": {
+    "Description": "Slice /swapp/gpu",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "17179869184",
+    "MemorySwapMax": "0",
+    "TasksMax": "128",
+    "kernel": {
+      "memory.max": "17179869184",
+      "memory.swap.max": "0",
+      "cpu.max": "200000 100000",
+      "pids.max": "128",
+      "cgroup.procs": "",
+      "cgroup.events": "populated 0\nfrozen 0"
+    },
+    "children": []
+  },
+  "checks": {
+    "setter_exit_zero": true,
+    "actual_kernel_caps": true,
+    "still_empty": true
+  },
+  "passed": true
+}

@@ -1,0 +1,8 @@
+{
+  "checked_at_utc": "2026-09-24T13:21:28.569563+00:00",
+  "database_revision": "0008_terminal_task_outcomes",
+  "legacy_running_score_jobs": 0,
+  "query": "SELECT count(*) FROM scorer.score_jobs WHERE state = 'running'",
+  "migration_sha256": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+  "result": "pass"
+}

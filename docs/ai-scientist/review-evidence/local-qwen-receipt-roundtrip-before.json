@@ -1,0 +1,34 @@
+{
+  "schema": "local-qwen-receipt-roundtrip-review.v1",
+  "scope": "Pure CPU mocked runtime from existing provider unit fixture; no model, GPU, database or experiment execution. Checks production receipt serialization roundtrip.",
+  "source_sha256": {
+    "lab/director/local_llm.py": "c27bf4f7219350793dc3579121434b4caac69a7d52e68ba00bc9199bd434408f",
+    "lab/director/fake_llm.py": "9a76130d95070af2c0ff891fb50643d07435a048ef1e3df14874a27787416aa2",
+    "tests/test_local_qwen_provider.py": "b3d951bc62bb8961154139e5df7d738d7b62f4a3aeb1e0391043dbad217537ef"
+  },
+  "checks": {
+    "proposal_turn": false,
+    "provider_receipt": false
+  },
+  "errors": {
+    "proposal_turn": {
+      "type": "ValidationError",
+      "fields": [
+        [
+          "provider_receipt",
+          "schema"
+        ]
+      ]
+    },
+    "provider_receipt": {
+      "type": "ValidationError",
+      "fields": [
+        [
+          "schema"
+        ]
+      ]
+    }
+  },
+  "sources_unchanged": true,
+  "passed": false
+}

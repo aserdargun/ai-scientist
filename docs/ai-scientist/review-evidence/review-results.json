@@ -1,0 +1,174 @@
+{
+  "python": "3.12.13",
+  "numpy": "2.2.6",
+  "pandas": "2.2.3",
+  "appendix_tests": "passed",
+  "edge_cases": {
+    "stateful_causal_violation": 1.0,
+    "masked_alarm_pdm": [
+      0.7959183673469388,
+      0.0,
+      0.0
+    ],
+    "no_healthy_time_pdm": [
+      1.0,
+      "nan",
+      "nan"
+    ],
+    "infinite_alarm_threshold_accepted": true,
+    "reject_not_strict_json": "Out of range float values are not JSON compliant: nan"
+  },
+  "null_simulation": [
+    {
+      "n_tasks": 12,
+      "sigma": 0.03,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.0994,
+      "confirmed_keep_count": 273,
+      "confirmed_rate": 0.0273,
+      "wilson_95_ci": [
+        0.024283092442663634,
+        0.030679939616974017
+      ]
+    },
+    {
+      "n_tasks": 12,
+      "sigma": 0.08,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.118,
+      "confirmed_keep_count": 566,
+      "confirmed_rate": 0.0566,
+      "wilson_95_ci": [
+        0.05223891451718412,
+        0.061301615237931865
+      ]
+    },
+    {
+      "n_tasks": 12,
+      "sigma": 0.08,
+      "seed_correlation": 1.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.118,
+      "confirmed_keep_count": 1180,
+      "confirmed_rate": 0.118,
+      "wilson_95_ci": [
+        0.11182319691636708,
+        0.12447017783882983
+      ]
+    },
+    {
+      "n_tasks": 12,
+      "sigma": 0.08,
+      "seed_correlation": 0.8,
+      "within_family_correlation": 0.6,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.2296,
+      "confirmed_keep_count": 1895,
+      "confirmed_rate": 0.1895,
+      "wilson_95_ci": [
+        0.18193857853345366,
+        0.19729988445473648
+      ]
+    },
+    {
+      "n_tasks": 12,
+      "sigma": 0.08,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.02,
+      "trials": 10000,
+      "first_stage_rate": 0.0403,
+      "confirmed_keep_count": 58,
+      "confirmed_rate": 0.0058,
+      "wilson_95_ci": [
+        0.004489676579576176,
+        0.00748986741000057
+      ]
+    },
+    {
+      "n_tasks": 16,
+      "sigma": 0.03,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.0834,
+      "confirmed_keep_count": 166,
+      "confirmed_rate": 0.0166,
+      "wilson_95_ci": [
+        0.014275044215554755,
+        0.019296205409215374
+      ]
+    },
+    {
+      "n_tasks": 16,
+      "sigma": 0.08,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.1154,
+      "confirmed_keep_count": 564,
+      "confirmed_rate": 0.0564,
+      "wilson_95_ci": [
+        0.052046511338241196,
+        0.06109417201622306
+      ]
+    },
+    {
+      "n_tasks": 16,
+      "sigma": 0.08,
+      "seed_correlation": 1.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.1154,
+      "confirmed_keep_count": 1154,
+      "confirmed_rate": 0.1154,
+      "wilson_95_ci": [
+        0.10928498225797102,
+        0.12181038928875342
+      ]
+    },
+    {
+      "n_tasks": 16,
+      "sigma": 0.08,
+      "seed_correlation": 0.8,
+      "within_family_correlation": 0.6,
+      "noise_sd": 0.0,
+      "trials": 10000,
+      "first_stage_rate": 0.2625,
+      "confirmed_keep_count": 2160,
+      "confirmed_rate": 0.216,
+      "wilson_95_ci": [
+        0.20804433525730787,
+        0.2241737758172364
+      ]
+    },
+    {
+      "n_tasks": 16,
+      "sigma": 0.08,
+      "seed_correlation": 0.0,
+      "within_family_correlation": 0.0,
+      "noise_sd": 0.02,
+      "trials": 10000,
+      "first_stage_rate": 0.0241,
+      "confirmed_keep_count": 10,
+      "confirmed_rate": 0.001,
+      "wilson_95_ci": [
+        0.0005432859864972464,
+        0.0018399443874379962
+      ]
+    }
+  ],
+  "limitations": "Scenario-specific population-null simulation, not a measured production error rate; fixed known noise_sd; equal weights; four families; no adaptive candidate selection modeled."
+}

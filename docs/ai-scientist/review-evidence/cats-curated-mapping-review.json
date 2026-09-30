@@ -1,0 +1,99 @@
+{
+  "source_record": 8338435,
+  "source_rows": 5000000,
+  "source_row_groups": 1,
+  "sensor_columns": [
+    "aimp",
+    "amud",
+    "arnd",
+    "asin1",
+    "asin2",
+    "adbr",
+    "adfl",
+    "bed1",
+    "bed2",
+    "bfo1",
+    "bfo2",
+    "bso1",
+    "bso2",
+    "bso3",
+    "ced1",
+    "cfo1",
+    "cso1"
+  ],
+  "excluded_columns": [
+    "y",
+    "category",
+    "__index_level_0__"
+  ],
+  "source_timestamp_unit": "microseconds, timezone unspecified (Parquet isAdjustedToUTC=false)",
+  "source_first_timestamp_us": 1672531200000000,
+  "source_last_timestamp_us": 1677531199000000,
+  "source_timestamp_step_counts_us": {
+    "1000000": 4999999
+  },
+  "curated_slices": [
+    {
+      "member": "TSB-AD-M/138_CATSv2_id_1_Sensor_tr_16568_1st_16668.csv",
+      "starts": [
+        4900000
+      ],
+      "compared_rows": 100000,
+      "max_abs_difference": 2.2737367544323206e-13,
+      "label_mismatch_rows": 0
+    },
+    {
+      "member": "TSB-AD-M/139_CATSv2_id_2_Sensor_tr_5592_1st_5692.csv",
+      "starts": [
+        2005000
+      ],
+      "compared_rows": 195000,
+      "max_abs_difference": 6.821210263296962e-13,
+      "label_mismatch_rows": 0
+    },
+    {
+      "member": "TSB-AD-M/140_CATSv2_id_3_Sensor_tr_28307_1st_28407.csv",
+      "starts": [
+        3800000
+      ],
+      "compared_rows": 400000,
+      "max_abs_difference": 2.2737367544323206e-13,
+      "label_mismatch_rows": 0
+    },
+    {
+      "member": "TSB-AD-M/141_CATSv2_id_4_Sensor_tr_41727_1st_41827.csv",
+      "starts": [
+        4405000
+      ],
+      "compared_rows": 195000,
+      "max_abs_difference": 1.3642420526593924e-12,
+      "label_mismatch_rows": 0
+    },
+    {
+      "member": "TSB-AD-M/142_CATSv2_id_5_Sensor_tr_30704_1st_30804.csv",
+      "starts": [
+        2650000
+      ],
+      "compared_rows": 350000,
+      "max_abs_difference": 1.3642420526593924e-12,
+      "label_mismatch_rows": 0
+    },
+    {
+      "member": "TSB-AD-M/143_CATSv2_id_6_Sensor_tr_50000_1st_60232.csv",
+      "starts": [
+        3600000
+      ],
+      "compared_rows": 200000,
+      "max_abs_difference": 1.1368683772161603e-13,
+      "label_mismatch_rows": 0
+    }
+  ],
+  "method": "streamed 65536-row batches, first-row 17-feature matching then complete ordered values and labels comparison",
+  "source_sha256": "259b5849a134e3318ed5e683bca0582d8c1005d1a008bb86094c8131ca1b2ff3",
+  "script_sha256": "da50f3593d1bcdda67a76baf48df86579e9029904b031cf70f8189dbbb690b22",
+  "command": "systemd-run --user --scope --quiet --property=MemoryMax=2G --property=CPUQuota=100% --property=IOWeight=10 nice -n 10 .venv/bin/python /tmp/ai-scientist-cats-map-review.py",
+  "all_source_intervals_after_nominal_prefix_end_1000000": true,
+  "clock_mapping_verified": true,
+  "production_loader_complete": false,
+  "reproduce_command": "systemd-run --user --scope --quiet --property=MemoryMax=2G --property=CPUQuota=100% --property=IOWeight=10 nice -n 10 .venv/bin/python docs/ai-scientist/review-evidence/review_cats_mapping.py"
+}

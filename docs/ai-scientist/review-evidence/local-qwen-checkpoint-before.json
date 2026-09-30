@@ -1,0 +1,38 @@
+{
+  "schema": "local-qwen-checkpoint-review.v1",
+  "checked_at": "2026-09-25T01:23:26.375286+00:00",
+  "run_id": "ba04a67c-f2fa-41db-a2de-58d4f7f5cf83",
+  "scope": "Production local provider and preregistration, actual owned PostgreSQL leases/checkpoints and physical blobs. Runtime is explicitly mocked; final register_experiment is a fault-injection spy. No model, GPU, Docker, Scorer, full SQL calibration admission or AOS acceptance.",
+  "source_sha256": {
+    "lab/director/runner.py": "94be09f8a5dbdab54f0e6541e1f2ff83c0627f5b5d937d09a5974f5291ae8fd4",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "af830d235cc4a9586872286394b324c08be92b981bcd662b7bb1ec463d6c26b1",
+    "lab/director/local_llm.py": "62f35c21578615f5556168349119d980add07ae5b960a750e40ce5e78d085e88",
+    "lab/director/artifacts.py": "d5b829304e36d67a162e78181db751e174d70af400f8fb2429dcc147598d33c7",
+    "lab/director/ledger.py": "a6a6fae74e04f8cae1ae8ec7d04ef625476f58e73164300328e3e6cc82aa77c2",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "tests/test_local_qwen_provider.py": "97adb4fb0e19d9f74f2f0562901279c24aea1c0df74619b10e0fb4702edae9f5",
+    "docs/ai-scientist/review-evidence/review_local_qwen_checkpoint.py": "df9bf41109c1021a8b8ba10ea4a08ca5288fe9b3761bcb8321eb1160e7c7c46c"
+  },
+  "checks": {
+    "owned_run_removed": true,
+    "source_unchanged": true
+  },
+  "scenarios": [],
+  "error": {
+    "type": "TypeError",
+    "message": "_FakeRuntime.run_turn() missing 1 required keyword-only argument: 'call_deadline'"
+  },
+  "source_after_sha256": {
+    "lab/director/runner.py": "94be09f8a5dbdab54f0e6541e1f2ff83c0627f5b5d937d09a5974f5291ae8fd4",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "af830d235cc4a9586872286394b324c08be92b981bcd662b7bb1ec463d6c26b1",
+    "lab/director/local_llm.py": "62f35c21578615f5556168349119d980add07ae5b960a750e40ce5e78d085e88",
+    "lab/director/artifacts.py": "d5b829304e36d67a162e78181db751e174d70af400f8fb2429dcc147598d33c7",
+    "lab/director/ledger.py": "a6a6fae74e04f8cae1ae8ec7d04ef625476f58e73164300328e3e6cc82aa77c2",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "tests/test_local_qwen_provider.py": "97adb4fb0e19d9f74f2f0562901279c24aea1c0df74619b10e0fb4702edae9f5",
+    "docs/ai-scientist/review-evidence/review_local_qwen_checkpoint.py": "df9bf41109c1021a8b8ba10ea4a08ca5288fe9b3761bcb8321eb1160e7c7c46c"
+  },
+  "overall_exit_code": 1
+}

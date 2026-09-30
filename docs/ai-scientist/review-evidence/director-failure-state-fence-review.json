@@ -1,0 +1,219 @@
+{
+  "schema": "director-failure-state-review.v1",
+  "scope": "Check dispatcher exception transitions against actual PostgreSQL state fences.\n\nRegistry/files/provider and Director execution are fixtures; no model, API server,\nDocker, Scorer or worker process runs. Actual dispatcher claim, event writes and\nterminal/stop-state conditions execute using the Director database role.\n",
+  "checked_at": "2026-09-25T03:02:04.266863+00:00",
+  "source_sha256": {
+    "lab/cli.py": "eaa910297dfd624d6df9c306ed0d016619b1c45f8a935f8a00f7bd7d4efa3c70",
+    "lab/db/schema.py": "d58f0a5e48f90c6af860900cc539bbcd0b38895c35588456e144f7de30f7cb6c",
+    "docs/ai-scientist/review-evidence/review_director_failure_state.py": "9f0f6bb0df6e694f63a5ed46b473d5d87736de43be0a70c65848db447b8572b6",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e"
+  },
+  "checks": {
+    "claimed_exception_correct_state": true,
+    "claimed_exception_no_fabricated_report": true,
+    "claimed_exception_only_claimed_execution": true,
+    "claimed_exception_untrusted_exception_text_not_recorded": true,
+    "claimed_exception_failure_event": true,
+    "concurrent_stop_correct_state": true,
+    "concurrent_stop_no_fabricated_report": true,
+    "concurrent_stop_only_claimed_execution": true,
+    "concurrent_stop_untrusted_exception_text_not_recorded": true,
+    "concurrent_stop_stop_preserved": true,
+    "concurrent_terminal_correct_state": true,
+    "concurrent_terminal_no_fabricated_report": true,
+    "concurrent_terminal_only_claimed_execution": true,
+    "concurrent_terminal_untrusted_exception_text_not_recorded": true,
+    "open_experiment_correct_state": true,
+    "open_experiment_no_fabricated_report": true,
+    "open_experiment_only_claimed_execution": true,
+    "open_experiment_untrusted_exception_text_not_recorded": true,
+    "open_experiment_recovery_request_recorded": true,
+    "open_experiment_terminal_fence_preserved": true,
+    "invalid_registry_request_correct_state": true,
+    "invalid_registry_request_no_fabricated_report": true,
+    "invalid_registry_request_only_claimed_execution": true,
+    "invalid_registry_request_untrusted_exception_text_not_recorded": true,
+    "invalid_registry_request_no_claim_event": true,
+    "unclaimed_running_correct_state": true,
+    "unclaimed_running_no_fabricated_report": true,
+    "unclaimed_running_only_claimed_execution": true,
+    "unclaimed_running_untrusted_exception_text_not_recorded": true,
+    "unclaimed_running_no_claim_event": true,
+    "sources_unchanged": true
+  },
+  "scenarios": [
+    {
+      "scenario": "claimed_exception",
+      "run_id": "e034e8fe-ed44-43ad-bc58-9ccf30fb6c5d",
+      "returned": {
+        "run_id": "e034e8fe-ed44-43ad-bc58-9ccf30fb6c5d",
+        "state": "failed",
+        "dispatch": "failed",
+        "error_type": "RuntimeError"
+      },
+      "state": {
+        "state": "failed",
+        "stop_requested": false,
+        "report_sha256": null
+      },
+      "events": [
+        {
+          "event_type": "run.started",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "payload_sha256": "2ebc7fbb5a0364df05adb10e7b5f420b94d05bc591c630e4557f9afe1db0a9f6"
+          }
+        },
+        {
+          "event_type": "run.failed",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "error_type": "RuntimeError"
+          }
+        }
+      ],
+      "execution_calls": 1
+    },
+    {
+      "scenario": "concurrent_stop",
+      "run_id": "be440a76-28d4-42fa-8b82-beb6f5a077e1",
+      "returned": {
+        "run_id": "be440a76-28d4-42fa-8b82-beb6f5a077e1",
+        "state": "stop_requested",
+        "report_sha256": null,
+        "dispatch": "state_changed_concurrently"
+      },
+      "state": {
+        "state": "stop_requested",
+        "stop_requested": true,
+        "report_sha256": null
+      },
+      "events": [
+        {
+          "event_type": "run.started",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "payload_sha256": "2ebc7fbb5a0364df05adb10e7b5f420b94d05bc591c630e4557f9afe1db0a9f6"
+          }
+        }
+      ],
+      "execution_calls": 1
+    },
+    {
+      "scenario": "concurrent_terminal",
+      "run_id": "6e026833-bb9b-42d0-a317-b3149856f19e",
+      "returned": {
+        "run_id": "6e026833-bb9b-42d0-a317-b3149856f19e",
+        "state": "failed",
+        "report_sha256": null,
+        "dispatch": "state_changed_concurrently"
+      },
+      "state": {
+        "state": "failed",
+        "stop_requested": false,
+        "report_sha256": null
+      },
+      "events": [
+        {
+          "event_type": "run.started",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "payload_sha256": "2ebc7fbb5a0364df05adb10e7b5f420b94d05bc591c630e4557f9afe1db0a9f6"
+          }
+        }
+      ],
+      "execution_calls": 1
+    },
+    {
+      "scenario": "open_experiment",
+      "run_id": "32c246e8-dadb-4674-83a6-524689379dea",
+      "returned": {
+        "run_id": "32c246e8-dadb-4674-83a6-524689379dea",
+        "state": "stop_requested",
+        "dispatch": "recovery_required",
+        "error_type": "RuntimeError"
+      },
+      "state": {
+        "state": "stop_requested",
+        "stop_requested": true,
+        "report_sha256": null
+      },
+      "events": [
+        {
+          "event_type": "run.started",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "payload_sha256": "2ebc7fbb5a0364df05adb10e7b5f420b94d05bc591c630e4557f9afe1db0a9f6"
+          }
+        },
+        {
+          "event_type": "run.dispatch_recovery_required",
+          "event_json": {
+            "dispatcher": "director.v1",
+            "error_type": "RuntimeError"
+          }
+        }
+      ],
+      "execution_calls": 1
+    },
+    {
+      "scenario": "invalid_registry_request",
+      "run_id": "22040e6d-b003-4070-ba52-5b8f8e0d712b",
+      "error_type": "ValueError",
+      "state": {
+        "state": "queued",
+        "stop_requested": false,
+        "report_sha256": null
+      },
+      "events": [],
+      "execution_calls": 0
+    },
+    {
+      "scenario": "unclaimed_running",
+      "run_id": "a6f9daa4-797c-4e2c-a092-1aad334b28be",
+      "error_type": "ValueError",
+      "state": {
+        "state": "running",
+        "stop_requested": false,
+        "report_sha256": null
+      },
+      "events": [],
+      "execution_calls": 0
+    }
+  ],
+  "source_after_sha256": {
+    "lab/cli.py": "eaa910297dfd624d6df9c306ed0d016619b1c45f8a935f8a00f7bd7d4efa3c70",
+    "lab/db/schema.py": "d58f0a5e48f90c6af860900cc539bbcd0b38895c35588456e144f7de30f7cb6c",
+    "docs/ai-scientist/review-evidence/review_director_failure_state.py": "9f0f6bb0df6e694f63a5ed46b473d5d87736de43be0a70c65848db447b8572b6",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e"
+  },
+  "overall_exit_code": 0
+}

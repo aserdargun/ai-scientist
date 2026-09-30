@@ -1,0 +1,312 @@
+{
+  "schema": "baseline-fixture-resource-cleanup.v1",
+  "created_at": "2026-09-27T04:47:12.229411+00:00",
+  "original_evidence_sha256": "67e1060f4374bfc1888ae3b70a960c3c2d7799932038733c9d1c54c8d51dad2c",
+  "original_exit_code": 1,
+  "semantic_acceptance_changed": false,
+  "container_removed": true,
+  "credentials_removed": true,
+  "before": {
+    "units": [
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-review-baseline-ownership-033-r2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      }
+    ],
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "a9ce08891c27120d55c466f3daa3ca3bc30602dc039ed79a7d672e296adc27b3",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2",
+      "dfb2baebd3345bc217f78f77fa794dce1cba61da7901057fdd8aaef05ff51700"
+    ],
+    "owned_marker_absent": true,
+    "api_pid_absent": true,
+    "outer_pid_absent": true
+  },
+  "container_identity": {
+    "container_id": "a9ce08891c27120d55c466f3daa3ca3bc30602dc039ed79a7d672e296adc27b3",
+    "image": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+    "name": "/swapp-baseline-ownership-pg-9fc429897d0c",
+    "labels": {
+      "swapp.review.baseline-ownership033": "9fc429897d0c456085ad071de0f739bd"
+    },
+    "ports": {
+      "5432/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "32796"
+        }
+      ]
+    }
+  },
+  "db_archive_sha256": "a4cd9364197080f1982d0f1741605bb3c48500330a2974091c47b7c688fb5306",
+  "fresh_before_remove": {
+    "units": [
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-review-baseline-ownership-033-r2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      }
+    ],
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "a9ce08891c27120d55c466f3daa3ca3bc30602dc039ed79a7d672e296adc27b3",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2",
+      "dfb2baebd3345bc217f78f77fa794dce1cba61da7901057fdd8aaef05ff51700"
+    ],
+    "owned_marker_absent": true,
+    "api_pid_absent": true,
+    "outer_pid_absent": true
+  },
+  "unrelated_container_inventory_unchanged": true,
+  "after": {
+    "units": [
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-88dc253cc9464ba8a024842424054c3f.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-63b2572b675e424a8dcde5d9d5b7245b.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-director-dispatch-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-ai-scientist-finalize-10f166b92b7f410797dde5b71bb1eec2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      },
+      {
+        "unit": "swapp-review-baseline-ownership-033-r2.service",
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "cgroup_absent": true
+      }
+    ],
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2",
+      "dfb2baebd3345bc217f78f77fa794dce1cba61da7901057fdd8aaef05ff51700"
+    ],
+    "owned_marker_absent": true,
+    "api_pid_absent": true,
+    "outer_pid_absent": true
+  },
+  "exit_code": 0
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "fresh039-init-admit-safe-summary.v1",
+  "date": "2026-09-30",
+  "source_version": "0.39.0",
+  "context_sha256": "abc06e7220097b6e11fdd83d28fc7c61bb290ddcc0cd801c99cd4e194808d337",
+  "driver_sha256": "0c0f88d9ebc6acd30a9b7cee806f6524475c13b81933193f28aba7ba32d4176c",
+  "provider": "fake-json",
+  "models_started": false,
+  "real_model_acceptance": false,
+  "new_campaign_and_calibration_identity": true,
+  "original056_source_fences_unchanged": true,
+  "phase_receipts": {
+    "init": {
+      "receipt_sha256": "57cf5b5b9872416931e96262821f86d1a106a9c168d1efcaf10dab485a635177",
+      "actual_exit_code": 0,
+      "elapsed_seconds": 3.0970754623413086,
+      "fresh_database": true,
+      "old056_untouched": true
+    },
+    "admit": {
+      "receipt_sha256": "afd174ab01dce70ad0e67e67712817f2e0eba653721b3031e327b27b0cd0ae7d",
+      "actual_exit_code": 0,
+      "elapsed_seconds": 42.50539827346802,
+      "source_unchanged": true
+    }
+  },
+  "prepared039_sha256": "3f5ca5b71a7cf79f65e9e055e596a7a2634a817cc417aaec6f6e3949ea8daa16",
+  "admission": {
+    "public_tasks": 27,
+    "development_holdout_disjoint": true,
+    "source_member_disjoint": true,
+    "director_private_read_denied": true,
+    "usage_profile": "noncommercial_research"
+  },
+  "planned_calibration_cells": 135,
+  "calibration_complete": false,
+  "calibration_state_at_publication": "execution started; no completion evidence reviewed",
+  "planned_research_baseline_cells": 243,
+  "research_complete": false,
+  "M0_10_complete": false,
+  "limitations": [
+    "Init/admit evidence only; no new calibration scores or completion proof published.",
+    "Original135 measurements are not relabelled as this fresh campaign.",
+    "No real local model, GPU, holdout evaluation, research or AOS coexistence acceptance.",
+    "No database addresses, credentials, raw profiles, private rows or numeric holdout results included."
+  ]
+}

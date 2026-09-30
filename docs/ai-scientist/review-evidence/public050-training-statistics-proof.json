@@ -1,0 +1,68 @@
+{
+  "schema": "public050-training-statistics.v1",
+  "source_manifest_sha256": "481a37fa41223f10eaae8368480cf4a45c83682743b2863099f99f51f495a3a4",
+  "statistics_source_sha256": "ba10984d03eebcc80acca33c27e83ecf629c402c9a4f61961e4c92956fcc782a",
+  "datasets": [
+    {
+      "dataset_id": "TSB-AD-M-Genesis",
+      "train_rows": 4055,
+      "sensors": 18,
+      "correlation_pairs": 153,
+      "missing": 0,
+      "nonfinite": 0,
+      "json_sha256": "f96738ae14547cfff379b7e879cb65b3e63c87c7da50372f6c39b7be4a7b09c2",
+      "file": "TSB-AD-M-Genesis.json",
+      "input_unchanged": true,
+      "time_statistics": "timestamp_not_selected"
+    },
+    {
+      "dataset_id": "TSB-AD-M-GECCO",
+      "train_rows": 16165,
+      "sensors": 9,
+      "correlation_pairs": 36,
+      "missing": 0,
+      "nonfinite": 0,
+      "json_sha256": "2f99fc1edf4eb9a266ac48aab3e6d5b3c27cbc54a2407326da734cbee803d6c4",
+      "file": "TSB-AD-M-GECCO.json",
+      "input_unchanged": true,
+      "time_statistics": "timestamp_not_selected"
+    },
+    {
+      "dataset_id": "TSB-AD-M-CATSv2",
+      "train_rows": 16568,
+      "sensors": 17,
+      "correlation_pairs": 136,
+      "missing": 0,
+      "nonfinite": 0,
+      "json_sha256": "bc3e4e8f403a9c51caf834af84c4b6b80c075cb43e862c559a857f3915fa5798",
+      "file": "TSB-AD-M-CATSv2.json",
+      "input_unchanged": true,
+      "time_statistics": "timestamp_not_selected"
+    },
+    {
+      "dataset_id": "SMD",
+      "train_rows": 12000,
+      "sensors": 38,
+      "correlation_pairs": 703,
+      "missing": 0,
+      "nonfinite": 0,
+      "json_sha256": "648a52f5b594acc7fb5ad7b6a88b80b1c95c1f5b3b3b268f9e0524ea3daff531",
+      "file": "SMD.json",
+      "input_unchanged": true,
+      "time_statistics": "timestamp_not_selected"
+    }
+  ],
+  "elapsed_seconds": 1.4776764029957121,
+  "max_rss_bytes": 386420736,
+  "models_used": false,
+  "scorer_inputs_modified": false,
+  "execution": {
+    "session": 49099,
+    "launch_chunk": "178de4",
+    "final_chunk": "163d17",
+    "exit_code": 0,
+    "memory_max_bytes": 1073741824,
+    "cpu_quota_percent": 100,
+    "swap_max_bytes": 0
+  }
+}

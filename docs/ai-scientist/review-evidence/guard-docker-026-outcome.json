@@ -1,0 +1,32 @@
+{
+  "schema": "guard-review-outcome.v1",
+  "session_id": 1913,
+  "actual_exit_code": 0,
+  "source_commit": "55f85a0d45cad11164069cda85e7be2d317696bf",
+  "harness_sha256": "3c51b8fe2db27c950da7a979e5d7757f4aa8d8b49e8c5c8608fe3069d43ff176",
+  "image": "sha256:63e019f316ccb9ea3cc8fe7e254d1f3b954b26a1520e8411151f10ac7bbb3747",
+  "cases_passed": 19,
+  "phase_attempts": 106,
+  "elapsed_seconds": 71.63880405499367,
+  "source_unchanged": true,
+  "own_work_root_removed": true,
+  "own_successful_containers_removed": true,
+  "evidence_sha256": {
+    "guard-docker-026-review.json": "ac92da90d0f3263d5f645690d899d91832330e3c80d1bcc08596f37c1d2345fc",
+    "guard-docker-026-wrapper.json": "b474f108d81e224c52e03e7f76929a0c6db8d10aad79007a0635b35a3eee9afa",
+    "review_guard_current.py": "84880bc6e31f1a4f5221905bd39cfb4a50fb02538bd3a09d590fac8290e2f28f",
+    "review_guard_docker.py": "cba9d93874f068d1f769b15d9e16f9de7c1632594d377a6713b534a7626f7d7a",
+    "guard_review_candidates.py": "9a65539de31c4e75215bd16dac4730ba9fb00ed1e4970111d69b14f747657ff4"
+  },
+  "acceptance_scope": [
+    "M0.4 synthetic causality/fresh-state fixture",
+    "M0.5 seeded reproducibility and unseeded rejection",
+    "M0.7 literal task/time/numeric hardcoding fixture"
+  ],
+  "not_claimed": [
+    "all isolation tests M0.3",
+    "full alarm parity M0.6",
+    "public-data research",
+    "LLM/GPU/AOS acceptance"
+  ]
+}

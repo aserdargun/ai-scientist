@@ -1,0 +1,11 @@
+{
+  "unit": "swapp-lab-gpu-review-c0398bb54c4c4bc5b3a946d998822852.service",
+  "observed": {
+    "Description": "SWAPP isolated Qwen review c0398bb54c4c4bc5b3a946d998822852",
+    "ActiveState": "active",
+    "InvocationID": "0651870571964b2aa06e408501f8d61b",
+    "MainPID": "2317451"
+  },
+  "reason": "Reviewer found prohibited HOME override in model launcher; stop own bounded test before retry with explicit cache vars only.",
+  "stop_exit_code": 0
+}

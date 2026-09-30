@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-09-24T20:31:49.583704+00:00",
+  "scope": "Patch packaging only. New-file sections applied in disposable git staging and matched isolated source bytes. Existing-file hunks are byte-identical to the previously reviewed prototype; only added payloads and their manifest hashes changed. No full current AOS package validation or live application.",
+  "baseline_patch_sha256": "c6708c3d53a8410d5fc7e6adcafe6704618d8e1148dc4809ff6ea3dfd6f58bf2",
+  "baseline_manifest_sha256": "8f3ef8e40feba53496a7c2a46ba3a5f3a936e3ae9d57e3b1894d20e3b3e940d2",
+  "patch_sha256": "f1893ec7f450f46bb0c19dab66e25051a1b96087a562f62e70d07f416feb4f52",
+  "payload_sha256": {
+    "database/migrations/0018_lab_external_jobs.sql": "dfd3baaaba8c4165cf52c03eaac619adca3a8fd8d8f30f8832d288e786f0137b",
+    "schemas/lab_external_job_start.schema.json": "997ef2ff8b9c9697e679c24c79694f02074d53de67b8063b4c03156ef449caca",
+    "schemas/lab_external_run_status.schema.json": "d7257bb22dfa5d25ab9cfa3e448cc6ad2eb5758b57038fea4da3cbc346b40d8e",
+    "schemas/lab_external_verified_report.schema.json": "de709d88743c61b9c93d4c47bbe4c8d7832ae7688b4b2a5528b64a64d0dd1ef6",
+    "src/aos/desktop_console.py": "67f98f3bb26659642a6d0163b26289ef0602ea0a76ed25361d8196aed6ac63bc",
+    "src/aos/lab_external.py": "a37612afc58bb2378fd14036fc6d78f7e79a062b1fae99504796554d1f3f4f10",
+    "tests/test_lab_external_jobs.py": "bda1b9d76768cc25cb46830e7d3cfaacd9ae7cce5de127f01308af8cf60c9520"
+  },
+  "changed_payloads": [
+    "src/aos/lab_external.py",
+    "tests/test_lab_external_jobs.py"
+  ],
+  "added_files_roundtrip": {
+    "database/migrations/0018_lab_external_jobs.sql": true,
+    "schemas/lab_external_job_start.schema.json": true,
+    "schemas/lab_external_run_status.schema.json": true,
+    "schemas/lab_external_verified_report.schema.json": true,
+    "src/aos/lab_external.py": true,
+    "tests/test_lab_external_jobs.py": true
+  },
+  "existing_file_sections_unchanged": true,
+  "targets": [
+    "MANIFEST.sha256",
+    "database/migrations/0018_lab_external_jobs.sql",
+    "schemas/lab_external_job_start.schema.json",
+    "schemas/lab_external_run_status.schema.json",
+    "schemas/lab_external_verified_report.schema.json",
+    "src/aos/desktop_console.py",
+    "src/aos/lab_external.py",
+    "tests/test_lab_external_jobs.py"
+  ],
+  "source_copy_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "d137247f015737dd9ba83e827bf703cd04d491e28ed1c634fa3f0432e80f9b8a"
+}

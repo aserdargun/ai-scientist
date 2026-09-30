@@ -1,0 +1,99 @@
+{
+  "schema": "release046-execution-binding.v1",
+  "gate": {
+    "session": 85033,
+    "launch_chunk": "147b2d",
+    "final_chunk": "839f0b",
+    "exit_code": 0,
+    "elapsed_seconds": 70.37319108800148,
+    "tests_passed": 859,
+    "tests_skipped": 7,
+    "tests_deselected": 98,
+    "mypy_files": 131,
+    "pylint_score": 9.26,
+    "commands": [
+      {
+        "command": [
+          "ruff",
+          "check",
+          "."
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit",
+          "-q",
+          "-r",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pytest",
+          "-m",
+          "not gpu and not live"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "mypy",
+          "--strict",
+          "harness",
+          "lab/referee",
+          "lab/analytics",
+          "lab/operating_modes",
+          "lab/llm",
+          "lab/sandbox",
+          "lab/api",
+          "lab/db",
+          "lab/director",
+          "lab/scorer",
+          "lab/training",
+          "lab/cli.py",
+          "lab/reporting.py",
+          "lab/replay.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv",
+          "build",
+          "--wheel",
+          "--out-dir",
+          "/home/cachyos/.m0r10/swapp-ai-scientist-wheel-k68qax_y"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/home/cachyos/ai-scientist/.venv/bin/python",
+          "-c",
+          "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "image": {
+    "session": 29902,
+    "launch_chunk": "495452",
+    "final_chunk": "0ac09c",
+    "exit_code": 0,
+    "elapsed_seconds": 5.3077307130006375
+  },
+  "mapped_source_files": 270,
+  "source_unchanged_after_gate": true
+}

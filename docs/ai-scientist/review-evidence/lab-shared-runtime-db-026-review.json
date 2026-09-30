@@ -1,0 +1,52 @@
+{
+  "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "branch": "feat/luna-shared-runtime-db-026",
+  "changed_files": {
+    "lab/cli.py": "94f0c693b52a37d63bf081ff7e0e6306fbb22cec8ca882f2dc18ce69aba40d6a",
+    "tests/test_shared_gpu_runtime_db.py": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f"
+  },
+  "clean_target_apply_check": {
+    "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+    "exit_code": 0,
+    "mutated": false,
+    "worktree": "data/runtime/parallel-m0/public-execution-025"
+  },
+  "not_run": [
+    "AOS/Lab services",
+    "GPU",
+    "models"
+  ],
+  "patch": {
+    "clean_base_apply_check_exit": 0,
+    "path": "lab-shared-runtime-db-026.patch",
+    "sha256": "3d722c06a9ebf245e3cb9d7c1811488d27901d86cf20110f3b367eb99aae3997"
+  },
+  "schema": "lab-shared-gpu-runtime-db-026-review.v1",
+  "scope": "CLI accepts only the fixed home shared broker database or the prior private direct-child test database; no request data controls the path. Existing symlink, owner, mode and regular-file checks are preserved or tightened.",
+  "validation": {
+    "actual_exit_code": 0,
+    "bounded_unit": "luna-shared-runtime-db-026-final-logged.service",
+    "command": [
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/shared-runtime-db-026/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_shared_gpu_runtime_db.py",
+      "&& ruff check lab/cli.py tests/test_shared_gpu_runtime_db.py",
+      "&& mypy lab/cli.py tests/test_shared_gpu_runtime_db.py",
+      "&& python -m py_compile lab/cli.py"
+    ],
+    "cpu_lock": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "limits": {
+      "CPUQuota": "100%",
+      "MemoryMax": "2G",
+      "MemorySwapMax": "0",
+      "RuntimeMaxSec": 240,
+      "TasksMax": 128
+    },
+    "stdout_path": "lab-shared-runtime-db-026-final-logged.log",
+    "stdout_sha256": "cce0dae87d62824aefb4b9a702c35162b1ca5f34df016955a7367882b8b9cc1c",
+    "summary": "10 passed; Ruff passed; mypy passed; py_compile passed"
+  },
+  "worktree": "data/runtime/parallel-m0/shared-runtime-db-026"
+}

@@ -1,0 +1,20 @@
+{
+  "apply_check_exit": 0,
+  "apply_exit": 0,
+  "base": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "hash_parity": true,
+  "patch_bytes": 114448,
+  "patch_sha256": "cf8a399fe8f90684d8c481743eb703394813f9dc77aa2b646a6e11055e1565a7",
+  "source_file_count": 9,
+  "source_sha256": {
+    "docs/ai-scientist/adr/0014-bounded-training-maintenance.md": "4af739fd708e8b71a4174cd89bd5491fc486584c433582ae9caba36e89fc77ed",
+    "lab/cli.py": "5b3a548cb61f1ee3a33332f98e4b131eb6e53712ca75f671edd6fbee0d92dcc0",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "32cfe2884cf51a5d8c13fcbbef1b0bcba169d61b4de7bafd5961047803bf0ea7",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "3777cf8f243c74245665712598811b194230b391aaf0e42967de7c4d065fa156",
+    "scripts/quality_gate.py": "6607db19aa4364115aa0b4c6f11d2238ac381b9478124657b306ce4804564806",
+    "tests/test_training_maintenance.py": "08b5960e1e20e600f34e02b26c648074c39a470634088610a4375cea3944da52"
+  }
+}

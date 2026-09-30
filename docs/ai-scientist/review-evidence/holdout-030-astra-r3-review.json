@@ -1,0 +1,46 @@
+{
+  "schema": "holdout-030-astra-r3-review.v1",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_approval": "blocked",
+  "patch_sha256": "6471d41820faf23d228db2edb9464a77a2663c09a0add4716af846bf0b5e328f",
+  "source_sha256": {
+    "lab/director/loop.py": "0fae8e3bab6809b45af72843cf31ad939c17eb4dbe108e5564bf8c4f0b2b50a9",
+    "lab/director/holdout.py": "071289982012aa3065e08b02bfad552d696919fdc31957b1c53af75c1476c9d6",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/cli.py": "c94afadc2ea210817442f0c3ff3113d117d5b894aacb3fd502c372cebb8fb01b",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896"
+  },
+  "blockers": [
+    {
+      "id": "r3-repeated-state-receipt",
+      "finding": "Unavailable rollback always appends the run_end state with a new sequence. Real journal compares original sequence as well as digest, so state-before-marker and completed-marker replay conflict.",
+      "required_fix": "Verify and reuse an existing identical state receipt; append only when absent."
+    },
+    {
+      "id": "r3-terminal-intent-startup",
+      "finding": "Budget restoration ignores unavailable intent budget_snapshot; startup proposals and fresh reservation can precede reconciliation of a durable terminal intent/fence after restart.",
+      "required_fix": "Reconcile terminal intent/fence before provider/proposals/reservation; preserve frozen budget and terminal status."
+    }
+  ],
+  "previous_candidate_binding": "corrected",
+  "sql_acl_source_review": "No concrete new bypass found in focused review; positive 0021 tests remain outstanding.",
+  "recovery_sql_evidence": {
+    "path": "holdout-030-recovery-sql-4390d99a595f.json",
+    "session_id": 96814,
+    "exit_code": 0,
+    "test_count": 1,
+    "additional_role_absent_resource_probes": 48,
+    "scope": "Actual PostgreSQL CAS/idempotency/stale-generation/stop/quota and concurrent 0020 fence-reservation RPC behavior on synthetic ledger and worker identity. No actual OS death/drain, Scorer execution or full wrapper acceptance."
+  },
+  "remaining": [
+    "real journal freeze/fence/application/state/marker restart boundaries",
+    "both 0021 reasons and admission orderings",
+    "final combined tests and quality gate",
+    "real Scorer/Docker recovery, Farm B scoring, 10 KEEP, run-end, rollback and canary"
+  ]
+}

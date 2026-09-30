@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-09-24T12:46:21.662015+00:00",
+  "cases": [
+    {
+      "case": "positive_exponent_overflow",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,1e999]}",
+      "should_accept": false,
+      "accepted": false,
+      "typed_candidate_error": true,
+      "passed": true
+    },
+    {
+      "case": "negative_exponent_overflow",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,-1e999]}",
+      "should_accept": false,
+      "accepted": false,
+      "typed_candidate_error": true,
+      "passed": true
+    },
+    {
+      "case": "unequal_parallel_arrays",
+      "payload": "{\"schema\": \"candidate-scores.v1\", \"sample_indices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"scores\": [0.0, 1.0]}",
+      "should_accept": false,
+      "accepted": false,
+      "typed_candidate_error": true,
+      "passed": true
+    },
+    {
+      "case": "valid_finite_control",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,1.0]}",
+      "should_accept": true,
+      "accepted": true,
+      "all_scores_finite": true,
+      "index_count": 2,
+      "score_count": 2,
+      "passed": true
+    }
+  ],
+  "scope": "Production numeric artifact parser only; verifies malformed numeric output is typed as candidate error before VUS/worker infrastructure handling. No DB, worker, sandbox or model acceptance.",
+  "source_sha256": {
+    "lab/scorer/service.py": "f344a59cb6dd57b2be73422621c5a6950cd3ba9dba1e70132bdb90c79eaec615"
+  },
+  "source_unchanged": true,
+  "script_sha256": "2b208fbc98d1479f907bec19e451190191cdd99bc00e0175bf2c33a82f02e44f",
+  "all_passed": true,
+  "violation_reproduced": false
+}

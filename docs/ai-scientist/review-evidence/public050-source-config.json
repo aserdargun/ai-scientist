@@ -1,0 +1,170 @@
+{
+  "allowed_purposes": [
+    "baseline"
+  ],
+  "archive_members": [
+    {
+      "compressed_bytes": 870846,
+      "crc32": "c55c3515",
+      "path": "TSB-AD-M/173_GECCO_id_1_Sensor_tr_16165_1st_16265.csv",
+      "uncompressed_bytes": 7401202
+    },
+    {
+      "compressed_bytes": 115059,
+      "crc32": "39a74e90",
+      "path": "TSB-AD-M/001_Genesis_id_1_Sensor_tr_4055_1st_15538.csv",
+      "uncompressed_bytes": 803413
+    },
+    {
+      "compressed_bytes": 11549064,
+      "crc32": "63f5e729",
+      "path": "TSB-AD-M/138_CATSv2_id_1_Sensor_tr_16568_1st_16668.csv",
+      "uncompressed_bytes": 26330863
+    }
+  ],
+  "expected_database": "swapp_lab",
+  "limits": {
+    "archive_member_bytes": 41943040,
+    "blas_threads": 1,
+    "cpu_quota_percent": 100,
+    "manifest_bytes": 67108864,
+    "matrix_bytes": 41943040,
+    "memory_max_bytes": 2147483648,
+    "minimum_free_disk_bytes": 21474836480,
+    "output_bytes": 134217728,
+    "source_bytes": 2147483648,
+    "tasks_max": 128,
+    "wall_seconds": 240
+  },
+  "materialization": {
+    "smd_entity": "machine-1-1",
+    "smd_evaluation_rows": 12000,
+    "smd_train_rows": 12000,
+    "tsb_evaluation_rows": null
+  },
+  "metadata_files": [
+    {
+      "bytes": 36890,
+      "path": "docs/ai-scientist/review-evidence/tsb-archive-manifest.json",
+      "sha256": "865d33890d479be97581f733a08d21c971281233341fd77fd06b6f1388f96f1d"
+    },
+    {
+      "bytes": 6499,
+      "path": "docs/ai-scientist/review-evidence/genesis-original-source.json",
+      "sha256": "ab7f2432e0be5d2954e293ce8e9be89dd30026c23bfc2f7c2ceec5d3a5f354f3"
+    },
+    {
+      "bytes": 1560,
+      "path": "docs/ai-scientist/review-evidence/gecco-source-clock-review.json",
+      "sha256": "d5b189ef4871bb898f8f3048effa0ad01c88b9d2f9c6f913765b3f4ef17de268"
+    },
+    {
+      "bytes": 673,
+      "path": "docs/ai-scientist/review-evidence/cats-original-source.json",
+      "sha256": "4ce20d98e18049ead1c1bdd6de77b41de4db6a74482a104c4e331e8acc125d42"
+    },
+    {
+      "bytes": 2983,
+      "path": "docs/ai-scientist/review-evidence/cats-curated-mapping-review.json",
+      "sha256": "2fdd825e1b04130d3af4259fb6bf3bcce057f81d5fd11e7fa3cc3ce14d5a0121"
+    },
+    {
+      "bytes": 127299,
+      "path": "docs/ai-scientist/review-evidence/smd-source-manifest.json",
+      "sha256": "09f3a257b3e1e9d1e5803ebc9592835da68c741cd28677faba29c54eda620694"
+    },
+    {
+      "bytes": 653,
+      "path": "docs/ai-scientist/review-evidence/smd-source-clock.json",
+      "sha256": "96235516c3d9355cf4da70a84bde54c7a4a35b0377a558b763dc66ba753eed19"
+    }
+  ],
+  "program_version": "public-cpu-baseline.v3",
+  "raw_files": [
+    {
+      "bytes": 540383983,
+      "path": "data/public/tsb-ad-m/source-2026-09-24/TSB-AD-M.zip",
+      "sha256": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d"
+    },
+    {
+      "bytes": 588103,
+      "path": "data/public/genesis/source-2026-09-24/genesis-original.zip",
+      "sha256": "14f4a5307ad4efd7759b052e5f6cbb93504a65148fc17b4a0087b8ef730c00c4"
+    },
+    {
+      "bytes": 10784171,
+      "path": "data/public/original-sources/GECCO/3884398/1_gecco2018_water_quality.csv",
+      "sha256": "c41221f3045696b75b79374f4c41c63f6c988e1df03b1dedcdbf910d44ea71cd"
+    },
+    {
+      "bytes": 554563684,
+      "path": "data/public/original-sources/CATSv2/8338435/data.parquet",
+      "sha256": "259b5849a134e3318ed5e683bca0582d8c1005d1a008bb86094c8131ca1b2ff3"
+    },
+    {
+      "bytes": 9739818,
+      "path": "data/public/smd/7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4/ServerMachineDataset/test/machine-1-1.txt",
+      "sha256": "bdb801d8d52ce6b0c4a20c310edf31b5cee9bc82eb84fb38e7d4a19309b16ddb"
+    },
+    {
+      "bytes": 56958,
+      "path": "data/public/smd/7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4/ServerMachineDataset/test_label/machine-1-1.txt",
+      "sha256": "cddf33441ae480c6074e173c897d4715eb893f24a7078d3d3e1b79b200c7cd19"
+    },
+    {
+      "bytes": 9739818,
+      "path": "data/public/smd/7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4/ServerMachineDataset/train/machine-1-1.txt",
+      "sha256": "ecebd2933ccdc1126e2abbfb538762dbde16410cebc77257a7b96e1e1fbcf753"
+    }
+  ],
+  "schema": "public-four-source-baseline050.v1",
+  "suite_id": "public-four-source-evt-v1",
+  "suite_version": 3,
+  "tasks": [
+    {
+      "columns": 18,
+      "dataset_id": "TSB-AD-M-Genesis",
+      "evaluation_rows": 12138,
+      "family": "EVT",
+      "independent_family": "tsb-genesis:industrial-process-sensors:EVT",
+      "license_id": "CC-BY-NC-SA-4.0",
+      "split_id": "curated-prefix-window-embargo.v2",
+      "task_id": "genesis-id-1",
+      "train_rows": 4055
+    },
+    {
+      "columns": 9,
+      "dataset_id": "TSB-AD-M-GECCO",
+      "evaluation_rows": 123301,
+      "family": "EVT",
+      "independent_family": "tsb-gecco:water-quality-sensors:EVT",
+      "license_id": "CC-BY-4.0",
+      "split_id": "curated-prefix-window-embargo.v2",
+      "task_id": "gecco-id-1",
+      "train_rows": 16165
+    },
+    {
+      "columns": 17,
+      "dataset_id": "TSB-AD-M-CATSv2",
+      "evaluation_rows": 83332,
+      "family": "EVT",
+      "independent_family": "tsb-catsv2:simulated-telemetry:EVT",
+      "license_id": "CC-BY-4.0",
+      "split_id": "curated-prefix-window-embargo.v2",
+      "task_id": "catsv2-id-1",
+      "train_rows": 16568
+    },
+    {
+      "columns": 38,
+      "dataset_id": "SMD",
+      "evaluation_rows": 12000,
+      "family": "EVT",
+      "independent_family": "SMD:server-telemetry:EVT",
+      "license_id": "MIT",
+      "split_id": "official-tail-12000-12000.v1",
+      "task_id": "machine-1-1",
+      "train_rows": 12000
+    }
+  ],
+  "usage_profile": "noncommercial_research"
+}

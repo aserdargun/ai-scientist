@@ -1,0 +1,15 @@
+{
+  "schema": "strategy-harness-integration-source.v1",
+  "scope": "pure Thompson policy and typed runner identity rejection; loop/CLI integration and live PG proof remain open",
+  "files": {
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "tests/test_director_strategy.py": "b956eb4ffb3774f5087b91b387ba32ef1445f082eb316c5ed4b4dd19516ea5d1",
+    "docs/ai-scientist/adr/0016-replayable-thompson-strategy.md": "602b40c4b2c2e90e3c61b92638b9c28eb74c3455c457e75c53c992d0ea8d82bb",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/runner.py": "10c58376f953aac3552760bf8f7d32d7db207a20fb5bbc0b457bd9bbc10977d5",
+    "tests/test_director_harness_mismatch.py": "5ce47b1605046c79b8a7dfe42608a13f2ecdcb3e0c3141caea91639552f67d2a",
+    "tests/test_director_primary_recovery.py": "69e8cb095982cb09aef463b8d4d6e3cf9d9d5337c87a2f462bc4f6ecab87890a",
+    "tests/test_director_seed_resume_review.py": "bbdedf3597e40065a3a7a074a3b775ca41be7d4cd2e26a87c3607e964ecc7d03"
+  },
+  "source_byte_parity": true
+}

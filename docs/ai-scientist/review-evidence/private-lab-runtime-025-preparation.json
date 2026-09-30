@@ -1,0 +1,15 @@
+{
+  "schema": "private-lab-model-runtime-preparation.v1",
+  "source_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "worktree": "data/runtime/parallel-m0/public-execution-025",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "model_manifest_sha256": "70fcdd0b7bc5be5ae08a83e876df27fe829c48162103b440dc101149ce267213",
+  "model_files": 16,
+  "model_bytes": 19329393661,
+  "copy_method": "btrfs FICLONE independent read-only files; source cache untouched",
+  "shared_read_only_dependency_environment": "data/runtime/vllm/.venv",
+  "full_model_hash_validation": "required again by native runtime before actual activation",
+  "gpu_started": false,
+  "model_imported": false,
+  "free_disk_gib": 75.40455627441406
+}

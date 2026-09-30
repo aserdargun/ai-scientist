@@ -1,0 +1,201 @@
+{
+  "schema": "guard-review-candidate-catalog.v1",
+  "scope": "Review inputs only; AST syntax parsing is not a guard/sandbox execution result.",
+  "entrypoint": "build_candidate() -> ADPipeline",
+  "private_identifiers": [
+    "private-review-task-id"
+  ],
+  "eval_interval_utc": [
+    "2026-09-24T10:00:00Z",
+    "2026-09-24T11:00:00Z"
+  ],
+  "cases": [
+    {
+      "name": "causal_clean",
+      "source_sha256": "033bcf6069c18bf32e7781b1bd4b2676031dd2b14add757eb765337c6b735b61",
+      "bytes": 698,
+      "expected_rejection": [],
+      "note": "Clean train-derived robust normalization and trailing rolling mean.",
+      "nrm_only": false
+    },
+    {
+      "name": "causal_small_scale",
+      "source_sha256": "7cc42bd027ce8d62b6d2f90f19b58963ed7754dff00f8094ad23f2e24788fa1d",
+      "bytes": 706,
+      "expected_rejection": [],
+      "note": "Nonconstant finite causal scores at small scale; a fixed variance cutoff must not silently define constant.",
+      "nrm_only": false
+    },
+    {
+      "name": "stateful_score_fresh_restore",
+      "source_sha256": "2ff0070768dad2b91b1bff3c465f67931b34e5c5e8ab452b25642a6eeffe04be",
+      "bytes": 735,
+      "expected_rejection": [],
+      "note": "Within-instance mutation is isolated by restoring the same frozen fit artifact for each score call.",
+      "nrm_only": false
+    },
+    {
+      "name": "seeded_random_fit",
+      "source_sha256": "20947b7283b8be93a07956ba77a3f42102951da0321314daffd23952e9c1cc7a",
+      "bytes": 778,
+      "expected_rejection": [],
+      "note": "Repeated full fitting with identical ctx.seed must reproduce the score vector.",
+      "nrm_only": false
+    },
+    {
+      "name": "unseeded_random_fit",
+      "source_sha256": "0691097faccffabb53442c41b32a838d8d00384af4a757bd199aee2dbe3e5d87",
+      "bytes": 770,
+      "expected_rejection": [
+        "determinism"
+      ],
+      "note": "Randomness occurs only in fit; repeating score on one artifact would incorrectly pass.",
+      "nrm_only": false
+    },
+    {
+      "name": "unseeded_random_score",
+      "source_sha256": "2cb27db49bb1475ddaf1c0935fe2b567815a7ccfe4fa510fa1a0c4b55614678f",
+      "bytes": 749,
+      "expected_rejection": [
+        "determinism",
+        "causality"
+      ],
+      "note": "Score randomness must reject; whichever comparison is evaluated first may discover it.",
+      "nrm_only": false
+    },
+    {
+      "name": "eval_statistics",
+      "source_sha256": "4f1326039afbc9de031f86006f73a4eb176870de17341c14101d3098f8ad864d",
+      "bytes": 715,
+      "expected_rejection": [
+        "causality"
+      ],
+      "note": "Evaluation-global mean/std changes earlier scores after a future perturbation.",
+      "nrm_only": false
+    },
+    {
+      "name": "eval_statistics_small_scale",
+      "source_sha256": "e85e8f7143a06282bb5daf1856d1b562ecbae92517ef65d55ec14f9f1589ef91",
+      "bytes": 723,
+      "expected_rejection": [
+        "causality"
+      ],
+      "note": "Scaling the same leaky detector must not bypass a relative causality comparison.",
+      "nrm_only": false
+    },
+    {
+      "name": "centered_rolling",
+      "source_sha256": "b92eec7c51964d6fdd63a75579a21bbd77e5cde33d7f39566385da88c03c8991",
+      "bytes": 711,
+      "expected_rejection": [
+        "causality"
+      ],
+      "note": "Centered rolling uses future rows even though normalization comes only from train.",
+      "nrm_only": false
+    },
+    {
+      "name": "constant_score",
+      "source_sha256": "eb92cbb42ddd922ac68a7969497d79ef06c544f6daa0ad1b9ce0c15267b375ce",
+      "bytes": 606,
+      "expected_rejection": [
+        "degenerate"
+      ],
+      "note": "Constant finite vectors must be rejected independently of candidate claims.",
+      "nrm_only": false
+    },
+    {
+      "name": "nan_score",
+      "source_sha256": "da4136f3453a1986c83754abc46383fba9c299a3992c1b50bf466dbbe16c98ad",
+      "bytes": 660,
+      "expected_rejection": [
+        "degenerate",
+        "interface"
+      ],
+      "note": "Nonfinite output must be rejected before any independent metric commit.",
+      "nrm_only": false
+    },
+    {
+      "name": "infinite_score",
+      "source_sha256": "bf7a1c034d9d4bb668ab3886a73f3ece6da06bd43e5853a6934ffbb1cd71ebcf",
+      "bytes": 660,
+      "expected_rejection": [
+        "degenerate",
+        "interface"
+      ],
+      "note": "Infinity must not turn into a valid JSON score or KEEP candidate.",
+      "nrm_only": false
+    },
+    {
+      "name": "wrong_length",
+      "source_sha256": "43d493a28801694d09c509059788f251eaf688df1f3b93c48797d5b5fb2c0c67",
+      "bytes": 618,
+      "expected_rejection": [
+        "degenerate",
+        "interface"
+      ],
+      "note": "One score per row is mandatory; missing output rows cannot be padded.",
+      "nrm_only": false
+    },
+    {
+      "name": "time_ramp",
+      "source_sha256": "3fcf04748fac4a07a086151dbc8f3551b16917ae4b643c8c645fd59d5c4f2bcd",
+      "bytes": 608,
+      "expected_rejection": [
+        "position_bias"
+      ],
+      "note": "Perfect monotone timing score must be rejected on a suite with eligible NRM tasks.",
+      "nrm_only": true
+    },
+    {
+      "name": "hardcoded_task_identity",
+      "source_sha256": "3e5c87be669cf90c4a927f6327c759eb031277a2ffc685b0be4d48dbff193788",
+      "bytes": 736,
+      "expected_rejection": [
+        "hardcoding"
+      ],
+      "note": "Literal task identity is forbidden even when the constant is currently unused.",
+      "nrm_only": false
+    },
+    {
+      "name": "hardcoded_eval_instant",
+      "source_sha256": "67a992ac687dec466224999dcd288549184ef10ba66b63b50fb5bf66b913e3aa",
+      "bytes": 739,
+      "expected_rejection": [
+        "hardcoding"
+      ],
+      "note": "13:15 +03:00 is inside the trusted eval interval [10:00Z,11:00Z).",
+      "nrm_only": false
+    },
+    {
+      "name": "hardcoded_64_floats",
+      "source_sha256": "5bfd7a99af27b7005fabc21fca319748c053e95ed27bbd2f2388f8d788af7cfe",
+      "bytes": 1084,
+      "expected_rejection": [
+        "hardcoding"
+      ],
+      "note": "Explicit 64-element numeric literal array exceeds the >=50 static threshold.",
+      "nrm_only": false
+    },
+    {
+      "name": "hardcoded_64_negative_floats",
+      "source_sha256": "0cd05f9e89450427389ab44beacfc5fcd8c057fce9d90a6d145b9670bfbb944a",
+      "bytes": 1148,
+      "expected_rejection": [
+        "hardcoding"
+      ],
+      "note": "Negative numeric literals are unary AST nodes but still form a forbidden literal list.",
+      "nrm_only": false
+    },
+    {
+      "name": "slow_fit",
+      "source_sha256": "4f629e7a974fcc34f63439607d4939e376e07a10468de9ac08192a2e00fef50f",
+      "bytes": 727,
+      "expected_rejection": [
+        "timeout"
+      ],
+      "note": "Use a one-second fit budget; the evaluation deadline must encompass all phase/guard work.",
+      "nrm_only": false
+    }
+  ],
+  "script_sha256": "9a65539de31c4e75215bd16dac4730ba9fb00ed1e4970111d69b14f747657ff4"
+}

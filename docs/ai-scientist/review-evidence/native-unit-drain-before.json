@@ -1,0 +1,216 @@
+{
+  "schema": "native-unit-drain-review.v1",
+  "scope": "Actual production drain and SQLite/scheduler against real bounded systemd CPU units; explicit fixture principal and GPU observations, no model/CUDA.",
+  "source_sha256": "d6cc44287179ef0943384601f830e0d3996d164c548ecf4b0408fa67fbfaa397",
+  "frozen_source_path": "data/runtime/native-unit-review/5957fb20524f49c885baed5e392a51fb/native_runtime.py",
+  "script_sha256": "c8a045e693c7d263d435948886bce172f78d17cde8eb067edd134bfa1b3df584",
+  "checks": {
+    "normal_release_clears_scheduler": true,
+    "normal_release_stops_exact_unit": true,
+    "normal_release_cgroup_empty": true,
+    "retained_gpu_pid_rejects_first_drain": true,
+    "retained_gpu_pid_rejects_repeated_drain": false,
+    "retained_gpu_does_not_leave_cpu_unit_running": true,
+    "drain_succeeds_after_gpu_pid_released": true,
+    "replacement_has_distinct_invocation": true,
+    "wrong_generation_refused": true,
+    "replacement_generation_preserved": true,
+    "foreign_gpu_blocks_handoff": true,
+    "foreign_gpu_does_not_prevent_owned_stop": false,
+    "foreign_sentinel_preserved": true,
+    "all_owned_review_units_terminal": true
+  },
+  "cases": {
+    "normal": {
+      "unit": "swapp-lab-gpu-turn-87b6e410a397456b910541ecc329b64f.service",
+      "invocation_id": "5f1e496f45ba4c7d8b917bd598dc2f5a",
+      "main_pid": 2227250,
+      "active_owner_after": null
+    },
+    "retained_gpu": {
+      "unit": "swapp-lab-gpu-turn-e2178c58669b494b92e9317d1f677c50.service",
+      "simulated_retained_gpu_pid": 2227263,
+      "first_drain": false,
+      "repeated_drain": true,
+      "after_pid_release": true,
+      "binding_has_no_saved_gpu_pids": true,
+      "scope": "Simulates a supervisor crash after binding and before readiness saved observed GPU PIDs."
+    },
+    "generation_reuse": {
+      "unit": "swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service",
+      "old_invocation": "e34c8a5b81d845d79bae9d2ef57002aa",
+      "replacement_invocation": "95b45f6910c84969b0ae472f2682aee1",
+      "replacement_pid": 2227624,
+      "drain_result": false
+    },
+    "foreign_consumer": {
+      "unit": "swapp-lab-gpu-turn-53a3ac44cb7246df9ffccb9ba8cb9ffa.service",
+      "owned_pid": 2227632,
+      "fixture_gpu_foreign_pid": 2227635,
+      "drain_result": false,
+      "owned_unit_terminal": false,
+      "scope": "Foreign GPU activity is simulated by reporting an owned CPU sentinel PID; no CUDA."
+    }
+  },
+  "unit_commands": [
+    {
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-lab-gpu-turn-87b6e410a397456b910541ecc329b64f.service",
+        "--slice=swapp-gpu.slice",
+        "--service-type=exec",
+        "--description=SWAPP GPU model turn 45d2674e3d4b6117bb1d681f62e05dc110ed29845c51b4d54b74494d5fa74706",
+        "--property=MemoryMax=10737418240",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=200%",
+        "--property=TasksMax=96",
+        "--property=RuntimeMaxSec=630",
+        "--property=TimeoutStopSec=2",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=SWAPP_GPU_TURN_NONCE=45d2674e3d4b6117bb1d681f62e05dc110ed29845c51b4d54b74494d5fa74706",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import time; time.sleep(120)"
+      ],
+      "exit_code": 0,
+      "invocation_id": "5f1e496f45ba4c7d8b917bd598dc2f5a",
+      "main_pid": 2227250,
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-87b6e410a397456b910541ecc329b64f.service"
+    },
+    {
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-lab-gpu-turn-e2178c58669b494b92e9317d1f677c50.service",
+        "--slice=swapp-gpu.slice",
+        "--service-type=exec",
+        "--description=SWAPP GPU model turn 41700e031347928bdcfe15d0fd63b1ce5503f49e4329395d59c8af1e4427ec42",
+        "--property=MemoryMax=10737418240",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=200%",
+        "--property=TasksMax=96",
+        "--property=RuntimeMaxSec=630",
+        "--property=TimeoutStopSec=2",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=SWAPP_GPU_TURN_NONCE=41700e031347928bdcfe15d0fd63b1ce5503f49e4329395d59c8af1e4427ec42",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import time; time.sleep(120)"
+      ],
+      "exit_code": 0,
+      "invocation_id": "98e9a07950c8461c9c3658be02d7a511",
+      "main_pid": 2227263,
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-e2178c58669b494b92e9317d1f677c50.service"
+    },
+    {
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service",
+        "--slice=swapp-gpu.slice",
+        "--service-type=exec",
+        "--description=SWAPP GPU model turn 4878b0a7bd7c269901515d5b732a84216cec415000daa2102eb5b577e605c1e9",
+        "--property=MemoryMax=10737418240",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=200%",
+        "--property=TasksMax=96",
+        "--property=RuntimeMaxSec=630",
+        "--property=TimeoutStopSec=2",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=SWAPP_GPU_TURN_NONCE=4878b0a7bd7c269901515d5b732a84216cec415000daa2102eb5b577e605c1e9",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import time; time.sleep(120)"
+      ],
+      "exit_code": 0,
+      "invocation_id": "e34c8a5b81d845d79bae9d2ef57002aa",
+      "main_pid": 2227618,
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service"
+    },
+    {
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service",
+        "--slice=swapp-gpu.slice",
+        "--service-type=exec",
+        "--description=SWAPP GPU model turn 4878b0a7bd7c269901515d5b732a84216cec415000daa2102eb5b577e605c1e9",
+        "--property=MemoryMax=10737418240",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=200%",
+        "--property=TasksMax=96",
+        "--property=RuntimeMaxSec=630",
+        "--property=TimeoutStopSec=2",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=SWAPP_GPU_TURN_NONCE=4878b0a7bd7c269901515d5b732a84216cec415000daa2102eb5b577e605c1e9",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import time; time.sleep(120)"
+      ],
+      "exit_code": 0,
+      "invocation_id": "95b45f6910c84969b0ae472f2682aee1",
+      "main_pid": 2227624,
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service"
+    },
+    {
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-lab-gpu-turn-53a3ac44cb7246df9ffccb9ba8cb9ffa.service",
+        "--slice=swapp-gpu.slice",
+        "--service-type=exec",
+        "--description=SWAPP GPU model turn d8b7226f4a355ac576a132dd70b252cece6ccf10a500ea664fbd7276084acc94",
+        "--property=MemoryMax=10737418240",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=200%",
+        "--property=TasksMax=96",
+        "--property=RuntimeMaxSec=630",
+        "--property=TimeoutStopSec=2",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=SWAPP_GPU_TURN_NONCE=d8b7226f4a355ac576a132dd70b252cece6ccf10a500ea664fbd7276084acc94",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-c",
+        "import time; time.sleep(120)"
+      ],
+      "exit_code": 0,
+      "invocation_id": "512c46284d0442fe9c1e9aabb8804727",
+      "main_pid": 2227632,
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-53a3ac44cb7246df9ffccb9ba8cb9ffa.service"
+    }
+  ],
+  "cleanup": [
+    {
+      "unit": "swapp-lab-gpu-turn-87b6e410a397456b910541ecc329b64f.service",
+      "safe": true
+    },
+    {
+      "unit": "swapp-lab-gpu-turn-e2178c58669b494b92e9317d1f677c50.service",
+      "safe": true
+    },
+    {
+      "unit": "swapp-lab-gpu-turn-c908e04de32e4480a9085be1fe5b6fc0.service",
+      "safe": true
+    },
+    {
+      "unit": "swapp-lab-gpu-turn-53a3ac44cb7246df9ffccb9ba8cb9ffa.service",
+      "safe": true
+    }
+  ],
+  "passed": false
+}

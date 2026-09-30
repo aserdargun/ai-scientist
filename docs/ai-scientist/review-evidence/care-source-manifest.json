@@ -1,0 +1,648 @@
+{
+  "schema": "source-discovery.v1",
+  "dataset": "CARE to Compare",
+  "record_id": 15846963,
+  "source_url": "https://zenodo.org/api/records/15846963/files/CARE_To_Compare.zip/content",
+  "doi": "10.5281/zenodo.15846963",
+  "license": "CC-BY-SA-4.0 (Zenodo metadata)",
+  "retrieved_at": "2026-09-24T08:58:31.992059+00:00",
+  "archive": "data/public/care/15846963/CARE_To_Compare.zip",
+  "archive_bytes": 5503439673,
+  "upstream_md5": "2547b58c21ac8c242d13232860cf500c",
+  "sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+  "acquisition_elapsed_seconds": 1213.21,
+  "uncompressed_bytes": 19987485991,
+  "extraction_status": "only bounded README text; datasets still compressed",
+  "descriptions": [
+    {
+      "member": "CARE_To_Compare/README.md",
+      "local_path": "data/public/care/15846963/source-README.md",
+      "sha256": "0bc9fa689cb28a6fa1439d15047f7f6b77beca53614a304bc86494f8dd6b9456"
+    },
+    {
+      "member": "CARE_To_Compare/README.txt",
+      "local_path": "data/public/care/15846963/source-README.txt",
+      "sha256": "0bc9fa689cb28a6fa1439d15047f7f6b77beca53614a304bc86494f8dd6b9456"
+    }
+  ],
+  "members": [
+    {
+      "path": "CARE_To_Compare/README.md",
+      "uncompressed_bytes": 5268,
+      "compressed_bytes": 1892,
+      "crc32": "7e20776d"
+    },
+    {
+      "path": "CARE_To_Compare/README.txt",
+      "uncompressed_bytes": 5268,
+      "compressed_bytes": 1892,
+      "crc32": "7e20776d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/0.csv",
+      "uncompressed_bytes": 36891572,
+      "compressed_bytes": 7227479,
+      "crc32": "af90f610"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/10.csv",
+      "uncompressed_bytes": 35826430,
+      "compressed_bytes": 7044148,
+      "crc32": "4160d251"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/13.csv",
+      "uncompressed_bytes": 36217983,
+      "compressed_bytes": 7033313,
+      "crc32": "3237a94b"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/14.csv",
+      "uncompressed_bytes": 36614003,
+      "compressed_bytes": 7302576,
+      "crc32": "280993ab"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/17.csv",
+      "uncompressed_bytes": 36850928,
+      "compressed_bytes": 7250077,
+      "crc32": "4b1a5db3"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/22.csv",
+      "uncompressed_bytes": 35472117,
+      "compressed_bytes": 6877676,
+      "crc32": "3f9ff4da"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/24.csv",
+      "uncompressed_bytes": 36979351,
+      "compressed_bytes": 7277908,
+      "crc32": "9ec55c44"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/25.csv",
+      "uncompressed_bytes": 36624095,
+      "compressed_bytes": 7210695,
+      "crc32": "9e8352c9"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/26.csv",
+      "uncompressed_bytes": 36068832,
+      "compressed_bytes": 7047241,
+      "crc32": "317d2174"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/3.csv",
+      "uncompressed_bytes": 37088823,
+      "compressed_bytes": 7288645,
+      "crc32": "23bc264d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/38.csv",
+      "uncompressed_bytes": 37275500,
+      "compressed_bytes": 7471995,
+      "crc32": "65c14edb"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/40.csv",
+      "uncompressed_bytes": 37308306,
+      "compressed_bytes": 7298233,
+      "crc32": "ca204964"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/42.csv",
+      "uncompressed_bytes": 35944110,
+      "compressed_bytes": 7058770,
+      "crc32": "e2a25256"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/45.csv",
+      "uncompressed_bytes": 36479816,
+      "compressed_bytes": 7301277,
+      "crc32": "0b40086a"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/51.csv",
+      "uncompressed_bytes": 36496359,
+      "compressed_bytes": 7096291,
+      "crc32": "97fd8ab8"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/68.csv",
+      "uncompressed_bytes": 36380960,
+      "compressed_bytes": 7167558,
+      "crc32": "89ebae65"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/69.csv",
+      "uncompressed_bytes": 36686027,
+      "compressed_bytes": 7223334,
+      "crc32": "fcf267b2"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/71.csv",
+      "uncompressed_bytes": 36547342,
+      "compressed_bytes": 7187778,
+      "crc32": "c9237a8d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/72.csv",
+      "uncompressed_bytes": 36248659,
+      "compressed_bytes": 7046135,
+      "crc32": "5265d846"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/73.csv",
+      "uncompressed_bytes": 36314694,
+      "compressed_bytes": 7139534,
+      "crc32": "57ce432b"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/84.csv",
+      "uncompressed_bytes": 36479271,
+      "compressed_bytes": 7306243,
+      "crc32": "a07a75e9"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/datasets/92.csv",
+      "uncompressed_bytes": 36069145,
+      "compressed_bytes": 7097945,
+      "crc32": "30d96d58"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/event_info.csv",
+      "uncompressed_bytes": 1788,
+      "compressed_bytes": 609,
+      "crc32": "3f3951d1"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm A/feature_description.csv",
+      "uncompressed_bytes": 4098,
+      "compressed_bytes": 883,
+      "crc32": "d8e63f1f"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/19.csv",
+      "uncompressed_bytes": 89680003,
+      "compressed_bytes": 26451047,
+      "crc32": "d072cad4"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/2.csv",
+      "uncompressed_bytes": 87149492,
+      "compressed_bytes": 25630956,
+      "crc32": "37a1cd30"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/21.csv",
+      "uncompressed_bytes": 85180339,
+      "compressed_bytes": 25042319,
+      "crc32": "42fa3ff7"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/23.csv",
+      "uncompressed_bytes": 86384882,
+      "compressed_bytes": 24966497,
+      "crc32": "28fd8d29"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/27.csv",
+      "uncompressed_bytes": 98960870,
+      "compressed_bytes": 28833746,
+      "crc32": "8c9ba4db"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/34.csv",
+      "uncompressed_bytes": 89434660,
+      "compressed_bytes": 25708202,
+      "crc32": "3759a8cb"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/52.csv",
+      "uncompressed_bytes": 87397671,
+      "compressed_bytes": 25136960,
+      "crc32": "188b4863"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/53.csv",
+      "uncompressed_bytes": 93271611,
+      "compressed_bytes": 27254332,
+      "crc32": "bae2ea80"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/7.csv",
+      "uncompressed_bytes": 92094858,
+      "compressed_bytes": 27075941,
+      "crc32": "a0595f08"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/74.csv",
+      "uncompressed_bytes": 88646969,
+      "compressed_bytes": 26155487,
+      "crc32": "f8c59180"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/77.csv",
+      "uncompressed_bytes": 98677572,
+      "compressed_bytes": 29373892,
+      "crc32": "d278318f"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/82.csv",
+      "uncompressed_bytes": 87397445,
+      "compressed_bytes": 25610512,
+      "crc32": "de776ac2"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/83.csv",
+      "uncompressed_bytes": 105007050,
+      "compressed_bytes": 30592958,
+      "crc32": "af770021"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/86.csv",
+      "uncompressed_bytes": 88573954,
+      "compressed_bytes": 26367665,
+      "crc32": "5c749b49"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/datasets/87.csv",
+      "uncompressed_bytes": 87964022,
+      "compressed_bytes": 25712847,
+      "crc32": "0cb6d515"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/event_info.csv",
+      "uncompressed_bytes": 1344,
+      "compressed_bytes": 495,
+      "crc32": "05292f25"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm B/feature_description.csv",
+      "uncompressed_bytes": 5324,
+      "compressed_bytes": 985,
+      "crc32": "73eb1390"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/1.csv",
+      "uncompressed_bytes": 299784529,
+      "compressed_bytes": 83794902,
+      "crc32": "8d366fe9"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/11.csv",
+      "uncompressed_bytes": 314674941,
+      "compressed_bytes": 85636074,
+      "crc32": "05ac1095"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/12.csv",
+      "uncompressed_bytes": 314764359,
+      "compressed_bytes": 88501963,
+      "crc32": "877d7667"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/15.csv",
+      "uncompressed_bytes": 300987880,
+      "compressed_bytes": 81331156,
+      "crc32": "00b257d3"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/16.csv",
+      "uncompressed_bytes": 298753935,
+      "compressed_bytes": 82814057,
+      "crc32": "f576ec87"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/18.csv",
+      "uncompressed_bytes": 294703160,
+      "compressed_bytes": 81441891,
+      "crc32": "4c6bdbec"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/20.csv",
+      "uncompressed_bytes": 302666495,
+      "compressed_bytes": 84674603,
+      "crc32": "16619ffa"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/28.csv",
+      "uncompressed_bytes": 310643463,
+      "compressed_bytes": 87004012,
+      "crc32": "ba468442"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/29.csv",
+      "uncompressed_bytes": 303107037,
+      "compressed_bytes": 80621088,
+      "crc32": "8694a0b3"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/30.csv",
+      "uncompressed_bytes": 311747245,
+      "compressed_bytes": 84216547,
+      "crc32": "13a589cc"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/31.csv",
+      "uncompressed_bytes": 305882491,
+      "compressed_bytes": 84599381,
+      "crc32": "20b0686d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/32.csv",
+      "uncompressed_bytes": 309545484,
+      "compressed_bytes": 87506086,
+      "crc32": "26e3db84"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/33.csv",
+      "uncompressed_bytes": 313179051,
+      "compressed_bytes": 86258999,
+      "crc32": "51b72662"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/35.csv",
+      "uncompressed_bytes": 294337537,
+      "compressed_bytes": 82159515,
+      "crc32": "e0a0cb43"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/36.csv",
+      "uncompressed_bytes": 310249395,
+      "compressed_bytes": 87005621,
+      "crc32": "e65ac4e5"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/37.csv",
+      "uncompressed_bytes": 300367686,
+      "compressed_bytes": 81015625,
+      "crc32": "c33cc768"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/39.csv",
+      "uncompressed_bytes": 298512034,
+      "compressed_bytes": 82882063,
+      "crc32": "06bab59c"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/4.csv",
+      "uncompressed_bytes": 315221402,
+      "compressed_bytes": 87225324,
+      "crc32": "7ebee1b5"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/41.csv",
+      "uncompressed_bytes": 309227112,
+      "compressed_bytes": 83877197,
+      "crc32": "4c3b0def"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/43.csv",
+      "uncompressed_bytes": 306504483,
+      "compressed_bytes": 85348593,
+      "crc32": "855e357a"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/44.csv",
+      "uncompressed_bytes": 354063087,
+      "compressed_bytes": 99227119,
+      "crc32": "2c2aa296"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/46.csv",
+      "uncompressed_bytes": 311140504,
+      "compressed_bytes": 88936027,
+      "crc32": "50a3ffd8"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/47.csv",
+      "uncompressed_bytes": 301857392,
+      "compressed_bytes": 84326961,
+      "crc32": "1c2b61e4"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/48.csv",
+      "uncompressed_bytes": 310077065,
+      "compressed_bytes": 85454550,
+      "crc32": "5e0a1e16"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/49.csv",
+      "uncompressed_bytes": 294017886,
+      "compressed_bytes": 79313476,
+      "crc32": "d1b6c3a8"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/5.csv",
+      "uncompressed_bytes": 295114453,
+      "compressed_bytes": 80628434,
+      "crc32": "9b90f22d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/50.csv",
+      "uncompressed_bytes": 305973953,
+      "compressed_bytes": 83712408,
+      "crc32": "798222f5"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/54.csv",
+      "uncompressed_bytes": 308675860,
+      "compressed_bytes": 86505246,
+      "crc32": "1ed3f55d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/55.csv",
+      "uncompressed_bytes": 312651912,
+      "compressed_bytes": 87838066,
+      "crc32": "28842f1e"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/56.csv",
+      "uncompressed_bytes": 298406675,
+      "compressed_bytes": 82799403,
+      "crc32": "bb91bc45"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/57.csv",
+      "uncompressed_bytes": 309037783,
+      "compressed_bytes": 86586868,
+      "crc32": "840b9e5f"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/58.csv",
+      "uncompressed_bytes": 306322566,
+      "compressed_bytes": 87193817,
+      "crc32": "4b43ba91"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/59.csv",
+      "uncompressed_bytes": 306753215,
+      "compressed_bytes": 83591400,
+      "crc32": "67709025"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/6.csv",
+      "uncompressed_bytes": 304985781,
+      "compressed_bytes": 84042502,
+      "crc32": "7959743b"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/60.csv",
+      "uncompressed_bytes": 301805533,
+      "compressed_bytes": 81098274,
+      "crc32": "b58edd23"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/61.csv",
+      "uncompressed_bytes": 312639582,
+      "compressed_bytes": 87706936,
+      "crc32": "de2c5fb6"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/62.csv",
+      "uncompressed_bytes": 298891736,
+      "compressed_bytes": 83497789,
+      "crc32": "0ddf6344"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/63.csv",
+      "uncompressed_bytes": 307228572,
+      "compressed_bytes": 85215022,
+      "crc32": "73d9d05e"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/64.csv",
+      "uncompressed_bytes": 307374415,
+      "compressed_bytes": 87264694,
+      "crc32": "a0ffdf78"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/65.csv",
+      "uncompressed_bytes": 311866781,
+      "compressed_bytes": 85313544,
+      "crc32": "77e2e518"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/66.csv",
+      "uncompressed_bytes": 295779639,
+      "compressed_bytes": 79990022,
+      "crc32": "56343c44"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/67.csv",
+      "uncompressed_bytes": 344830246,
+      "compressed_bytes": 95418117,
+      "crc32": "737f60ce"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/70.csv",
+      "uncompressed_bytes": 315968484,
+      "compressed_bytes": 88226867,
+      "crc32": "8bb0a19d"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/75.csv",
+      "uncompressed_bytes": 316452199,
+      "compressed_bytes": 89465456,
+      "crc32": "f30582e5"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/76.csv",
+      "uncompressed_bytes": 290309797,
+      "compressed_bytes": 80323108,
+      "crc32": "b82b584c"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/78.csv",
+      "uncompressed_bytes": 297287308,
+      "compressed_bytes": 82737066,
+      "crc32": "98164175"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/79.csv",
+      "uncompressed_bytes": 299858364,
+      "compressed_bytes": 85016720,
+      "crc32": "e11446bf"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/8.csv",
+      "uncompressed_bytes": 307847655,
+      "compressed_bytes": 87047338,
+      "crc32": "7e85b731"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/80.csv",
+      "uncompressed_bytes": 309606724,
+      "compressed_bytes": 86536213,
+      "crc32": "d2340ff1"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/81.csv",
+      "uncompressed_bytes": 299760683,
+      "compressed_bytes": 82520681,
+      "crc32": "46dc796e"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/85.csv",
+      "uncompressed_bytes": 291875901,
+      "compressed_bytes": 81810547,
+      "crc32": "f9c2c178"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/88.csv",
+      "uncompressed_bytes": 310924172,
+      "compressed_bytes": 88418859,
+      "crc32": "75327f30"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/89.csv",
+      "uncompressed_bytes": 305580092,
+      "compressed_bytes": 84772954,
+      "crc32": "04940983"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/9.csv",
+      "uncompressed_bytes": 314336070,
+      "compressed_bytes": 89378005,
+      "crc32": "ee5a2773"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/90.csv",
+      "uncompressed_bytes": 307259862,
+      "compressed_bytes": 84977091,
+      "crc32": "66fff9c1"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/91.csv",
+      "uncompressed_bytes": 318329877,
+      "compressed_bytes": 89832192,
+      "crc32": "2dc4c1a0"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/93.csv",
+      "uncompressed_bytes": 313279637,
+      "compressed_bytes": 86442253,
+      "crc32": "bdc4f9bc"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/datasets/94.csv",
+      "uncompressed_bytes": 305718534,
+      "compressed_bytes": 84456920,
+      "crc32": "29beaf71"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/event_info.csv",
+      "uncompressed_bytes": 6070,
+      "compressed_bytes": 2385,
+      "crc32": "cef29956"
+    },
+    {
+      "path": "CARE_To_Compare/Wind Farm C/feature_description.csv",
+      "uncompressed_bytes": 21396,
+      "compressed_bytes": 2836,
+      "crc32": "30bbdca9"
+    }
+  ]
+}

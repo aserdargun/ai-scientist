@@ -1,0 +1,61 @@
+{
+  "schema": "stop055-release-execution-binding.v1",
+  "version": "0.36.3",
+  "gate_source_files": 281,
+  "gate_source_matches_main": true,
+  "scope": "CPU stopped-proposal recovery only; no original M0 GPU/public/holdout acceptance is closed",
+  "gate": {
+    "exit_code": 0,
+    "independent_tools": [
+      "0227a0",
+      "98ba5c"
+    ]
+  },
+  "postgres40": {
+    "exit_code": 0,
+    "session": 16678,
+    "start_tool": "2a7729",
+    "end_tool": "0cbc8e"
+  },
+  "image": {
+    "exit_code": 0,
+    "runtime_files": 143,
+    "independent_tools": [
+      "0b4bda",
+      "bd3657"
+    ]
+  },
+  "deployment": {
+    "exit_code": 0,
+    "session": 19702,
+    "start_tool": "8b26bf",
+    "end_tool": "e1f044"
+  },
+  "actual053_closure": {
+    "exit_code": 0,
+    "session": 50705,
+    "start_tool": "754190",
+    "end_tool": "7c851c"
+  },
+  "public_copy_redactions": [
+    "migrator_dsn_sha256 replaced; original evidence retained privately"
+  ],
+  "evidence_sha256": {
+    "stop055-gate.json": "4fef5dc1e65b744126caf884fac8c0f04e047dc5867ac6c0fc42a47290ef112a",
+    "stop055-gate-commands.json": "9c7eed267b78e1b652e60eefde26d29728f13052b2b919c3d57dcb2a4f9aae9e",
+    "stop055-postgres40.json": "b9d58ba66f957f3bbc2450e250d0e3746a96cd7bd843e6712180d15b5685fb88",
+    "stop055-image-parity.json": "31e9160f011c1fef00f2f09354bfb58fa352f7d4fbc52f40192c48faa1ee67fc",
+    "deployment0363.json": "7faf3d7edd0517c6e2c208f3b8e83078d0b7f62a6c935b71ded4fa27eaa1199c",
+    "stop055-actual053-closure.json": "b856d4611ec4dcdfc1b3f5938ced36dbe0135d2525c0d3a6a98d9f50f9baf8bf",
+    "stop055-canonical-report.json": "6191a1ac6cc1697565220d2e86b365c9ea3ebccb9bc15808df281f41ce4e0673"
+  },
+  "console_report": {
+    "http_status": 200,
+    "canonical_sha256": "6191a1ac6cc1697565220d2e86b365c9ea3ebccb9bc15808df281f41ce4e0673",
+    "tools": [
+      "489ad4",
+      "723f72"
+    ]
+  },
+  "main_source_fence_tool": "610e84"
+}

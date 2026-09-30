@@ -1,0 +1,59 @@
+{
+  "schema": "release038-deployment-safe-summary.v1",
+  "status": "deployed_and_independently_verified",
+  "runtime_version": "0.38.0",
+  "database_revision": "0032_care_development_binding",
+  "scope": "14 reviewed runtime/test/image-pin files and two calibrated-suite trigger functions; documents separate",
+  "quality_gate": {
+    "actual_exit_code": 0,
+    "all_seven_commands_exit_zero": true,
+    "frozen_source_unchanged": true
+  },
+  "sandbox_image": {
+    "image": "sha256:9326a4c7514310b93572d2156a76cb0c6b4c75dcb0e3410a2c7c87fb0f3a32a5",
+    "actual_build_exit_code": 0,
+    "actual_parity_exit_code": 0,
+    "runtime_files_compared": 148,
+    "current_main_matches_every_image_source_hash": true,
+    "current_pin_matches_built_image": true
+  },
+  "promotion": {
+    "actual_exit_code": 0,
+    "changed_files": 14,
+    "current_main_matches_all_final_gate_payload_hashes": true,
+    "all_47_lab_scorer_data_tables_unchanged": true,
+    "original_budgets_and_execution_deadlines_unchanged": true,
+    "three_owned_cpu_services_active": true,
+    "tunnel_preserved": true,
+    "full_database_restore_used": false
+  },
+  "migration_rehearsal": {
+    "actual_exit_code": 0,
+    "passed": true,
+    "isolated_clone_only": true,
+    "two_function_upgrade_and_original_definition_reversal": true,
+    "all_data_budgets_deadlines_preserved": true,
+    "original_function_ownership_acl_oid_security_and_triggers_restored": true,
+    "role_permissions_verified": true,
+    "own_clone_stopped_and_retained": true,
+    "main_database_unchanged_by_rehearsal": true
+  },
+  "earlier_failed_promotion": {
+    "retained": true,
+    "cause": "Raw DBAPI percent parsing in PL/pgSQL; corrected using compiled SQL text.",
+    "full_original_source_schema_data_budget_rollback_verified": true,
+    "old_services_restored_before_second_attempt": true
+  },
+  "independent_review": {
+    "current_payload_and_image_bytes_read_directly": true,
+    "private_receipts_reviewed": true,
+    "deployment_receipt_sha256": "1ef77c0c0f54a73037a9f15974b18ea150a5e4c7f54768cdf55c1a8cfcccea88",
+    "clone_receipt_sha256": "e5952529b167dbfae79bbf4451eaf4c5f759f23e707c288799967f4b281d98d9",
+    "review_method": "Read-only file hashes and receipt invariants; no service or database action"
+  },
+  "acceptance_limits": [
+    "Exporter fixture tests and historical CPU-record exclusion establish zero real local-model training examples.",
+    "No GPU/model run, adapter training, model quality, AOS coexistence or new scientific acceptance is claimed.",
+    "Private dumps, catalogs, credentials, sessions and raw dataset/trajectory content remain outside this summary."
+  ]
+}

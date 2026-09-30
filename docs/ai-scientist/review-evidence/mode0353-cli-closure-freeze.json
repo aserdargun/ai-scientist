@@ -1,0 +1,8 @@
+{
+  "schema": "mode0353-cli-closure-freeze.v1",
+  "payload_files": {
+    "lab/cli.py": "4729cafa5f5504e90520fb0fad5145322c029c153d761dd95cbd3a5907652ed5",
+    "tests/test_mode_finalization0353.py": "2ea714df4ac19f2620ed07fdc39f70492661b0858c56159154d9b3af378e9910"
+  },
+  "scope": "Explicit mode-grid/single-snapshot terminal study only, no registered holdout, active existing budget and normal owner-fenced seal; no report deadline extension or new grants."
+}

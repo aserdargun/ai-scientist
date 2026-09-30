@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-24T17:18:09.194135+00:00",
+  "run_id": "0e6e6d7f-7c27-4cf1-838e-340212124745",
+  "scope": "Actual PG checkpoint/session and physical blob recovery with one injected ledger-call failure; ledger registration is a spy, so this does not validate SQL calibration admission, candidate execution, process crash, Director20 or full resume.",
+  "source_sha256": {
+    "lab/director/runner.py": "30997ab37d2b2f11c12fbab476cefbe326774b4f45216cfd6ed86a012bdc654d",
+    "lab/director/journal.py": "7cf2afc0c86fc9baf14207c1f4b6bd57a202cfda4c20ef7e79a20d94e24d4f0a",
+    "lab/director/fake_llm.py": "2ac62bdcfcbe8f42e3e60af2f16fdb10c5575003d4948b28edaa20cb03479b77",
+    "lab/director/artifacts.py": "d5b829304e36d67a162e78181db751e174d70af400f8fb2429dcc147598d33c7"
+  },
+  "checks": {
+    "fault_at_ledger_boundary_observed": true,
+    "checkpoint_committed_before_ledger_fault": true,
+    "exact_repeat_has_same_identity": true,
+    "provider_called_once": true,
+    "all_ledger_attempts_same_immutable_registration": true,
+    "physical_candidate_hash_matches": true,
+    "changed_context_rejected_before_ledger": true
+  },
+  "source_unchanged": true,
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_director_proposal_resume.py",
+  "script_sha256": "3e6bab35aea78f26c72b3d45096c96866275fb6965d66ea2e4d94e6b1865a25a"
+}

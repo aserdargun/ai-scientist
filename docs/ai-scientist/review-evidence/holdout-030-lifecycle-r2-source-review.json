@@ -1,0 +1,40 @@
+{
+  "aos_changed": false,
+  "created_at": "2026-09-26T23:38:09.788017+00:00",
+  "gpu_or_model_execution": false,
+  "live_lifecycle_execution": false,
+  "remaining_findings": [
+    {
+      "id": "docker_published_port",
+      "reason": "SQL inet_server_port is the internal container port; it need not equal the host DSN published port.",
+      "required_change": "Compare host endpoints among roles separately from SQL server identities."
+    },
+    {
+      "id": "receipt_cleanup_ownership",
+      "reason": "Preflight failure cleanup unconditionally removes the receipt pathname.",
+      "required_change": "Verify reserved inode and token before unlink; preserve a replacement."
+    }
+  ],
+  "resolved_prior_findings": [
+    "snapshot-local private Scorer alias is checked before stop",
+    "live worker cwd/executable/argv is bound to reviewed snapshot",
+    "receipt destination is reserved before mutation with atomic publication",
+    "post-stop failures attempt a sanitized failure artifact"
+  ],
+  "reviewed_driver_sha256": "f52138bef80a26a67fb57af9899335b159431069e51534f44ed5131afdcc3e33",
+  "reviewed_test_sha256": "5b389222c66e5e99d7d1ff1139b4ef7367daeab2d0050248373e84bb3dd04b2d",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "runtime_base_commit": "7ba1a1b3d296b52c2287cabd19c08ca2767680c8",
+  "runtime_version": "0.30.0",
+  "schema": "holdout-lifecycle-source-review.v1",
+  "scope_limits": [
+    "Negative CPU helper checks do not prove real process or Docker lifecycle behavior.",
+    "Authenticated TestClient is in-process API coverage, not HTTP or AOS deployment.",
+    "Final drain plus failed CAS does not independently timestamp drain-before-CAS ordering."
+  ],
+  "source_archive_note": "Reviewer verified these hashes. Root did not archive the superseded driver: its guarded copy rejected a changed hash after the worker started corrections. No partial copy was created.",
+  "status": "changes_requested_before_execution"
+}

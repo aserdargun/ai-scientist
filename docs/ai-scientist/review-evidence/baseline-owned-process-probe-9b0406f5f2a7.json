@@ -1,0 +1,25 @@
+{
+  "cases": [],
+  "created_at": "2026-09-27T03:39:32.121896+00:00",
+  "driver_sha256": "d656f558afb5063a2f331bb8fc7d0d41c0c5c5ee197f2d29e62cdb6a8e613465",
+  "error_type": "AttributeError",
+  "exit_code": 1,
+  "fixture_run_id": "9b0406f5-f2a7-4b2a-a206-746aa18eb3fd",
+  "helper_sha256": "5ce83173ff9668bfa650756bf3aa8f43225776f09c75ab3dee4c392de39fdc12",
+  "helper_unchanged": true,
+  "launch_exit_code": 0,
+  "outer_cgroup": {
+    "cpu_period": 100000,
+    "cpu_quota": 50000,
+    "memory_max": 1073741824,
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-baseline-observer033-20260927-r1.service",
+    "swap_max": 0,
+    "tasks_max": 64
+  },
+  "owned_cgroup_populated_after_cleanup": true,
+  "owned_sleeper_drained": false,
+  "probe_passed": false,
+  "schema": "baseline-owned-process-observer-probe.v1",
+  "scope": "One synthetic CPU sleeper; observer instrumentation only. No database, Director workload, baseline score, API, Docker, model, GPU or AOS execution.",
+  "unit": "swapp-ai-scientist-director-dispatch-9b0406f5f2a74b2aa206746aa18eb3fd.service"
+}

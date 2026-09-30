@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-09-24T17:11:22.799955+00:00",
+  "before": "0013_baseline_calibration",
+  "active_runs_before": 0,
+  "migration_sha256": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+  "command": ".venv/bin/alembic upgrade 0014_immutable_events",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\n",
+  "source_unchanged": true
+}

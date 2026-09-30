@@ -1,0 +1,19 @@
+{
+  "schema": "alarm-reference-command-outcome.v1",
+  "actual_exit_code": 0,
+  "tool_chunk_id": "d3016d",
+  "elapsed_seconds": 0.406227242,
+  "unit": "swapp-alarm-appendix-026.service",
+  "limits": {
+    "memory_max": "512M",
+    "memory_swap_max": 0,
+    "cpu_quota": "100%",
+    "tasks_max": 64,
+    "runtime_max_sec": 60
+  },
+  "command": "flock data/runtime/parallel-m0/cpu-check.lock systemd-run --user --wait --collect --pipe --quiet [bounded properties] .venv/bin/python docs/ai-scientist/review-evidence/review_alarm_appendix_c.py",
+  "result_sha256": "9c0e80980e43daa4ac959c684b631167ad7fd5351ea5399f2b8b9bfd0ec4e7cc",
+  "harness_sha256": "3c51b8fe2db27c950da7a979e5d7757f4aa8d8b49e8c5c8608fe3069d43ff176",
+  "passed_checks": 6,
+  "scope": "Production CPU functions, exact Appendix C [3] fixture. Not a Docker/Scorer, dataset or model measurement."
+}

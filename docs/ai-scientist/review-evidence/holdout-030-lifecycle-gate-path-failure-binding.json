@@ -1,0 +1,15 @@
+{
+  "actual_exec_session": 14566,
+  "actual_exit_code": 1,
+  "cause": "Root chose a long pytest basetemp on /home; four existing Unix-domain-socket tests hit AF_UNIX pathname limits. New six preflight tests passed.",
+  "completion_chunk": "f874c8",
+  "cpu_seconds": 52.469,
+  "next_action": "Re-run required full gate with a short private /home temporary directory; no production or test-source changes.",
+  "other_six_commands_exit_code": 0,
+  "pytest_summary": "4 failed,489 passed,7 skipped,22 deselected",
+  "reported_memory_peak": "481.2M",
+  "schema": "holdout-lifecycle-gate-path-failure.v1",
+  "swap_bytes": 0,
+  "unit": "swapp-holdout-lifecycle-gate-20260927-43ad.service",
+  "wall_seconds": 56.851
+}

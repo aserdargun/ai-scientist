@@ -1,0 +1,62 @@
+{
+  "schema": "fresh039-calibration-register-diagnosis-safe-summary.v1",
+  "date": "2026-09-30",
+  "provider": "fake-json",
+  "real_model_acceptance": false,
+  "calibration": {
+    "inner_phase_exit_code": 0,
+    "child_exit_code": 0,
+    "inner_state": "complete",
+    "completed_cells": 135,
+    "expected_cells": 135,
+    "outer_systemd_exit_code": 120,
+    "inner_receipt_sha256": "151e979b336e21d1ffd0a19d34435b0b8aff013cabd46564e89e4777930ea5ce",
+    "retained_outer_journal_sha256": "29e7ade25e1d0ac0d615db9e30c2e47bd4c8e088e9ffa282706c83cc1b6b1f01",
+    "outer_failure_cause": "not confirmed",
+    "possible_python_cleanup_explanation": "Python documents exit120 after interpreter cleanup or stream flush failure; this is a possibility, not a measured cause for this run.",
+    "python_documentation": "https://docs.python.org/3.13/library/sys.html#sys.exit"
+  },
+  "register": {
+    "actual_exit_code": 1,
+    "error_type": "ValueError",
+    "receipt_sha256": "1500af3c1af3ef4054c1de9a97a6296d537dc855c6f522a3da6ea7c831418c7e",
+    "proof_artifact_created": false
+  },
+  "first_diagnostic": {
+    "reported_failure_type": "FileNotFoundError",
+    "source_path_bug_corrected_in_diagnostic_only": true,
+    "shell_cat_exit_zero_is_not_diagnostic_success": true,
+    "actual_outer_exit_code": "not established by the masked shell result"
+  },
+  "diagnostic_r2": {
+    "actual_systemd_exit_code": 0,
+    "output_sha256": "f4ff72b036c7b6ad43213744ea6c09b69ed0557a4778862635d1c635f942e34c",
+    "failing_guard": "job_control_and_totals",
+    "failing_predicate_index": 4
+  },
+  "diagnostic_r3": {
+    "actual_systemd_exit_code": 0,
+    "output_sha256": "d96825d5a15028a3c6bf3ec9d9218d6c66eb0b91efb2015391e6f077d78ab1e2",
+    "image_format_checks": {
+      "context_sandbox_full_pin_unchanged": true,
+      "runtime_pin_exact_sha256_prefix": true,
+      "scientific_digest_equals_runtime_pin_hex": true,
+      "scientific_digest_exact64hex": true
+    },
+    "joined_cells": 135,
+    "distinct_claims": 135,
+    "summaries": 15,
+    "registration_called": false
+  },
+  "confirmed_guard_cause": "Scientific job image is bare64hex; runtime context is sha256: plus the exact same64hex. Original guard compared different textual formats.",
+  "original_records_context_deadline_budget_and_pins_unchanged": true,
+  "normalization_continuation_status": "source-only derivative prepared; not executed",
+  "worker_and_summary_proof_complete": false,
+  "research_complete": false,
+  "M0_10_complete": false,
+  "limits": [
+    "Inner calibration completion does not erase outer120 or failed registration.",
+    "No measured score, private row, holdout label, address or credential is published.",
+    "No record repin, old135 relabel, recalibration, deadline reset or scientific/GPU/AOS acceptance claimed."
+  ]
+}

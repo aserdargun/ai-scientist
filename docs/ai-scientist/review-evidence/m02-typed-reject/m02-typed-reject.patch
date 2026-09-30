@@ -1,0 +1,385 @@
+diff --git a/lab/director/executor.py b/lab/director/executor.py
+index e4e8cbe..02fce82 100644
+--- a/lab/director/executor.py
++++ b/lab/director/executor.py
+@@ -30,6 +30,20 @@ class CandidateExecutionRejected(RuntimeError):
+         self.code = code
+ 
+ 
++def verify_execution_identity(
++    runner: LocalDockerRunner, *, harness_sha256: str, image_sha256: str
++) -> None:
++    """Reject a changed trusted harness/image before cache or sandbox use."""
++    current_harness = compute_harness_hash(PROJECT_ROOT).sha256
++    runner_digest = DEFAULT_SANDBOX_IMAGE.rsplit("@sha256:", 1)[-1].removeprefix("sha256:")
++    if (
++        current_harness != harness_sha256
++        or runner.image != DEFAULT_SANDBOX_IMAGE
++        or runner_digest != image_sha256
++    ):
++        raise CandidateExecutionRejected("harness_hash_mismatch")
++
++
+ def evaluate_and_score_seed(
+     director_engine: Engine,
+     planner_engine: Engine,
+@@ -58,14 +72,7 @@ def evaluate_and_score_seed(
+         raise ValueError("seed execution deadline exceeds the 600-second cap")
+     if hashlib.sha256(candidate_source).hexdigest() != candidate_sha256:
+         raise ValueError("candidate source bytes differ from their preregistered digest")
+-    current_harness = compute_harness_hash(PROJECT_ROOT).sha256
+-    runner_digest = DEFAULT_SANDBOX_IMAGE.rsplit("@sha256:", 1)[-1].removeprefix("sha256:")
+-    if (
+-        current_harness != harness_sha256
+-        or runner.image != DEFAULT_SANDBOX_IMAGE
+-        or runner_digest != image_sha256
+-    ):
+-        raise RuntimeError("harness_hash_mismatch")
++    verify_execution_identity(runner, harness_sha256=harness_sha256, image_sha256=image_sha256)
+     train, evaluation = task.frames()
+     context = replace(task.context, seed=seed, time_budget_s=float(remaining_seconds))
+     deadline = time.monotonic() + remaining_seconds
+diff --git a/lab/director/runner.py b/lab/director/runner.py
+index 101eb04..81947a2 100644
+--- a/lab/director/runner.py
++++ b/lab/director/runner.py
+@@ -43,7 +43,11 @@ from lab.director.contracts import (
+     TrajectoryDocument,
+     replay_configuration_sha256,
+ )
+-from lab.director.executor import CandidateExecutionRejected, evaluate_and_score_seed
++from lab.director.executor import (
++    CandidateExecutionRejected,
++    evaluate_and_score_seed,
++    verify_execution_identity,
++)
+ from lab.director.fake_llm import (
+     AgentContext,
+     ProposalProvider,
+@@ -92,6 +96,7 @@ _CANDIDATE_TERMINAL_CODES = frozenset(
+         "degenerate_constant_scores",
+         "timeout",
+         "candidate_crash",
++        "harness_hash_mismatch",
+         "invalid_fit_context",
+         "fit_artifact_set_mismatch",
+         "empty_fit_artifact",
+@@ -136,7 +141,7 @@ class RegisteredProposal:
+ 
+ @dataclass(frozen=True, slots=True)
+ class PrimaryEvaluationResult:
+-    """Measurements or a typed candidate outcome for the primary seed."""
++    """Measurements or a typed no-score terminal outcome for the requested seed."""
+ 
+     experiment_id: str
+     status: str
+@@ -642,6 +647,19 @@ def execute_candidate_seed(
+         or not 1 <= seed_wall_seconds <= MAX_SEED_WALL_SECONDS
+     ):
+         raise ValueError("seed wall allowance must be between one and 600 seconds")
++    lease.require_run_active()
++    try:
++        verify_execution_identity(runner, harness_sha256=harness_sha256, image_sha256=image_sha256)
++    except CandidateExecutionRejected as exc:
++        return PrimaryEvaluationResult(
++            proposal.experiment_id,
++            "rejected",
++            (),
++            exc.code,
++            0.0,
++            evaluation_kind,
++            seed,
++        )
+     completed = _read_completed_seed(
+         director_engine,
+         planner_engine,
+@@ -656,6 +674,20 @@ def execute_candidate_seed(
+         artifact_root=artifact_root,
+     )
+     if completed is not None:
++        try:
++            verify_execution_identity(
++                runner, harness_sha256=harness_sha256, image_sha256=image_sha256
++            )
++        except CandidateExecutionRejected as exc:
++            return PrimaryEvaluationResult(
++                proposal.experiment_id,
++                "rejected",
++                (),
++                exc.code,
++                completed.wall_seconds,
++                evaluation_kind,
++                seed,
++            )
+         return completed
+     lease.require_run_active()
+     assignments = tuple(
+@@ -2104,6 +2136,11 @@ def commit_primary_terminal_record(
+         ),
+     )
+     provenances = tuple(dict.fromkeys(task.provenance for task in tasks))
++    exclusions: tuple[str, ...] = (
++        "labels and raw feature values were not supplied to the proposal provider",
++    )
++    if result.terminal_code == "harness_hash_mismatch":
++        exclusions += ("execution identity rejection; not a candidate quality label",)
+     replay_inputs = (
+         replay_decisions
+         or (
+@@ -2213,7 +2250,7 @@ def commit_primary_terminal_record(
+         secrets_scrubbed=False,
+         people_scrubbed=False,
+         raw_values_scrubbed=False,
+-        exclusions=("labels and raw feature values were not supplied to the proposal provider",),
++        exclusions=exclusions,
+         provider_receipt=(
+             proposal.provider_receipt.model_dump(mode="json")
+             if proposal.provider_receipt is not None
+diff --git a/tests/test_director_harness_mismatch.py b/tests/test_director_harness_mismatch.py
+new file mode 100644
+index 0000000..8cdef19
+--- /dev/null
++++ b/tests/test_director_harness_mismatch.py
+@@ -0,0 +1,218 @@
++"""A trusted-source mutation is terminally rejected before sandbox or Scorer work."""
++
++from __future__ import annotations
++
++import hashlib
++import shutil
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any
++from uuid import uuid4
++
++from harness.fingerprint import compute_harness_hash
++from lab.director import executor, runner
++from lab.director.budget import RunBudget
++from lab.director.contracts import CandidateProposal
++
++
++class _MemoryLease:
++    def __init__(self) -> None:
++        self.records: dict[str, dict[str, Any]] = {}
++
++    def heartbeat(self) -> None:
++        pass
++
++    def require_run_active(self) -> None:
++        pass
++
++    def read_checkpoint(self, *, key: str, **_: Any) -> dict[str, Any] | None:
++        return self.records.get(key)
++
++    def append_checkpoint(
++        self, *, key: str, phase: str, payload: dict[str, Any], **_: Any
++    ) -> None:
++        self.records[key] = {"phase": phase, "payload": payload}
++
++
++def _proposal(number: int, harness_sha256: str) -> runner.RegisteredProposal:
++    source = "def build_candidate():\n    return None\n"
++    digest = hashlib.sha256(source.encode()).hexdigest()
++    return runner.RegisteredProposal(
++        experiment_id=f"exp_{number:032x}",
++        experiment_number=number,
++        proposal=CandidateProposal(
++            hypothesis="Fingerprint mutation must fail closed",
++            move_type="features",
++            candidate_source=source,
++            predicted_delta=0.01,
++        ),
++        candidate_sha256=digest,
++        candidate_blob_sha256=digest,
++        inputs_sha256="a" * 64,
++        messages_blob_sha256="b" * 64,
++        calibration_sha256="c" * 64,
++        parent_experiment_id="exp_" + "d" * 32,
++        parent_tree_sha256="e" * 40,
++        harness_sha256=harness_sha256,
++        image_sha256=executor.DEFAULT_SANDBOX_IMAGE.removeprefix("sha256:").split("@sha256:")[-1],
++        suite_id="fingerprint-mutation-fixture.v1",
++        suite_version=1,
++        system="S1",
++        input_tokens=1,
++        output_tokens=1,
++    )
++
++
++def test_mutated_trusted_byte_rejects_each_next_proposal_without_execution(
++    monkeypatch: Any, tmp_path: Path
++) -> None:
++    source_root = Path(__file__).resolve().parents[1]
++    live_pin = compute_harness_hash(source_root).sha256
++    root = tmp_path / "trusted-copy"
++    for relative in (
++        "harness",
++        "vendor",
++        "lab/sandbox",
++        "lab/scorer",
++        "lab/referee",
++        "lab/director",
++        "lab/llm",
++        "lab/api",
++        "lab/training",
++    ):
++        shutil.copytree(source_root / relative, root / relative, ignore=shutil.ignore_patterns(
++            "__pycache__", "*.pyc", ".*"
++        ))
++    for relative in (
++        "Dockerfile.sandbox",
++        "docker/sandbox/requirements.txt",
++        "ops/sandbox-image.lock",
++        "pyproject.toml",
++        "uv.lock",
++        "lab/cli.py",
++        "lab/suite_limits.py",
++        "lab/reporting.py",
++        "lab/replay.py",
++    ):
++        destination = root / relative
++        destination.parent.mkdir(parents=True, exist_ok=True)
++        shutil.copy2(source_root / relative, destination)
++    monkeypatch.setattr(executor, "PROJECT_ROOT", root)
++    original_hash = compute_harness_hash(root).sha256
++    version_file = root / "harness/VERSION"
++    original_bytes = version_file.read_bytes()
++    lease = _MemoryLease()
++    terminal_outcomes: list[str] = []
++    forbidden_dispatch: list[str] = []
++    cache_lookups: list[str] = []
++    task = SimpleNamespace(
++        task_id="fixture-task", dataset_id="fixture", split_id="dev", session_id="session"
++    )
++
++    monkeypatch.setattr(runner, "plan_run_tasks", lambda *args, **kwargs: None)
++    monkeypatch.setattr(runner, "_advance_experiment_if_needed", lambda *args, **kwargs: None)
++    monkeypatch.setattr(runner, "_read_measurement", lambda *args, **kwargs: None)
++    def read_cached_seed(*args: Any, **kwargs: Any) -> runner.PrimaryEvaluationResult | None:
++        proposal = kwargs["proposal"]
++        cache_lookups.append(proposal.experiment_id)
++        if proposal.experiment_number == 2:
++            return runner.PrimaryEvaluationResult(
++                proposal.experiment_id,
++                "primary_measured",
++                ({"task_id": task.task_id},),
++                None,
++            )
++        return None
++
++    monkeypatch.setattr(runner, "_read_completed_seed", read_cached_seed)
++    monkeypatch.setattr(runner, "_task_has_terminal_outcome", lambda *args, **kwargs: False)
++    monkeypatch.setattr(
++        runner,
++        "record_planner_terminal_outcome",
++        lambda *args, **kwargs: terminal_outcomes.append(kwargs["outcome_code"]),
++    )
++    monkeypatch.setattr(
++        runner,
++        "_append_next_checkpoint",
++        lambda _lease, _engine, *, key, phase, payload, **kwargs: lease.append_checkpoint(
++            key=key, phase=phase, payload=payload
++        ),
++    )
++    monkeypatch.setattr(
++        executor,
++        "run_guarded_seed_evaluation",
++        lambda *args, **kwargs: forbidden_dispatch.append("sandbox"),
++    )
++    monkeypatch.setattr(
++        executor,
++        "enqueue_score_job",
++        lambda *args, **kwargs: forbidden_dispatch.append("scorer"),
++    )
++
++    def mutate_after_first_boundary_check(*args: Any, **kwargs: Any) -> None:
++        executor.verify_execution_identity(*args, **kwargs)
++        if not version_file.read_bytes().endswith(b"x"):
++            version_file.write_bytes(original_bytes + b"x")
++
++    monkeypatch.setattr(runner, "verify_execution_identity", mutate_after_first_boundary_check)
++    results = []
++    for ordinal in (1, 2):
++        proposal = _proposal(ordinal, original_hash)
++        budget = RunBudget(wall_limit=1200, token_limit=0)
++        result = runner.execute_candidate_seed(
++            object(),
++            object(),
++            lease=lease,
++            runner=SimpleNamespace(image=executor.DEFAULT_SANDBOX_IMAGE),
++            run_id=uuid4(),
++            proposal=proposal,
++            tasks=(task,),
++            harness_sha256=original_hash,
++            image_sha256=proposal.image_sha256,
++            budget=budget,
++        )
++        results.append(result)
++
++    assert [item.status for item in results] == ["rejected", "rejected"]
++    assert [item.terminal_code for item in results] == [
++        "harness_hash_mismatch",
++        "harness_hash_mismatch",
++    ]
++    assert compute_harness_hash(root).sha256 != original_hash
++    assert terminal_outcomes == ["guard_rejected"]
++    assert forbidden_dispatch == []
++    assert cache_lookups == ["exp_" + f"{1:032x}"]
++    for proposal_number in (1, 2):
++        if proposal_number == 1:
++            event = lease.records[
++                f"seed-complete:exp_{proposal_number:032x}:primary:0"
++            ]
++            assert event["payload"]["terminal_code"] == "harness_hash_mismatch"
++        else:
++            assert f"seed-complete:exp_{proposal_number:032x}:primary:0" not in lease.records
++
++    assert version_file.read_bytes() == original_bytes + b"x"
++    assert compute_harness_hash(source_root).sha256 == live_pin
++
++
++def test_harness_mismatch_surfaces_as_exact_referee_reject(tmp_path: Path) -> None:
++    from test_director_confirmation_review import _fixture
++
++    arguments, _ = _fixture(tmp_path)
++    result = runner.PrimaryEvaluationResult(
++        experiment_id=arguments["proposal"].experiment_id,
++        status="rejected",
++        measurements=(),
++        terminal_code="harness_hash_mismatch",
++    )
++    referee = runner.decide_proposal_from_measurements(
++        proposal=arguments["proposal"],
++        result=result,
++        tasks=arguments["tasks"],
++        calibration=arguments["calibration"],
++        parent_source=arguments["parent_source"],
++        best_suite=arguments["best_suite"],
++    )
++
++    assert referee.decision.verdict == "REJECT"
++    assert referee.decision.reason == "harness_hash_mismatch"
+diff --git a/tests/test_director_primary_recovery.py b/tests/test_director_primary_recovery.py
+index 89557a6..0c0610f 100644
+--- a/tests/test_director_primary_recovery.py
++++ b/tests/test_director_primary_recovery.py
+@@ -16,6 +16,7 @@ from lab.director.executor import CandidateExecutionRejected
+ 
+ def _arguments(monkeypatch: pytest.MonkeyPatch, *, task_count: int = 1) -> dict[str, Any]:
+     """Isolate control flow; Docker/SQL behavior is covered by separate live probes."""
++    monkeypatch.setattr(module, "verify_execution_identity", lambda *args, **kwargs: None)
+     for name in ("plan_run_tasks", "transition_experiment", "_append_next_checkpoint",
+                  "record_planner_terminal_outcome"):
+         monkeypatch.setattr(module, name, lambda *args, **kwargs: None)
+diff --git a/tests/test_director_seed_resume_review.py b/tests/test_director_seed_resume_review.py
+index 9d30697..331d447 100644
+--- a/tests/test_director_seed_resume_review.py
++++ b/tests/test_director_seed_resume_review.py
+@@ -135,6 +135,7 @@ def test_completed_seed_resumes_without_dispatch_or_second_budget_reconciliation
+     )
+     monkeypatch.setattr(module, "_append_next_checkpoint", journal.append)
+     monkeypatch.setattr(module, "evaluate_and_score_seed", execute)
++    monkeypatch.setattr(module, "verify_execution_identity", lambda *args, **kwargs: None)
+     budget = RunBudget(wall_limit=3600, token_limit=0)
+     arguments = {
+         "director_engine": object(),

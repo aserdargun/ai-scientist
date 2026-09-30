@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-09-24T20:02:23.397343+00:00",
+  "run_id": "d407c921-e61a-4b45-a493-178362083d8d",
+  "scope": "One actual Docker fit on a tiny synthetic task. The admission callback commits an authenticated ASGI API stop in real PostgreSQL before the score phase. This tests the guarded evaluator's phase boundary; not in-flight cancellation, Director end-to-end, Scorer, real data, model/GPU or AOS acceptance.",
+  "harness_sha256": "8e1b3bc6c46e55d42b0d4c62d1a6f31d5e59228bf0267f834bb37d557b886cf7",
+  "image": "sha256:9b342827934c5ac89ef2ebf78ab647727d31736c01cd42d2c02e877ac281f4ac",
+  "guarded_evaluation_error": "director_run_is_not_active",
+  "admission_checks": 2,
+  "started_phases": [
+    "fit"
+  ],
+  "finished_phases": [
+    "fit"
+  ],
+  "checks": {
+    "api_stop_committed_between_phases": true,
+    "stopped_run_denied": true,
+    "only_fit_started_and_finished": true
+  },
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "21c9afdd8d4a0232ad2bc5b9e6c9ec182db37a477a6ce6771fbf55b642d7ec09"
+}

@@ -1,0 +1,28 @@
+{
+  "command": [
+    "systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-review-gpu-quality-2b6d7f1ff0f04eda9212f14b1b188a05.service",
+    "--service-type=exec",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--property=MemoryMax=3G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=200%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=300",
+    "--property=TimeoutStopSec=10",
+    "--property=KillMode=control-group",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PATH=/home/cachyos/ai-scientist/.venv/bin:/home/cachyos/.local/bin:/usr/local/bin:/usr/bin:/bin",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "scripts/quality_gate.py"
+  ],
+  "exit_code": 0,
+  "runtime_directory": "data/runtime/gpu-quality-review/2b6d7f1ff0f04eda9212f14b1b188a05"
+}

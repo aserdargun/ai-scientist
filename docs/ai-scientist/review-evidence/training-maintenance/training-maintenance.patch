@@ -1,0 +1,2651 @@
+diff --git a/lab/cli.py b/lab/cli.py
+index 42143ae..e265ae2 100644
+--- a/lab/cli.py
++++ b/lab/cli.py
+@@ -989,6 +989,20 @@ def main(argv: list[str] | None = None) -> int:
+     apply.add_argument("--run-id", type=UUID, required=True)
+     apply.add_argument("--recovery-id", type=UUID, required=True)
+     apply.add_argument("--remaining-seconds", type=int, default=MAX_WORKER_RUNTIME_SECONDS)
++    gpu = commands.add_parser("gpu", help="run a bounded shared-GPU maintenance operation")
++    gpu_commands = gpu.add_subparsers(dest="gpu_command", required=True)
++    lease = gpu_commands.add_parser("lease", help="switch the shared GPU lane to a fixed mode")
++    lease.add_argument("mode", choices=("TRAIN",))
++    lease.add_argument("--noop", action="store_true", required=True)
++    doctor = commands.add_parser("doctor", help="run a fixed local diagnostic")
++    doctor_commands = doctor.add_subparsers(dest="doctor_command", required=True)
++    train_doctor = doctor_commands.add_parser("train", help="measure the bounded QLoRA profile")
++    train_doctor.add_argument("--dry-run", action="store_true", required=True)
++    training_worker = commands.add_parser("training-worker", help=argparse.SUPPRESS)
++    training_worker.add_argument("--operation-id", required=True)
++    training_worker.add_argument(
++        "--operation", choices=("train_noop", "train_dry_run"), required=True
++    )
+     args = parser.parse_args(argv)
+     if args.command == "api" and args.api_command == "serve":
+         try:
+@@ -1026,6 +1040,22 @@ def main(argv: list[str] | None = None) -> int:
+         except Exception as exc:
+             print(f"lab Director recovery failed ({type(exc).__name__})", file=sys.stderr)
+             return 1
++    if args.command == "gpu" and args.gpu_command == "lease":
++        if args.mode != "TRAIN" or args.noop is not True:
++            parser.error("only `lab gpu lease TRAIN --noop` is supported")
++        from lab.training.maintenance import gpu_lease_main
++
++        return gpu_lease_main([args.mode, "--noop"])
++    if args.command == "doctor" and args.doctor_command == "train":
++        if args.dry_run is not True:
++            parser.error("only `lab doctor train --dry-run` is supported")
++        from lab.training.maintenance import doctor_train_main
++
++        return doctor_train_main(["--dry-run"])
++    if args.command == "training-worker":
++        from lab.training.worker import worker_main
++
++        return worker_main(["--operation-id", args.operation_id, "--operation", args.operation])
+     if args.command in {"report", "replay"}:
+         report_engine: Engine | None = None
+         try:
+diff --git a/scripts/quality_gate.py b/scripts/quality_gate.py
+index 8f2d6ca..9667f96 100644
+--- a/scripts/quality_gate.py
++++ b/scripts/quality_gate.py
+@@ -33,6 +33,7 @@ COMMANDS: tuple[tuple[str, ...], ...] = (
+         "lab/db",
+         "lab/director",
+         "lab/scorer",
++        "lab/training",
+         "lab/cli.py",
+         "lab/reporting.py",
+         "lab/replay.py",
+diff --git a/lab/training/__init__.py b/lab/training/__init__.py
+new file mode 100644
+index 0000000..f8128cb
+--- /dev/null
++++ b/lab/training/__init__.py
+@@ -0,0 +1 @@
++"""Bounded, offline training maintenance operations."""
+diff --git a/lab/training/maintenance.py b/lab/training/maintenance.py
+new file mode 100644
+index 0000000..0878983
+--- /dev/null
++++ b/lab/training/maintenance.py
+@@ -0,0 +1,646 @@
++"""Durable receipts and bounded dispatch for the M0 training maintenance profile.
++
++The public CLI never trains in its own process. It dispatches a fixed worker in
++an owned transient systemd unit; that worker must authenticate as the existing
++Lab lane in the shared AOS/Lab GPU scheduler before starting any GPU child.
++"""
++
++# pylint: disable=missing-function-docstring,too-many-arguments,too-many-locals,import-outside-toplevel,broad-exception-caught,too-many-instance-attributes
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import re
++import sqlite3
++import stat
++import subprocess  # nosec B404 -- fixed systemd-run binary and argv
++import sys
++from collections.abc import Callable
++from contextlib import closing
++from dataclasses import dataclass
++from datetime import UTC, datetime
++from pathlib import Path
++from typing import Any, Literal, cast
++from uuid import uuid4
++
++from lab.training.runtime_paths import validated_gpu_runtime_database
++
++PROJECT_ROOT = Path(__file__).resolve().parents[2]
++TRAIN_RUNTIME = PROJECT_ROOT / "data/runtime/train"
++TRAIN_PYTHON = TRAIN_RUNTIME / ".venv/bin/python"
++TRAIN_STATE_ROOT = TRAIN_RUNTIME / "maintenance"
++GPU_RUNTIME = PROJECT_ROOT / "data/runtime/gpu"
++NATIVE_DOCTOR_RUNTIME = PROJECT_ROOT / "data/runtime/native-doctor"
++TRAINING_LEDGER = TRAIN_STATE_ROOT / "maintenance-ledger.sqlite3"
++SYSTEMD_RUN = "/usr/bin/systemd-run"
++SYSTEMCTL = "/usr/bin/systemctl"
++GPU_SLICE = "swapp-gpu.slice"
++TRAIN_SEQUENCE_LENGTH = 24_576
++TRAIN_ADAPTER_RANK = 32
++TRAIN_STEPS = 3
++TRAIN_RUNTIME_SECONDS = 900
++TRAIN_MEMORY_BYTES = 12 * 1024**3
++TRAIN_PARENT_MEMORY_BYTES = 2 * 1024**3
++TRAIN_CPU_PERCENT = 100
++TRAIN_PARENT_CPU_PERCENT = 50
++TRAIN_TASKS = 64
++TRAIN_PARENT_TASKS = 32
++MINIMUM_FREE_DISK_BYTES = 20 * 1024**3
++HOST_RAM_RESERVE_BYTES = 6 * 1024**3
++LOCAL_AGENT_VERSION = "director.v0.17.0"
++TRAINING_UNIT = "swapp-lab-gpu-maintenance.service"
++UTC_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
++Operation = Literal["train_noop", "train_dry_run"]
++REQUIRED_TRAINING_PACKAGES = {
++    "accelerate": "1.15.0",
++    "bitsandbytes": "0.50.2",
++    "peft": "0.21.0",
++    "torch": "2.12.1+cu130",
++    "transformers": "5.5.0",
++    "trl": "0.24.0",
++    "unsloth": "2026.9.11",
++}
++EXPECTED_TRAINING_LOCK_SHA256 = "cdf0390c761fa7170f62453cc03fabfba82a02b432f7f8090b3d1d3d118e8e0b"
++
++
++class MaintenanceError(RuntimeError):
++    """A maintenance request failed closed before a trusted completion receipt."""
++
++
++@dataclass(frozen=True, slots=True)
++class TrainingProfile:
++    """Fixed M0.14 measurement profile; no caller-controlled training knobs."""
++
++    model_repository: str = "Qwen/Qwen3.5-9B"
++    sequence_length: int = TRAIN_SEQUENCE_LENGTH
++    steps: int = TRAIN_STEPS
++    adapter_rank: int = TRAIN_ADAPTER_RANK
++    load_in_4bit: bool = True
++    gradient_checkpointing: str = "unsloth"
++    cpu_offload_embeddings: bool = True
++    synthetic_data_only: bool = True
++    save_adapter: bool = False
++
++    def document(self) -> dict[str, object]:
++        return {
++            "adapter_rank": self.adapter_rank,
++            "gradient_checkpointing": self.gradient_checkpointing,
++            "load_in_4bit": self.load_in_4bit,
++            "model_repository": self.model_repository,
++            "cpu_offload_embeddings": self.cpu_offload_embeddings,
++            "save_adapter": self.save_adapter,
++            "sequence_length": self.sequence_length,
++            "steps": self.steps,
++            "synthetic_data_only": self.synthetic_data_only,
++        }
++
++
++DEFAULT_TRAINING_PROFILE = TrainingProfile()
++
++
++def _utc_now() -> str:
++    return datetime.now(UTC).strftime(UTC_FORMAT)
++
++
++def _canonical_json(value: object) -> bytes:
++    return json.dumps(
++        value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
++    ).encode("utf-8")
++
++
++def agent_version_identity() -> dict[str, str]:
++    """Return the immutable local agent label plus its source digest."""
++    source = PROJECT_ROOT / "lab/director/runner.py"
++    if source.is_symlink() or not source.is_file():
++        raise MaintenanceError("trusted Director agent source is unavailable")
++    return {
++        "agent_version": LOCAL_AGENT_VERSION,
++        "agent_source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
++    }
++
++
++class MaintenanceLedger:
++    """Private SQLite operation/event ledger with immutable request identity."""
++
++    def __init__(self, path: Path = TRAINING_LEDGER) -> None:
++        self.path = path
++        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
++        parent = path.parent
++        if parent.is_symlink() or parent.stat().st_uid != os.getuid():
++            raise MaintenanceError("training runtime directory is not private and owned")
++        os.chmod(parent, 0o700)
++        if path.exists() and (path.is_symlink() or not path.is_file()):
++            raise MaintenanceError("training ledger path is not a regular file")
++        self._initialize()
++
++    def _connect(self) -> sqlite3.Connection:
++        connection = sqlite3.connect(self.path, timeout=5.0, isolation_level=None)
++        connection.row_factory = sqlite3.Row
++        connection.execute("PRAGMA busy_timeout=5000")
++        connection.execute("PRAGMA journal_mode=WAL")
++        os.chmod(self.path, 0o600)
++        return connection
++
++    def _initialize(self) -> None:
++        with closing(self._connect()) as connection:
++            connection.executescript(
++                """
++                CREATE TABLE IF NOT EXISTS training_maintenance (
++                    operation_id TEXT PRIMARY KEY CHECK(length(operation_id)=32),
++                    operation TEXT NOT NULL CHECK(operation IN ('train_noop','train_dry_run')),
++                    request_sha256 TEXT NOT NULL CHECK(length(request_sha256)=64),
++                    state TEXT NOT NULL CHECK(state IN (
++                        'created','queued','active','training',
++                        'drained','smoke','completed','failed')),
++                    request_json TEXT NOT NULL,
++                    receipt_json TEXT,
++                    created_at TEXT NOT NULL,
++                    updated_at TEXT NOT NULL
++                );
++                CREATE TABLE IF NOT EXISTS training_maintenance_events (
++                    event_sequence INTEGER PRIMARY KEY AUTOINCREMENT,
++                    operation_id TEXT NOT NULL REFERENCES training_maintenance(operation_id),
++                    event TEXT NOT NULL CHECK(event IN (
++                        'created','queued','lease_acquired','noop_completed',
++                        'training_started','training_unit_bound','training_finished',
++                        'lease_drained','smoke_started','smoke_finished','completed','failed')),
++                    observed_at TEXT NOT NULL,
++                    details_json TEXT NOT NULL
++                );
++                CREATE INDEX IF NOT EXISTS training_maintenance_events_by_operation
++                    ON training_maintenance_events(operation_id,event_sequence);
++                """
++            )
++
++    def create(self, operation_id: str, operation: Operation, request: dict[str, object]) -> str:
++        if re.fullmatch(r"[0-9a-f]{32}", operation_id) is None:
++            raise ValueError("operation ID must be 32 lowercase hexadecimal characters")
++        encoded = _canonical_json(request).decode("utf-8")
++        digest = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++        now = _utc_now()
++        with closing(self._connect()) as connection:
++            connection.execute("BEGIN IMMEDIATE")
++            row = connection.execute(
++                "SELECT operation,request_sha256 FROM training_maintenance WHERE operation_id=?",
++                (operation_id,),
++            ).fetchone()
++            if row is not None:
++                if row["operation"] != operation or row["request_sha256"] != digest:
++                    connection.rollback()
++                    raise MaintenanceError("maintenance idempotency key changed request terms")
++                connection.commit()
++                return digest
++            connection.execute(
++                "INSERT INTO training_maintenance(operation_id,operation,request_sha256,state,"
++                "request_json,created_at,updated_at) VALUES(?,?,?,'created',?,?,?)",
++                (operation_id, operation, digest, encoded, now, now),
++            )
++            self._event(connection, operation_id, "created", {"request_sha256": digest}, now)
++            connection.commit()
++        return digest
++
++    @staticmethod
++    def _event(
++        connection: sqlite3.Connection,
++        operation_id: str,
++        event: str,
++        details: dict[str, object],
++        timestamp: str,
++    ) -> None:
++        connection.execute(
++            "INSERT INTO training_maintenance_events(operation_id,event,observed_at,details_json) "
++            "VALUES(?,?,?,?)",
++            (operation_id, event, timestamp, _canonical_json(details).decode("utf-8")),
++        )
++
++    def advance(
++        self,
++        operation_id: str,
++        *,
++        expected: tuple[str, ...],
++        state: str,
++        event: str,
++        details: dict[str, object],
++    ) -> None:
++        if state not in {"queued", "active", "training", "drained", "smoke", "completed", "failed"}:
++            raise ValueError("invalid training maintenance state")
++        now = _utc_now()
++        with closing(self._connect()) as connection:
++            connection.execute("BEGIN IMMEDIATE")
++            row = connection.execute(
++                "SELECT state FROM training_maintenance WHERE operation_id=?", (operation_id,)
++            ).fetchone()
++            if row is None:
++                connection.rollback()
++                raise MaintenanceError("training maintenance state transition was fenced")
++            if row["state"] in {"completed", "failed"}:
++                connection.rollback()
++                raise MaintenanceError("training maintenance operation is terminal")
++            if row["state"] not in expected:
++                connection.rollback()
++                raise MaintenanceError("training maintenance state transition was fenced")
++            connection.execute(
++                "UPDATE training_maintenance SET state=?,updated_at=? WHERE operation_id=?",
++                (state, now, operation_id),
++            )
++            self._event(connection, operation_id, event, details, now)
++            connection.commit()
++
++    def append_event(self, operation_id: str, event: str, details: dict[str, object]) -> None:
++        """Durably bind facts that must precede an external side effect."""
++        now = _utc_now()
++        with closing(self._connect()) as connection:
++            connection.execute("BEGIN IMMEDIATE")
++            row = connection.execute(
++                "SELECT state FROM training_maintenance WHERE operation_id=?", (operation_id,)
++            ).fetchone()
++            if row is None or row["state"] in {"completed", "failed"}:
++                connection.rollback()
++                raise MaintenanceError("cannot append evidence to a terminal operation")
++            self._event(connection, operation_id, event, details, now)
++            connection.commit()
++
++    def child_generation(self, operation_id: str) -> dict[str, object] | None:
++        """Return the immutable first child binding, rejecting conflicting retries."""
++        with closing(self._connect()) as connection:
++            rows = connection.execute(
++                "SELECT details_json FROM training_maintenance_events "
++                "WHERE operation_id=? AND event='training_unit_bound' ORDER BY event_sequence",
++                (operation_id,),
++            ).fetchall()
++        if not rows:
++            return None
++        try:
++            first = json.loads(rows[0]["details_json"])
++            if any(json.loads(row["details_json"]) != first for row in rows[1:]):
++                raise MaintenanceError("child unit generation changed within one operation")
++        except (json.JSONDecodeError, TypeError) as exc:
++            raise MaintenanceError("durable child unit binding is malformed") from exc
++        if not isinstance(first, dict):
++            raise MaintenanceError("durable child unit binding is malformed")
++        return first
++
++    def unfinished_children(self) -> list[tuple[str, str, dict[str, object] | None]]:
++        with closing(self._connect()) as connection:
++            rows = connection.execute(
++                "SELECT operation_id,state FROM training_maintenance "
++                "WHERE state IN ('training','active','queued') ORDER BY created_at"
++            ).fetchall()
++        result: list[tuple[str, str, dict[str, object] | None]] = []
++        for row in rows:
++            result.append(
++                (
++                    str(row["operation_id"]),
++                    str(row["state"]),
++                    self.child_generation(str(row["operation_id"])),
++                )
++            )
++        return result
++
++    def verify_request(
++        self, operation_id: str, operation: Operation, request: dict[str, object]
++    ) -> str:
++        encoded = _canonical_json(request).decode("utf-8")
++        digest = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++        with closing(self._connect()) as connection:
++            row = connection.execute(
++                "SELECT operation,state,request_sha256,request_json FROM training_maintenance "
++                "WHERE operation_id=?",
++                (operation_id,),
++            ).fetchone()
++        if (
++            row is None
++            or row["operation"] != operation
++            or row["state"] != "created"
++            or row["request_sha256"] != digest
++            or row["request_json"] != encoded
++        ):
++            raise MaintenanceError("worker request differs from its immutable maintenance ledger")
++        return digest
++
++    def finish(self, operation_id: str, *, success: bool, receipt: dict[str, object]) -> None:
++        now = _utc_now()
++        target = "completed" if success else "failed"
++        event = target
++        encoded = _canonical_json(receipt).decode("utf-8")
++        with closing(self._connect()) as connection:
++            connection.execute("BEGIN IMMEDIATE")
++            row = connection.execute(
++                "SELECT state FROM training_maintenance WHERE operation_id=?", (operation_id,)
++            ).fetchone()
++            if row is None or row["state"] in {"completed", "failed"}:
++                connection.rollback()
++                raise MaintenanceError("maintenance operation is missing or already terminal")
++            connection.execute(
++                "UPDATE training_maintenance SET state=?,receipt_json=?,updated_at=? "
++                "WHERE operation_id=?",
++                (target, encoded, now, operation_id),
++            )
++            self._event(connection, operation_id, event, receipt, now)
++            connection.commit()
++
++    def read_completed(self, operation_id: str, request_sha256: str) -> dict[str, object]:
++        with closing(self._connect()) as connection:
++            row = connection.execute(
++                "SELECT state,request_sha256,receipt_json FROM training_maintenance "
++                "WHERE operation_id=?",
++                (operation_id,),
++            ).fetchone()
++        if (
++            row is None
++            or row["state"] != "completed"
++            or row["request_sha256"] != request_sha256
++            or not isinstance(row["receipt_json"], str)
++        ):
++            raise MaintenanceError("worker did not persist a completed trusted receipt")
++        try:
++            value = json.loads(row["receipt_json"])
++        except json.JSONDecodeError as exc:
++            raise MaintenanceError("worker completion receipt is malformed") from exc
++        if not isinstance(value, dict) or value.get("operation_id") != operation_id:
++            raise MaintenanceError("worker completion receipt identity is inconsistent")
++        return value
++
++
++def _private_runtime(path: Path) -> Path:
++    if path.is_symlink():
++        raise MaintenanceError("training runtime path cannot be a symlink")
++    path.mkdir(parents=True, exist_ok=True, mode=0o700)
++    path = path.resolve(strict=True)
++    if path != TRAIN_RUNTIME.resolve() and TRAIN_RUNTIME.resolve() not in path.parents:
++        raise MaintenanceError("training artifacts must stay under the private runtime root")
++    if path.stat().st_uid != os.getuid() or stat.S_IMODE(path.stat().st_mode) & 0o077:
++        raise MaintenanceError("training runtime directory permissions are too broad")
++    return path
++
++
++def _prepare_native_doctor_runtime() -> Path:
++    """Prepare the exact private output root used by the post-lease S1 smoke."""
++    root = NATIVE_DOCTOR_RUNTIME
++    if root.is_symlink():
++        raise MaintenanceError("native diagnostic runtime cannot be a symlink")
++    root.mkdir(parents=True, exist_ok=True, mode=0o700)
++    logs = root / "logs"
++    if logs.is_symlink():
++        raise MaintenanceError("native diagnostic log root cannot be a symlink")
++    logs.mkdir(mode=0o700, exist_ok=True)
++    for directory in (root, logs):
++        info = directory.lstat()
++        if (
++            not stat.S_ISDIR(info.st_mode)
++            or stat.S_ISLNK(info.st_mode)
++            or info.st_uid != os.getuid()
++        ):
++            raise MaintenanceError("native diagnostic runtime identity is unsafe")
++        os.chmod(directory, 0o700)
++    return root
++
++
++def _unit_name(operation_id: str) -> str:
++    if re.fullmatch(r"[0-9a-f]{32}", operation_id) is None:
++        raise ValueError("operation ID is invalid")
++    return TRAINING_UNIT
++
++
++def build_dispatch_argv(operation_id: str, operation: Operation) -> list[str]:
++    """Construct the only accepted transient service launch for training work."""
++    unit = _unit_name(operation_id)
++    return [
++        SYSTEMD_RUN,
++        "--user",
++        "--wait",
++        "--collect",
++        "--quiet",
++        f"--unit={unit}",
++        f"--slice={GPU_SLICE}",
++        f"--property=Description=SWAPP Lab bounded {operation}",
++        f"--property=MemoryMax={TRAIN_PARENT_MEMORY_BYTES}",
++        "--property=MemorySwapMax=0",
++        f"--property=CPUQuota={TRAIN_PARENT_CPU_PERCENT}%",
++        f"--property=TasksMax={TRAIN_PARENT_TASKS}",
++        f"--property=RuntimeMaxSec={TRAIN_RUNTIME_SECONDS}",
++        "--property=KillMode=control-group",
++        "--property=OOMPolicy=stop",
++        "--property=NoNewPrivileges=yes",
++        "--property=PrivateTmp=yes",
++        "--property=ProtectSystem=strict",
++        "--property=ReadWritePaths=" + str(TRAIN_STATE_ROOT.resolve()),
++        f"--setenv=SWAPP_TRAIN_OPERATION_ID={operation_id}",
++        f"--setenv=SWAPP_TRAIN_OPERATION={operation}",
++        f"--setenv=SWAPP_LAB_GPU_UNIT={unit}",
++        "--setenv=HF_HUB_OFFLINE=1",
++        "--setenv=TRANSFORMERS_OFFLINE=1",
++        "--setenv=HF_HUB_DISABLE_TELEMETRY=1",
++        "--setenv=WANDB_DISABLED=true",
++        f"--setenv=HF_HOME={TRAIN_STATE_ROOT / (operation_id + '.hf')}",
++        f"--setenv=TRITON_CACHE_DIR={TRAIN_STATE_ROOT / (operation_id + '.triton')}",
++        f"--setenv=TORCHINDUCTOR_CACHE_DIR={TRAIN_STATE_ROOT / (operation_id + '.inductor')}",
++        "--setenv=OPENBLAS_NUM_THREADS=1",
++        "--setenv=OMP_NUM_THREADS=1",
++        "--setenv=MKL_NUM_THREADS=1",
++        "--setenv=NUMEXPR_NUM_THREADS=1",
++        sys.executable,
++        "-m",
++        "lab.training.worker",
++    ]
++
++
++def installed_training_versions() -> dict[str, str]:
++    """Read pinned distributions with stdlib metadata only (no torch/Unsloth import)."""
++    try:
++        interpreter = TRAIN_PYTHON.resolve(strict=True)
++    except OSError as exc:
++        raise MaintenanceError("pinned training virtualenv interpreter is unavailable") from exc
++    uv_python_root = Path.home() / ".local/share/uv/python"
++    if (
++        not TRAIN_PYTHON.is_file()
++        or not interpreter.is_file()
++        or not interpreter.is_relative_to(uv_python_root)
++        or not os.access(interpreter, os.X_OK)
++    ):
++        raise MaintenanceError("pinned training virtualenv interpreter is unavailable")
++    script = (
++        "import importlib.metadata,json; names="
++        + repr(sorted(REQUIRED_TRAINING_PACKAGES))
++        + "; print(json.dumps({n: importlib.metadata.version(n) for n in names},sort_keys=True))"
++    )
++    try:
++        result = subprocess.run(  # nosec B603 -- pinned executable and fixed metadata-only script.
++            [str(TRAIN_PYTHON), "-I", "-c", script],
++            capture_output=True,
++            text=True,
++            timeout=5,
++            check=False,
++            env={"PATH": "/usr/bin:/bin", "PYTHONNOUSERSITE": "1"},
++        )
++    except (OSError, subprocess.SubprocessError) as exc:
++        raise MaintenanceError("pinned training metadata check failed") from exc
++    if result.returncode != 0:
++        raise MaintenanceError("pinned training package metadata is incomplete")
++    try:
++        values = json.loads(result.stdout)
++    except json.JSONDecodeError as exc:
++        raise MaintenanceError("pinned training metadata response is malformed") from exc
++    if not isinstance(values, dict) or not all(
++        isinstance(name, str) and isinstance(version, str) for name, version in values.items()
++    ):
++        raise MaintenanceError("training environment metadata has an invalid shape")
++    if values != REQUIRED_TRAINING_PACKAGES:
++        raise MaintenanceError("training environment differs from its pinned package profile")
++    return cast(dict[str, str], values)
++
++
++def training_environment_identity(
++    *, metadata_checker: Callable[[], dict[str, str]] = installed_training_versions
++) -> dict[str, object]:
++    lock_path = PROJECT_ROOT / "docs/ai-scientist/review-evidence/training-requirements.lock"
++    if lock_path.is_symlink() or not lock_path.is_file():
++        raise MaintenanceError("pinned training requirements lock is unavailable")
++    lock_sha256 = hashlib.sha256(lock_path.read_bytes()).hexdigest()
++    if lock_sha256 != EXPECTED_TRAINING_LOCK_SHA256:
++        raise MaintenanceError("training requirements lock differs from the reviewed profile")
++    return {"packages": metadata_checker(), "requirements_lock_sha256": lock_sha256}
++
++
++def dispatch(
++    operation: Operation,
++    *,
++    runner: Any = subprocess.run,
++    metadata_checker: Callable[[], dict[str, str]] = installed_training_versions,
++) -> dict[str, object]:
++    """Write immutable intent, then ask systemd to start the trusted worker."""
++    aos_unit = os.environ.get("SWAPP_AOS_GPU_UNIT", "")
++    configured_lab_unit = os.environ.get("SWAPP_LAB_GPU_UNIT", "")
++    database_text = os.environ.get("SWAPP_GPU_RUNTIME_DB", "")
++    if (
++        re.fullmatch(r"swapp-aos-gpu-[a-z0-9_.@-]+\.service", aos_unit) is None
++        or configured_lab_unit != TRAINING_UNIT
++        or not database_text
++    ):
++        raise MaintenanceError("trusted fixed maintenance principal configuration is unavailable")
++    if operation not in {"train_noop", "train_dry_run"}:
++        raise ValueError("unknown training operation")
++    _private_runtime(TRAIN_STATE_ROOT)
++    native_runtime = _prepare_native_doctor_runtime()
++    environment_identity = (
++        training_environment_identity(metadata_checker=metadata_checker)
++        if operation == "train_dry_run"
++        else {}
++    )
++    operation_id = uuid4().hex
++    agent_identity = agent_version_identity()
++    request: dict[str, object] = {
++        "agent_version_before": agent_identity["agent_version"],
++        "agent_source_sha256_before": agent_identity["agent_source_sha256"],
++        "operation": operation,
++        "profile": DEFAULT_TRAINING_PROFILE.document() if operation == "train_dry_run" else None,
++        "scheduler_owner": "lab",
++        "unit": _unit_name(operation_id),
++        "training_environment": environment_identity,
++    }
++    ledger = MaintenanceLedger()
++    request_sha256 = ledger.create(operation_id, operation, request)
++    argv = build_dispatch_argv(operation_id, operation)
++    database = Path(database_text).expanduser()
++    try:
++        resolved_database = validated_gpu_runtime_database(
++            database, project_root=PROJECT_ROOT, gpu_runtime_root=GPU_RUNTIME
++        )
++    except ValueError as exc:
++        raise MaintenanceError("shared GPU runtime database path is unsafe") from exc
++    try:
++        gpu_runtime_info = GPU_RUNTIME.lstat()
++    except OSError as exc:
++        raise MaintenanceError("private GPU runtime directory is unavailable") from exc
++    if (
++        GPU_RUNTIME.is_symlink()
++        or not GPU_RUNTIME.is_dir()
++        or gpu_runtime_info.st_uid != os.getuid()
++        or gpu_runtime_info.st_mode & 0o077
++    ):
++        raise MaintenanceError("private GPU runtime directory is unavailable")
++    writable_paths = " ".join(
++        str(path.resolve(strict=True))
++        for path in (TRAIN_STATE_ROOT, GPU_RUNTIME, resolved_database.parent, native_runtime)
++    )
++    readwrite_index = next(
++        index
++        for index, argument in enumerate(argv)
++        if argument.startswith("--property=ReadWritePaths=")
++    )
++    argv[readwrite_index] = f"--property=ReadWritePaths={writable_paths}"
++    python_index = argv.index(sys.executable)
++    argv[python_index:python_index] = [
++        f"--setenv=SWAPP_AOS_GPU_UNIT={aos_unit}",
++        f"--setenv=SWAPP_LAB_GPU_UNIT={TRAINING_UNIT}",
++        f"--setenv=SWAPP_GPU_RUNTIME_DB={resolved_database}",
++        f"--setenv=LAB_TRAINING_LEDGER={TRAINING_LEDGER}",
++    ]
++    environment = {
++        **os.environ,
++        "SWAPP_TRAIN_OPERATION_ID": operation_id,
++        "SWAPP_TRAIN_OPERATION": operation,
++    }
++    try:
++        result = runner(
++            argv,
++            capture_output=True,
++            text=True,
++            timeout=TRAIN_RUNTIME_SECONDS + 30,
++            check=False,
++            env=environment,
++        )
++    except (OSError, subprocess.SubprocessError) as exc:
++        raise MaintenanceError("bounded training service could not be dispatched") from exc
++    if result.returncode != 0:
++        raise MaintenanceError(
++            "bounded training service failed; inspect private maintenance ledger"
++        )
++    receipt = ledger.read_completed(operation_id, request_sha256)
++    return {
++        "status": "completed",
++        "operation": operation,
++        "operation_id": operation_id,
++        "request_sha256": request_sha256,
++        "unit": _unit_name(operation_id),
++        "receipt": receipt,
++    }
++
++
++def doctor_train_main(argv: list[str] | None = None) -> int:
++    """CLI entry point for the coordinated, few-step 24k synthetic measurement."""
++    import argparse
++
++    parser = argparse.ArgumentParser(prog="lab doctor train")
++    parser.add_argument("--dry-run", action="store_true", required=True)
++    args = parser.parse_args(argv)
++    if args.dry_run is not True:
++        parser.error("--dry-run is required")
++    try:
++        result = dispatch("train_dry_run")
++    except Exception as exc:
++        print(json.dumps({"status": "failed", "error": type(exc).__name__}), file=sys.stderr)
++        return 1
++    print(json.dumps(result, sort_keys=True, separators=(",", ":")))
++    return 0
++
++
++def gpu_lease_main(argv: list[str] | None = None) -> int:
++    """CLI entry point for `lab gpu lease TRAIN --noop`."""
++    import argparse
++
++    parser = argparse.ArgumentParser(prog="lab gpu lease")
++    parser.add_argument("mode", choices=("TRAIN",))
++    parser.add_argument("--noop", action="store_true", required=True)
++    args = parser.parse_args(argv)
++    if args.mode != "TRAIN" or args.noop is not True:
++        parser.error("only the bounded TRAIN --noop maintenance profile is available")
++    try:
++        result = dispatch("train_noop")
++    except Exception as exc:
++        print(json.dumps({"status": "failed", "error": type(exc).__name__}), file=sys.stderr)
++        return 1
++    print(json.dumps(result, sort_keys=True, separators=(",", ":")))
++    return 0
+diff --git a/lab/training/worker.py b/lab/training/worker.py
+new file mode 100644
+index 0000000..e7b0bdd
+--- /dev/null
++++ b/lab/training/worker.py
+@@ -0,0 +1,1033 @@
++"""Authenticated worker implementation for the bounded M0.14 operations.
++
++No model or CUDA library is imported by the product CLI. The QLoRA imports
++live in `qlora_step_worker.py`, which is launched only by the explicitly
++coordinated TRAIN dry-run operation.
++"""
++
++# pylint: disable=missing-function-docstring,missing-class-docstring,too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-branches,too-many-statements,too-many-return-statements,too-many-boolean-expressions,protected-access,import-outside-toplevel,broad-exception-caught,reimported,import-error
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++import os
++import re
++import shutil
++import sqlite3
++import subprocess  # nosec B404 -- fixed systemd and Python executables only
++import sys
++import time
++from collections.abc import Callable
++from contextlib import closing
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, cast
++from uuid import uuid4
++
++from lab.llm.gpu_scheduler import (
++    MAX_DRAIN_SECONDS,
++    MAX_INFERENCE_SECONDS,
++    MAX_TOTAL_SECONDS,
++    GpuLease,
++    PrincipalResolver,
++    ProcessIdentity,
++    SharedGpuScheduler,
++    SystemdPrincipalResolver,
++    _process_cgroup,
++    _process_identity_alive,
++    _read_process_identity,
++    boottime,
++)
++from lab.llm.native_runtime import (
++    _DOCTOR_MESSAGES,
++    DIAGNOSTIC_S1_PROFILE,
++    SYSTEMCTL,
++    SYSTEMD_RUN,
++    ModelRuntimeError,
++    NvidiaSmiObserver,
++    OwnedVllmRuntime,
++    SystemdUnitManager,
++)
++from lab.training.maintenance import (
++    DEFAULT_TRAINING_PROFILE,
++    HOST_RAM_RESERVE_BYTES,
++    LOCAL_AGENT_VERSION,
++    MINIMUM_FREE_DISK_BYTES,
++    TRAIN_CPU_PERCENT,
++    TRAIN_MEMORY_BYTES,
++    TRAIN_PARENT_MEMORY_BYTES,
++    TRAIN_PYTHON,
++    TRAIN_RUNTIME,
++    TRAIN_STATE_ROOT,
++    TRAIN_STEPS,
++    TRAIN_TASKS,
++    TRAINING_UNIT,
++    MaintenanceError,
++    MaintenanceLedger,
++    Operation,
++    _unit_name,
++    agent_version_identity,
++    training_environment_identity,
++)
++from lab.training.runtime_paths import validated_gpu_runtime_database
++
++GPU_RUNTIME_ROOT = Path(__file__).resolve().parents[2] / "data/runtime/gpu"
++
++_HEARTBEAT_SECONDS = 8
++_POLL_SECONDS = 0.25
++_GPU_SAMPLE_SECONDS = 0.5
++_TRAIN_JOB_RUNTIME_SECONDS = 600
++_CHILD_GATE_SECONDS = 40
++
++
++@dataclass(frozen=True, slots=True)
++class ChildUnitGeneration:
++    unit: str
++    pid: int
++    start_ticks: int
++    boot_id: str
++    invocation_id: str
++    cgroup: str
++
++    def as_json(self) -> dict[str, object]:
++        return {
++            "unit": self.unit,
++            "pid": self.pid,
++            "start_ticks": self.start_ticks,
++            "boot_id": self.boot_id,
++            "invocation_id": self.invocation_id,
++            "cgroup": self.cgroup,
++        }
++
++
++def _unit_properties(unit: str) -> dict[str, str] | None:
++    if re.fullmatch(r"swapp-lab-train-job-[0-9a-f]{32}\.service", unit) is None:
++        raise ValueError("training child unit is outside the fixed namespace")
++    result = subprocess.run(  # nosec B603 -- fixed systemctl binary and strict unit allowlist.
++        [
++            SYSTEMCTL,
++            "--user",
++            "show",
++            "--no-pager",
++            "--property=LoadState",
++            "--property=ActiveState",
++            "--property=ControlGroup",
++            "--property=InvocationID",
++            "--property=MainPID",
++            "--property=ExecMainCode",
++            "--property=ExecMainStatus",
++            unit,
++        ],
++        capture_output=True,
++        text=True,
++        timeout=3,
++        check=False,
++    )
++    if result.returncode != 0:
++        return None
++    values = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
++    if set(values) != {
++        "LoadState",
++        "ActiveState",
++        "ControlGroup",
++        "InvocationID",
++        "MainPID",
++        "ExecMainCode",
++        "ExecMainStatus",
++    }:
++        raise MaintenanceError("training child unit inspection was incomplete")
++    return values
++
++
++def _child_generation(unit: str, values: dict[str, str]) -> ChildUnitGeneration:
++    if values.get("LoadState") != "loaded":
++        raise MaintenanceError("training child unit was not loaded")
++    try:
++        pid = int(values["MainPID"])
++    except (KeyError, ValueError) as exc:
++        raise MaintenanceError("training child main process identity is invalid") from exc
++    invocation = values.get("InvocationID", "")
++    cgroup = values.get("ControlGroup", "").rstrip("/")
++    if pid <= 1 or re.fullmatch(r"[0-9a-f]{32}", invocation) is None:
++        raise MaintenanceError("training child systemd generation is invalid")
++    if "/swapp-gpu.slice/" not in cgroup or not cgroup.endswith("/" + unit):
++        raise MaintenanceError("training child cgroup does not match its exact unit")
++    identity = _read_process_identity(pid)
++    if identity is None or _process_cgroup(pid) != cgroup:
++        raise MaintenanceError("training child main process could not be generation-fenced")
++    return ChildUnitGeneration(
++        unit, pid, identity.start_ticks, identity.boot_id, invocation, cgroup
++    )
++
++
++def _matches_generation(values: dict[str, str], generation: ChildUnitGeneration) -> bool:
++    if (
++        values.get("LoadState") != "loaded"
++        or values.get("InvocationID") != generation.invocation_id
++        or values.get("ControlGroup", "").rstrip("/") != generation.cgroup
++    ):
++        return False
++    if values.get("ActiveState") in {"inactive", "failed"}:
++        return True
++    try:
++        current = _read_process_identity(int(values["MainPID"]))
++    except (KeyError, OSError, ValueError, IndexError):
++        return False
++    return current == ProcessIdentity(generation.pid, generation.start_ticks, generation.boot_id)
++
++
++def _same_unit_invocation(values: dict[str, str], generation: ChildUnitGeneration) -> bool:
++    return (
++        values.get("LoadState") == "loaded"
++        and values.get("InvocationID") == generation.invocation_id
++        and values.get("ControlGroup", "").rstrip("/") == generation.cgroup
++    )
++
++
++def _atomic_gate(path: Path, generation: ChildUnitGeneration, operation_id: str) -> None:
++    """Open the model-import gate only after the exact child generation is durable."""
++    if path.exists() or path.is_symlink():
++        raise MaintenanceError("training start gate already exists")
++    payload = json.dumps(
++        {"operation_id": operation_id, **generation.as_json()},
++        sort_keys=True,
++        separators=(",", ":"),
++    ).encode("ascii")
++    temporary = path.with_name(path.name + ".tmp")
++    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
++    try:
++        with os.fdopen(fd, "wb") as handle:
++            handle.write(payload)
++            handle.flush()
++            os.fsync(handle.fileno())
++        temporary.replace(path)
++    finally:
++        temporary.unlink(missing_ok=True)
++
++
++class _TrainingDrainVerifier:
++    """Permit lease release only after the child unit and GPU process set drain."""
++
++    def __init__(self, gpu: NvidiaSmiObserver, units: SystemdUnitManager) -> None:
++        self.gpu = gpu
++        self.units = units
++        self.child_unit: str | None = None
++        self.generation: ChildUnitGeneration | None = None
++        self.recovery_mode = False
++        self.child_finished = False
++
++    def __call__(self, lease: GpuLease) -> bool:
++        if lease.owner != "lab":
++            return False
++        if self.child_unit is not None:
++            generation = self.generation
++            if generation is None or generation.unit != self.child_unit:
++                return False
++            try:
++                values = _unit_properties(self.child_unit)
++            except (OSError, subprocess.SubprocessError, MaintenanceError):
++                return False
++            if values is None or values["LoadState"] == "not-found":
++                if not (self.recovery_mode or self.child_finished):
++                    return False
++                try:
++                    if not self.units.cgroup_empty(generation.cgroup):
++                        return False
++                except (OSError, ModelRuntimeError, subprocess.SubprocessError):
++                    return False
++            else:
++                if not _matches_generation(values, generation):
++                    return False
++                if values["ActiveState"] not in {"inactive", "failed"}:
++                    if not (self.recovery_mode or self.child_finished):
++                        return False
++                    current = _unit_properties(self.child_unit)
++                    if current is None or not _matches_generation(current, generation):
++                        return False
++                    stopped = subprocess.run(  # nosec B603 -- exact generation just revalidated.
++                        [SYSTEMCTL, "--user", "stop", self.child_unit],
++                        capture_output=True,
++                        text=True,
++                        timeout=MAX_DRAIN_SECONDS,
++                        check=False,
++                    )
++                    if stopped.returncode != 0:
++                        return False
++                    deadline = boottime() + MAX_DRAIN_SECONDS
++                    while boottime() < deadline:
++                        current = _unit_properties(self.child_unit)
++                        if current is None or current["LoadState"] == "not-found":
++                            if self.units.cgroup_empty(generation.cgroup):
++                                break
++                        elif (
++                            _same_unit_invocation(current, generation)
++                            and current["ActiveState"] in {"inactive", "failed"}
++                            and self.units.cgroup_empty(generation.cgroup)
++                        ):
++                            break
++                        time.sleep(_POLL_SECONDS)
++                    else:
++                        return False
++                else:
++                    try:
++                        if not self.units.cgroup_empty(generation.cgroup):
++                            return False
++                    except (OSError, ModelRuntimeError, subprocess.SubprocessError):
++                        return False
++            try:
++                if not self.units.cgroup_empty(generation.cgroup):
++                    return False
++            except (OSError, ModelRuntimeError, subprocess.SubprocessError):
++                return False
++        try:
++            snapshot = self.gpu.snapshot()
++        except (OSError, subprocess.SubprocessError, ModelRuntimeError):
++            return False
++        compute_pids = set(snapshot.process_memory_mib) - set(snapshot.exempt_display_pids)
++        return not compute_pids and snapshot.used_memory_mib <= 512
++
++
++def _runtime_inputs() -> tuple[Path, str, str]:
++    aos_unit = os.environ.get("SWAPP_AOS_GPU_UNIT", "")
++    lab_unit = os.environ.get("SWAPP_LAB_GPU_UNIT", "")
++    database_text = os.environ.get("SWAPP_GPU_RUNTIME_DB", "")
++    if re.fullmatch(r"swapp-aos-gpu-[a-z0-9_.@-]+\.service", aos_unit) is None:
++        raise MaintenanceError("trusted AOS GPU service mapping is unavailable")
++    expected_lab_unit = _unit_name(os.environ.get("SWAPP_TRAIN_OPERATION_ID", ""))
++    if lab_unit != expected_lab_unit or lab_unit != TRAINING_UNIT:
++        raise MaintenanceError("training worker unit differs from fixed maintenance identity")
++    database = Path(database_text)
++    try:
++        resolved = validated_gpu_runtime_database(
++            database,
++            project_root=Path(__file__).resolve().parents[2],
++            gpu_runtime_root=GPU_RUNTIME_ROOT,
++        )
++    except ValueError as exc:
++        raise MaintenanceError("GPU runtime database path is unsafe") from exc
++    return resolved, aos_unit, lab_unit
++
++
++def _validate_main_process(resolver: SystemdPrincipalResolver) -> None:
++    receipt = resolver.resolve("lab")
++    if receipt.identity.pid != os.getpid() or not resolver.verify(receipt):
++        raise MaintenanceError(
++            "training worker is not the authenticated transient service main process"
++        )
++
++
++def _training_lease_scheduler(
++    database: Path,
++    resolver: PrincipalResolver,
++    verifier: _TrainingDrainVerifier,
++) -> SharedGpuScheduler:
++    return SharedGpuScheduler(
++        database,
++        principal_resolver=resolver,
++        drain_verifier=verifier,
++        max_activation_seconds=min(300, MAX_TOTAL_SECONDS - MAX_INFERENCE_SECONDS),
++        max_inference_seconds=MAX_INFERENCE_SECONDS,
++        max_total_seconds=MAX_TOTAL_SECONDS,
++        queue_timeout_seconds=900,
++    )
++
++
++def _await_training_lease(
++    scheduler: SharedGpuScheduler,
++    request_id: str,
++    payload: bytes,
++    *,
++    queue_seconds: int = 900,
++    recovery_hook: Callable[[], object] = lambda: None,
++) -> GpuLease:
++    entry = scheduler.submit(
++        "lab",
++        request_id,
++        payload,
++        activation_seconds=min(300, scheduler.max_activation_seconds),
++        inference_seconds=min(600, scheduler.max_inference_seconds),
++        total_seconds=scheduler.max_total_seconds,
++        queue_timeout_seconds=queue_seconds,
++    )
++    deadline = min(entry.queue_deadline, boottime() + queue_seconds)
++    while boottime() < deadline:
++        lease = scheduler.try_acquire("lab", request_id)
++        if lease is not None:
++            ready = scheduler.mark_ready(lease)
++            if ready is None:
++                raise MaintenanceError("training lease could not enter the active phase")
++            return ready
++        recovery_hook()
++        time.sleep(_POLL_SECONDS)
++    scheduler.cancel_queued("lab", request_id)
++    raise MaintenanceError("training lease timed out in the fair AOS/Lab queue")
++
++
++def _heartbeat(scheduler: SharedGpuScheduler, lease: GpuLease) -> GpuLease:
++    renewed = scheduler.heartbeat(lease)
++    if renewed is None:
++        raise MaintenanceError("training GPU lease expired or was fenced")
++    return renewed
++
++
++def _recover_orphaned_training(
++    scheduler: SharedGpuScheduler,
++    ledger: MaintenanceLedger,
++    verifier: _TrainingDrainVerifier,
++) -> bool:
++    """Recover only a quarantined dead owner with its immutable child binding."""
++    with closing(scheduler._connect()) as connection:
++        state = connection.execute(
++            "SELECT active_owner,active_request_id,phase,owner_pid,owner_start_ticks,owner_boot_id "
++            "FROM gpu_turn_state WHERE singleton=1"
++        ).fetchone()
++    if state is None or state["phase"] != "quarantined" or state["active_owner"] != "lab":
++        return False
++    try:
++        owner = ProcessIdentity(
++            int(state["owner_pid"]), int(state["owner_start_ticks"]), str(state["owner_boot_id"])
++        )
++    except (TypeError, ValueError):
++        return False
++    if _process_identity_alive(owner):
++        return False
++    operation_id = str(state["active_request_id"])
++    with closing(ledger._connect()) as connection:
++        row = connection.execute(
++            "SELECT operation,state FROM training_maintenance WHERE operation_id=?",
++            (operation_id,),
++        ).fetchone()
++    if row is None or row["state"] not in {"active", "training"}:
++        return False
++    if row["state"] == "training" and row["operation"] != "train_dry_run":
++        return False
++    raw_generation = ledger.child_generation(operation_id)
++    verifier.child_unit = None
++    verifier.generation = None
++    gate = TRAIN_STATE_ROOT / f"{operation_id}.start-gate.json"
++    if raw_generation is not None:
++        try:
++            if set(raw_generation) != {
++                "unit",
++                "pid",
++                "start_ticks",
++                "boot_id",
++                "invocation_id",
++                "cgroup",
++            }:
++                return False
++            if any(
++                isinstance(raw_generation[name], bool) or not isinstance(raw_generation[name], int)
++                for name in ("pid", "start_ticks")
++            ) or any(
++                not isinstance(raw_generation[name], str)
++                for name in ("unit", "boot_id", "invocation_id", "cgroup")
++            ):
++                return False
++            generation = ChildUnitGeneration(
++                unit=cast(str, raw_generation["unit"]),
++                pid=cast(int, raw_generation["pid"]),
++                start_ticks=cast(int, raw_generation["start_ticks"]),
++                boot_id=cast(str, raw_generation["boot_id"]),
++                invocation_id=cast(str, raw_generation["invocation_id"]),
++                cgroup=cast(str, raw_generation["cgroup"]),
++            )
++            if generation.pid <= 1 or generation.start_ticks <= 0:
++                return False
++            if re.fullmatch(r"[0-9a-f-]{36}", generation.boot_id) is None:
++                return False
++            if re.fullmatch(r"[0-9a-f]{32}", generation.invocation_id) is None:
++                return False
++            if generation.unit != raw_generation["unit"] or not generation.cgroup.endswith(
++                "/" + generation.unit
++            ):
++                return False
++            verifier.child_unit = generation.unit
++            verifier.generation = generation
++        except (KeyError, TypeError, ValueError):
++            return False
++    elif gate.exists() or gate.is_symlink():
++        # The gate can only be atomically created after its binding event commits.
++        return False
++    verifier.recovery_mode = True
++    try:
++        recovered = scheduler.recover_quarantined()
++    finally:
++        verifier.recovery_mode = False
++    if not recovered:
++        return False
++    verifier.child_unit = None
++    verifier.generation = None
++    ledger.finish(
++        operation_id,
++        success=False,
++        receipt={
++            "operation_id": operation_id,
++            "status": "failed",
++            "failure_class": "RecoveredAfterWorkerLoss",
++            "recovery": "exact_owner_and_child_generation_drained",
++        },
++    )
++    return True
++
++
++def _training_child_argv(
++    operation_id: str, result_path: Path, gate_path: Path
++) -> tuple[str, list[str]]:
++    child_id = uuid4().hex
++    unit = f"swapp-lab-train-job-{child_id}.service"
++    if re.fullmatch(r"swapp-lab-train-job-[0-9a-f]{32}\.service", unit) is None:
++        raise AssertionError("generated training unit name is invalid")
++    argv = [
++        SYSTEMD_RUN,
++        "--user",
++        "--no-block",
++        "--quiet",
++        f"--unit={unit}",
++        "--slice=swapp-gpu.slice",
++        "--property=Description=SWAPP bounded synthetic QLoRA measurement",
++        f"--property=MemoryMax={TRAIN_MEMORY_BYTES}",
++        "--property=MemorySwapMax=0",
++        f"--property=CPUQuota={TRAIN_CPU_PERCENT}%",
++        f"--property=TasksMax={TRAIN_TASKS}",
++        f"--property=RuntimeMaxSec={_TRAIN_JOB_RUNTIME_SECONDS}",
++        "--property=KillMode=control-group",
++        "--property=OOMPolicy=stop",
++        "--property=NoNewPrivileges=yes",
++        "--property=PrivateTmp=yes",
++        "--property=PrivateNetwork=yes",
++        "--property=ProtectSystem=strict",
++        "--property=ReadWritePaths=" + str(TRAIN_STATE_ROOT.resolve()),
++        "--setenv=HF_HUB_OFFLINE=1",
++        "--setenv=TRANSFORMERS_OFFLINE=1",
++        "--setenv=HF_HUB_DISABLE_TELEMETRY=1",
++        "--setenv=WANDB_DISABLED=true",
++        "--setenv=OPENBLAS_NUM_THREADS=1",
++        "--setenv=OMP_NUM_THREADS=1",
++        "--setenv=MKL_NUM_THREADS=1",
++        "--setenv=NUMEXPR_NUM_THREADS=1",
++        "--setenv=PYTHONDONTWRITEBYTECODE=1",
++        f"--setenv=HF_HOME={TRAIN_STATE_ROOT / (operation_id + '.hf')}",
++        f"--setenv=XDG_CACHE_HOME={TRAIN_STATE_ROOT / (operation_id + '.cache')}",
++        f"--setenv=TRANSFORMERS_CACHE={TRAIN_STATE_ROOT / (operation_id + '.cache/transformers')}",
++        f"--setenv=TORCH_HOME={TRAIN_STATE_ROOT / (operation_id + '.cache/torch')}",
++        f"--setenv=TORCH_EXTENSIONS_DIR={TRAIN_STATE_ROOT / (operation_id + '.cache/extensions')}",
++        f"--setenv=TRITON_CACHE_DIR={TRAIN_STATE_ROOT / (operation_id + '.triton')}",
++        f"--setenv=TORCHINDUCTOR_CACHE_DIR={TRAIN_STATE_ROOT / (operation_id + '.inductor')}",
++        f"--setenv=CUDA_CACHE_PATH={TRAIN_STATE_ROOT / (operation_id + '.cuda')}",
++        str(TRAIN_PYTHON),
++        str(Path(__file__).with_name("qlora_step_worker.py")),
++        "--operation-id",
++        operation_id,
++        "--result-file",
++        str(result_path),
++        "--start-gate",
++        str(gate_path),
++    ]
++    return unit, argv
++
++
++def _host_memory_preflight() -> dict[str, int]:
++    values: dict[str, int] = {}
++    try:
++        for line in Path("/proc/meminfo").read_text(encoding="ascii").splitlines():
++            key, _, rest = line.partition(":")
++            fields = rest.split()
++            if key in {"MemTotal", "MemAvailable"} and fields:
++                values[key] = int(fields[0]) * 1024
++    except (OSError, ValueError) as exc:
++        raise MaintenanceError("host memory preflight is unavailable") from exc
++    if set(values) != {"MemTotal", "MemAvailable"}:
++        raise MaintenanceError("host memory preflight is incomplete")
++    if values["MemTotal"] < 24 * 1024**3:
++        raise MaintenanceError("host RAM is below the supported shared-host floor")
++    if values["MemAvailable"] < (
++        TRAIN_MEMORY_BYTES + TRAIN_PARENT_MEMORY_BYTES + HOST_RAM_RESERVE_BYTES
++    ):
++        raise MaintenanceError("host RAM reserve is insufficient for the maintenance cap")
++    free_bytes = shutil.disk_usage(TRAIN_RUNTIME).free
++    if free_bytes < MINIMUM_FREE_DISK_BYTES:
++        raise MaintenanceError("training operation would violate the free-disk reserve")
++    return {"mem_available_bytes": values["MemAvailable"], "free_disk_bytes": free_bytes}
++
++
++def _run_child_with_heartbeats(
++    scheduler: SharedGpuScheduler,
++    lease: GpuLease,
++    child_unit: str,
++    argv: list[str],
++    operation_id: str,
++    gate_path: Path,
++    ledger: MaintenanceLedger,
++    *,
++    runner: Any = subprocess.Popen,
++) -> tuple[GpuLease, int, int, int]:
++    verifier = scheduler._drain_verifier  # trusted worker composition, not user input
++    if isinstance(verifier, _TrainingDrainVerifier):
++        verifier.child_unit = child_unit
++    process = runner(
++        argv,
++        stdin=subprocess.DEVNULL,
++        stdout=subprocess.DEVNULL,
++        stderr=subprocess.DEVNULL,
++        close_fds=True,
++    )
++    bound: ChildUnitGeneration | None = None
++    bind_deadline = boottime() + _CHILD_GATE_SECONDS
++    while bound is None:
++        if boottime() >= bind_deadline:
++            raise MaintenanceError("training child generation binding timed out")
++        values = _unit_properties(child_unit)
++        if values is not None and values["ActiveState"] in {"activating", "active"}:
++            bound = _child_generation(child_unit, values)
++            ledger.append_event(operation_id, "training_unit_bound", bound.as_json())
++            if isinstance(verifier, _TrainingDrainVerifier):
++                verifier.generation = bound
++            _atomic_gate(gate_path, bound, operation_id)
++            break
++        time.sleep(_POLL_SECONDS)
++    next_heartbeat = boottime() + _HEARTBEAT_SECONDS
++    next_gpu_sample = 0.0
++    start_gpu_memory_mib: int | None = None
++    peak_gpu_memory_mib = 0
++    deadline = boottime() + _TRAIN_JOB_RUNTIME_SECONDS + MAX_DRAIN_SECONDS
++    while True:
++        process.poll()  # reap the short-lived `systemd-run --no-block` launcher.
++        if not isinstance(verifier, _TrainingDrainVerifier) or bound is None:
++            raise MaintenanceError("training drain verifier or generation is unavailable")
++        values = _unit_properties(child_unit)
++        if (
++            values is not None
++            and values["LoadState"] == "loaded"
++            and not _matches_generation(values, bound)
++        ):
++            raise MaintenanceError("training child systemd invocation disappeared or changed")
++        result_path = TRAIN_STATE_ROOT / f"{operation_id}.result.json"
++        result_ready = result_path.exists() or result_path.is_symlink()
++        if result_ready:
++            _read_child_receipt(result_path)
++        unit_gone = values is None or values["LoadState"] == "not-found"
++        if result_ready or unit_gone:
++            verifier.child_finished = True
++            drain_deadline = boottime() + MAX_DRAIN_SECONDS
++            while boottime() < drain_deadline and not verifier(lease):
++                time.sleep(_POLL_SECONDS)
++            if not verifier(lease):
++                raise MaintenanceError("training child failed to drain within its bounded deadline")
++            final_gpu = verifier.gpu.snapshot()
++            if start_gpu_memory_mib is None:
++                start_gpu_memory_mib = final_gpu.used_memory_mib
++            peak_gpu_memory_mib = max(peak_gpu_memory_mib, final_gpu.used_memory_mib)
++            return lease, (0 if result_ready else 1), peak_gpu_memory_mib, start_gpu_memory_mib
++        if boottime() >= deadline:
++            raise MaintenanceError("training unit exceeded its bounded completion deadline")
++        if boottime() >= next_heartbeat:
++            lease = _heartbeat(scheduler, lease)
++            next_heartbeat = boottime() + _HEARTBEAT_SECONDS
++        if boottime() >= next_gpu_sample:
++            if not isinstance(verifier, _TrainingDrainVerifier):
++                raise MaintenanceError("training drain verifier is unavailable")
++            snapshot = verifier.gpu.snapshot()
++            if start_gpu_memory_mib is None:
++                start_gpu_memory_mib = snapshot.used_memory_mib
++            peak_gpu_memory_mib = max(peak_gpu_memory_mib, snapshot.used_memory_mib)
++            child = _unit_properties(child_unit)
++            if child is None or bound is None or not _matches_generation(child, bound):
++                raise MaintenanceError("training child systemd generation changed while running")
++            compute_pids = set(snapshot.process_memory_mib) - set(snapshot.exempt_display_pids)
++            if compute_pids:
++                owned_pids = set(verifier.units.cgroup_pids(bound.cgroup))
++                if not compute_pids <= owned_pids:
++                    # Stop only after rechecking the exact invocation, PID start, and cgroup.
++                    current = _unit_properties(child_unit)
++                    if current is None or not _matches_generation(current, bound):
++                        raise MaintenanceError(
++                            "refusing to stop a changed training unit generation"
++                        )
++                    subprocess.run(  # nosec B603 -- exact generation was just revalidated.
++                        [SYSTEMCTL, "--user", "stop", child_unit],
++                        capture_output=True,
++                        text=True,
++                        timeout=MAX_DRAIN_SECONDS,
++                        check=False,
++                    )
++                    raise MaintenanceError("unadmitted GPU process appeared during training")
++            next_gpu_sample = boottime() + _GPU_SAMPLE_SECONDS
++        time.sleep(_POLL_SECONDS)
++
++
++def _read_child_receipt(path: Path) -> dict[str, object]:
++    if path.is_symlink() or not path.is_file() or path.stat().st_size > 64 * 1024:
++        raise MaintenanceError("bounded training result receipt is missing or invalid")
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError) as exc:
++        raise MaintenanceError("bounded training result receipt is malformed") from exc
++    required = {
++        "adapter_rank",
++        "adapter_saved",
++        "cpu_offload_embeddings",
++        "embedding_device",
++        "schema",
++        "load_in_4bit",
++        "status",
++        "steps_completed",
++        "sequence_length",
++        "peak_gpu_allocated_bytes",
++        "peak_gpu_reserved_bytes",
++        "synthetic_data_only",
++    }
++    if (
++        not isinstance(value, dict)
++        or set(value) != required
++        or value.get("schema") != "training-dry-run.v1"
++        or value.get("status") != "ok"
++        or value.get("steps_completed") != TRAIN_STEPS
++        or value.get("sequence_length") != DEFAULT_TRAINING_PROFILE.sequence_length
++        or value.get("adapter_rank") != DEFAULT_TRAINING_PROFILE.adapter_rank
++        or value.get("load_in_4bit") is not True
++        or value.get("cpu_offload_embeddings") is not True
++        or value.get("embedding_device") != "cpu"
++        or value.get("synthetic_data_only") is not True
++        or value.get("adapter_saved") is not False
++        or isinstance(value.get("peak_gpu_allocated_bytes"), bool)
++        or not isinstance(value.get("peak_gpu_allocated_bytes"), int)
++        or value["peak_gpu_allocated_bytes"] <= 0
++        or isinstance(value.get("peak_gpu_reserved_bytes"), bool)
++        or not isinstance(value.get("peak_gpu_reserved_bytes"), int)
++        or value["peak_gpu_reserved_bytes"] < value["peak_gpu_allocated_bytes"]
++    ):
++        raise MaintenanceError("training result did not meet the fixed measurement contract")
++    return value
++
++
++def execute_worker(
++    operation: Operation,
++    operation_id: str,
++    *,
++    ledger: MaintenanceLedger | None = None,
++    runtime_factory: Any = OwnedVllmRuntime,
++    lease_waiter: Any = _await_training_lease,
++    child_runner: Any = _run_child_with_heartbeats,
++) -> dict[str, object]:
++    """Execute a real, authenticated maintenance operation in its own unit."""
++    if re.fullmatch(r"[0-9a-f]{32}", operation_id) is None:
++        raise ValueError("maintenance operation identity is invalid")
++    if ledger is None:
++        ledger_text = os.environ.get("LAB_TRAINING_LEDGER", "")
++        if not ledger_text:
++            raise MaintenanceError("private training ledger path is unavailable")
++        ledger = MaintenanceLedger(Path(ledger_text))
++    training_environment = training_environment_identity() if operation == "train_dry_run" else {}
++    current_agent = agent_version_identity()
++    expected_request: dict[str, object] = {
++        "agent_version_before": current_agent["agent_version"],
++        "agent_source_sha256_before": current_agent["agent_source_sha256"],
++        "operation": operation,
++        "profile": DEFAULT_TRAINING_PROFILE.document() if operation == "train_dry_run" else None,
++        "scheduler_owner": "lab",
++        "unit": _unit_name(operation_id),
++        "training_environment": training_environment,
++    }
++    request_sha256 = ledger.verify_request(operation_id, operation, expected_request)
++    database, aos_unit, lab_unit = _runtime_inputs()
++    resolver = SystemdPrincipalResolver({"aos": aos_unit, "lab": lab_unit})
++    _validate_main_process(resolver)
++    preflight = _host_memory_preflight()
++    from lab.llm.native_runtime import _prepare_doctor_directories
++
++    _prepare_doctor_directories()
++    model_runtime = runtime_factory(
++        database,
++        principal_resolver=resolver,
++        profile=DIAGNOSTIC_S1_PROFILE,
++        required_free_disk_bytes=MINIMUM_FREE_DISK_BYTES,
++    )
++    model_runtime.units.ensure_slice()
++    model_runtime._preflight_disk()
++    model_runtime._preflight_host()
++    verifier = _TrainingDrainVerifier(model_runtime.gpu, model_runtime.units)
++    train_scheduler = _training_lease_scheduler(database, resolver, verifier)
++    request_id = operation_id
++    payload = json.dumps(
++        {
++            "agent_version": LOCAL_AGENT_VERSION,
++            "operation": operation,
++            "profile": DEFAULT_TRAINING_PROFILE.document()
++            if operation == "train_dry_run"
++            else None,
++        },
++        sort_keys=True,
++        separators=(",", ":"),
++    ).encode("utf-8")
++    ledger.advance(
++        operation_id,
++        expected=("created",),
++        state="queued",
++        event="queued",
++        details={
++            "lease_request_id": request_id,
++            "payload_sha256": hashlib.sha256(payload).hexdigest(),
++        },
++    )
++    lease: GpuLease | None = None
++    receipt: dict[str, object] = {
++        "operation": operation,
++        "operation_id": operation_id,
++        "status": "failed",
++        "agent_version_before": LOCAL_AGENT_VERSION,
++        "agent_version_after": LOCAL_AGENT_VERSION,
++        "agent_version_unchanged": True,
++        "agent_source_sha256_before": current_agent["agent_source_sha256"],
++        "request_sha256": request_sha256,
++        "model_sha256": model_runtime.pin.digest,
++        "training_environment": training_environment,
++        "profile": DEFAULT_TRAINING_PROFILE.document() if operation == "train_dry_run" else None,
++        "host_preflight": preflight,
++        "capacity_status": "measurement_only_not_capacity_acceptance",
++    }
++    result_path = TRAIN_STATE_ROOT / f"{operation_id}.result.json"
++    gate_path = TRAIN_STATE_ROOT / f"{operation_id}.start-gate.json"
++    try:
++        lease = lease_waiter(
++            train_scheduler,
++            request_id,
++            payload,
++            recovery_hook=lambda: _recover_orphaned_training(train_scheduler, ledger, verifier),
++        )
++        ledger.advance(
++            operation_id,
++            expected=("queued",),
++            state="active",
++            event="lease_acquired",
++            details={
++                "fencing_token": lease.fencing_token,
++                "owner": lease.owner,
++                "owner_pid": lease.owner_identity.pid,
++                "owner_start_ticks": lease.owner_identity.start_ticks,
++                "owner_boot_id": lease.owner_identity.boot_id,
++                "owner_unit": lease.owner_unit,
++                "owner_invocation_id": lease.owner_invocation_id,
++            },
++        )
++        if operation == "train_dry_run":
++            for suffix in ("hf", "cache", "triton", "inductor", "cuda"):
++                (TRAIN_STATE_ROOT / f"{operation_id}.{suffix}").mkdir(
++                    mode=0o700, parents=False, exist_ok=False
++                )
++            if result_path.exists() or result_path.is_symlink():
++                raise MaintenanceError("training result path already exists")
++            child_unit, argv = _training_child_argv(operation_id, result_path, gate_path)
++            ledger.advance(
++                operation_id,
++                expected=("active",),
++                state="training",
++                event="training_started",
++                details={
++                    "child_unit": child_unit,
++                    "child_unit_sha256": hashlib.sha256(child_unit.encode("ascii")).hexdigest(),
++                    "sequence_length": DEFAULT_TRAINING_PROFILE.sequence_length,
++                    "steps": DEFAULT_TRAINING_PROFILE.steps,
++                },
++            )
++            lease, exit_code, peak_gpu_memory_mib, start_gpu_memory_mib = child_runner(
++                train_scheduler,
++                lease,
++                child_unit,
++                argv,
++                operation_id=operation_id,
++                gate_path=gate_path,
++                ledger=ledger,
++            )
++            if exit_code != 0:
++                train_scheduler.release(lease)
++                lease = None
++                ledger.advance(
++                    operation_id,
++                    expected=("training",),
++                    state="drained",
++                    event="training_finished",
++                    details={"exit_code": exit_code, "measurement_status": "not_recorded"},
++                )
++                raise MaintenanceError("bounded training unit failed; measurement was not recorded")
++            child = _read_child_receipt(result_path)
++            result_path.unlink()
++            threshold_bytes = int(15.5 * 1024**3)
++            receipt["measurement"] = {
++                **child,
++                "vram_target_bytes": threshold_bytes,
++                "start_gpu_used_memory_mib": start_gpu_memory_mib,
++                "peak_gpu_used_memory_mib": peak_gpu_memory_mib,
++                "peak_gpu_used_estimate_bytes": max(
++                    peak_gpu_memory_mib * 1024**2,
++                    start_gpu_memory_mib * 1024**2 + child["peak_gpu_reserved_bytes"],
++                ),
++                "within_target": max(
++                    peak_gpu_memory_mib * 1024**2,
++                    start_gpu_memory_mib * 1024**2 + child["peak_gpu_reserved_bytes"],
++                )
++                <= threshold_bytes,
++                "capacity_status": "measurement_only_not_capacity_acceptance",
++            }
++            ledger.advance(
++                operation_id,
++                expected=("training",),
++                state="active",
++                event="training_finished",
++                details={
++                    "steps_completed": child["steps_completed"],
++                    "peak_gpu_allocated_bytes": child["peak_gpu_allocated_bytes"],
++                },
++            )
++        # Release must pass the independent child/GPU drain verifier.
++        if operation == "train_noop":
++            ledger.advance(
++                operation_id,
++                expected=("active",),
++                state="active",
++                event="noop_completed",
++                details={"status": "no_change", "agent_version": LOCAL_AGENT_VERSION},
++            )
++        train_scheduler.release(lease)
++        lease = None
++        ledger.advance(
++            operation_id,
++            expected=("active",),
++            state="drained",
++            event="lease_drained",
++            details={"status": "verified", "vllm_lifecycle": "per_call_transient_and_drained"},
++        )
++        ledger.advance(
++            operation_id,
++            expected=("drained",),
++            state="smoke",
++            event="smoke_started",
++            details={"profile": "s1-diagnostic"},
++        )
++        smoke = model_runtime.run_turn(
++            "lab",
++            uuid4().hex,
++            _DOCTOR_MESSAGES["s1"],
++            enable_thinking=False,
++            max_output_tokens=DIAGNOSTIC_S1_PROFILE.max_output_tokens,
++            temperature=DIAGNOSTIC_S1_PROFILE.temperature,
++            top_p=DIAGNOSTIC_S1_PROFILE.top_p,
++            profile=DIAGNOSTIC_S1_PROFILE,
++        )
++        if re.search(r"\b42\b", smoke.text) is None:
++            raise MaintenanceError("post-maintenance model smoke check returned an invalid answer")
++        smoke_measurements = (
++            smoke.measurements.startup_seconds,
++            smoke.measurements.inference_seconds,
++            smoke.measurements.drain_seconds,
++        )
++        if any(not math.isfinite(value) or value < 0 for value in smoke_measurements):
++            raise MaintenanceError("post-maintenance smoke measurements are invalid")
++        smoke_details: dict[str, object] = {
++            "status": "passed",
++            "text_sha256": hashlib.sha256(smoke.text.encode("utf-8")).hexdigest(),
++            "prompt_tokens": smoke.prompt_tokens,
++            "completion_tokens": smoke.completion_tokens,
++            "startup_seconds": smoke.measurements.startup_seconds,
++            "inference_seconds": smoke.measurements.inference_seconds,
++            "drain_seconds": smoke.measurements.drain_seconds,
++            "peak_gpu_memory_mib": smoke.measurements.peak_gpu_memory_mib,
++        }
++        receipt["smoke"] = smoke_details
++        ledger.advance(
++            operation_id,
++            expected=("smoke",),
++            state="drained",
++            event="smoke_finished",
++            details=smoke_details,
++        )
++        final_agent = agent_version_identity()
++        if final_agent != current_agent:
++            raise MaintenanceError("agent version or source changed during maintenance operation")
++        receipt["agent_version_after"] = final_agent["agent_version"]
++        receipt["agent_source_sha256_after"] = final_agent["agent_source_sha256"]
++        receipt["status"] = "completed"
++        ledger.finish(operation_id, success=True, receipt=receipt)
++        return receipt
++    except BaseException as exc:
++        # Do not force-release on failure: scheduler quarantine remains until
++        # its trusted drain callback proves that the recorded GPU child is gone.
++        receipt["failure_class"] = type(exc).__name__
++        try:
++            current = ledger_state(ledger.path, operation_id)
++            if current not in {"completed", "failed"}:
++                if lease is None:
++                    ledger.finish(operation_id, success=False, receipt=receipt)
++                else:
++                    ledger.append_event(
++                        operation_id,
++                        "failed",
++                        {"failure_class": type(exc).__name__, "lease_still_fenced": True},
++                    )
++        except Exception as finalization_error:
++            receipt["ledger_finalization_error_class"] = type(finalization_error).__name__
++        raise
++    finally:
++        for suffix in () if lease is not None else ("hf", "cache", "triton", "inductor", "cuda"):
++            path = TRAIN_STATE_ROOT / f"{operation_id}.{suffix}"
++            try:
++                if path.is_symlink():
++                    path.unlink()
++                elif path.is_dir():
++                    shutil.rmtree(path)
++            except OSError:
++                # Non-removal is reflected by the private unit journal; never
++                # follow a cache path or delete outside this operation scope.
++                pass
++        if lease is None:
++            for path in (result_path, gate_path):
++                try:
++                    if path.is_symlink():
++                        path.unlink()
++                    elif path.is_file():
++                        path.unlink()
++                except OSError:
++                    pass
++
++
++def ledger_state(path: Path, operation_id: str) -> str:
++    with closing(sqlite3.connect(path)) as connection:
++        row = connection.execute(
++            "SELECT state FROM training_maintenance WHERE operation_id=?", (operation_id,)
++        ).fetchone()
++    if row is None:
++        raise MaintenanceError("training maintenance receipt is unavailable")
++    return str(row[0])
++
++
++def worker_main(argv: list[str] | None = None) -> int:
++    import argparse
++
++    parser = argparse.ArgumentParser(prog="lab-training-worker")
++    parser.add_argument("--operation-id", default=os.environ.get("SWAPP_TRAIN_OPERATION_ID"))
++    parser.add_argument(
++        "--operation",
++        choices=("train_noop", "train_dry_run"),
++        default=os.environ.get("SWAPP_TRAIN_OPERATION"),
++    )
++    args = parser.parse_args(argv)
++    if (
++        not isinstance(args.operation_id, str)
++        or not isinstance(args.operation, str)
++        or args.operation != os.environ.get("SWAPP_TRAIN_OPERATION")
++        or args.operation not in {"train_noop", "train_dry_run"}
++    ):
++        parser.error("immutable operation identity is missing")
++    try:
++        result = execute_worker(cast(Operation, args.operation), args.operation_id)
++        print(json.dumps(result, sort_keys=True, separators=(",", ":")))
++        return 0
++    except Exception as exc:
++        print(json.dumps({"status": "failed", "error": type(exc).__name__}), file=sys.stderr)
++        return 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(worker_main())
+diff --git a/lab/training/qlora_step_worker.py b/lab/training/qlora_step_worker.py
+new file mode 100644
+index 0000000..6eeeb0a
+--- /dev/null
++++ b/lab/training/qlora_step_worker.py
+@@ -0,0 +1,283 @@
++"""One fixed, offline 9B QLoRA dry-run; called only by the bounded systemd child."""
++
++# pylint: disable=too-many-boolean-expressions,missing-function-docstring,missing-class-docstring,too-many-locals,too-many-statements,import-outside-toplevel,invalid-name,import-error,broad-exception-caught
++
++from __future__ import annotations
++
++import argparse
++import atexit
++import json
++import os
++import random
++import re
++import shutil
++import sys
++import tempfile
++import time
++from pathlib import Path
++from typing import Any
++
++SEQUENCE_LENGTH = 24_576
++STEPS = 3
++LORA_RANK = 32
++MODEL_REVISION = "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
++PROJECT_ROOT = Path(__file__).resolve().parents[2]
++MODEL_DIRECTORY = PROJECT_ROOT / "models/Qwen3.5-9B" / MODEL_REVISION
++MAX_RESULT_BYTES = 64 * 1024
++
++
++def _write_result(path: Path, value: dict[str, object]) -> None:
++    if path.is_symlink() or path.exists():
++        raise RuntimeError("result path already exists or is unsafe")
++    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
++    if len(encoded) > MAX_RESULT_BYTES:
++        raise RuntimeError("training result exceeds its bound")
++    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
++    fd, temporary_name = tempfile.mkstemp(prefix=".train-result-", dir=path.parent)
++    temporary = Path(temporary_name)
++    try:
++        with os.fdopen(fd, "wb") as handle:
++            handle.write(encoded)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.chmod(temporary, 0o600)
++        temporary.replace(path)
++    finally:
++        temporary.unlink(missing_ok=True)
++
++
++def _await_start_gate(
++    path: Path, operation_id: str, timeout_seconds: int = 45
++) -> dict[str, object]:
++    """Block before importing GPU libraries until the parent binds this process."""
++    deadline = time.monotonic() + timeout_seconds
++    while time.monotonic() < deadline:
++        if path.is_symlink():
++            raise RuntimeError("training start gate is unsafe")
++        if path.is_file():
++            if path.stat().st_size > 4096:
++                raise RuntimeError("training start gate exceeds its bound")
++            try:
++                value = json.loads(path.read_text(encoding="ascii"))
++            except (OSError, json.JSONDecodeError) as exc:
++                raise RuntimeError("training start gate is malformed") from exc
++            required = {
++                "operation_id",
++                "unit",
++                "pid",
++                "start_ticks",
++                "boot_id",
++                "invocation_id",
++                "cgroup",
++            }
++            if not isinstance(value, dict) or set(value) != required:
++                raise RuntimeError("training start gate fields are invalid")
++            if value["operation_id"] != operation_id or value["pid"] != os.getpid():
++                raise RuntimeError("training start gate process binding does not match")
++            if (
++                not isinstance(value["start_ticks"], int)
++                or isinstance(value["start_ticks"], bool)
++                or value["start_ticks"] <= 0
++                or not isinstance(value["boot_id"], str)
++                or re.fullmatch(r"[0-9a-f-]{36}", value["boot_id"]) is None
++                or not isinstance(value["invocation_id"], str)
++                or re.fullmatch(r"[0-9a-f]{32}", value["invocation_id"]) is None
++                or not isinstance(value["unit"], str)
++                or re.fullmatch(r"swapp-lab-train-job-[0-9a-f]{32}\.service", value["unit"]) is None
++                or not isinstance(value["cgroup"], str)
++                or "/swapp-gpu.slice/" not in value["cgroup"]
++                or not value["cgroup"].endswith("/" + value["unit"])
++            ):
++                raise RuntimeError("training start gate generation is invalid")
++            proc_stat = Path(f"/proc/{os.getpid()}/stat").read_text(encoding="ascii")
++            start_ticks = int(proc_stat.rsplit(")", maxsplit=1)[1].split()[19])
++            boot_id = Path("/proc/sys/kernel/random/boot_id").read_text(encoding="ascii").strip()
++            proc_cgroup = Path(f"/proc/{os.getpid()}/cgroup").read_text(encoding="ascii")
++            unified = next(
++                (
++                    line.split(":", 2)[2]
++                    for line in proc_cgroup.splitlines()
++                    if line.startswith("0::")
++                ),
++                "",
++            )
++            if (
++                start_ticks != value["start_ticks"]
++                or boot_id != value["boot_id"]
++                or unified.rstrip("/") != value["cgroup"]
++            ):
++                raise RuntimeError("training start gate no longer names this process generation")
++            return value
++        time.sleep(0.1)
++    raise RuntimeError("training parent did not durably bind this child generation")
++
++
++def run(operation_id: str, result_path: Path, gate_path: Path) -> dict[str, object]:
++    if os.environ.get("HF_HUB_OFFLINE") != "1" or os.environ.get("TRANSFORMERS_OFFLINE") != "1":
++        raise RuntimeError("training process must run in offline mode")
++    if os.environ.get("HF_HUB_DISABLE_TELEMETRY") != "1":
++        raise RuntimeError("training telemetry must be disabled")
++    if not MODEL_DIRECTORY.is_dir() or MODEL_DIRECTORY.is_symlink():
++        raise RuntimeError("pinned model directory is unavailable")
++
++    _await_start_gate(gate_path, operation_id)
++
++    # Unsloth must patch supported Transformers/PEFT call paths before import.
++    import importlib
++
++    FastLanguageModel = importlib.import_module("unsloth").FastLanguageModel
++
++    # These imports intentionally occur only after the durable child binding.
++    import torch
++    from transformers import Trainer, TrainingArguments, default_data_collator
++
++    class SyntheticTokenDataset:
++        def __init__(self, vocab_size: int, count: int = STEPS) -> None:
++            generator = random.Random(20260925)  # nosec B311 -- deterministic synthetic input only.
++            low_token = 16
++            rows = [
++                [
++                    generator.randrange(low_token, max(low_token + 1, vocab_size - 1))
++                    for _ in range(SEQUENCE_LENGTH)
++                ]
++                for _ in range(count)
++            ]
++            self.rows = rows
++
++        def __len__(self) -> int:
++            return len(self.rows)
++
++        def __getitem__(self, index: int) -> dict[str, Any]:
++            ids = torch.tensor(self.rows[index], dtype=torch.long)
++            return {
++                "input_ids": ids,
++                "attention_mask": torch.ones_like(ids),
++                "labels": ids.clone(),
++            }
++
++    torch.manual_seed(20260925)
++    if not torch.cuda.is_available():
++        raise RuntimeError("CUDA was not active; this cannot be recorded as a VRAM measurement")
++    torch.cuda.reset_peak_memory_stats()
++    model, tokenizer = FastLanguageModel.from_pretrained(
++        model_name=str(MODEL_DIRECTORY),
++        max_seq_length=SEQUENCE_LENGTH,
++        dtype=None,
++        load_in_4bit=True,
++        local_files_only=True,
++        offload_embedding=True,
++        device_map="auto",
++    )
++    model = FastLanguageModel.get_peft_model(
++        model,
++        r=LORA_RANK,
++        target_modules=[
++            "q_proj",
++            "k_proj",
++            "v_proj",
++            "o_proj",
++            "gate_proj",
++            "up_proj",
++            "down_proj",
++        ],
++        lora_alpha=LORA_RANK,
++        lora_dropout=0.0,
++        bias="none",
++        use_gradient_checkpointing="unsloth",
++        random_state=20260925,
++        max_seq_length=SEQUENCE_LENGTH,
++        offload_embedding=True,
++    )
++    embedding = model.get_input_embeddings()
++    embedding_devices = {str(parameter.device) for parameter in embedding.parameters()}
++    if len(embedding_devices) != 1:
++        raise RuntimeError("embedding placement is mixed and cannot be reported as CPU offload")
++    embedding_device = next(iter(embedding_devices))
++    cpu_offload_embeddings = embedding_device == "cpu"
++    if not cpu_offload_embeddings:
++        raise RuntimeError("the requested CPU embedding offload was not realized by the model")
++    model.config.use_cache = False
++    training_args = TrainingArguments(
++        output_dir=str(result_path.parent / f"{operation_id}.tmp"),
++        max_steps=STEPS,
++        per_device_train_batch_size=1,
++        gradient_accumulation_steps=1,
++        gradient_checkpointing=True,
++        gradient_checkpointing_kwargs={"use_reentrant": False},
++        optim="adamw_8bit",
++        learning_rate=2e-4,
++        logging_strategy="no",
++        save_strategy="no",
++        report_to=[],
++        remove_unused_columns=False,
++        dataloader_num_workers=0,
++        dataloader_pin_memory=False,
++        disable_tqdm=True,
++        bf16=bool(torch.cuda.is_available() and torch.cuda.is_bf16_supported()),
++        fp16=False,
++    )
++    data = SyntheticTokenDataset(int(tokenizer.vocab_size))
++    if len(data.rows[0]) != SEQUENCE_LENGTH:
++        raise RuntimeError("synthetic sequence length differs from the fixed profile")
++    temporary_output = Path(training_args.output_dir)
++    atexit.register(shutil.rmtree, temporary_output, ignore_errors=True)
++    trainer = Trainer(
++        model=model,
++        args=training_args,
++        train_dataset=data,
++        data_collator=default_data_collator,
++    )
++    result = trainer.train()
++    steps_completed = int(result.global_step)
++    if steps_completed != STEPS:
++        raise RuntimeError("trainer completed a different number of steps")
++    if not torch.cuda.is_available():
++        raise RuntimeError("CUDA was not active; this cannot be recorded as a VRAM measurement")
++    peak = int(torch.cuda.max_memory_allocated())
++    peak_reserved = int(torch.cuda.max_memory_reserved())
++    if peak <= 0 or peak_reserved < peak:
++        raise RuntimeError("CUDA peak memory measurement is missing")
++    output = {
++        "adapter_rank": LORA_RANK,
++        "adapter_saved": False,
++        "cpu_offload_embeddings": True,
++        "embedding_device": embedding_device,
++        "schema": "training-dry-run.v1",
++        "load_in_4bit": True,
++        "status": "ok",
++        "steps_completed": steps_completed,
++        "sequence_length": SEQUENCE_LENGTH,
++        "peak_gpu_allocated_bytes": peak,
++        "peak_gpu_reserved_bytes": peak_reserved,
++        "synthetic_data_only": True,
++    }
++    del trainer, model, tokenizer, data
++    torch.cuda.empty_cache()
++    shutil.rmtree(temporary_output, ignore_errors=True)
++    _write_result(result_path, output)
++    # Keep this exact transient generation alive until the parent has verified
++    # the atomic result and explicitly drains the unit through systemd.
++    while True:
++        time.sleep(30)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(prog="lab-training-qlora-worker")
++    parser.add_argument("--operation-id", required=True)
++    parser.add_argument("--result-file", required=True, type=Path)
++    parser.add_argument("--start-gate", required=True, type=Path)
++    args = parser.parse_args(argv)
++    if re.fullmatch(r"[0-9a-f]{32}", args.operation_id) is None:
++        parser.error("operation ID is invalid")
++    try:
++        run(args.operation_id, args.result_file, args.start_gate)
++        return 0
++    except Exception as exc:
++        # Error text/logging can contain source paths or model metadata. The
++        # supervisor records only this stable class code and nonzero exit.
++        print(f"training_dry_run_failed:{type(exc).__name__}", file=sys.stderr)
++        return 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/lab/training/runtime_paths.py b/lab/training/runtime_paths.py
+new file mode 100644
+index 0000000..38b7747
+--- /dev/null
++++ b/lab/training/runtime_paths.py
+@@ -0,0 +1,96 @@
++"""Strict lexical validation for the shared scheduler and private test database."""
++
++from __future__ import annotations
++
++import os
++import stat
++from pathlib import Path
++
++
++def _absolute_directory_chain(path: Path) -> tuple[Path, ...]:
++    if not path.is_absolute():
++        raise ValueError("GPU runtime directory must be absolute")
++    components = [Path("/")]
++    current = Path("/")
++    for part in path.parts[1:]:
++        current = current / part
++        components.append(current)
++    return tuple(components)
++
++
++def _validate_private_directory_chain(path: Path, *, strict_root: Path) -> None:
++    for directory in _absolute_directory_chain(path):
++        try:
++            info = directory.lstat()
++        except OSError as exc:
++            raise ValueError("GPU runtime directory is unavailable") from exc
++        sticky_root_directory = bool(info.st_mode & stat.S_ISVTX) and info.st_uid == 0
++        if (
++            directory.is_symlink()
++            or not directory.is_dir()
++            or info.st_uid not in {0, os.getuid()}
++            or (info.st_mode & 0o022 and not sticky_root_directory)
++        ):
++            raise ValueError("GPU runtime path has an unsafe directory component")
++        if directory == strict_root and (info.st_uid != os.getuid() or info.st_mode & 0o077):
++            raise ValueError("GPU runtime directory must be private to the service owner")
++
++
++def validated_gpu_runtime_database(
++    database: Path, *, project_root: Path, gpu_runtime_root: Path
++) -> Path:
++    """Accept only the fixed broker DB or a private direct-child test DB."""
++    shared = Path.home() / ".local/state/swapp-gpu/arbiter.sqlite3"
++    if not database.is_absolute() or database.is_symlink():
++        raise ValueError("GPU runtime database must be absolute and cannot be a symlink")
++    if database == shared:
++        home = Path.home()
++        for directory in _absolute_directory_chain(shared.parent):
++            try:
++                info = directory.lstat()
++            except OSError as exc:
++                raise ValueError("shared GPU runtime directory is unavailable") from exc
++            is_home_or_descendant = directory == home or home in directory.parents
++            sticky_root_directory = bool(info.st_mode & stat.S_ISVTX) and info.st_uid == 0
++            if (
++                directory.is_symlink()
++                or not directory.is_dir()
++                or info.st_uid not in {0, os.getuid()}
++                or (info.st_mode & 0o022 and not sticky_root_directory)
++            ):
++                raise ValueError("shared GPU runtime path has an unsafe directory component")
++            if sticky_root_directory:
++                continue
++            if is_home_or_descendant and info.st_uid != os.getuid():
++                raise ValueError("shared GPU home path is not owned by the service owner")
++            if (
++                directory
++                in {
++                    home / ".local/state",
++                    home / ".local/state/swapp-gpu",
++                }
++                and info.st_mode & 0o077
++            ):
++                raise ValueError("shared GPU state directory must be private")
++        parent = shared.parent
++    else:
++        if gpu_runtime_root != project_root / "data/runtime/gpu":
++            raise ValueError("GPU runtime root differs from the fixed project path")
++        if database.name in {"", ".", ".."} or database.parent != gpu_runtime_root:
++            raise ValueError("GPU runtime database must be a direct child of its private root")
++        _validate_private_directory_chain(gpu_runtime_root, strict_root=gpu_runtime_root)
++        parent = gpu_runtime_root
++    try:
++        database_info = database.lstat()
++    except FileNotFoundError:
++        database_info = None
++    except OSError as exc:
++        raise ValueError("GPU runtime database cannot be inspected") from exc
++    if database_info is not None and (
++        stat.S_ISLNK(database_info.st_mode)
++        or not stat.S_ISREG(database_info.st_mode)
++        or database_info.st_uid != os.getuid()
++        or database_info.st_mode & 0o077
++    ):
++        raise ValueError("GPU runtime database must be a private regular file")
++    return parent / database.name
+diff --git a/tests/test_training_maintenance.py b/tests/test_training_maintenance.py
+new file mode 100644
+index 0000000..7d7dab9
+--- /dev/null
++++ b/tests/test_training_maintenance.py
+@@ -0,0 +1,469 @@
++from __future__ import annotations
++
++import json
++import sqlite3
++import subprocess
++from contextlib import closing
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++
++from lab.llm.gpu_scheduler import ProcessIdentity
++from lab.training import maintenance
++from lab.training.maintenance import MaintenanceError, MaintenanceLedger
++from lab.training.qlora_step_worker import _await_start_gate
++from lab.training.runtime_paths import validated_gpu_runtime_database
++from lab.training.worker import (
++    ChildUnitGeneration,
++    _await_training_lease,
++    _host_memory_preflight,
++    _matches_generation,
++    _read_child_receipt,
++    _recover_orphaned_training,
++    _runtime_inputs,
++    _TrainingDrainVerifier,
++)
++
++
++def test_fixed_training_unit_is_bound_to_single_maintenance_principal() -> None:
++    operation_id = "a" * 32
++    assert maintenance._unit_name(operation_id) == "swapp-lab-gpu-maintenance.service"
++    with pytest.raises(ValueError):
++        maintenance._unit_name("../bad")
++    argv = maintenance.build_dispatch_argv(operation_id, "train_noop")
++    assert argv[0] == "/usr/bin/systemd-run"
++    assert "--unit=swapp-lab-gpu-maintenance.service" in argv
++    assert "--slice=swapp-gpu.slice" in argv
++    assert f"--property=MemoryMax={maintenance.TRAIN_PARENT_MEMORY_BYTES}" in argv
++    assert "--property=MemorySwapMax=0" in argv
++    assert "--property=RuntimeMaxSec=900" in argv
++    assert "--property=CPUQuota=50%" in argv
++    assert "--property=TasksMax=32" in argv
++    assert "--property=NoNewPrivileges=yes" in argv
++    assert argv[-3:] == [maintenance.sys.executable, "-m", "lab.training.worker"]
++
++
++def test_training_profile_is_fixed_and_cannot_persist_an_adapter() -> None:
++    profile = maintenance.DEFAULT_TRAINING_PROFILE.document()
++    assert profile == {
++        "adapter_rank": 32,
++        "cpu_offload_embeddings": True,
++        "gradient_checkpointing": "unsloth",
++        "load_in_4bit": True,
++        "model_repository": "Qwen/Qwen3.5-9B",
++        "save_adapter": False,
++        "sequence_length": 24_576,
++        "steps": 3,
++        "synthetic_data_only": True,
++    }
++
++
++def test_ledger_retries_are_immutable_and_completion_requires_receipt(tmp_path: Path) -> None:
++    ledger = MaintenanceLedger(tmp_path / "maintenance.sqlite3")
++    operation_id = "b" * 32
++    request = {"operation": "train_noop", "unit": maintenance.TRAINING_UNIT}
++    digest = ledger.create(operation_id, "train_noop", request)
++    assert ledger.create(operation_id, "train_noop", request) == digest
++    with pytest.raises(MaintenanceError, match="idempotency"):
++        ledger.create(operation_id, "train_noop", {**request, "unit": "swapp-lab-gpu-bad.service"})
++    with pytest.raises(MaintenanceError, match="completed"):
++        ledger.read_completed(operation_id, digest)
++    ledger.advance(
++        operation_id,
++        expected=("created",),
++        state="queued",
++        event="queued",
++        details={"lease_request_id": operation_id},
++    )
++    with pytest.raises(MaintenanceError, match="fenced"):
++        ledger.advance(
++            operation_id,
++            expected=("created",),
++            state="active",
++            event="lease_acquired",
++            details={},
++        )
++    ledger.finish(
++        operation_id, success=True, receipt={"operation_id": operation_id, "status": "completed"}
++    )
++    assert ledger.read_completed(operation_id, digest)["status"] == "completed"
++    with pytest.raises(MaintenanceError, match="terminal"):
++        ledger.advance(
++            operation_id,
++            expected=("completed",),
++            state="active",
++            event="lease_acquired",
++            details={},
++        )
++
++
++def test_receipt_identity_cannot_be_replayed_under_another_digest(tmp_path: Path) -> None:
++    ledger = MaintenanceLedger(tmp_path / "maintenance.sqlite3")
++    operation_id = "c" * 32
++    digest = ledger.create(operation_id, "train_noop", {"x": 1})
++    ledger.finish(
++        operation_id, success=True, receipt={"operation_id": operation_id, "status": "completed"}
++    )
++    with pytest.raises(MaintenanceError, match="completed trusted receipt"):
++        ledger.read_completed(operation_id, "0" * 64)
++    assert len(digest) == 64
++
++
++def test_success_exit_without_durable_worker_receipt_fails_closed(
++    monkeypatch, tmp_path: Path
++) -> None:
++    project = tmp_path / "project"
++    runtime = project / "data/runtime/train"
++    state = runtime / "maintenance"
++    gpu_root = project / "data/runtime/gpu"
++    gpu_root.mkdir(mode=0o700, parents=True)
++    state.mkdir(parents=True, mode=0o700)
++    runtime.mkdir(mode=0o700, exist_ok=True)
++    monkeypatch.setattr(maintenance, "TRAIN_RUNTIME", runtime)
++    monkeypatch.setattr(maintenance, "PROJECT_ROOT", project)
++    monkeypatch.setattr(maintenance, "TRAIN_STATE_ROOT", state)
++    monkeypatch.setattr(maintenance, "TRAINING_LEDGER", state / "maintenance.sqlite3")
++    monkeypatch.setattr(maintenance, "GPU_RUNTIME", gpu_root)
++    native_runtime = project / "data/runtime/native-doctor"
++    monkeypatch.setattr(maintenance, "NATIVE_DOCTOR_RUNTIME", native_runtime)
++    monkeypatch.setattr(
++        maintenance,
++        "agent_version_identity",
++        lambda: {"agent_version": "director.test", "agent_source_sha256": "a" * 64},
++    )
++    database = gpu_root / "arbiter.sqlite3"
++    monkeypatch.setenv("SWAPP_AOS_GPU_UNIT", "swapp-aos-gpu-broker.service")
++    monkeypatch.setenv("SWAPP_LAB_GPU_UNIT", maintenance.TRAINING_UNIT)
++    monkeypatch.setenv("SWAPP_GPU_RUNTIME_DB", str(database))
++    captured: list[list[str]] = []
++
++    def fake_runner(*args, **kwargs):
++        captured.append(args[0])
++        return subprocess.CompletedProcess(args[0], 0, stdout="", stderr="")
++
++    with pytest.raises(MaintenanceError, match="completed trusted receipt"):
++        maintenance.dispatch("train_noop", runner=fake_runner)
++    assert len(captured) == 1
++    rw_paths = next(arg for arg in captured[0] if arg.startswith("--property=ReadWritePaths="))
++    for expected_path in (state, gpu_root, database.parent, native_runtime):
++        assert str(expected_path) in rw_paths
++
++
++def test_wrong_fixed_lab_principal_fails_before_systemd_dispatch(
++    monkeypatch, tmp_path: Path
++) -> None:
++    monkeypatch.setenv("SWAPP_AOS_GPU_UNIT", "swapp-aos-gpu-broker.service")
++    monkeypatch.setenv("SWAPP_LAB_GPU_UNIT", "swapp-lab-gpu-broker.service")
++    monkeypatch.setenv("SWAPP_GPU_RUNTIME_DB", str(tmp_path / "arbiter.sqlite3"))
++
++    def should_not_run(*args, **kwargs):
++        pytest.fail("systemd dispatch must not run with a mismatched principal")
++
++    with pytest.raises(MaintenanceError, match="fixed maintenance principal"):
++        maintenance.dispatch("train_noop", runner=should_not_run)
++
++
++def test_worker_rejects_spoofed_owner_mapping_before_gpu_access(
++    monkeypatch, tmp_path: Path
++) -> None:
++    monkeypatch.setenv("SWAPP_TRAIN_OPERATION_ID", "d" * 32)
++    monkeypatch.setenv("SWAPP_AOS_GPU_UNIT", "swapp-aos-gpu-broker.service")
++    monkeypatch.setenv("SWAPP_LAB_GPU_UNIT", "swapp-lab-gpu-train-" + "d" * 32 + ".service")
++    monkeypatch.setenv("SWAPP_GPU_RUNTIME_DB", str(tmp_path / "arbiter.sqlite3"))
++    with pytest.raises(MaintenanceError, match="fixed maintenance identity"):
++        _runtime_inputs()
++
++
++def test_gpu_database_validation_rejects_symlinked_ancestor(tmp_path: Path) -> None:
++    project = tmp_path / "project"
++    gpu_root = project / "data/runtime/gpu"
++    gpu_root.mkdir(parents=True, mode=0o700)
++    database = gpu_root / "arbiter.sqlite3"
++    assert (
++        validated_gpu_runtime_database(database, project_root=project, gpu_runtime_root=gpu_root)
++        == database
++    )
++    alias = tmp_path / "alias"
++    alias.symlink_to(project / "data/runtime", target_is_directory=True)
++    symlinked_database = alias / "gpu/arbiter.sqlite3"
++    with pytest.raises(ValueError, match="direct child"):
++        validated_gpu_runtime_database(
++            symlinked_database, project_root=project, gpu_runtime_root=gpu_root
++        )
++
++
++def test_training_admission_fails_before_launch_when_shared_ram_reserve_is_short(
++    monkeypatch, tmp_path: Path
++) -> None:
++    original_read_text = Path.read_text
++
++    def read_meminfo(path: Path, *args, **kwargs) -> str:
++        if path == Path("/proc/meminfo"):
++            available_kib = (
++                maintenance.TRAIN_MEMORY_BYTES
++                + maintenance.TRAIN_PARENT_MEMORY_BYTES
++                + maintenance.HOST_RAM_RESERVE_BYTES
++            ) // 1024 - 1
++            return f"MemTotal: 32768000 kB\nMemAvailable: {available_kib} kB\n"
++        return original_read_text(path, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "read_text", read_meminfo)
++    monkeypatch.setattr("lab.training.worker.TRAIN_RUNTIME", tmp_path)
++    with pytest.raises(MaintenanceError, match="RAM reserve"):
++        _host_memory_preflight()
++
++
++def test_training_admission_fails_when_free_disk_reserve_is_short(
++    monkeypatch, tmp_path: Path
++) -> None:
++    original_read_text = Path.read_text
++
++    def read_meminfo(path: Path, *args, **kwargs) -> str:
++        if path == Path("/proc/meminfo"):
++            return "MemTotal: 32768000 kB\nMemAvailable: 32768000 kB\n"
++        return original_read_text(path, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "read_text", read_meminfo)
++    monkeypatch.setattr("lab.training.worker.TRAIN_RUNTIME", tmp_path)
++    monkeypatch.setattr(
++        "lab.training.worker.shutil.disk_usage",
++        lambda _: SimpleNamespace(free=maintenance.MINIMUM_FREE_DISK_BYTES - 1),
++    )
++    with pytest.raises(MaintenanceError, match="free-disk reserve"):
++        _host_memory_preflight()
++
++
++def test_queued_training_deadline_uses_boottime_and_cancels_request(monkeypatch) -> None:
++    class Scheduler:
++        max_activation_seconds = 30
++        max_inference_seconds = 30
++        max_total_seconds = 60
++
++        def __init__(self) -> None:
++            self.cancelled: list[tuple[str, str]] = []
++
++        def submit(self, *args, **kwargs):
++            return SimpleNamespace(queue_deadline=10_000.0)
++
++        def cancel_queued(self, owner: str, request_id: str) -> None:
++            self.cancelled.append((owner, request_id))
++
++        def try_acquire(self, *_args, **_kwargs):
++            pytest.fail("zero-length queue admission must not claim the lease")
++
++    scheduler = Scheduler()
++    monkeypatch.setattr("lab.training.worker.boottime", lambda: 100.0)
++    monkeypatch.setattr("lab.training.worker.time.monotonic", lambda: pytest.fail("wrong clock"))
++    with pytest.raises(MaintenanceError, match="timed out"):
++        _await_training_lease(scheduler, "1" * 32, b"payload", queue_seconds=0)
++    assert scheduler.cancelled == [("lab", "1" * 32)]
++
++
++def test_child_receipt_requires_real_fixed_profile_measurement(tmp_path: Path) -> None:
++    receipt = {
++        "adapter_rank": 32,
++        "adapter_saved": False,
++        "cpu_offload_embeddings": True,
++        "embedding_device": "cpu",
++        "schema": "training-dry-run.v1",
++        "load_in_4bit": True,
++        "status": "ok",
++        "steps_completed": 3,
++        "sequence_length": 24_576,
++        "peak_gpu_allocated_bytes": 1_000_000,
++        "peak_gpu_reserved_bytes": 1_500_000,
++        "synthetic_data_only": True,
++    }
++    path = tmp_path / "result.json"
++    path.write_text(json.dumps(receipt), encoding="utf-8")
++    assert _read_child_receipt(path)["steps_completed"] == 3
++    receipt["steps_completed"] = 2
++    path.write_text(json.dumps(receipt), encoding="utf-8")
++    with pytest.raises(MaintenanceError, match="fixed measurement contract"):
++        _read_child_receipt(path)
++
++
++def test_agent_identity_is_bound_to_local_source_file() -> None:
++    identity = maintenance.agent_version_identity()
++    assert identity["agent_version"] == "director.v0.17.0"
++    assert len(identity["agent_source_sha256"]) == 64
++
++
++def test_child_generation_fence_rejects_reused_pid_or_changed_invocation(monkeypatch) -> None:
++    generation = ChildUnitGeneration(
++        unit="swapp-lab-train-job-" + "a" * 32 + ".service",
++        pid=1234,
++        start_ticks=88,
++        boot_id="b" * 36,
++        invocation_id="c" * 32,
++        cgroup="/swapp-gpu.slice/swapp-lab-train-job-" + "a" * 32 + ".service",
++    )
++    monkeypatch.setattr(
++        "lab.training.worker._read_process_identity",
++        lambda pid: ProcessIdentity(pid, 89, generation.boot_id),
++    )
++    same_generation_unit = {
++        "LoadState": "loaded",
++        "ActiveState": "active",
++        "MainPID": "1234",
++        "InvocationID": generation.invocation_id,
++        "ControlGroup": generation.cgroup,
++    }
++    assert not _matches_generation(same_generation_unit, generation)
++    reused_invocation = {**same_generation_unit, "InvocationID": "d" * 32}
++    assert not _matches_generation(reused_invocation, generation)
++
++
++def test_inactive_child_still_requires_unchanged_generation() -> None:
++    generation = ChildUnitGeneration(
++        unit="swapp-lab-train-job-" + "e" * 32 + ".service",
++        pid=4321,
++        start_ticks=52,
++        boot_id="f" * 36,
++        invocation_id="1" * 32,
++        cgroup="/swapp-gpu.slice/swapp-lab-train-job-" + "e" * 32 + ".service",
++    )
++    values = {
++        "LoadState": "loaded",
++        "ActiveState": "inactive",
++        "MainPID": "0",
++        "InvocationID": generation.invocation_id,
++        "ControlGroup": generation.cgroup,
++    }
++    assert _matches_generation(values, generation)
++    assert not _matches_generation(
++        {**values, "ControlGroup": "/swapp-gpu.slice/foreign.service"}, generation
++    )
++
++
++def test_child_cannot_cross_start_gate_without_parent_generation_receipt(tmp_path: Path) -> None:
++    with pytest.raises(RuntimeError, match="did not durably bind"):
++        _await_start_gate(tmp_path / "missing-gate", "9" * 32, timeout_seconds=0)
++
++
++def test_child_generation_ledger_binding_is_immutable(tmp_path: Path) -> None:
++    ledger = MaintenanceLedger(tmp_path / "maintenance.sqlite3")
++    operation_id = "a" * 32
++    ledger.create(operation_id, "train_dry_run", {"operation": "train_dry_run"})
++    ledger.advance(
++        operation_id,
++        expected=("created",),
++        state="queued",
++        event="queued",
++        details={},
++    )
++    ledger.advance(
++        operation_id,
++        expected=("queued",),
++        state="active",
++        event="lease_acquired",
++        details={},
++    )
++    ledger.advance(
++        operation_id,
++        expected=("active",),
++        state="training",
++        event="training_started",
++        details={},
++    )
++    generation = {
++        "unit": "swapp-lab-train-job-" + "b" * 32 + ".service",
++        "pid": 1234,
++        "start_ticks": 45,
++        "boot_id": "c" * 36,
++        "invocation_id": "d" * 32,
++        "cgroup": "/user.slice/swapp-gpu.slice/swapp-lab-train-job-" + "b" * 32 + ".service",
++    }
++    ledger.append_event(operation_id, "training_unit_bound", generation)
++    assert ledger.child_generation(operation_id) == generation
++    ledger.append_event(operation_id, "training_unit_bound", {**generation, "pid": 4567})
++    with pytest.raises(MaintenanceError, match="generation changed"):
++        ledger.child_generation(operation_id)
++
++
++def test_recovery_stops_only_the_persisted_dead_owner_generation(
++    monkeypatch, tmp_path: Path
++) -> None:
++    operation_id = "4" * 32
++    ledger = MaintenanceLedger(tmp_path / "maintenance.sqlite3")
++    ledger.create(operation_id, "train_dry_run", {"operation": "train_dry_run"})
++    ledger.advance(operation_id, expected=("created",), state="queued", event="queued", details={})
++    ledger.advance(
++        operation_id, expected=("queued",), state="active", event="lease_acquired", details={}
++    )
++    ledger.advance(
++        operation_id, expected=("active",), state="training", event="training_started", details={}
++    )
++    unit = "swapp-lab-train-job-" + "5" * 32 + ".service"
++    cgroup = "/user.slice/user-1000.slice/user@1000.service/swapp-gpu.slice/" + unit
++    generation = {
++        "unit": unit,
++        "pid": 1234,
++        "start_ticks": 50,
++        "boot_id": "6" * 36,
++        "invocation_id": "7" * 32,
++        "cgroup": cgroup,
++    }
++    ledger.append_event(operation_id, "training_unit_bound", generation)
++
++    database = tmp_path / "scheduler.sqlite3"
++    with closing(sqlite3.connect(database)) as connection:
++        connection.execute(
++            "CREATE TABLE gpu_turn_state (singleton INTEGER, active_owner TEXT, "
++            "active_request_id TEXT, phase TEXT, owner_pid INTEGER, owner_start_ticks INTEGER, "
++            "owner_boot_id TEXT)"
++        )
++        connection.execute(
++            "INSERT INTO gpu_turn_state VALUES(1,'lab',?,'quarantined',99,21,?)",
++            (operation_id, "8" * 36),
++        )
++        connection.commit()
++
++    class FakeScheduler:
++        def __init__(self) -> None:
++            self.drain_verifier = verifier
++
++        def _connect(self):
++            result = sqlite3.connect(database)
++            result.row_factory = sqlite3.Row
++            return result
++
++        def recover_quarantined(self) -> bool:
++            return bool(self.drain_verifier(SimpleNamespace(owner="lab")))
++
++    class FakeUnits:
++        @staticmethod
++        def cgroup_empty(_: str) -> bool:
++            return True
++
++    class FakeGpu:
++        @staticmethod
++        def snapshot():
++            return SimpleNamespace(
++                process_memory_mib={}, exempt_display_pids=frozenset(), used_memory_mib=0
++            )
++
++    verifier = _TrainingDrainVerifier(FakeGpu(), FakeUnits())  # type: ignore[arg-type]
++    monkeypatch.setattr("lab.training.worker._process_identity_alive", lambda _: False)
++    monkeypatch.setattr(
++        "lab.training.worker._unit_properties",
++        lambda _: {
++            "LoadState": "loaded",
++            "ActiveState": "inactive",
++            "MainPID": "0",
++            "InvocationID": generation["invocation_id"],
++            "ControlGroup": generation["cgroup"],
++        },
++    )
++    assert _recover_orphaned_training(FakeScheduler(), ledger, verifier) is True  # type: ignore[arg-type]
++    assert ledger_state_for_test(ledger.path, operation_id) == "failed"
++
++
++def ledger_state_for_test(path: Path, operation_id: str) -> str:
++    with closing(sqlite3.connect(path)) as connection:
++        row = connection.execute(
++            "SELECT state FROM training_maintenance WHERE operation_id=?", (operation_id,)
++        ).fetchone()
++    assert row is not None
++    return str(row[0])
+diff --git a/docs/ai-scientist/adr/0014-bounded-training-maintenance.md b/docs/ai-scientist/adr/0014-bounded-training-maintenance.md
+new file mode 100644
+index 0000000..47f8387
+--- /dev/null
++++ b/docs/ai-scientist/adr/0014-bounded-training-maintenance.md
+@@ -0,0 +1,21 @@
++# ADR 0014: bounded local training maintenance
++
++Status: implementation prepared; GPU and model-runtime acceptance pending coordinated measurement.
++
++## Decision
++
++Expose only `lab gpu lease TRAIN --noop` and `lab doctor train --dry-run`. Both enter the same fixed Lab maintenance principal, `swapp-lab-gpu-maintenance.service`, and the shared AOS/Lab scheduler. TRAIN remains one synthetic-only QLoRA measurement: Qwen3.5-9B, 4-bit loading, LoRA rank 32, 24,576 tokens, three steps, no adapter save. The no-op path only records a bounded lease and performs a fresh S1 local serve smoke after the lease drains.
++
++The existing inference runtime is per-call: each call starts its transient service, performs one bounded request, drains it, and records the result. Training does not install a permanent vLLM server or model adapter. The post-training smoke is a separate normal S1 call after TRAIN releases the lease, so it verifies the existing lifecycle and remains in scheduler order.
++
++## Fencing and recovery
++
++A private SQLite ledger records immutable operation terms, state transitions, and the child unit generation. The QLoRA child starts behind a private gate and imports no torch, Transformers, PEFT, or Unsloth modules until the parent has read its systemd MainPID, `/proc` start ticks, boot ID, InvocationID, and cgroup, then durably stored that exact generation. The gate binds those values back to the child PID/start/boot/cgroup. Child stop and lease release require the same unit invocation and cgroup to be inactive and empty, followed by an independent GPU-process drain check.
++
++If the parent dies, an unbound child cannot pass the gate and therefore cannot start model/GPU work. A later worker may recover only a quarantined lease whose owner PID/start/boot is proven dead. It uses the immutable child binding to stop and drain only that same child generation. If any identity is stale, unreadable, or inconsistent, the lease remains quarantined.
++
++The scheduler's persisted queue deadlines and worker waits use `CLOCK_BOOTTIME`, keeping deadlines consistent across suspend. CPU/RAM/task/runtime limits are enforced by the fixed transient systemd unit. The operation uses offline package/model settings and synthetic token IDs only.
++
++## Scope and acceptance
++
++This code and its CPU-only tests do not establish that the pinned Unsloth path actually honors embedding CPU offload, that the requested long-context training fits, or that the GPU runtime reaches the target. The child reports observed embedding placement and GPU allocated/reserved peaks and rejects an offload request that was not realized. An actual, root-coordinated 24k/three-step GPU run and post-restore local smoke remain required before M0.14 is accepted. No new dependencies or model weights are downloaded by this path.

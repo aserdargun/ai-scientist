@@ -1,0 +1,38 @@
+{
+  "base": "7ca5334",
+  "037_manifest_sha256": "114608dac5a275dca68b49928b8828ebe199333302245ed2ee7a15d6740f16c4",
+  "041_manifest_sha256": "f282fc1e37305ddad5c2fb1c40f96ac3cec69d404a20c99ddbd3323f1df23abe",
+  "041_files": {
+    "console/app.py": "b8d722e63b8d4dbde4f35dd38aa5a0b8e030faf65ee4cdbc39e0e5f765aab641",
+    "console/MODE_WORKFLOW.md": "52d1cf87c3a92d2f750eb046b7df2ec20ffcf95786ee2e03434102a9cb74c966",
+    "console/web/src/ui/App.tsx": "f7d3a37553dd25065865187c86b31cc70a32a234dab0b6cbf18ff403cf7bef87",
+    "console/web/src/ui/api.ts": "ce240ecdad389f90485793d950a329d601f9c27f5f5c517b754fc0425e43c2ee",
+    "console/web/src/ui/types.ts": "17c2bc46e47371bcccdc0731f08d2f7e2586fb7c45a289b509e814c94409a3a0",
+    "console/web/src/ui/styles.css": "9195ff1b36f12c01d45334f2a86b33aa2ee70ac153fbb1a84991e10d24e2a9bb",
+    "console/web/src/ui/OperatingModesPage.tsx": "5c2f24b25b35d1ec0736201d4e115f9079a35e4494490f52e0a4ad88f959c60a",
+    "console/web/src/ui/ModeDiagnostics.tsx": "a3b80404da0abb9f9c0daa0019408c38808c926ed87a9cc2e51bbcad3ad075ba",
+    "lab/api/app.py": "0e1df1392bccd64d0f62aa72ccc25600b3cb4eab5e49657903e7e49114f41cdd",
+    "lab/api/registry.py": "757e8486c1124599e4c8cbabf722110d718779225f1fcf7e965db2560936d7d1",
+    "lab/api/mode_experiments.py": "f6ab0c4dae0d4f5c4bff44930209dca3116f45d9899afbd1bf9f5d779c41adce",
+    "lab/api/mode_sources.py": "a3fd96ff40818075c15963ab787560ffe02d229f2b173845c85bc7509eb801c2",
+    "lab/director/parameter_grid.py": "c9f2cb0fb95f11b4b8c17c9e7ca918696c2e8456bfdd2d55283a98e60e633544",
+    "lab/director/runner.py": "f706c3eaed37cd56099debd7ab9c9f5b95fe4857784576ed7dc3b392f229f72c",
+    "lab/director/loop.py": "9c67ec8540aa30803441ea14fd10b36f87215607192e3a837a878e960d44c3e5",
+    "lab/director/suite_manifest.py": "f225b556655cc7d454a88950711f173d176973560045d342b7e955048cddafbc",
+    "lab/cli.py": "978527e250b29e195a8047e3a7a9506d9d9a4713cdea09cb9b46bd01769902c3",
+    "lab/scorer/mode_snapshot.py": "de6d3e600d07e8ee91955dc49b75c557171917bb4fc3ce3dee2aaecceda35156",
+    "lab/scorer/mode_snapshot_worker.py": "eca457af69ea1b22a76ebac6a4a638dc4eb2c9f554954dcde40fda0c5dbb0c3c",
+    "lab/scorer/mode_diagnostics.py": "56ba9cffd6d238aa4f98a7e247e7d55ea118648c66c7de0760644fbcb789d663",
+    "lab/scorer/service.py": "dd7b7eb4d9ce94ee904302f076b5964606d2b488c7143c2d554519e81f8b7727",
+    "lab/scorer/supervisor.py": "40fc09b4fce384ec636383454b28cd6a4748181ab2c55d496f8f40753eb3c2bf",
+    "lab/scorer/worker.py": "f663a1417be27a872d1857e676310bb1066b4c81c5e6c5ce59ba45d764a6ed9f",
+    "lab/sandbox/candidate_entrypoint.py": "51c6805c91f597d7d247f88b8b937cd2ce205ca0e6009f74abd665c07a0a59a7",
+    "tests/test_mode_experiments041.py": "44e3831d0ae172b1d16de6b5f6fdc89047467bf9dbcc1db107854a6583586d61"
+  },
+  "dist": {
+    "console/web/dist/assets/index-CrkIo9B4.css": "b071ac0fef59d5512ce22e7da3f030c4651a0fb18fce32424e89b996408eaf85",
+    "console/web/dist/assets/index-qsDSfd8q.js": "24e6a8b68e81fc8f6f9ad54efb33047f8cbc30cacccba4fd507759acab7d3212",
+    "console/web/dist/index.html": "314f76a76f64a471340ba8c7a5b0827443c5e97ee60d7c0f069240c443548dd4"
+  },
+  "version": "0.35.0"
+}

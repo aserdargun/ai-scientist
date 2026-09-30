@@ -1,0 +1,118 @@
+diff --git a/lab/cli.py b/lab/cli.py
+index 42143ae..54ce78c 100644
+--- a/lab/cli.py
++++ b/lab/cli.py
+@@ -85,18 +85,8 @@ def _local_qwen_provider(
+     database_value = os.environ.get("SWAPP_GPU_RUNTIME_DB", "")
+     if not aos_unit or not lab_unit or not database_value:
+         raise RuntimeError("local model service requires its fixed GPU principal mapping")
+-    runtime_root = GPU_RUNTIME_ROOT.resolve(strict=True)
+     database = Path(database_value)
+-    if database.is_symlink():
+-        raise ValueError("GPU runtime database cannot be a symlink")
+-    parent = database.parent.resolve(strict=True)
+-    if parent != runtime_root or database.name in {"", ".", ".."}:
+-        raise ValueError("GPU runtime database must be a direct child of its private runtime root")
+-    parent_stat = parent.stat()
+-    if parent_stat.st_uid != os.getuid() or parent_stat.st_mode & 0o077:
+-        raise ValueError("GPU runtime directory must be private to the service owner")
+-    if database.exists() and (database.is_symlink() or not database.is_file()):
+-        raise ValueError("GPU runtime database must be a regular file")
++    database = _validated_gpu_runtime_database(database)
+     expected_configuration = provider_config_sha256(profile_set)
+     provider = LocalQwenProposalProvider(
+         run_id=run_id,
+@@ -111,6 +101,93 @@ def _local_qwen_provider(
+     return provider
+ 
+ 
++def _validated_gpu_runtime_database(database: Path) -> Path:
++    """Accept a private test DB or the one fixed broker DB, never a caller path."""
++    if not database.is_absolute() or database.is_symlink():
++        raise ValueError("GPU runtime database must be absolute and cannot be a symlink")
++    project_root = GPU_RUNTIME_ROOT
++    shared_database = Path.home() / ".local/state/swapp-gpu/arbiter.sqlite3"
++
++    if database == shared_database:
++        home = Path.home()
++        directory_paths = _absolute_directory_chain(shared_database.parent)
++        for directory in directory_paths:
++            try:
++                info = directory.lstat()
++            except OSError as exc:
++                raise ValueError("shared GPU runtime directory is unavailable") from exc
++            is_home_or_descendant = directory == home or home in directory.parents
++            root_sticky_directory = bool(info.st_mode & 0o1000) and info.st_uid == 0
++            if (
++                directory.is_symlink()
++                or not directory.is_dir()
++                or info.st_uid not in {0, os.getuid()}
++                or (info.st_mode & 0o022 and not root_sticky_directory)
++            ):
++                raise ValueError("shared GPU runtime path has an unsafe directory component")
++            if root_sticky_directory:
++                continue
++            if is_home_or_descendant and info.st_uid != os.getuid():
++                raise ValueError("shared GPU home path is not owned by the service owner")
++            if directory in {home / ".local/state", home / ".local/state/swapp-gpu"} and (
++                info.st_mode & 0o077
++            ):
++                raise ValueError("shared GPU state directory must be private to the service owner")
++        parent = shared_database.parent
++    else:
++        if database.name in {"", ".", ".."} or database.parent != project_root:
++            raise ValueError(
++                "GPU runtime database must be a direct child of its private runtime root"
++            )
++        _validate_private_directory_chain(project_root, strict_root=project_root)
++        parent = project_root
++    try:
++        database_info = database.lstat()
++    except FileNotFoundError:
++        database_info = None
++    except OSError as exc:
++        raise ValueError("GPU runtime database cannot be inspected") from exc
++    if database_info is not None and (
++        database.is_symlink()
++        or not database.is_file()
++        or database_info.st_uid != os.getuid()
++        or database_info.st_mode & 0o077
++    ):
++        raise ValueError("GPU runtime database must be a private regular file")
++    return parent / database.name
++
++
++def _absolute_directory_chain(path: Path) -> tuple[Path, ...]:
++    """Return every original lexical directory component without resolving it."""
++    if not path.is_absolute():
++        raise ValueError("GPU runtime directory must be absolute")
++    components = [Path("/")]
++    current = Path("/")
++    for part in path.parts[1:]:
++        current = current / part
++        components.append(current)
++    return tuple(components)
++
++
++def _validate_private_directory_chain(path: Path, *, strict_root: Path) -> None:
++    for directory in _absolute_directory_chain(path):
++        try:
++            info = directory.lstat()
++        except OSError as exc:
++            raise ValueError("GPU runtime directory is unavailable") from exc
++        if (
++            directory.is_symlink()
++            or not directory.is_dir()
++            or info.st_uid not in {0, os.getuid()}
++            or (info.st_mode & 0o022 and not (info.st_mode & 0o1000 and info.st_uid == 0))
++        ):
++            raise ValueError("GPU runtime path has an unsafe directory component")
++        if directory == strict_root and (
++            info.st_uid != os.getuid() or info.st_mode & 0o077
++        ):
++            raise ValueError("GPU runtime directory must be private to the service owner")
++
++
+ def _planner_engine() -> Engine:
+     path = Path(os.environ.get("LAB_PLANNER_DSN_FILE", DEFAULT_PLANNER_DSN))
+     if path.is_symlink() or not path.is_file() or path.stat().st_mode & 0o077:

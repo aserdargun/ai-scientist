@@ -1,0 +1,79 @@
+{
+  "checked_at": "2026-09-24T15:18:55.719536+00:00",
+  "draft_sha256": "48ef3a88b498cbd02299a1d3b10ecda2caf069db498b8466144b0db3431f908c",
+  "scope": "Read-only PostgreSQL expression tests of float JSON identity and SQL advisory-key derivation; no migration, lock acquisition, or row mutation.",
+  "float_checks": [
+    {
+      "value": 0.0,
+      "document": "{\"predicted_delta\": 0.0}",
+      "text_comparison_equal": false,
+      "jsonb_numeric_comparison_equal": true
+    },
+    {
+      "value": -0.0,
+      "document": "{\"predicted_delta\": -0.0}",
+      "text_comparison_equal": false,
+      "jsonb_numeric_comparison_equal": true
+    },
+    {
+      "value": 1.0,
+      "document": "{\"predicted_delta\": 1.0}",
+      "text_comparison_equal": false,
+      "jsonb_numeric_comparison_equal": true
+    },
+    {
+      "value": -1.0,
+      "document": "{\"predicted_delta\": -1.0}",
+      "text_comparison_equal": false,
+      "jsonb_numeric_comparison_equal": true
+    },
+    {
+      "value": 0.1,
+      "document": "{\"predicted_delta\": 0.1}",
+      "text_comparison_equal": true,
+      "jsonb_numeric_comparison_equal": true
+    },
+    {
+      "value": 1e-07,
+      "document": "{\"predicted_delta\": 1e-07}",
+      "text_comparison_equal": false,
+      "jsonb_numeric_comparison_equal": true
+    }
+  ],
+  "lock_key_checks": [
+    {
+      "run_id": "00000000-0000-0000-0000-000000000000",
+      "sql_key": 3983162290893594069,
+      "python_key": 3983162290893594069,
+      "equal": true
+    },
+    {
+      "run_id": "00000000-0000-0000-0000-000000000001",
+      "sql_key": 8952255631054521211,
+      "python_key": 8952255631054521211,
+      "equal": true
+    },
+    {
+      "run_id": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "sql_key": 6541097565471264777,
+      "python_key": 6541097565471264777,
+      "equal": true
+    },
+    {
+      "run_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sql_key": 2467420735635315210,
+      "python_key": 2467420735635315210,
+      "equal": true
+    },
+    {
+      "run_id": "00000000-0000-0000-0000-000000000003",
+      "sql_key": -8423169259228530906,
+      "python_key": -8423169259228530906,
+      "equal": true
+    }
+  ],
+  "database_revision": "0010_terminal_recovery_fence",
+  "float_query": "SELECT (%s::jsonb->>'predicted_delta') IS NOT DISTINCT FROM (%s::double precision)::text, (%s::jsonb->'predicted_delta') IS NOT DISTINCT FROM to_jsonb(%s::double precision)",
+  "lock_key_query": "SELECT ('x' || substr(encode(sha256(uuid_send(%s::uuid)), 'hex'), 1, 16))::bit(64)::bigint",
+  "all_passed": true
+}

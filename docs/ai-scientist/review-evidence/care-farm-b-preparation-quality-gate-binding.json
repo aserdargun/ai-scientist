@@ -1,0 +1,37 @@
+{
+  "schema": "care-farm-b-preparation-gate.v1",
+  "created_at": "2026-09-26T21:40:47.225773+00:00",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "base_commit": "fc28ea1710ff917da536a7faa591146d5dd624fa",
+  "harness_sha256": "3be08c30da6132aada7d2bba0d8211e19d46c34eedd85f3349356a917031dd91",
+  "harness_files": 76,
+  "files": {
+    "docs/ai-scientist/review-evidence/care-farm-b-astra-policy.json": "825ebea6334264b59ed8b2a683c0c9c1a823e7f3ead067ce78fa6e43ecc1e696",
+    "docs/ai-scientist/review-evidence/care-farm-b-policy-analysis.json": "ac74320d562250d313f4dc21a94af73a6e59339397be340766152f6bd008f261",
+    "docs/ai-scientist/review-evidence/care-farm-b-policy-analysis.py": "8692b096f7549529eaf64ae3012a476be16ff7934307485909af44bcf29cfcfc",
+    "docs/ai-scientist/review-evidence/care-farm-b-root-review.json": "88bddb81b19fa5ed54f89964703a263c8143b279ce27febf7bf49bc95717a068",
+    "docs/ai-scientist/review-evidence/care-farm-b-source-audit.json": "a075fbb1e5287406983908fa05b647768c04f6e3b278b1fea1aed22cccbecd00",
+    "docs/ai-scientist/review-evidence/care-farm-b-source-audit.py": "5490266394166bf892f9f2dae680be41bbd3868bdeda26c9071572b246615490",
+    "docs/ai-scientist/review-evidence/holdout-030-astra-first-review.json": "bfead0220f34d8747b762167b90b6441a2209c7cbbb6392147d988c97df24c33",
+    "docs/ai-scientist/review-evidence/holdout-030-first-handoff.md": "812d2d9fc3b360a4b76daab2e3676c4c3fffe437b6d574ada187808ca9678b6b",
+    "CHANGELOG.md": "c8bda5cc9a4017ced95aedd174c170809d08d620474c4ff4b38eec239e3390b7",
+    "docs/ai-scientist/32-holdout-integration-review.md": "5056743e8ae922ca2f27cc33916dcbcd271221e2d8a2bf5d247dc31014380c7f",
+    "docs/ai-scientist/33-care-farm-b-source-review.md": "23404362b7072f178022e3ccb3910480399c5ce3c4de1916ee7d7684282291e3",
+    "docs/ai-scientist/m0-acceptance.md": "cb15c78c73fe11486ee7fdead89ae69d6d259fcb7ffce3bcce5e72f2c13c5dbd"
+  },
+  "gate": "docs/ai-scientist/evidence/quality-gate-care-farm-b-preparation.json",
+  "gate_sha256": "e1d41e4c3652825d6cc6fdd5aaba624bcd7b6771075a77ac932a7aca5c56db9c",
+  "scope": "Main 0.29 plus Farm B source audit and first holdout review documents. Private holdout-030 runtime, recovery and Farm B loader changes are excluded.",
+  "actual_exec_session": 14231,
+  "actual_exec_exit_code": 0,
+  "unit": "swapp-care-farm-b-preparation-gate-20260927-f92ad.service",
+  "reported_service_runtime_seconds": 50.5,
+  "reported_cpu_seconds": 50.098,
+  "reported_memory_peak": "503.1M",
+  "staged_whitespace_check": {
+    "full_exit_code": 2,
+    "source_docs_excluding_preserved_raw_output_and_original_handoff_exit_code": 0,
+    "reason": "Six trailing spaces in raw deprecation-warning output and four original Markdown hard line breaks in the byte-preserved worker handoff. Evidence bytes were retained."
+  }
+}

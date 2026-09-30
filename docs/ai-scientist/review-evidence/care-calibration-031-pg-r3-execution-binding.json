@@ -1,0 +1,36 @@
+{
+  "schema": "care-calibration-031-pg-execution-binding.v1",
+  "attempt": "0023-r3-uuid-fixed",
+  "actual_session": 70379,
+  "actual_exit_code": 0,
+  "completion_chunk": "3665cc",
+  "unit": "swapp-calibration031-pg-20260927-r3.service",
+  "wall_seconds": 105.387,
+  "cpu_seconds": 1.894,
+  "reported_driver_memory_peak": "184M",
+  "swap_bytes": 0,
+  "evidence_path": "docs/ai-scientist/review-evidence/care-calibration-031-pg-522d4be1021e.json",
+  "evidence_sha256": "e4f0dbab8c71268db67268132c481d26162ed408d546eee11102f8b6c91d6f9c",
+  "source_count": 178,
+  "preflight_matches_run": true,
+  "migration_head": "0023_care_calibration_execution",
+  "migration_exit_code": 0,
+  "test_exit_code": 0,
+  "test_passed_count": 1,
+  "source_and_snapshot_unchanged": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "unrelated_containers_still_running": [
+    "afaae4dcfb47 aos-desktop-5df31b9b76ead5778b4f",
+    "a39921a78072 WinBoat"
+  ],
+  "verified_test_scope": [
+    "135 synthetic bound cell receipts, exact replays and immutable freeze/readback hash",
+    "NULL generation rejected before valid bind/fail/complete on eligible live claims with unchanged state/count/100-second debit",
+    "sealed 15-task manifest and original deadline/budget exhaustion",
+    "original 100-second cell deadline elapsed before exact receipt replay",
+    "Scorer/Director role restrictions and no raw cell insert privilege"
+  ],
+  "prior_failed_attempt": "care-calibration-031-pg-r2-execution-binding.json",
+  "scope": "Real PostgreSQL0023 on frozen private calibration source with synthetic scores and synthetic worker identities. No actual cell workers, Farm B measurements, Docker candidate work, models, GPU or AOS. Main0.32 runtime integration uses identical calibration files but has a distinct full-source fingerprint and its own image/full gate."
+}

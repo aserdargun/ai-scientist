@@ -1,0 +1,2128 @@
+{
+  "acceptance_claim": null,
+  "api": {
+    "auth": "local bearer",
+    "health": "ok",
+    "pid": 1168788,
+    "port": 41503
+  },
+  "api_process_reaped": true,
+  "container_id": "b8155dcdcb968ada52ae8d22f5a8f3fa3c89630668d4aa30b57fbc426a102fe7",
+  "container_name": "swapp-baseline-ownership-pg-432eef866da3",
+  "created_at": "2026-09-27T05:36:21.888756+00:00",
+  "credentials_removed": true,
+  "database": "swapp_lab_baseline_033_432eef866da3",
+  "diagnostics_helper_sha256": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+  "driver_sha256": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+  "endpoint": {
+    "container_ips": [
+      "172.17.0.2"
+    ],
+    "host": "127.0.0.1",
+    "port": 32800
+  },
+  "exit_code": 0,
+  "fixture_id": "432eef866da344f5b85ef32fa5cefa52",
+  "host_after": {
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2"
+    ],
+    "service_states": [
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update-tray.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-:1.2-org.freedesktop.secrets@0.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-broker.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "dirmngr.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "gnome-keyring-daemon.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "gpg-agent.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "keyboxd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "p11-kit-server.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-media-session.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-pulse.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "pipewire.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pulseaudio.service"
+      },
+      {
+        "active": "activating",
+        "sub": "start",
+        "unit": "rclone-gdrive-sync.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "rclone-gdrive.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "shelly-notifications.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-ai-scientist-console.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-review-baseline-ownership-033-r6.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-importd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-machined.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "wireplumber.service"
+      },
+      {
+        "active": "failed",
+        "sub": "failed",
+        "unit": "xdg-desktop-portal-gtk.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-desktop-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-document-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-permission-store.service"
+      }
+    ]
+  },
+  "host_before": {
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2"
+    ],
+    "service_states": [
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update-tray.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-:1.2-org.freedesktop.secrets@0.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-broker.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "dirmngr.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "gnome-keyring-daemon.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "gpg-agent.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "keyboxd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "p11-kit-server.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-media-session.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-pulse.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "pipewire.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pulseaudio.service"
+      },
+      {
+        "active": "activating",
+        "sub": "start",
+        "unit": "rclone-gdrive-sync.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "rclone-gdrive.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "shelly-notifications.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-ai-scientist-console.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-review-baseline-ownership-033-r6.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-importd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-machined.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "wireplumber.service"
+      },
+      {
+        "active": "failed",
+        "sub": "failed",
+        "unit": "xdg-desktop-portal-gtk.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-desktop-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-document-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-permission-store.service"
+      }
+    ]
+  },
+  "input": {
+    "family_cap": 0.25,
+    "family_shares": {
+      "synthetic-process-0:sensors:EVT": 0.25,
+      "synthetic-process-1:sensors:EVT": 0.25,
+      "synthetic-process-2:sensors:EVT": 0.25,
+      "synthetic-process-3:sensors:EVT": 0.25
+    },
+    "fixture_id": "432eef86-6da3-44f5-b85e-f32fa5cefa52",
+    "label_row_count": 512,
+    "manifest_bytes": 46177,
+    "manifest_sha256": "3abf48ab82ca2f60dde35e0c73fe31e4ac37a65478498ea6e49c547493c05906",
+    "measured_score_count": 0,
+    "planned_score_count": 36,
+    "planner_database_readback": "not_run",
+    "private_profile_inputs_sha256": "9e33d5832a534895f8a988a76f361062ce680bcb0632248032c770913195976c",
+    "profile_count": 4,
+    "provider_constructed": false,
+    "registry_entry_sha256": "23d6bd27d306031482e6926f72a38b2e38b12d8285dce34457906515cd201b70",
+    "registry_sha256": "dd55004697208c078a02995e50b85160974b379b11aeb254be65f975664bc47e",
+    "scenario_sha256": "134e1ebea8e4ba9c6bb2d81026cfeb44c464a259b4740a3de4de892455cf347d",
+    "sql_profile_installation": "not_run",
+    "task_count": 4,
+    "two_task_rejection": {
+      "reason": "fewer than four independent families cannot satisfy the 0.25 cap",
+      "type": "ValueError"
+    },
+    "type_shares": {
+      "EVT": 1.0
+    }
+  },
+  "installed_fixture": {
+    "label_rows": 512,
+    "profiles": 4
+  },
+  "intermediate_receipts": [
+    {
+      "canonical_payload_sha256": "085ed5477cad90364d57e2e46d9ea1110084c32a88b516901d86b75806507d58",
+      "path": "proof-checkpoints/sql-owner-cases.json",
+      "sha256": "1f5a426d460764ff2d3755414c95eacc438bf55e37d53c7071958d0ef1a48399",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "sql-owner-cases"
+    },
+    {
+      "canonical_payload_sha256": "ea9dd33c2b9e6300ca81cc6b8de8adfd74421412c4d797354196c53658b2af85",
+      "path": "proof-checkpoints/baseline-admitted.json",
+      "sha256": "cd13fadb79905b587b07b32263c480df15b4b33547c00d3131a2a073fb9f5c3f",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "baseline-admitted"
+    },
+    {
+      "canonical_payload_sha256": "c9037bb19d6d214ba7313d763f90176e5dc51a1214692b4274c49ab744329059",
+      "path": "proof-checkpoints/completed-baseline.json",
+      "sha256": "29eb87335a0b4c16876238a184432fe18fef17498cc9deedd8cef95bfe811eb9",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "completed-baseline"
+    },
+    {
+      "canonical_payload_sha256": "dbf9b6f02e2e810cc8ea48a2bdef838e096b834e27c4563c0e5b12ddc5c172a9",
+      "path": "proof-checkpoints/queued-stop.json",
+      "sha256": "d68265e21b32bf89a5bfdd697851dd08c8effd78478ed1dd1235a353a47da3da",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "queued-stop"
+    }
+  ],
+  "migration_exit_code": 0,
+  "migration_head": "0025_director_generations",
+  "migration_output_sha256": "f40820ee743e8df8fe89c74568b3308380ef1711bb132284fe93142ff1b71c3f",
+  "outer_cgroup": {
+    "cpu_period_us": 100000,
+    "cpu_quota_us": 50000,
+    "memory_max_bytes": 1073741824,
+    "swap_max_bytes": 0,
+    "tasks_max": 64
+  },
+  "owned_container_removed": true,
+  "owned_process_drain": {
+    "containers": [],
+    "drained": true,
+    "marker": null,
+    "runs": [
+      {
+        "run_id": "971b388a-d6c0-4fef-8550-a6dbad591586",
+        "state": "completed"
+      },
+      {
+        "run_id": "ad9dcc20-b81d-4671-8cb8-197d92f68ec7",
+        "state": "stop_requested"
+      },
+      {
+        "run_id": "d783e345-d5ab-4f2c-a255-6ab10e493ce3",
+        "state": "stopped"
+      },
+      {
+        "run_id": "3fdbf459-6699-4fc9-b3a0-524580c0e95f",
+        "state": "stop_requested"
+      }
+    ],
+    "score_job_count": 36,
+    "units": [
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-ad9dcc20b81d46718cb8197d92f68ec7.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-ad9dcc20b81d46718cb8197d92f68ec7.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-ad9dcc20b81d46718cb8197d92f68ec7.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-ad9dcc20b81d46718cb8197d92f68ec7.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-3fdbf45966994fc9b3a0524580c0e95f.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-3fdbf45966994fc9b3a0524580c0e95f.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-3fdbf45966994fc9b3a0524580c0e95f.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-3fdbf45966994fc9b3a0524580c0e95f.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-971b388ad6c04fef8550a6dbad591586.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-971b388ad6c04fef8550a6dbad591586.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-971b388ad6c04fef8550a6dbad591586.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-971b388ad6c04fef8550a6dbad591586.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-d783e345d5ab4f2ca2556ab10e493ce3.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-d783e345d5ab4f2ca2556ab10e493ce3.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-d783e345d5ab4f2ca2556ab10e493ce3.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-d783e345d5ab4f2ca2556ab10e493ce3.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-aa644b59eb8541b78a03cc2102ef8812.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-aa644b59eb8541b78a03cc2102ef8812.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3f9f7e0d3b2846bdb19996ff41b9d075.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-3f9f7e0d3b2846bdb19996ff41b9d075.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-7faab638ca194be1ae9127381e07afa5.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-7faab638ca194be1ae9127381e07afa5.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-85a96d5e0a254b988c75b21d544f471d.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-85a96d5e0a254b988c75b21d544f471d.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-c53aca3d5fc348cf902357c53269525d.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-c53aca3d5fc348cf902357c53269525d.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-5a3b967b4a1046708f9285c98b4a9ccf.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-5a3b967b4a1046708f9285c98b4a9ccf.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-fbf9c45b45ef48a293a120fdfd407c24.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-fbf9c45b45ef48a293a120fdfd407c24.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-a3b5d6c1d89e412f9f593032f800f91c.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-a3b5d6c1d89e412f9f593032f800f91c.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-6e5d864586394390a02237bd0b73e9e6.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-6e5d864586394390a02237bd0b73e9e6.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-233924ce22dd4a48a17de999c54c1270.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-233924ce22dd4a48a17de999c54c1270.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-1e3bcf9176094d7f8a4eeecc4cbcf266.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-1e3bcf9176094d7f8a4eeecc4cbcf266.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-faf45358668441909c20293d5e651809.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-faf45358668441909c20293d5e651809.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-c804513e37d9471ba27b9253425998d3.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-c804513e37d9471ba27b9253425998d3.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-262d76b3ffa946218f7808aa669edf9e.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-262d76b3ffa946218f7808aa669edf9e.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-fa45dfa8dc4848dda1a8732f73acc286.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-fa45dfa8dc4848dda1a8732f73acc286.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-98e9ad95aee4475f99a6d4aeacefc25a.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-98e9ad95aee4475f99a6d4aeacefc25a.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-4b7bd4297417458bbf1cd0a9b54753ea.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-4b7bd4297417458bbf1cd0a9b54753ea.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-a374420675c64121b3a9f4c2ebad1364.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-a374420675c64121b3a9f4c2ebad1364.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-23e690f07cde49d4800fc29384fad2e7.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-23e690f07cde49d4800fc29384fad2e7.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-d96ad417850a48c19b458fe62f1eefc9.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-d96ad417850a48c19b458fe62f1eefc9.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-2a8b488f99714a2981b8de5456cef11e.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-2a8b488f99714a2981b8de5456cef11e.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-0623d6d372ee424f8330fb9cff7fe416.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-0623d6d372ee424f8330fb9cff7fe416.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-38931f903d31471e87f90b9ed4b3b655.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-38931f903d31471e87f90b9ed4b3b655.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-68de28e7d8c64f13a03bffd502a8b59f.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-68de28e7d8c64f13a03bffd502a8b59f.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-18fa0181e01045f992990170ca521579.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-18fa0181e01045f992990170ca521579.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3d62f89bb0ac428f943de6e78842a3c8.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-3d62f89bb0ac428f943de6e78842a3c8.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-477d0e7944cd4e68a08fab98d66392dd.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-477d0e7944cd4e68a08fab98d66392dd.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-ecef4a0989ff4eaf8e297165403dca2a.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-ecef4a0989ff4eaf8e297165403dca2a.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-9fa42cdfd7644229b5609f5771765101.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-9fa42cdfd7644229b5609f5771765101.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-fd8c050c02a64596992878dd7d846858.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-fd8c050c02a64596992878dd7d846858.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-046d3aad388f4831832d61928ac6e503.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-046d3aad388f4831832d61928ac6e503.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-805ccd3f8afb45209beda35acf4df188.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-805ccd3f8afb45209beda35acf4df188.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3ee31124131d4dbeae166abfe8898bb1.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-3ee31124131d4dbeae166abfe8898bb1.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-80ae3c9fbb664ffcbf9fbae56c6755ec.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-80ae3c9fbb664ffcbf9fbae56c6755ec.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-132a74415db4471f954bde3b4bae9df0.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-132a74415db4471f954bde3b4bae9df0.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-10aeb057ba2a46449f91cf1db2ba4a53.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-10aeb057ba2a46449f91cf1db2ba4a53.service"
+      }
+    ]
+  },
+  "postgres_image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "primary_run_terminal_semantics_verified": true,
+  "proof": {
+    "admission": {
+      "changed_payload_status": 409,
+      "cli_admitted_run_id": "971b388a-d6c0-4fef-8550-a6dbad591586",
+      "request_sha256": "c1fb3b944403deaf540b57947759e81d49eb4a000008ae6f7e18be39c2f095e8",
+      "same_key_replay_same_id": true,
+      "unauthorized_status": 401
+    },
+    "cli_stdout_sha256": "59c64e494a05933afcd1de5b9d5c06829c388e2f8060baf402b5f5ee28d6fab8",
+    "happy_dispatch": {
+      "dispatcher_exit_code": 0,
+      "execution": {
+        "control_mode": "active",
+        "current_generation": 1,
+        "execution_json": {
+          "harness_sha256": "65182764fa467d863a21f821af57a33ba33ea8021a25c90ea4c3d78fc46329eb",
+          "image_sha256": "359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73",
+          "provider": "fake-json",
+          "provider_config_sha256": null,
+          "registry_entry_sha256": "23d6bd27d306031482e6926f72a38b2e38b12d8285dce34457906515cd201b70",
+          "request": {
+            "budget": {
+              "experiments": 0,
+              "model_tokens": 0,
+              "wall_seconds": 900
+            },
+            "harness_sha256": "65182764fa467d863a21f821af57a33ba33ea8021a25c90ea4c3d78fc46329eb",
+            "image_sha256": "359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73",
+            "program_version": "fixture-v1",
+            "proposal_limit": 0,
+            "provider": "fake-json",
+            "provider_config_sha256": null,
+            "provider_registry_entry_sha256": "23d6bd27d306031482e6926f72a38b2e38b12d8285dce34457906515cd201b70",
+            "purpose": "baseline",
+            "scenario_sha256": "134e1ebea8e4ba9c6bb2d81026cfeb44c464a259b4740a3de4de892455cf347d",
+            "suite": "synthetic.baseline-proof.v1",
+            "suite_manifest_sha256": "3abf48ab82ca2f60dde35e0c73fe31e4ac37a65478498ea6e49c547493c05906",
+            "track": "anomaly"
+          },
+          "request_sha256": "c1fb3b944403deaf540b57947759e81d49eb4a000008ae6f7e18be39c2f095e8",
+          "run_id": "971b388a-d6c0-4fef-8550-a6dbad591586",
+          "scenario_sha256": "134e1ebea8e4ba9c6bb2d81026cfeb44c464a259b4740a3de4de892455cf347d",
+          "schema": "director-execution-contract.v1",
+          "suite_id": "synthetic.baseline-proof.v1",
+          "suite_manifest_sha256": "3abf48ab82ca2f60dde35e0c73fe31e4ac37a65478498ea6e49c547493c05906",
+          "suite_version": 1,
+          "wall_seconds": 900
+        },
+        "execution_sha256": "c42ae4f8cb1e9822eee9e30540f07663c42093245d899dc50fa3051d0a2fbbe5",
+        "owner_generation": 1,
+        "owner_generation_count": 1,
+        "payload_sha256": "c1fb3b944403deaf540b57947759e81d49eb4a000008ae6f7e18be39c2f095e8",
+        "worker_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-971b388ad6c04fef8550a6dbad591586.service",
+        "worker_invocation_id": "37af71b7358547709feeb11b93f0849e",
+        "worker_pid": 1169056,
+        "worker_start_ticks": 3514886,
+        "worker_unit": "swapp-ai-scientist-director-dispatch-971b388ad6c04fef8550a6dbad591586.service"
+      },
+      "matrix": {
+        "experiment_count": 3,
+        "nonbaseline_rows": 0,
+        "score_rows": 36,
+        "seed_count": 3,
+        "task_count": 4,
+        "unique_cells": 36
+      },
+      "model_invocations": {
+        "calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "model_usage": {
+        "calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "provider_tripwire": "not_run",
+      "report_sha256": "3dcdde08773710a1246634c61361df55c916c3485366de3dc412590fbe80feea",
+      "score_count": 36,
+      "state": "completed",
+      "task_plan_count": 36
+    },
+    "intermediate_receipts": [
+      {
+        "canonical_payload_sha256": "085ed5477cad90364d57e2e46d9ea1110084c32a88b516901d86b75806507d58",
+        "path": "proof-checkpoints/sql-owner-cases.json",
+        "sha256": "1f5a426d460764ff2d3755414c95eacc438bf55e37d53c7071958d0ef1a48399",
+        "source_sha256": {
+          "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+          "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+          "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+        },
+        "stage": "sql-owner-cases"
+      },
+      {
+        "canonical_payload_sha256": "ea9dd33c2b9e6300ca81cc6b8de8adfd74421412c4d797354196c53658b2af85",
+        "path": "proof-checkpoints/baseline-admitted.json",
+        "sha256": "cd13fadb79905b587b07b32263c480df15b4b33547c00d3131a2a073fb9f5c3f",
+        "source_sha256": {
+          "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+          "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+          "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+        },
+        "stage": "baseline-admitted"
+      },
+      {
+        "canonical_payload_sha256": "c9037bb19d6d214ba7313d763f90176e5dc51a1214692b4274c49ab744329059",
+        "path": "proof-checkpoints/completed-baseline.json",
+        "sha256": "29eb87335a0b4c16876238a184432fe18fef17498cc9deedd8cef95bfe811eb9",
+        "source_sha256": {
+          "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+          "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+          "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+        },
+        "stage": "completed-baseline"
+      },
+      {
+        "canonical_payload_sha256": "dbf9b6f02e2e810cc8ea48a2bdef838e096b834e27c4563c0e5b12ddc5c172a9",
+        "path": "proof-checkpoints/queued-stop.json",
+        "sha256": "d68265e21b32bf89a5bfdd697851dd08c8effd78478ed1dd1235a353a47da3da",
+        "source_sha256": {
+          "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+          "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+          "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+        },
+        "stage": "queued-stop"
+      }
+    ],
+    "observation_authority": {
+      "holdout_count_transaction": "read_only",
+      "holdout_reservation_count": "migrator",
+      "queued_stop_holdout_reservation_count": "migrator"
+    },
+    "other_scenarios": {
+      "active_worker_stop": "not_run",
+      "generation_takeover_restart": "not_run",
+      "score_checkpoint_gap": "not_run",
+      "sql_owner_mutation_matrix": "initial_claim_and_owner_subset_passed"
+    },
+    "queued_stop": {
+      "calibration_complete": false,
+      "http_stop_status": 200,
+      "job_count": 0,
+      "run_id": "d783e345-d5ab-4f2c-a255-6ab10e493ce3",
+      "score_count": 0,
+      "state": "stopped",
+      "task_count": 0,
+      "task_plan_count": 0
+    }
+  },
+  "proof_source_capture": {
+    "directory": "proof-sources",
+    "files": {
+      "diagnostics_helper": {
+        "bytes": 13888,
+        "sha256": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "snapshot_path": "proof-sources/diagnostics_helper.py",
+        "source_name": "baseline_proof_diagnostics.py"
+      },
+      "driver": {
+        "bytes": 88350,
+        "sha256": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "snapshot_path": "proof-sources/driver.py",
+        "source_name": "run_baseline_ownership_proof.py"
+      },
+      "sql_companion": {
+        "bytes": 41018,
+        "sha256": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2",
+        "snapshot_path": "proof-sources/sql_companion.py",
+        "source_name": "baseline_ownership_sql_cases.py"
+      }
+    },
+    "schema": "baseline-proof-source-capture.v1"
+  },
+  "proof_source_capture_verified": true,
+  "raw_owned_drain_verified": true,
+  "run_cleanup_verified": true,
+  "sandbox_image_id": "sha256:359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73",
+  "scenarios": {
+    "active_worker_stop": "not_run",
+    "generation_takeover_restart": "not_run",
+    "score_checkpoint_gap": "not_run",
+    "sql_owner_mutation_matrix": "initial_claim_and_owner_subset_passed"
+  },
+  "schema": "baseline-ownership-proof-033.v1",
+  "scope": "authenticated HTTP/CLI, one production dispatch with 36 measured scores, separate ownerless queued-stop report; no public-data/model/GPU/AOS claim",
+  "snapshot_matches_source": true,
+  "source_head": "c6fc212f69b18893ade15447aaa373ef6c345ddb",
+  "source_sha256": {
+    "Dockerfile.sandbox": "e9051b122769dd3eac6967e12a61d385b644c3539ea7fa4bc15c1b06fc9659ac",
+    "alembic.ini": "aab60ec24a4a1e0c65bed284631f8f19c2a2394d3110b8793f6d6078d8db3860",
+    "docker/sandbox/requirements.txt": "cfa6650061e68249c3dcff28d2002541df4c1a6b19bd9d0351a9119ed23e28ea",
+    "docs/ai-scientist/review-evidence/baseline-proof-inputs-032.py": "2d0fbaa127f27c60cb5d9967e9948410cf8bda3b7f6581915d7f1e26f6bb4f32",
+    "docs/ai-scientist/review-evidence/review_director_synthetic_scenario.py": "2a64715052fe2df0551a70c5ce237030e2888d3e6c99acc7352c2f8f7def179b",
+    "harness/VERSION": "3630c15bda1cfb9e6274224065dab611861602ae98c49169c866ff70ca3c0a05",
+    "harness/__init__.py": "9dabc85ce30040e9e4c93992622dcbefcf3f7654fa14c9ffcacb3bc4f53d3ccd",
+    "harness/alarm.py": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103",
+    "harness/baselines.py": "abb4f46252934ed234951a9429b23cf545c53b4d7c5ea06f621bbf0d88dff909",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "harness/contracts.py": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599",
+    "harness/fingerprint.py": "289243f47b18cec08dabe1d07df040b1157bee823091c2bf6f447a7b5e181222",
+    "harness/guards.py": "d820e5026825c8f0ca588337c6d86cb99e8be6099b5ab5545b3256e958093d89",
+    "harness/metrics.py": "6d0b997d5b26ad1ed879450c04eaffbea2e094233847e5f8b3895b71b0b9e22c",
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "harness/referee.py": "a5952cb5e621b36ca8f491573642c96fe92216f243e460a36c87865de6f243f2",
+    "lab/__init__.py": "1a39d5e3ee50d08b91b175f667db7d5e6de2025f4e0fedac4659f0386407cc1a",
+    "lab/api/__init__.py": "408485dcde070bea88526c05d2d39f3653b9033e89540f9fa25aea72736f3be4",
+    "lab/api/app.py": "b302f5cb776a8f86cbf80539eca2bd76c5f23d1c51df38944026d10f10703f33",
+    "lab/api/contracts.py": "7ab39e9bdc536d7bea0b91423d9a6eeb4731c14dd8e20a944e70b7ca13ed47ed",
+    "lab/api/registry.py": "a58eed45a6513c93ab45ca2ffaf60bc4dee414ee7b7326dd44ab4f1daa8a242e",
+    "lab/cli.py": "af5ec7ae2249b8a73b2aeab6e7839a718349878059f19a2e78d7199fa4d7abdc",
+    "lab/db/__init__.py": "f52763d89d95a46b0ff8a514c3336dba74a9ea6292343091e1ce0efa3ebf1fe7",
+    "lab/db/migrations/__init__.py": "b9b682537c8c1c2adedde55ed6b45eaeaacd4d4d7804c65877373a029ad3d563",
+    "lab/db/migrations/env.py": "eef43a4e3cd91fbd408af738ed5c6baa80f4e0831d046aeba1f15d8e62c64e6f",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "lab/db/migrations/versions/0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896",
+    "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+    "lab/db/migrations/versions/0023_care_calibration_execution.py": "23f39209b59ea13c1a2f40e81a8ed7c3d60c6a4284810adc92079b9679d12541",
+    "lab/db/migrations/versions/0024_baseline_operation.py": "0224a417ac659b86d40a86fd822c20b7be305f5dff35f871c1ad67f254d28742",
+    "lab/db/migrations/versions/0025_director_generations.py": "1451c83f17438795910623dce09743ba140ef7caa6942d03b456ce60c53bc23f",
+    "lab/db/schema.py": "c8ae93cc710440dadd4afe9d8b885a25b3a9201f6ebfd7b836f5981be9a5d60a",
+    "lab/db/task_plan.py": "2e946acc43f32179488948a636561742d22f7f11b2b4dbf4128517abc76b796a",
+    "lab/director/__init__.py": "947c4b6815906cd3fc868c7ea66844150f26f2476518fa75615a7405eb5e51bc",
+    "lab/director/artifacts.py": "d5131e0261611a4d3f494acbb0294b5c69df51b9f5a2e16981da488129b7b661",
+    "lab/director/baseline_operation.py": "857f269fe1240f3a5ce3ff4c5c1b40f185ec9daaf78cddd43d30476991bba81c",
+    "lab/director/baseline_runner.py": "f9b0897ed3130414d060f0167ab0512acf39ba8f87d6efe279358a0b679a637c",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "lab/director/budget.py": "4a0fd39420c24915fbaf2bbcb3b102ac17386545490d5806840c865bea9ef067",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/fake_llm.py": "7dd96f0060c80133bba897047626268796990b4ad11fc2a0f9c2591850f5c4c2",
+    "lab/director/holdout.py": "3173548fdb8157406620ad524899a72315ec96009b93ca3d9a27accc4e577ece",
+    "lab/director/journal.py": "c8022a9835fb18b744522d7b3e986689e57de9030420344ea079fcb364ee55cc",
+    "lab/director/ledger.py": "0ca6c2def4661670b5e99d91b2b6ae1d99a3abc6cd097934de072e38857fa599",
+    "lab/director/local_llm.py": "dc21385c1b8930a35f0f33fa10b661592fa10df43aa15ce4f5164a8e00ce271c",
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/director/ownership.py": "8ca75a75496a06bd12e146fbd72a2106cf4b8d18057951b08f4b4704e13314f3",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/recovery.py": "9f9999708c3a69f579210b430e924cbe9494a9c668b1739c1761564c0854aaed",
+    "lab/director/runner.py": "10c58376f953aac3552760bf8f7d32d7db207a20fb5bbc0b457bd9bbc10977d5",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_guards.py": "38916491f76a712bd2e46cf136c261cf0dd8da3cf07cadd98335b4237d81e0f7",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/director/task_plan.py": "aa9ac6dd9e3fb58c366147205dda9bf537beb5f0fb3a7b66dc960a252db87bf2",
+    "lab/llm/__init__.py": "d1b8ca22acbe93ce9d0849b05cb7dae7c875ac8e0b382aa2520915befab38527",
+    "lab/llm/aos_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab/llm/aos_gpu_executor.py": "148ec806adfbc921dbabbfc8442681587c14059103d28534a82453aa6f0d3bec",
+    "lab/llm/aos_gpu_service.py": "9332db586f64316bfeb82e45de09b9a88f9f859f8141cdeee56444720a8ff245",
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "lab/llm/native_runtime.py": "9ae0374c883e9ba518d08449820050354ac7c6618d864a5681374fe467062411",
+    "lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1",
+    "lab/llm/router.py": "0c5caf16c0e395b16a62625fc98d7f78ed35a690d689bb68097bece4d859e874",
+    "lab/referee/__init__.py": "f09a6e041b8ad74485df8868b2dc0a12c9a5999b62d45238caa4845247498a48",
+    "lab/replay.py": "300ac20b98346643a5f33048e659725cdd5d551cdf6133c65c52a79b77a2b676",
+    "lab/reporting.py": "dbf26e4fab99c99ba2385db47a8626e11849dc97b3c20a220633c54f81431a1a",
+    "lab/sandbox/__init__.py": "bd427df6fb5df35ac056fe351025b24ea3a18a2935eb904b48723ecd463cc0f7",
+    "lab/sandbox/candidate_entrypoint.py": "b71bf07c746dd8208835009517ab595f7ae99a0455c0cffe8799cb51e39d213d",
+    "lab/sandbox/docker_runner.py": "2127f6669064e36eb8168531db1384de8f99841d10e9c5600a8da203b64248ca",
+    "lab/sandbox/evaluation.py": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c",
+    "lab/sandbox/sandbox_wrapper.py": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+    "lab/scorer/__init__.py": "0f6e4bbd979497b6e287f4a10c91c66b9c432675c1bdc4d1d36a4462ebd6373b",
+    "lab/scorer/baseline_report.py": "25bc4488b72f892d3cf5654868dd6506d66f5552ae61cc524541f0e542645483",
+    "lab/scorer/care_calibration.py": "3af4d19467be4125b058f05316947bd1de836ef90c838d8f77eac77d4a9f453b",
+    "lab/scorer/care_calibration_supervisor.py": "0b2b48c9f3fabc6a9d9e9fb76b9879f316d8a3cab1d648f60083645a943fd064",
+    "lab/scorer/care_calibration_worker.py": "f2da3f2e4e3eed940620f4ffc2c558796103db9bc46e6752f5df0d4b511a325a",
+    "lab/scorer/care_holdout.py": "fbb458cbfd32318e39046575994c2ecb6c5d477172afe41fbb7529f22198e827",
+    "lab/scorer/holdout.py": "a3b826d919cd5969df4a92038cb45a67cdbc0421208f763e1e9d3c59c6ca06ee",
+    "lab/scorer/holdout_recovery.py": "ac2d11f60372a3db6581adc2b644f7e33eedeecc29196db9eea5d659111f57b1",
+    "lab/scorer/holdout_supervisor.py": "84e99abf17169b1f4ab6a99b7565b6703883772f0ad79f113dd6b5a012a63c42",
+    "lab/scorer/holdout_worker.py": "8d781d49919f1dfc8cd72982e0097e315c65d11df15fcfb9e765c3d5d22693a2",
+    "lab/scorer/jobs.py": "db53b2b11e3a8c8220417bf361289b8f8652fff840213e0c8465d60e46354ad7",
+    "lab/scorer/service.py": "3812f118818abaa45ec148ffd148887a6ba12cf240aaf72735678aeda53c24ab",
+    "lab/scorer/supervisor.py": "8bc15f5bdb88ae12fb5885a1e2ac0b490b2d5e3486534c9b25c948d946af7221",
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/worker.py": "1300bbb013d2fed294864e97160d2c48fa186620e0e705213f61b95d839ed6e7",
+    "lab/suite_limits.py": "7346f938ad21eef8e0eb633335d0618211ae893560d1c11b59c2b4360d1b49c2",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "4cb3b417b008b8406c2c34376f581f6c85c502c8885129bc49e68aeb9acd24ce",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b",
+    "ops/sandbox-image.lock": "cec36c518164090a180ea30b183b9c17ebac313154b0184787626cc3d289b387",
+    "pyproject.toml": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5",
+    "vendor/__init__.py": "c6a56bc9e54e8248bb2f9294d394f7869e1f2959e1e7ebb17054b089da0546aa",
+    "vendor/tsb_ad_eval/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "vendor/tsb_ad_eval/NOTICE.md": "af8de8404b18d0a033fb5f5aeb8cb5148969b47f88ada2674d916324d5baf0fa",
+    "vendor/tsb_ad_eval/__init__.py": "e758702baf9c178c1c15542ce10d160b06c8ed2e0ab631738caa87d5daf4cf08",
+    "vendor/tsb_ad_eval/basic_metrics.py": "1fcddedf5ada1d5221f39ee568c7fddb9e7181bd7e1c19636c2cbecf40c97707",
+    "vendor/tsb_ad_eval/basic_metrics.pyi": "dee1dc8e503b5e815b5161d5c9646931ae61544b42ab2e3a9b6c9c5bf39ef0a1"
+  },
+  "source_still_matches_snapshot": true,
+  "source_worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/integration-033",
+  "sql_fixture_run_ids": [
+    "3fdbf459-6699-4fc9-b3a0-524580c0e95f",
+    "ad9dcc20-b81d-4671-8cb8-197d92f68ec7"
+  ],
+  "sql_instance": [
+    "swapp_lab_baseline_033_432eef866da3",
+    "172.17.0.2",
+    5432,
+    "2026-09-27 05:36:22.959827+00"
+  ],
+  "sql_only_diagnostic": false,
+  "sql_owner_cases": {
+    "all_ids_added_to_cleanup_set": true,
+    "auxiliary_run_ids": [
+      "ad9dcc20-b81d-4671-8cb8-197d92f68ec7",
+      "3fdbf459-6699-4fc9-b3a0-524580c0e95f"
+    ],
+    "baseline_budget_guard_observation": {
+      "acceptance_claim": false,
+      "diagnostic_only": true,
+      "observations": {
+        "integer_zero_control": {
+          "expected": {
+            "message": "baseline task plan is not sealed",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline task plan is not sealed",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_array": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": [],
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_boolean_false": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": false,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_missing": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": "<missing>",
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_nonzero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 1,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_null": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": null,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_numeric_float_zero": {
+          "expected": {
+            "message": "baseline task plan is not sealed",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0.0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline task plan is not sealed",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_object": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": {},
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "model_tokens_string_zero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": "0",
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_array": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": [],
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_boolean_false": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": false,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_missing": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": "<missing>",
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_nonzero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 1,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_null": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": null,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_numeric_float_zero": {
+          "expected": {
+            "message": "baseline task plan is not sealed",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0.0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline task plan is not sealed",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_object": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": {},
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "proposal_count_string_zero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": "0",
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_array": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": [],
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_boolean_false": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": false,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_missing": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": "<missing>",
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_nonzero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 1,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_null": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": null,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_numeric_float_zero": {
+          "expected": {
+            "message": "baseline task plan is not sealed",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0.0,
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline task plan is not sealed",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_object": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": {},
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_model_tokens_string_zero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": "0",
+            "reserved_wall_seconds": 0
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_array": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": []
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_boolean_false": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": false
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_missing": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": "<missing>"
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_nonzero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 1
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_null": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": null
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_numeric_float_zero": {
+          "expected": {
+            "message": "baseline task plan is not sealed",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": 0.0
+          },
+          "observed": {
+            "message": "baseline task plan is not sealed",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_object": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": {}
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        },
+        "reserved_wall_seconds_string_zero": {
+          "expected": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "sqlstate": "P0001"
+          },
+          "fixture_unchanged": true,
+          "input_counters": {
+            "model_tokens": 0,
+            "proposal_count": 0,
+            "reserved_model_tokens": 0,
+            "reserved_wall_seconds": "0"
+          },
+          "observed": {
+            "message": "baseline budget receipt is invalid or unreconciled",
+            "returned_value": null,
+            "sqlstate": "P0001"
+          }
+        }
+      },
+      "run_state": "claimed_unsealed_sql_fixture"
+    },
+    "claims": {
+      "3fdbf459-6699-4fc9-b3a0-524580c0e95f": {
+        "contract_count": 1,
+        "control_count": 1,
+        "deadline_at": "2026-09-27T05:46:26.011894+00:00",
+        "execution_sha256": "54461ad63051e6961892084b802738a3082a425ae64159688184ac537f8c570a",
+        "generation": 1,
+        "generation_count": 1,
+        "immutable_wall_seconds": 600.0,
+        "legacy_owner_count": 1,
+        "started_at": "2026-09-27T05:36:26.011894+00:00",
+        "started_event_count": 1,
+        "state": "running",
+        "worker_invocation_id": "aa1eb06b3f684cb4b36cf396f0eb0a35",
+        "worker_pid": 1168476,
+        "worker_start_ticks": 3513643
+      },
+      "ad9dcc20-b81d-4671-8cb8-197d92f68ec7": {
+        "contract_count": 1,
+        "control_count": 1,
+        "deadline_at": "2026-09-27T05:46:25.993108+00:00",
+        "execution_sha256": "aeadc7a560f5abbbd44ab0fe916615cb3140ce0ef84524e933286c046cd8f263",
+        "generation": 1,
+        "generation_count": 1,
+        "immutable_wall_seconds": 600.0,
+        "legacy_owner_count": 1,
+        "started_at": "2026-09-27T05:36:25.993108+00:00",
+        "started_event_count": 1,
+        "state": "running",
+        "worker_invocation_id": "aa1eb06b3f684cb4b36cf396f0eb0a35",
+        "worker_pid": 1168476,
+        "worker_start_ticks": 3513643
+      }
+    },
+    "cross_target": {
+      "cross_run_direct_update": {
+        "message": "Director owner context is missing or bound to another run",
+        "sqlstate": "P0001"
+      },
+      "cross_run_register": {
+        "message": "run lifecycle lock target differs from captured owner",
+        "sqlstate": "P0001"
+      },
+      "run_b_experiment_id": "sql-proof-82a2079d9ce647c8a98c3967fc12d1bb",
+      "valid_run_b_direct_update": true,
+      "valid_run_b_register": true
+    },
+    "identity_assertions_run_a": {
+      "director_malformed_context": {
+        "message": "Director owner context is malformed",
+        "sqlstate": "P0001"
+      },
+      "director_missing_context": {
+        "message": "Director owner context is missing or bound to another run",
+        "sqlstate": "P0001"
+      },
+      "director_null_generation": {
+        "message": "Director generation identity is malformed",
+        "sqlstate": "P0001"
+      },
+      "director_valid_context": "",
+      "director_valid_pair": "",
+      "director_wrong_execution": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "director_wrong_generation": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "director_wrong_invocation": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "scorer_null_generation": {
+        "message": "Scorer execution identity is malformed",
+        "sqlstate": "P0001"
+      },
+      "scorer_valid_pair": {
+        "admitted_generation": 1,
+        "execution_sha256": "aeadc7a560f5abbbd44ab0fe916615cb3140ce0ef84524e933286c046cd8f263",
+        "run_id": "ad9dcc20-b81d-4671-8cb8-197d92f68ec7"
+      },
+      "scorer_wrong_execution": {
+        "message": "Scorer execution owner is stale or inactive",
+        "sqlstate": "P0001"
+      },
+      "scorer_wrong_generation": {
+        "message": "Scorer execution owner is stale or inactive",
+        "sqlstate": "P0001"
+      }
+    },
+    "kind": "sql_fixture_not_dispatcher_ownership_proof",
+    "process_identity": {
+      "worker_boot_id": "24ce6302-3913-4b99-9aea-3a5de341dfd1",
+      "worker_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-review-baseline-ownership-033-r6.service",
+      "worker_invocation_id": "aa1eb06b3f684cb4b36cf396f0eb0a35",
+      "worker_pid": 1168476,
+      "worker_start_ticks": 3513643,
+      "worker_unit": "swapp-review-baseline-ownership-033-r6.service"
+    },
+    "runs_dispatched": 0,
+    "task_scores_inserted": 0,
+    "wall_tamper": {
+      "message": "run is not eligible for an initial Director claim",
+      "sqlstate": "P0001"
+    }
+  },
+  "sql_owner_cases_sha256": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2",
+  "verification_binding": {
+    "gate_sha256": "0416061d207b5787c394baa1bd71e086749a147f5c864d8bf1363321a39be665",
+    "image_parity_sha256": "b12433f07b9f26a7f5d0c85b19139716f9bf43b2c4c2baa6ad14ffd01a3743ae",
+    "sandbox_image": "sha256:359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73",
+    "verified_runtime_input_count": 119
+  }
+}

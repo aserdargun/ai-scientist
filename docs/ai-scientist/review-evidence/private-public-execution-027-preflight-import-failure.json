@@ -1,0 +1,9 @@
+{
+  "schema": "private-preflight-attempt.v1",
+  "actual_exit_code": 1,
+  "tool_chunk_id": "17ddae",
+  "reason": "Root preparation driver imported provider_config_sha256 from fake_llm instead of local_llm; product source not changed.",
+  "original_driver_sha256": "56fbe68f84e0d50424719ca2d03f703c488d40b98a5641e8b2635eb265aaeb10",
+  "corrected_driver_sha256": "b8354b51d5a81d9a5060c71a256cedf8926939aa5dbdeb153cd35ee65eb4a80e",
+  "model_started": false
+}

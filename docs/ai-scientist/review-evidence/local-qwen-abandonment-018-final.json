@@ -1,0 +1,245 @@
+{
+  "schema": "local-qwen-abandonment-review.v1",
+  "scope": "Check malformed-episode continuation and crash recovery with actual PG journals.\n\nModel/tokenizer, calibration and suite identity are fixtures. Production provider,\nproposal budget reconciliation, Director loop/state recovery and PostgreSQL run\nevents/blob storage execute. No Docker, Scorer, GPU or public-data acceptance.\n",
+  "checked_at": "2026-09-25T03:09:52.385576+00:00",
+  "source_sha256": {
+    "lab/director/local_llm.py": "eb6b9213934f52f83e2ec238c8775c0fe14a6a117efc7243743f974aebbfeea5",
+    "lab/director/runner.py": "0da114055c82af8bccca840ef24f2bb42d8b6ff8cd8f58319bcb3e25b8a4215a",
+    "lab/director/loop.py": "bfd46cd187be35daa809d8472e66482d84ba0af2e1a8fce2375e1892442818ae",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "782bbe3c9f80a1ea31147a31b2069760791db4a1606b2b920055cda33a8df3e0",
+    "docs/ai-scientist/review-evidence/review_local_qwen_abandonment.py": "21da1c11aa1b72e1d5c82868b6a11b0201b4caa0c5b756cd8bf49512f36a6e38",
+    "tests/test_local_qwen_provider.py": "fd82bc953672a1595d44f2cd7d00557748b6da5a3484c105634b036a7fe72998",
+    "docs/ai-scientist/review-evidence/review_local_qwen_attempt_recovery.py": "aabc05d71a61bb1c523dd92cd982eeae503cd3262de096d4a8ff284a268b2d4c"
+  },
+  "checks": {
+    "normal_next_ordinal_before_restart": true,
+    "normal_continued_to_second_ordinal": true,
+    "normal_no_duplicate_model_call": true,
+    "normal_abandoned_episode_counted_once": true,
+    "normal_usage_charged_once": true,
+    "normal_champion_unchanged": true,
+    "normal_typed_reason_retained": true,
+    "normal_no_valid_proposal_checkpoint": true,
+    "normal_no_fabricated_experiment": true,
+    "after_budget_receipt_fault_reached": true,
+    "after_budget_receipt_one_primary_one_repair_before_loss": true,
+    "after_budget_receipt_continued_to_second_ordinal": true,
+    "after_budget_receipt_no_duplicate_model_call": true,
+    "after_budget_receipt_abandoned_episode_counted_once": true,
+    "after_budget_receipt_usage_charged_once": true,
+    "after_budget_receipt_champion_unchanged": true,
+    "after_budget_receipt_typed_reason_retained": true,
+    "after_budget_receipt_no_valid_proposal_checkpoint": true,
+    "after_budget_receipt_no_fabricated_experiment": true,
+    "after_abandonment_receipt_fault_reached": true,
+    "after_abandonment_receipt_one_primary_one_repair_before_loss": true,
+    "after_abandonment_receipt_continued_to_second_ordinal": true,
+    "after_abandonment_receipt_no_duplicate_model_call": true,
+    "after_abandonment_receipt_abandoned_episode_counted_once": true,
+    "after_abandonment_receipt_usage_charged_once": true,
+    "after_abandonment_receipt_champion_unchanged": true,
+    "after_abandonment_receipt_typed_reason_retained": true,
+    "after_abandonment_receipt_no_valid_proposal_checkpoint": true,
+    "after_abandonment_receipt_no_fabricated_experiment": true,
+    "sources_unchanged": true
+  },
+  "scenarios": [
+    {
+      "scenario": "normal",
+      "run_id": "ffd6ba0d-21ad-4948-8e4b-a3cd6f97d6f4",
+      "state": {
+        "schema_version": "director-loop-state.v1",
+        "run_id": "ffd6ba0d-21ad-4948-8e4b-a3cd6f97d6f4",
+        "suite_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "suite_id": "synthetic.fixture",
+        "suite_version": 1,
+        "calibration_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "harness_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "image_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "proposal_limit": 2,
+        "completed_proposals": 1,
+        "next_ordinal": 2,
+        "champion_experiment_id": "exp_eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "champion_source_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_tree_sha256": "ffffffffffffffffffffffffffffffffffffffff",
+        "champion_source_blob_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_seed0_by_task": {
+          "fixture": 0.5
+        },
+        "champion_seed1_by_task": {
+          "fixture": 0.5
+        },
+        "champion_suite_seed_scores": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "champion_noise_sd": 0.0,
+        "best_suite": 0.5,
+        "consecutive_non_keep": 1,
+        "explore_proposals": 0,
+        "explore_family": null,
+        "consecutive_candidate_crashes": 0,
+        "discard_streak": 0,
+        "previous_move_type": "hparam",
+        "recent_feedback": [
+          "experiment=1; verdict=ABANDONED; reason=tool_parse"
+        ],
+        "budget": {
+          "proposal_count": 1,
+          "wall_seconds": 0.036922977000358514,
+          "model_tokens": 300,
+          "reserved_wall_seconds": 0.0,
+          "reserved_model_tokens": 0,
+          "elapsed_wall_seconds": 0.08002640599443112,
+          "reservations": []
+        }
+      },
+      "budget": {
+        "proposal_count": 1,
+        "wall_seconds": 0.036922977000358514,
+        "model_tokens": 300,
+        "reserved_wall_seconds": 0.0,
+        "reserved_model_tokens": 0,
+        "elapsed_wall_seconds": 0.09285738300241064,
+        "reservations": []
+      }
+    },
+    {
+      "scenario": "after_budget_receipt",
+      "run_id": "6fd369ad-7d03-4c9d-9c98-d4c26825ae26",
+      "state": {
+        "schema_version": "director-loop-state.v1",
+        "run_id": "6fd369ad-7d03-4c9d-9c98-d4c26825ae26",
+        "suite_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "suite_id": "synthetic.fixture",
+        "suite_version": 1,
+        "calibration_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "harness_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "image_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "proposal_limit": 2,
+        "completed_proposals": 1,
+        "next_ordinal": 2,
+        "champion_experiment_id": "exp_eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "champion_source_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_tree_sha256": "ffffffffffffffffffffffffffffffffffffffff",
+        "champion_source_blob_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_seed0_by_task": {
+          "fixture": 0.5
+        },
+        "champion_seed1_by_task": {
+          "fixture": 0.5
+        },
+        "champion_suite_seed_scores": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "champion_noise_sd": 0.0,
+        "best_suite": 0.5,
+        "consecutive_non_keep": 1,
+        "explore_proposals": 0,
+        "explore_family": null,
+        "consecutive_candidate_crashes": 0,
+        "discard_streak": 0,
+        "previous_move_type": "hparam",
+        "recent_feedback": [
+          "experiment=1; verdict=ABANDONED; reason=tool_parse"
+        ],
+        "budget": {
+          "proposal_count": 1,
+          "wall_seconds": 0.03488418000051752,
+          "model_tokens": 300,
+          "reserved_wall_seconds": 0.0,
+          "reserved_model_tokens": 0,
+          "elapsed_wall_seconds": 0.06249924200528767,
+          "reservations": []
+        }
+      },
+      "budget": {
+        "proposal_count": 1,
+        "wall_seconds": 0.03488418000051752,
+        "model_tokens": 300,
+        "reserved_wall_seconds": 0.0,
+        "reserved_model_tokens": 0,
+        "elapsed_wall_seconds": 0.07586485501087736,
+        "reservations": []
+      }
+    },
+    {
+      "scenario": "after_abandonment_receipt",
+      "run_id": "4ee31e80-1613-4d95-bf9f-7cc42ea8e2b5",
+      "state": {
+        "schema_version": "director-loop-state.v1",
+        "run_id": "4ee31e80-1613-4d95-bf9f-7cc42ea8e2b5",
+        "suite_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "suite_id": "synthetic.fixture",
+        "suite_version": 1,
+        "calibration_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "harness_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "image_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "proposal_limit": 2,
+        "completed_proposals": 1,
+        "next_ordinal": 2,
+        "champion_experiment_id": "exp_eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "champion_source_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_tree_sha256": "ffffffffffffffffffffffffffffffffffffffff",
+        "champion_source_blob_sha256": "e6f6693bd098960d08655c9f382f9d38e151a6314bf90b514f632f2a89b5573d",
+        "champion_seed0_by_task": {
+          "fixture": 0.5
+        },
+        "champion_seed1_by_task": {
+          "fixture": 0.5
+        },
+        "champion_suite_seed_scores": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "champion_noise_sd": 0.0,
+        "best_suite": 0.5,
+        "consecutive_non_keep": 1,
+        "explore_proposals": 0,
+        "explore_family": null,
+        "consecutive_candidate_crashes": 0,
+        "discard_streak": 0,
+        "previous_move_type": "hparam",
+        "recent_feedback": [
+          "experiment=1; verdict=ABANDONED; reason=tool_parse"
+        ],
+        "budget": {
+          "proposal_count": 1,
+          "wall_seconds": 0.034409195999614894,
+          "model_tokens": 300,
+          "reserved_wall_seconds": 0.0,
+          "reserved_model_tokens": 0,
+          "elapsed_wall_seconds": 0.05458292900584638,
+          "reservations": []
+        }
+      },
+      "budget": {
+        "proposal_count": 1,
+        "wall_seconds": 0.034409195999614894,
+        "model_tokens": 300,
+        "reserved_wall_seconds": 0.0,
+        "reserved_model_tokens": 0,
+        "elapsed_wall_seconds": 0.06759483300265856,
+        "reservations": []
+      }
+    }
+  ],
+  "source_after_sha256": {
+    "lab/director/local_llm.py": "eb6b9213934f52f83e2ec238c8775c0fe14a6a117efc7243743f974aebbfeea5",
+    "lab/director/runner.py": "0da114055c82af8bccca840ef24f2bb42d8b6ff8cd8f58319bcb3e25b8a4215a",
+    "lab/director/loop.py": "bfd46cd187be35daa809d8472e66482d84ba0af2e1a8fce2375e1892442818ae",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/fake_llm.py": "782bbe3c9f80a1ea31147a31b2069760791db4a1606b2b920055cda33a8df3e0",
+    "docs/ai-scientist/review-evidence/review_local_qwen_abandonment.py": "21da1c11aa1b72e1d5c82868b6a11b0201b4caa0c5b756cd8bf49512f36a6e38",
+    "tests/test_local_qwen_provider.py": "fd82bc953672a1595d44f2cd7d00557748b6da5a3484c105634b036a7fe72998",
+    "docs/ai-scientist/review-evidence/review_local_qwen_attempt_recovery.py": "aabc05d71a61bb1c523dd92cd982eeae503cd3262de096d4a8ff284a268b2d4c"
+  },
+  "overall_exit_code": 0
+}

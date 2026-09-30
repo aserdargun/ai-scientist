@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-09-24T19:47:35.784322+00:00",
+  "scope": "Isolated AOS prototype, real SQLite migrations and coordinator, fake controller and transport with deliberately reordered valid responses. No live AOS, actual Lab server/research, model or GPU execution.",
+  "source_sha256": {
+    "src/aos/lab_external.py": "8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb",
+    "tests/test_lab_external_jobs.py": "762197b3cc70405ebed5987eb8d5f931d8391e2a3c7803fb111d20a5fdd67034"
+  },
+  "observations": {
+    "recovered_terminal_ack": {
+      "public_state": "completed",
+      "report_sha256": "bfae6645598250a282366eb137c5e9f1b3d3341d98d41d20218b72fd49facbc8",
+      "report_calls": 1,
+      "verification_count": 1,
+      "passed": true
+    },
+    "late_running_response": {
+      "verified_state_before_late_response": "completed",
+      "returned_state_after_late_response": "completed",
+      "persisted_state": "completed",
+      "persisted_report_sha256": "0d882d93772a5cea8808753e2ddf89acbab41bd77fcf297815fcbf1fb5451ca3",
+      "aos_run_status": "succeeded",
+      "passed": true
+    }
+  },
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "1a89d548737a1be446fe164485bc5c7225eea430a98b174c542cc55cd8597bd1"
+}

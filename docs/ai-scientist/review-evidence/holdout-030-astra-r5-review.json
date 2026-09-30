@@ -1,0 +1,18 @@
+{
+  "schema": "holdout-030-astra-r5-review.v1",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_approval": "No remaining blocker found in focused review; source integration approved.",
+  "loop_sha256": "b8b3903f3f18b0113aa409c8c6c2bc6666324d51ebd561b95d74dc01fb705d88",
+  "fix": "Mandatory payload.run_id is restricted to the new unavailable-intent format; legacy budget checkpoint schemas remain accepted.",
+  "migration_sha256": {
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896"
+  },
+  "scope": "Source approval only. Actual wrapper restart proof, final combined gate, process death/drain, scoring, 10 KEEP and canary remain separate requirements."
+}

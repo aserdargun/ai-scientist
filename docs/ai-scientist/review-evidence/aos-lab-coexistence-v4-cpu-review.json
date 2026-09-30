@@ -1,0 +1,45 @@
+{
+  "schema": "aos-coexistence-v4-cpu-review.v1",
+  "created_at": "2026-09-26T21:17:50.422565+00:00",
+  "scope": "CPU contract tests with mocked launch/API/systemd; no AOS/GPU/model/DB execution",
+  "commands": [
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "docs/ai-scientist/review-evidence/test_aos_lab_coexistence_v4_contract.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.05200970899932145,
+      "stdout": "",
+      "stderr": "test_cleanup_failure_overrides_success_and_rejects_result (__main__.CleanupTests.test_cleanup_failure_overrides_success_and_rejects_result) ... ok\ntest_execute_marks_startup_failure_failed_after_draining_owned_generation (__main__.CleanupTests.test_execute_marks_startup_failure_failed_after_draining_owned_generation) ... ok\ntest_pass_requires_both_owned_generations_to_be_drained (__main__.CleanupTests.test_pass_requires_both_owned_generations_to_be_drained) ... ok\ntest_foreground_admission_requires_calibration_and_live_model_attempt (__main__.ProgressGateTests.test_foreground_admission_requires_calibration_and_live_model_attempt) ... ok\ntest_lab_must_remain_running_across_measured_overlap_interval (__main__.ProgressGateTests.test_lab_must_remain_running_across_measured_overlap_interval) ... ok\ntest_human_owned_typed_start_is_explicitly_not_m0_aos_5_proof (__main__.StartScopeTests.test_human_owned_typed_start_is_explicitly_not_m0_aos_5_proof) ... ok\ntest_systemd_run_timeout_captures_and_drains_created_aos_generation (__main__.StartScopeTests.test_systemd_run_timeout_captures_and_drains_created_aos_generation) ... ok\ntest_child_generation_change_is_not_a_completion_receipt (__main__.TicketTransitionTests.test_child_generation_change_is_not_a_completion_receipt) ... ok\ntest_historical_done_ticket_does_not_count_as_a_transition (__main__.TicketTransitionTests.test_historical_done_ticket_does_not_count_as_a_transition) ... ok\ntest_only_observed_live_to_done_transition_inside_same_run_counts (__main__.TicketTransitionTests.test_only_observed_live_to_done_transition_inside_same_run_counts) ... ok\ntest_rejects_boot_or_run_spanning_observations (__main__.TicketTransitionTests.test_rejects_boot_or_run_spanning_observations) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.003s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/ruff",
+        "check",
+        "docs/ai-scientist/review-evidence/review_aos_lab_coexistence_v4.py",
+        "docs/ai-scientist/review-evidence/test_aos_lab_coexistence_v4_contract.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.0034313460000703344,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_aos_lab_coexistence_v4.py": "a3e9d06e2bd3934779135c94ad510397a31f83c1a6ba414f5ddef4dac3d37da2",
+    "docs/ai-scientist/review-evidence/test_aos_lab_coexistence_v4_contract.py": "3f72d1dec2a70bcfb3155687b403c2d93f803d484d762ec194a2ef335a7a38ec"
+  },
+  "source_unchanged": true,
+  "exit_code": 0,
+  "m0_aos_5_proven": false,
+  "m0_aos_7_proven": false,
+  "limits": {
+    "memory_max_bytes": 1073741824,
+    "memory_swap_max_bytes": 0,
+    "cpu_quota_percent": 50,
+    "tasks_max": 64
+  },
+  "prior_worker_attempt": "Worker reported one failing mocked-clock test then fixed it; raw root run below is the frozen-source verification."
+}

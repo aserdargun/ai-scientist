@@ -1,0 +1,1988 @@
+{
+  "source_manifest_sha256": "481a37fa41223f10eaae8368480cf4a45c83682743b2863099f99f51f495a3a4",
+  "dataset_id": "TSB-AD-M-GECCO",
+  "split_id": "curated-prefix-window-embargo.v2",
+  "session_id": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d:TSB-AD-M/173_GECCO_id_1_Sensor_tr_16165_1st_16265.csv",
+  "selected_period": "train",
+  "provenance": {
+    "access_terms": "Source license applies; this installation is noncommercial research only. Original source clock/timestamp limitations remain disclosed in task metadata.",
+    "attribution": "Moritz et al., GECCO Industrial Challenge 2018 Dataset, Zenodo 3884398",
+    "dataset_id": "TSB-AD-M-GECCO",
+    "license_id": "CC-BY-4.0",
+    "session_id": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d:TSB-AD-M/173_GECCO_id_1_Sensor_tr_16165_1st_16265.csv",
+    "source_manifest_sha256": "2f33311efeecd90097f5b87e4b11d46c3f6423f3d547390246052bbeb13b88b7",
+    "source_revision": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d",
+    "split_id": "curated-prefix-window-embargo.v2",
+    "usage_profile": "noncommercial_research"
+  },
+  "scope": "All selected training rows/sensors. Manifest has no original timestamp column; no UTC values invented. Time-based trend/ACF unavailable with reason.",
+  "summary": {
+    "schema_version": "descriptive-statistics.v1",
+    "rows": 16165,
+    "sensors": [
+      {
+        "name": "Tp",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 336,
+        "statistics": {
+          "minimum": {
+            "value": 6.5,
+            "reason": null
+          },
+          "maximum": {
+            "value": 7.1,
+            "reason": null
+          },
+          "mean": {
+            "value": 6.7060253634395295,
+            "reason": null
+          },
+          "median": {
+            "value": 6.7,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.09999999999999964,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.20000000000000018,
+            "reason": null
+          },
+          "p01": {
+            "value": 6.5,
+            "reason": null
+          },
+          "p05": {
+            "value": 6.5,
+            "reason": null
+          },
+          "p25": {
+            "value": 6.6,
+            "reason": null
+          },
+          "p75": {
+            "value": 6.8,
+            "reason": null
+          },
+          "p95": {
+            "value": 6.9,
+            "reason": null
+          },
+          "p99": {
+            "value": 7.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.1305559679872837,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.017044860777096642,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.22316605171506348,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -0.4341644109494056,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          2222,
+          0,
+          3148,
+          0,
+          5035,
+          0,
+          3626,
+          0,
+          1488,
+          0,
+          620,
+          26
+        ],
+        "histogram_edges": [
+          6.5,
+          6.55,
+          6.6,
+          6.65,
+          6.7,
+          6.75,
+          6.8,
+          6.85,
+          6.8999999999999995,
+          6.949999999999999,
+          7.0,
+          7.05,
+          7.1
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Cl",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 132,
+        "statistics": {
+          "minimum": {
+            "value": 0.14,
+            "reason": null
+          },
+          "maximum": {
+            "value": 0.19,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.16559047324466436,
+            "reason": null
+          },
+          "median": {
+            "value": 0.17,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.009999999999999981,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.010000000000000009,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.15,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.16,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.16,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.17,
+            "reason": null
+          },
+          "p95": {
+            "value": 0.18,
+            "reason": null
+          },
+          "p99": {
+            "value": 0.18,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 88.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.006832970878176226,
+            "reason": null
+          },
+          "variance": {
+            "value": 4.668949102200439e-05,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.3210598549843054,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 0.2581820507937782,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          7,
+          0,
+          484,
+          0,
+          7334,
+          0,
+          0,
+          7226,
+          0,
+          1033,
+          0,
+          81
+        ],
+        "histogram_edges": [
+          0.14,
+          0.14416666666666667,
+          0.14833333333333334,
+          0.15250000000000002,
+          0.15666666666666668,
+          0.16083333333333333,
+          0.165,
+          0.1691666666666667,
+          0.17333333333333334,
+          0.1775,
+          0.18166666666666667,
+          0.18583333333333335,
+          0.19
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "pH",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 55,
+        "statistics": {
+          "minimum": {
+            "value": 8.12,
+            "reason": null
+          },
+          "maximum": {
+            "value": 8.52,
+            "reason": null
+          },
+          "mean": {
+            "value": 8.353137024435508,
+            "reason": null
+          },
+          "median": {
+            "value": 8.36,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.02000000000000135,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.05000000000000071,
+            "reason": null
+          },
+          "p01": {
+            "value": 8.24,
+            "reason": null
+          },
+          "p05": {
+            "value": 8.29,
+            "reason": null
+          },
+          "p25": {
+            "value": 8.33,
+            "reason": null
+          },
+          "p75": {
+            "value": 8.38,
+            "reason": null
+          },
+          "p95": {
+            "value": 8.41,
+            "reason": null
+          },
+          "p99": {
+            "value": 8.45,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 348.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.04022411655666136,
+            "reason": null
+          },
+          "variance": {
+            "value": 0.0016179795527638788,
+            "reason": null
+          },
+          "skewness": {
+            "value": -0.5243513538879297,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 2.812776072560925,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          33,
+          24,
+          16,
+          203,
+          478,
+          1452,
+          5815,
+          5128,
+          2305,
+          639,
+          33,
+          39
+        ],
+        "histogram_edges": [
+          8.12,
+          8.153333333333332,
+          8.186666666666666,
+          8.219999999999999,
+          8.253333333333332,
+          8.286666666666665,
+          8.32,
+          8.353333333333333,
+          8.386666666666667,
+          8.42,
+          8.453333333333333,
+          8.486666666666666,
+          8.52
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Redox",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 132,
+        "statistics": {
+          "minimum": {
+            "value": 744.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 757.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 750.6648314259202,
+            "reason": null
+          },
+          "median": {
+            "value": 751.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 1.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 2.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 747.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 748.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 749.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 751.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 754.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 755.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 405.0,
+            "reason": null
+          },
+          "std": {
+            "value": 1.8032741377943173,
+            "reason": null
+          },
+          "variance": {
+            "value": 3.251797616037839,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.1619474580143433,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 0.38091427505448516,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          35,
+          40,
+          614,
+          945,
+          2837,
+          1994,
+          5660,
+          1737,
+          1210,
+          723,
+          246,
+          124
+        ],
+        "histogram_edges": [
+          744.0,
+          745.0833333333334,
+          746.1666666666666,
+          747.25,
+          748.3333333333334,
+          749.4166666666666,
+          750.5,
+          751.5833333333334,
+          752.6666666666666,
+          753.75,
+          754.8333333333334,
+          755.9166666666666,
+          757.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Leit",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 398,
+        "statistics": {
+          "minimum": {
+            "value": 201.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 218.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 211.3320136096505,
+            "reason": null
+          },
+          "median": {
+            "value": 211.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 1.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 4.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 203.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 207.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 210.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 214.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 214.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 217.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 207.0,
+            "reason": null
+          },
+          "std": {
+            "value": 2.452784565657209,
+            "reason": null
+          },
+          "variance": {
+            "value": 6.016152125526223,
+            "reason": null
+          },
+          "skewness": {
+            "value": -0.46470665796420063,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 1.8065833314038513,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          56,
+          151,
+          112,
+          2,
+          1262,
+          197,
+          2407,
+          7230,
+          100,
+          4188,
+          0,
+          460
+        ],
+        "histogram_edges": [
+          201.0,
+          202.41666666666666,
+          203.83333333333334,
+          205.25,
+          206.66666666666666,
+          208.08333333333334,
+          209.5,
+          210.91666666666666,
+          212.33333333333334,
+          213.75,
+          215.16666666666666,
+          216.58333333333334,
+          218.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Trueb",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 80,
+        "statistics": {
+          "minimum": {
+            "value": 0.005,
+            "reason": null
+          },
+          "maximum": {
+            "value": 0.125,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.018541725951128987,
+            "reason": null
+          },
+          "median": {
+            "value": 0.019,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0020000000000000018,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.005000000000000001,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.009640000000000015,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.012,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.016,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.021,
+            "reason": null
+          },
+          "p95": {
+            "value": 0.024,
+            "reason": null
+          },
+          "p99": {
+            "value": 0.027,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 112.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.004510094165778008,
+            "reason": null
+          },
+          "variance": {
+            "value": 2.0340949384184825e-05,
+            "reason": null
+          },
+          "skewness": {
+            "value": 4.766608960465533,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 79.89248146192561,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          2348,
+          13032,
+          731,
+          23,
+          6,
+          10,
+          5,
+          2,
+          2,
+          4,
+          0,
+          2
+        ],
+        "histogram_edges": [
+          0.005,
+          0.015,
+          0.025,
+          0.034999999999999996,
+          0.045,
+          0.055,
+          0.065,
+          0.07500000000000001,
+          0.085,
+          0.095,
+          0.10500000000000001,
+          0.115,
+          0.125
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Cl_2",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 50,
+        "statistics": {
+          "minimum": {
+            "value": 0.095,
+            "reason": null
+          },
+          "maximum": {
+            "value": 0.132,
+            "reason": null
+          },
+          "mean": {
+            "value": 0.10926817197649244,
+            "reason": null
+          },
+          "median": {
+            "value": 0.109,
+            "reason": null
+          },
+          "mad": {
+            "value": 0.0030000000000000027,
+            "reason": null
+          },
+          "iqr": {
+            "value": 0.0050000000000000044,
+            "reason": null
+          },
+          "p01": {
+            "value": 0.099,
+            "reason": null
+          },
+          "p05": {
+            "value": 0.102,
+            "reason": null
+          },
+          "p25": {
+            "value": 0.106,
+            "reason": null
+          },
+          "p75": {
+            "value": 0.111,
+            "reason": null
+          },
+          "p95": {
+            "value": 0.118,
+            "reason": null
+          },
+          "p99": {
+            "value": 0.124,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 512.0,
+            "reason": null
+          },
+          "std": {
+            "value": 0.004806388005262735,
+            "reason": null
+          },
+          "variance": {
+            "value": 2.3101365657133486e-05,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.5993984094910977,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": 1.2529011315639775,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          83,
+          480,
+          1977,
+          3165,
+          4137,
+          3456,
+          1715,
+          723,
+          210,
+          147,
+          29,
+          43
+        ],
+        "histogram_edges": [
+          0.095,
+          0.09808333333333333,
+          0.10116666666666667,
+          0.10425000000000001,
+          0.10733333333333334,
+          0.11041666666666666,
+          0.1135,
+          0.11658333333333334,
+          0.11966666666666667,
+          0.12275,
+          0.12583333333333335,
+          0.12891666666666668,
+          0.132
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Fm",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 3,
+        "statistics": {
+          "minimum": {
+            "value": 1140.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1995.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 1520.4713888029694,
+            "reason": null
+          },
+          "median": {
+            "value": 1506.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 118.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 237.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 1221.64,
+            "reason": null
+          },
+          "p05": {
+            "value": 1258.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 1400.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 1637.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1805.7999999999993,
+            "reason": null
+          },
+          "p99": {
+            "value": 1891.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 2.0,
+            "reason": null
+          },
+          "std": {
+            "value": 164.2120651085921,
+            "reason": null
+          },
+          "variance": {
+            "value": 26965.602327228495,
+            "reason": null
+          },
+          "skewness": {
+            "value": 0.23381640920198182,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -0.6532835000168693,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          83,
+          1128,
+          1468,
+          2355,
+          2703,
+          2153,
+          2299,
+          1542,
+          1296,
+          791,
+          295,
+          52
+        ],
+        "histogram_edges": [
+          1140.0,
+          1211.25,
+          1282.5,
+          1353.75,
+          1425.0,
+          1496.25,
+          1567.5,
+          1638.75,
+          1710.0,
+          1781.25,
+          1852.5,
+          1923.75,
+          1995.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      },
+      {
+        "name": "Fm_2",
+        "rows": 16165,
+        "valid": 16165,
+        "missing": 0,
+        "nonfinite": 0,
+        "missing_fraction": 0.0,
+        "longest_constant_run": 5,
+        "statistics": {
+          "minimum": {
+            "value": 673.0,
+            "reason": null
+          },
+          "maximum": {
+            "value": 1043.0,
+            "reason": null
+          },
+          "mean": {
+            "value": 874.7886173832354,
+            "reason": null
+          },
+          "median": {
+            "value": 880.0,
+            "reason": null
+          },
+          "mad": {
+            "value": 59.0,
+            "reason": null
+          },
+          "iqr": {
+            "value": 125.0,
+            "reason": null
+          },
+          "p01": {
+            "value": 689.0,
+            "reason": null
+          },
+          "p05": {
+            "value": 701.0,
+            "reason": null
+          },
+          "p25": {
+            "value": 822.0,
+            "reason": null
+          },
+          "p75": {
+            "value": 947.0,
+            "reason": null
+          },
+          "p95": {
+            "value": 1018.0,
+            "reason": null
+          },
+          "p99": {
+            "value": 1032.0,
+            "reason": null
+          },
+          "tukey_outlier_count": {
+            "value": 0.0,
+            "reason": null
+          },
+          "std": {
+            "value": 85.68712643578658,
+            "reason": null
+          },
+          "variance": {
+            "value": 7342.283636822476,
+            "reason": null
+          },
+          "skewness": {
+            "value": -0.23639839366406565,
+            "reason": null
+          },
+          "excess_kurtosis": {
+            "value": -0.4452656684861216,
+            "reason": null
+          },
+          "trend_per_second": {
+            "value": null,
+            "reason": "insufficient_timed_observations"
+          }
+        },
+        "histogram_counts": [
+          911,
+          354,
+          492,
+          220,
+          2923,
+          2506,
+          1430,
+          2533,
+          1010,
+          2147,
+          811,
+          828
+        ],
+        "histogram_edges": [
+          673.0,
+          703.8333333333334,
+          734.6666666666666,
+          765.5,
+          796.3333333333334,
+          827.1666666666666,
+          858.0,
+          888.8333333333333,
+          919.6666666666666,
+          950.5,
+          981.3333333333333,
+          1012.1666666666666,
+          1043.0
+        ],
+        "histogram_reason": null,
+        "autocorrelation": {
+          "1": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "2": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "3": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "4": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "5": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "6": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "7": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "8": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "9": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "10": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "11": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          },
+          "12": {
+            "value": null,
+            "reason": "timestamp_not_selected"
+          }
+        }
+      }
+    ],
+    "pairs": [
+      {
+        "first": "Tp",
+        "second": "Cl",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.015637528448923438,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0028167848132780436,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "pH",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.11709395375089755,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.13960252631027514,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Redox",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.4993206347697563,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.5041093807201757,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Leit",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.00018582896144639038,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.007275022944601511,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Trueb",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.34767246554165115,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.4409689418267493,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.15511065701020468,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.10943861925480328,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.04287435903485192,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.046293104298325734,
+          "reason": null
+        }
+      },
+      {
+        "first": "Tp",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.3088624058973453,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2975660840862998,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "pH",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.08103378821868623,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.0623338372260149,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Redox",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.10899920607938399,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.09577033379746865,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Leit",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.05486810017246195,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.0637515483599951,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Trueb",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.07304140475369236,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.08435466414147899,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.24808073059422192,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2461514380662606,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.005802010989589102,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.02535348467119321,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.007601170299257734,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.001582433425389392,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Redox",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.47967077690726806,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.4825394382012188,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Leit",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.12588969802427274,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.14152022983711016,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Trueb",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.025241938226182033,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.024283101970821404,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.41122453963370653,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.38052734166040836,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.011735799680639397,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.012604713326114235,
+          "reason": null
+        }
+      },
+      {
+        "first": "pH",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.04211083753887227,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.07340935667426982,
+          "reason": null
+        }
+      },
+      {
+        "first": "Redox",
+        "second": "Leit",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.10164690032625619,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.1339338888885012,
+          "reason": null
+        }
+      },
+      {
+        "first": "Redox",
+        "second": "Trueb",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.32306267414074896,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.4562415909955459,
+          "reason": null
+        }
+      },
+      {
+        "first": "Redox",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.6365791923188725,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.5802487639692204,
+          "reason": null
+        }
+      },
+      {
+        "first": "Redox",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.28161129167526905,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.28238951273636664,
+          "reason": null
+        }
+      },
+      {
+        "first": "Redox",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.4101040886934922,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.45387767080776686,
+          "reason": null
+        }
+      },
+      {
+        "first": "Leit",
+        "second": "Trueb",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.08457852096617852,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.017571000282990395,
+          "reason": null
+        }
+      },
+      {
+        "first": "Leit",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.21566814111305568,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.20858166194949296,
+          "reason": null
+        }
+      },
+      {
+        "first": "Leit",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.1560026667548448,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.07693477306256695,
+          "reason": null
+        }
+      },
+      {
+        "first": "Leit",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.14774413568086822,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.09377666749306372,
+          "reason": null
+        }
+      },
+      {
+        "first": "Trueb",
+        "second": "Cl_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.004128578881129633,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.011162173158960976,
+          "reason": null
+        }
+      },
+      {
+        "first": "Trueb",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": -0.04336647680220239,
+          "reason": null
+        },
+        "spearman": {
+          "value": -0.031073472592303218,
+          "reason": null
+        }
+      },
+      {
+        "first": "Trueb",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.4207746210120602,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.5843123628083932,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl_2",
+        "second": "Fm",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.24973662878782876,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.20605287989566567,
+          "reason": null
+        }
+      },
+      {
+        "first": "Cl_2",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.012407458543495965,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.029784897811027226,
+          "reason": null
+        }
+      },
+      {
+        "first": "Fm",
+        "second": "Fm_2",
+        "valid_pairs": 16165,
+        "pearson": {
+          "value": 0.18543658848237116,
+          "reason": null
+        },
+        "spearman": {
+          "value": 0.2198157154901878,
+          "reason": null
+        }
+      }
+    ],
+    "timeline": {
+      "column": null,
+      "valid": 0,
+      "missing": 0,
+      "invalid": 0,
+      "naive": 0,
+      "duplicate_count": 0,
+      "backward_steps": 0,
+      "regular": false,
+      "interval_seconds": {
+        "value": null,
+        "reason": "insufficient_positive_intervals"
+      },
+      "maximum_gap_seconds": {
+        "value": null,
+        "reason": "insufficient_positive_intervals"
+      },
+      "gap_count": 0,
+      "reason": "timestamp_not_selected"
+    },
+    "notes": [
+      "Descriptive only; no model fitting, interpolation or missing-value imputation.",
+      "Sample standard deviation/variance use ddof=1; kurtosis is unbiased excess kurtosis.",
+      "Correlations use pairwise finite values and do not establish causality.",
+      "Autocorrelation requires an ordered regular UTC grid; missing sensor pairs stay missing."
+    ]
+  }
+}

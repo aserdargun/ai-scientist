@@ -1,0 +1,54 @@
+{
+  "schema": "native-gpu-host-preflight-review.v1",
+  "source_sha256": "3e54cc2bb09434c3f2f0473bb0fa6bad5e8fdeb11e8fd2aa4cb841639bcc6944",
+  "observation": {
+    "observed_at": "2026-09-24T21:47:06.684218+00:00",
+    "monotonic_seconds": 61046.894414007,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 23468007424,
+    "swap_used_bytes": 2391764992,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82615033856,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 62.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 43.0,
+      "power_w": 13.88
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      }
+    ]
+  },
+  "checks": {
+    "disk_reserve_20_gib": true,
+    "single_model_cap_10_gib_plus_host_reserve_6_gib": true,
+    "no_non_display_gpu_consumer": true,
+    "gpu_temperature_below_83_c": true
+  },
+  "scope": "Point-in-time prerequisite for one native model with a proposed 10 GiB cgroup RAM cap; no model started.",
+  "limitations": [
+    "This snapshot is not an atomic GPU reservation or protection against a later consumer.",
+    "The runtime must enforce its own process/cgroup, CPU, RAM, disk, activation and inference bounds.",
+    "The 10 GiB cap is a proposed first experiment limit, not measured model host memory use.",
+    "Combined AOS/Lab/sandbox/Scorer/API/DB capacity and runtime behavior are not tested here."
+  ],
+  "passed": true
+}

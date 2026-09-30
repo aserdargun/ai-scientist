@@ -1,0 +1,158 @@
+{
+  "schema": "aos-gpu-model-metadata-review.v1",
+  "checked_at": "2026-09-25T01:11:52.214175+00:00",
+  "scope": "Read-only public model metadata and source SHA comparison; no model launch, artifact-byte verification, copied model cache, AOS edit or coexistence acceptance.",
+  "models": {
+    "decider": {
+      "manifest_sha256": "7bd3135317a406a9be02e05dbc220935ada7c4f1db2ab1cf878114005bef0624",
+      "public_metadata": {
+        "checkpoint_revision": "7789eb65d5cf519737608e218fa88819bddea0af",
+        "tokenizer_revision": "7789eb65d5cf519737608e218fa88819bddea0af",
+        "code_revision": "75b00fade2dd7f353106e3f4683e56fa2481ec28"
+      },
+      "model_files": [
+        {
+          "filename": "chat_template.jinja",
+          "expected_sha256_from_manifest": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+          "exists": true,
+          "bytes_from_stat": 7755,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "config.json",
+          "expected_sha256_from_manifest": "6cb8daca9fb653c61485ff7452fc068bacd5c27cbee659ecd24b47186b0d1b52",
+          "exists": true,
+          "bytes_from_stat": 1790,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "decider_config.json",
+          "expected_sha256_from_manifest": "f2e21a1b25ff8c5c6bdf4c6d337e9c8e41385333ae66ca67aa1a7908d8f393d3",
+          "exists": true,
+          "bytes_from_stat": 285,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "generation_config.json",
+          "expected_sha256_from_manifest": "62153eb6c69f2e1f426beaa8002b7186437e949c7588167085df14e10e9c0a73",
+          "exists": true,
+          "bytes_from_stat": 116,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "model.safetensors",
+          "expected_sha256_from_manifest": "49ca58057fd0cc34a70ffdbf5b8353659868a551fdcf1d3c395693041db1d588",
+          "exists": true,
+          "bytes_from_stat": 3763692048,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "tokenizer.json",
+          "expected_sha256_from_manifest": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523",
+          "exists": true,
+          "bytes_from_stat": 19989325,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "tokenizer_config.json",
+          "expected_sha256_from_manifest": "171ecbe7ddae98d11840698f7df2b8d5b4722139db0f0620d3bbf429bd656250",
+          "exists": true,
+          "bytes_from_stat": 1127,
+          "artifact_bytes_verified": false
+        }
+      ],
+      "runtime_file_count": 0,
+      "model_cache_copied": false,
+      "runtime_started": false
+    },
+    "bonsai": {
+      "manifest_sha256": "3773305ac067780330124b658081835e88895dec3c7068dfa12e771d7a4351b1",
+      "public_metadata": {
+        "source": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+        "checkpoint_revision": "6ed5e12bf84b7a63069882c91dd9e9218647d17b",
+        "tokenizer_revision": "6ed5e12bf84b7a63069882c91dd9e9218647d17b",
+        "projector_revision": "6ed5e12bf84b7a63069882c91dd9e9218647d17b",
+        "code_revision": "9a9394a895b96003ca842a6041cb28ac49a108f7",
+        "release_tag": "prism-b10709-9a9394a",
+        "weights_file": "Ternary-Bonsai-2-27B-PQ2_0.gguf",
+        "projector_file": "Ternary-Bonsai-2-27B-mmproj-Q8_0.gguf",
+        "context_tokens": 16384,
+        "gpu_layers": 99,
+        "max_output_tokens": 512,
+        "parallel": 1,
+        "temperature": 0.0,
+        "reasoning_budget": 0
+      },
+      "model_files": [
+        {
+          "filename": "Ternary-Bonsai-2-27B-PQ2_0.gguf",
+          "expected_sha256_from_manifest": "3907dc1658db1f78a9826bf8d5bcb8dc65db0d466388937af57f2294fae62ec1",
+          "exists": true,
+          "bytes_from_stat": 7206168928,
+          "artifact_bytes_verified": false
+        },
+        {
+          "filename": "Ternary-Bonsai-2-27B-mmproj-Q8_0.gguf",
+          "expected_sha256_from_manifest": "6807ede61d570bb86ba34b756a0fa109edc33668604de867c6ea6d8f1d631903",
+          "exists": true,
+          "bytes_from_stat": 629246976,
+          "artifact_bytes_verified": false
+        }
+      ],
+      "runtime_file_count": 84,
+      "model_cache_copied": false,
+      "runtime_started": false
+    }
+  },
+  "integration_sources": {
+    "src/aos/decision.py": {
+      "live_sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "isolated_sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "same_bytes": true
+    },
+    "src/aos/reusable_decider.py": {
+      "live_sha256": "f08ec66d8b16f4f7e73c0486db71696d886a0126b26dcbcf2286766a5f46269a",
+      "isolated_sha256": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+      "same_bytes": false
+    },
+    "src/aos/supervisor.py": {
+      "live_sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "isolated_sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "same_bytes": true
+    },
+    "src/aos/vision.py": {
+      "live_sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "isolated_sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "same_bytes": true
+    },
+    "services/decider/worker.py": {
+      "live_sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "isolated_sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "same_bytes": true
+    },
+    "scripts/serve_desktop.py": {
+      "live_sha256": "1fa4eb407d8193fd14df787ac531aad01691079eb41cf1531cbc854c85973d03",
+      "isolated_sha256": "d86098bb18cab221f52cc4542883c187990be7edfc49e0230695e5957bb94e24",
+      "same_bytes": false
+    }
+  },
+  "source_sha256": {
+    "/home/cachyos/aos/models/decider-manifest.json": "7bd3135317a406a9be02e05dbc220935ada7c4f1db2ab1cf878114005bef0624",
+    "/home/cachyos/aos/models/bonsai-manifest.json": "3773305ac067780330124b658081835e88895dec3c7068dfa12e771d7a4351b1",
+    "/home/cachyos/aos/src/aos/decision.py": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+    "/home/cachyos/aos/src/aos/reusable_decider.py": "f08ec66d8b16f4f7e73c0486db71696d886a0126b26dcbcf2286766a5f46269a",
+    "/home/cachyos/aos/src/aos/supervisor.py": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+    "/home/cachyos/aos/src/aos/vision.py": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+    "/home/cachyos/aos/services/decider/worker.py": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+    "/home/cachyos/aos/scripts/serve_desktop.py": "1fa4eb407d8193fd14df787ac531aad01691079eb41cf1531cbc854c85973d03",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/src/aos/decision.py": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/src/aos/reusable_decider.py": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/src/aos/supervisor.py": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/src/aos/vision.py": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/services/decider/worker.py": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-gpu/scripts/serve_desktop.py": "d86098bb18cab221f52cc4542883c187990be7edfc49e0230695e5957bb94e24"
+  },
+  "script_sha256": "eb4c22dcbc77f81146a8cf62217219feaff33e6f3dcfd505bbc34b7b46231a69",
+  "sources_unchanged_during_read": true,
+  "metadata_read_completed": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "documentation-preparation-quality-outcome.v1",
+  "session_id": 2036,
+  "actual_exit_code": 0,
+  "elapsed_seconds": 45.25579034400289,
+  "runtime_source_commit": "390a6c25e94e5da339457dd17e88749ed07c7795",
+  "runtime_source_unchanged": true,
+  "archive": "docs/ai-scientist/evidence/quality-gate-parallel-integration-027-preparation-bound.json",
+  "archive_sha256": "c909d3022ec6a6e65f3bdcf38155c8fabe8b2db5abc980a6e50f70b840e25aed",
+  "command_record": "parallel-integration-027-preparation-gate-bound-command.json",
+  "command_record_sha256": "77a6df20c7735bd2b74a4f83245cc3f3541cba92472425ec90da53ab3ea13602",
+  "quality_commands_passed": 7,
+  "scope": "Documentation and private runtime preparation commit; no new GPU/model/coexistence acceptance."
+}

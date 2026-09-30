@@ -1,0 +1,32 @@
+{
+  "schema": "research046-pg-execution-binding.v1",
+  "attempt": "r2",
+  "session_id": 4373,
+  "launch_chunk": "f04189",
+  "final_chunk": "36d857",
+  "process_exit_code": 1,
+  "service_runtime_seconds": 64.184,
+  "memory_peak_mb": 209.6,
+  "swap_bytes": 0,
+  "evidence": "research-integration-046-pg-4f20c701b0b2.json",
+  "evidence_sha256": "d4015e1042eaf41de7032e56a7b43c2951d4299d3b9bfae58cf1d446edcc16dd",
+  "migration_head": "0030_director_resume",
+  "test_passed_count": 27,
+  "source_matches_snapshot": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "failures": [
+    {
+      "failure": {
+        "line": 117,
+        "message": "sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) record \"new\" has no field \"generation\"\nCONTEXT:  SQL expression \"TG_TABLE_NAME='director_owner_generations' AND TG_OP='INSERT' AND\n      NEW.generation=request.expected_generation+1 AND NEW.restart_id=request.restart_id AND\n      NEW.execution_sha256=request.execution_sha256\"\nPL/pgSQL function guard_immutable_director_execution_row() line 16 at IF\nSQL statement \"UPDATE lab.director_execution_control SET current_generation=a.expected_generation+1,\n   updated_at=clock_timestamp() WHERE run_id=target AND current_generation=a.expected_generation\"\nPL/pgSQL function claim_resumed_director(uuid,text,text) line 57 at SQL statement\n[SQL: SELECT lab.claim_resumed_director(%(id)s,%(proof)s,%(process)s)]\n[parameters: {'id': UUID('ead91e2c-dc25-4523-b772-56c27ccbb787'), 'proof': '673f1885f80666a168f664fda3447d0dbef19456c7152c758004eef5b7d7fc4b', 'process': '{\"payload_sha256\":\"4a61f5efa10c41d6611d5bbe3a2451b4c88087dcfdd7b6989b4bb8d5e081ddd1\",\"worker_boot_id\":\"24ce6302-3913-4b99-9aea-3a5de341dfd1\",\"worker_ ... (227 characters truncated) ... er_start_ticks\":4728780,\"worker_unit\":\"swapp-ai-scientist-director-resume-82b8c13e460440519c0149aab993a2e8-ead91e2cdc254523b77256c27ccbb787.service\"}'}]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+        "path": "/home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/psycopg/cursor.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_expired_historical_positive_suffix_then_seal[run_end-none]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    }
+  ],
+  "scope": "Real isolated PostgreSQL roles and synthetic ledger; resume reached the ownership trigger but failed, no restart acceptance. Main services and DB untouched."
+}

@@ -1,0 +1,1993 @@
+--- a/src/aos/computer.py
++++ b/src/aos/computer.py
+@@ -131,6 +131,24 @@
+ class ToolRegistry:
+     @staticmethod
+     def validate(action: Action) -> None:
++        if action.tool.startswith("lab."):
++            patterns = {
++                "job_id": r"^external-job-[0-9a-f]{32}$",
++                "suite": r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
++                "request_sha256": r"^[a-f0-9]{64}$",
++                "lab_run_id": r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
++            }
++            expected = {"job_id", "suite", "request_sha256"} if action.tool == "lab.start" else {"job_id", "lab_run_id"}
++            if (
++                set(action.arguments) != expected
++                or any(
++                    not isinstance(action.arguments[key], str)
++                    or re.fullmatch(patterns[key], action.arguments[key]) is None
++                    for key in expected
++                )
++            ):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control arguments must be typed identifiers and hashes")
++            return
+         if action.tool.startswith("vision."):
+             if action.tool == "vision.verify":
+                 if action.arguments:
+@@ -405,6 +423,27 @@
+                         ('browser.form.observe', 'read_receipt')}
+                     or action.arguments['plan_sha256'] != state.authorized_content):
+                 raise AOSFault(ErrorCode.UNSAFE_ACTION, 'Action exceeds exact HTTPS form authority')
++        elif state.task_kind == "ai_scientist":
++            if action.tool not in {"lab.start", "lab.status", "lab.stop", "lab.report"}:
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab research permits only typed Lab control actions")
++            if state.authorized_path != "aos://lab/external-job":
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action has no detached-job authority")
++            if action.selected_option != action.tool.removeprefix("lab."):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action decision does not match its tool")
++            try:
++                lab_identity = json.loads(state.authorized_content)
++            except (TypeError, json.JSONDecodeError):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab state has no canonical job identity") from None
++            if not isinstance(lab_identity, dict) or action.arguments.get("job_id") != lab_identity.get("job_id"):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action targets another external job")
++            if action.tool == "lab.start":
++                if (
++                    action.arguments.get("suite") != lab_identity.get("suite")
++                    or action.arguments.get("request_sha256") != lab_identity.get("request_sha256")
++                ):
++                    raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab start exceeds the registered request authority")
++            elif action.arguments.get("lab_run_id") != lab_identity.get("lab_run_id"):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action targets another Lab run")
+         elif (action.tool.startswith(("browser.", "vision.")) or action.arguments["path"] != state.authorized_path
+               or (action.tool == "filesystem.write" and action.arguments["content"] != state.authorized_content)):
+             raise AOSFault(ErrorCode.UNSAFE_ACTION, "Action exceeds hello task authority")
+--- a/src/aos/contracts.py
++++ b/src/aos/contracts.py
+@@ -113,7 +113,7 @@
+ 
+ 
+ class State(TypedModel):
+-    task_kind: Literal["hello", "browser_form", "vision_canvas", "browser_local_navigation", "browser_staging_workflow", "browser_remote_entry", "browser_remote_routes", "browser_remote_static_assets", "browser_remote_form"] = "hello"
++    task_kind: Literal["hello", "browser_form", "vision_canvas", "browser_local_navigation", "browser_staging_workflow", "browser_remote_entry", "browser_remote_routes", "browser_remote_static_assets", "browser_remote_form", "ai_scientist"] = "hello"
+     capture_id: str | None = None
+     scene_sha256: str | None = None
+     task_id: str
+@@ -175,7 +175,7 @@
+     runtime_id: str
+     state_version: int
+     owner_lease_id: str
+-    tool: Literal["filesystem.write", "filesystem.read", "process.sha256", "browser.fill", "browser.submit", "browser.verify", "browser.fixture.open", "browser.fixture.follow", "browser.fixture.snapshot", "browser.staging.open", "browser.staging.follow", "browser.staging.fill", "browser.staging.submit", "browser.staging.snapshot", "browser.remote.open", "browser.remote.route", "browser.remote.observe", "browser.static.open", "browser.static.observe", "browser.form.open", "browser.form.fill", "browser.form.submit", "browser.form.receipt", "browser.form.observe", "browser.form.state_before", "browser.form.state_after", "vision.click", "vision.verify"]
++    tool: Literal["filesystem.write", "filesystem.read", "process.sha256", "browser.fill", "browser.submit", "browser.verify", "browser.fixture.open", "browser.fixture.follow", "browser.fixture.snapshot", "browser.staging.open", "browser.staging.follow", "browser.staging.fill", "browser.staging.submit", "browser.staging.snapshot", "browser.remote.open", "browser.remote.route", "browser.remote.observe", "browser.static.open", "browser.static.observe", "browser.form.open", "browser.form.fill", "browser.form.submit", "browser.form.receipt", "browser.form.observe", "browser.form.state_before", "browser.form.state_after", "vision.click", "vision.verify", "lab.start", "lab.status", "lab.stop", "lab.report"]
+     arguments: dict[str, str | int]
+     expected_effect: str
+     verification: str = "independent_read_equals"
+--- a/src/aos/dataset_audit.py
++++ b/src/aos/dataset_audit.py
+@@ -33,9 +33,10 @@
+ 
+ 
+ @lru_cache
+-def expected_schema(version: int = 17) -> tuple:
++def expected_schema(version: int = 19) -> tuple:
+     migrations = sorted((REPO_ROOT / "database/migrations").glob("*.sql"))
+-    if version not in {7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17} or [int(path.name.split("_", 1)[0]) for path in migrations] != list(range(1, 18)):
++    supported = {7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
++    if version not in supported or [int(path.name.split("_", 1)[0]) for path in migrations] != list(range(1, 20)):
+         raise ValueError("unsupported_migration_set")
+     migrations = migrations[:version]
+     with closing(sqlite3.connect(":memory:")) as reference:
+@@ -59,7 +60,12 @@
+         source.execute("PRAGMA trusted_schema=OFF")
+         source.set_progress_handler(lambda: int(time.monotonic() > deadline), 1000)
+         source.execute("BEGIN")
+-        source.execute("SELECT count(*) FROM sqlite_master").fetchone()
++        try:
++            source.execute("SELECT count(*) FROM sqlite_master").fetchone()
++        except sqlite3.OperationalError as error:
++            if time.monotonic() > deadline and "interrupt" in str(error).lower():
++                raise ValueError("snapshot_resource_limit") from None
++            raise
+         captured_at = now()
+         page_size = source.execute("PRAGMA page_size").fetchone()[0]
+         if page_size * source.execute("PRAGMA page_count").fetchone()[0] > MAX_SNAPSHOT_BYTES:
+@@ -77,7 +83,7 @@
+         snapshot.execute("PRAGMA trusted_schema=OFF")
+         snapshot.set_progress_handler(lambda: int(time.monotonic() > deadline), 1000)
+         signature = schema_signature(snapshot)
+-        expected = next((expected_schema(version) for version in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17) if expected_schema(version)[0] == signature), None)
++        expected = next((expected_schema(version) for version in range(7, 20) if expected_schema(version)[0] == signature), None)
+         if expected is None:
+             raise ValueError("unsupported_database_schema")
+         signature, versions, migrations = expected
+--- a/src/aos/desktop_console.py
++++ b/src/aos/desktop_console.py
+@@ -600,6 +600,15 @@
+         if set(value) != {'command'} or not isinstance(value['command'], str) or value['command'] not in commands:
+             raise HTTPException(400, 'Unknown control')
+         async with control_lock:
++            if lab_external_jobs is not None and value['command'] in {
++                'pause', 'take-control', 'stop', 'restart'
++            }:
++                try:
++                    await lab_external_jobs.stop_for_desktop_takeover(controller.session_id)
++                except AOSFault:
++                    raise
++                except (OSError, RuntimeError, ValueError, TypeError):
++                    raise HTTPException(409, 'Detached Lab jobs could not be safely stopped') from None
+             if value['command'] == 'resume' and scheduler:
+                 if scheduler.busy or scheduler.sequences.reserved:
+                     raise HTTPException(409, 'Task is already running')
+@@ -1222,6 +1231,28 @@
+         except (OSError, RuntimeError, ValueError, TypeError):
+             raise HTTPException(502, 'Lab stop request is unavailable') from None
+ 
++    @app.post('/api/lab/jobs/{job_id}/recover')
++    async def recover_lab_job(job_id: str, request: Request):
++        if lab_external_jobs is None:
++            raise HTTPException(503, 'Lab research integration is not configured')
++        from .lab_external import AOSLabRecoverRequest
++
++        value = await body(request, reject_duplicates=True)
++        try:
++            if request.query_params:
++                raise ValueError
++            admission = AOSLabRecoverRequest.model_validate(value, strict=True)
++        except ValueError:
++            raise HTTPException(400, 'Lab recovery requires an explicit current AOS lease') from None
++        try:
++            return lab_external_jobs.recover(
++                controller.session_id, job_id, admission.lease_id, admission.generation
++            )
++        except AOSFault:
++            raise
++        except (OSError, RuntimeError, ValueError, TypeError):
++            raise HTTPException(409, 'Lab recovery could not safely rebind this job') from None
++
+     @app.get('/api/lab/jobs/{job_id}/report')
+     async def lab_job_report(job_id: str, request: Request):
+         if lab_external_jobs is None:
+--- a/src/aos/lab_external.py
++++ b/src/aos/lab_external.py
+@@ -13,6 +13,7 @@
+ import json
+ import os
+ import stat
++import time
+ from pathlib import Path
+ from typing import Literal
+ from urllib.parse import urlsplit
+@@ -20,7 +21,21 @@
+ 
+ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+ 
+-from .contracts import AOSFault, ErrorCode, canonical, identifier, now
++from .computer import SafetyPolicy, ToolRegistry
++from .contracts import (
++    AOSFault,
++    Action,
++    ErrorCode,
++    Option,
++    Phase,
++    Prediction,
++    State,
++    canonical,
++    digest,
++    identifier,
++    now,
++)
++from .decision import FixtureDecisionEngine, decision_request
+ 
+ 
+ class LabBudget(BaseModel):
+@@ -63,6 +78,13 @@
+     generation: StrictInt = Field(ge=0)
+ 
+ 
++class AOSLabRecoverRequest(BaseModel):
++    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
++
++    lease_id: StrictStr = Field(min_length=1, max_length=128)
++    generation: StrictInt = Field(ge=0)
++
++
+ class LabRunHandle(BaseModel):
+     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+ 
+@@ -90,6 +112,23 @@
+     report_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
+     report: dict[str, object]
+     verified_at: StrictStr
++
++
++class DetachedLabControlPolicy:
++    """Deterministic host policy for status/stop/report; never invokes a model."""
++
++    identity = {
++        "deployment_id": "lab-control-policy-v1",
++        "kind": "host_policy",
++        "real_model": False,
++    }
++
++    async def decide(self, state: State, options: list[Option]) -> Prediction:
++        del state
++        return Prediction(
++            selected_option=options[0].id,
++            probabilities={option.id: 1.0 if index == 0 else 0.0 for index, option in enumerate(options)},
++        )
+ 
+ 
+ class LabApiClient:
+@@ -234,12 +273,263 @@
+     """SQLite ledger + Lab transport with lease-bound, short control calls."""
+ 
+     def __init__(
+-        self, connection, controller, client: LabApiClient, *, allowed_suites: frozenset[str]
++        self,
++        connection,
++        controller,
++        client: LabApiClient,
++        *,
++        allowed_suites: frozenset[str],
++        decision_engine=None,
+     ):
+         self.connection = connection
+         self.controller = controller
+         self.client = client
+         self.allowed_suites = allowed_suites
++        self.decision_engine = decision_engine or FixtureDecisionEngine()
++
++    def _validate_lab_action(self, action: Action, state: State) -> None:
++        ToolRegistry.validate(action)
++        SafetyPolicy.check(action, state, state.runtime_id)
++
++    async def _decision_material(self, action: Action, state: State) -> dict[str, object]:
++        engine = self.decision_engine if action.tool == "lab.start" else DetachedLabControlPolicy()
++        options = [
++            Option(id=action.selected_option, label=f"Perform bounded Lab {action.selected_option}"),
++            Option(id="deny", label="Do not perform the Lab action"),
++        ]
++        prediction = await engine.decide(state, options)
++        prediction.validate_options(options)
++        request = {**decision_request(state, options), "engine": engine.identity}
++        response = {
++            "engine": engine.identity,
++            "prediction": prediction.model_dump(mode="json"),
++        }
++        return {
++            "call_id": identifier("call"),
++            "deployment_id": str(engine.identity["deployment_id"]),
++            "request_json": canonical(request),
++            "response_json": canonical(response),
++            "options_json": canonical([option.model_dump(mode="json") for option in options]),
++            "probabilities_json": canonical(prediction.probabilities),
++            "selected_option": prediction.selected_option,
++            "confidence": max(prediction.probabilities.values()),
++        }
++
++    async def _record_control_action(
++        self,
++        row,
++        operation: Literal["status", "stop", "report"],
++        *,
++        idempotency_key: str | None = None,
++        require_human_lease: bool = False,
++    ) -> str:
++        desktop = self.controller.state()
++        binding = self.connection.execute(
++            "SELECT session_id,lease_id,generation FROM aos_external_job_bindings WHERE job_id=?",
++            (row["job_id"],),
++        ).fetchone()
++        if binding is None or binding["session_id"] != self.controller.session_id:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab job is not bound to this AOS session")
++        if require_human_lease and (
++            desktop.get("owner") != "HUMAN"
++            or desktop.get("status") != "running"
++            or binding["lease_id"] != desktop.get("lease_id")
++            or binding["generation"] != desktop.get("generation")
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab stop requires the current bound human lease")
++        if not row["lab_run_id"]:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control requires an acknowledged run handle")
++        stored = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        if stored is None:
++            raise AOSFault(ErrorCode.INVALID_OUTPUT, "Lab AOS trajectory has no typed runtime state")
++        state = State.model_validate_json(stored["state_json"])
++        if (
++            state.task_kind != "ai_scientist"
++            or state.owner != "AGENT"
++            or (require_human_lease and state.runtime_id != desktop.get("runtime_id"))
++            or state.phase != Phase.EXECUTE
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action is not bound to the current typed AOS state")
++        request_key = idempotency_key or f"lab-{operation}:{row['job_id']}:{uuid4().hex}"
++        previous = self.connection.execute(
++            "SELECT a.action_id,a.status,a.arguments_json,e.envelope_json "
++            "FROM actions a JOIN action_envelopes e USING(action_id) "
++            "WHERE a.run_id=? AND a.idempotency_key=?",
++            (state.run_id, request_key),
++        ).fetchone()
++        if previous is not None:
++            envelope = Action.model_validate_json(previous["envelope_json"], strict=True)
++            if (
++                envelope.task_id != state.task_id
++                or envelope.run_id != state.run_id
++                or envelope.step_id != state.step_id
++                or envelope.tool != f"lab.{operation}"
++                or envelope.arguments != {"job_id": row["job_id"], "lab_run_id": row["lab_run_id"]}
++                or previous["arguments_json"]
++                != canonical({"job_id": row["job_id"], "lab_run_id": row["lab_run_id"]})
++            ):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control idempotency key conflicts")
++            if previous["status"] == "ok":
++                return previous["action_id"]
++            if previous["status"] != "intent":
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control action is not retryable")
++            return previous["action_id"]
++        action_id = identifier("action")
++        action = Action(
++            task_id=state.task_id,
++            run_id=state.run_id,
++            step_id=state.step_id,
++            action_id=action_id,
++            runtime_id=state.runtime_id,
++            state_version=state.state_version,
++            owner_lease_id=state.owner_lease_id,
++            tool=f"lab.{operation}",
++            arguments={"job_id": row["job_id"], "lab_run_id": row["lab_run_id"]},
++            expected_effect=f"Perform one bounded Lab {operation} control operation.",
++            deadline=time.time() + 5.0,
++            idempotency_key=request_key,
++            selected_option=operation,
++        )
++        self._validate_lab_action(action, state)
++        decision = await self._decision_material(action, state)
++        if decision["selected_option"] != operation:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Fixture decision denied the Lab control action")
++        timestamp = now()
++        decision_id = identifier("decision")
++        snapshot_id = identifier("snapshot")
++        with self.connection:
++            self.connection.execute(
++                "INSERT INTO model_calls(call_id,run_id,step_id,deployment_id,role,request_json,"
++                "response_json,status,created_at) VALUES(?,?,?,?, 'system1', ?,?,'ok',?)",
++                (
++                    decision["call_id"],
++                    state.run_id,
++                    state.step_id,
++                    decision["deployment_id"],
++                    decision["request_json"],
++                    decision["response_json"],
++                    timestamp,
++                ),
++            )
++            self.connection.execute(
++                "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,content_sha256,created_at) "
++                "VALUES(?,?,?,?,?,?,?)",
++                (
++                    snapshot_id,
++                    state.run_id,
++                    state.step_id,
++                    state.state_version,
++                    state.model_dump_json(),
++                    digest(state.model_dump(mode="json")),
++                    timestamp,
++                ),
++            )
++            self.connection.execute(
++                "INSERT INTO decisions(decision_id,run_id,step_id,snapshot_id,call_id,question,"
++                "options_json,probabilities_json,selected_option,confidence,policy_result,created_at) "
++                "VALUES(?,?,?,?,?,?,?,?,?,?,'allow',?)",
++                (
++                    decision_id,
++                    state.run_id,
++                    state.step_id,
++                    snapshot_id,
++                    decision["call_id"],
++                    f"Authorize the bounded detached Lab {operation} action.",
++                    decision["options_json"],
++                    decision["probabilities_json"],
++                    decision["selected_option"],
++                    decision["confidence"],
++                    timestamp,
++                ),
++            )
++            self.connection.execute(
++                "INSERT INTO actions(action_id,run_id,step_id,decision_id,idempotency_key,tool,"
++                "arguments_json,status,created_at) VALUES(?,?,?,?,?,?,?,'intent',?)",
++                (
++                    action.action_id,
++                    action.run_id,
++                    action.step_id,
++                    decision_id,
++                    action.idempotency_key,
++                    action.tool,
++                    canonical(action.arguments),
++                    timestamp,
++                ),
++            )
++            self.connection.execute(
++                "INSERT INTO action_envelopes(action_id,envelope_json,payload_sha256) VALUES(?,?,?)",
++                (
++                    action.action_id,
++                    canonical(action.model_dump(mode="json")),
++                    digest(action.model_dump(mode="json")),
++                ),
++            )
++        return action_id
++
++    def _finish_control_action(self, action_id: str, result: dict[str, object]) -> None:
++        with self.connection:
++            changed = self.connection.execute(
++                "UPDATE actions SET status='ok',result_json=?,completed_at=? "
++                "WHERE action_id=? AND status='intent'",
++                (canonical(result), now(), action_id),
++            ).rowcount
++            if changed != 1:
++                existing = self.connection.execute(
++                    "SELECT status,result_json FROM actions WHERE action_id=?", (action_id,)
++                ).fetchone()
++                if existing is None or existing["status"] != "ok":
++                    raise AOSFault(ErrorCode.UI_CHANGED, "Lab action intent changed before completion")
++                prior = json.loads(existing["result_json"])
++                if prior.get("lab_run_id") != result.get("lab_run_id"):
++                    raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab action replay changed run identity")
++
++    def _bind_lab_handle(self, row, lab_run_id: UUID) -> None:
++        stored = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        if stored is None:
++            raise AOSFault(ErrorCode.INVALID_OUTPUT, "Lab AOS trajectory has no typed runtime state")
++        state = State.model_validate_json(stored["state_json"])
++        try:
++            identity = json.loads(state.authorized_content)
++        except (TypeError, json.JSONDecodeError):
++            raise AOSFault(ErrorCode.INVALID_OUTPUT, "Lab AOS state identity is malformed") from None
++        if not isinstance(identity, dict) or identity.get("job_id") != row["job_id"]:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab handle cannot bind to another AOS job")
++        existing = identity.get("lab_run_id")
++        if existing not in {None, str(lab_run_id)}:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "AOS Lab run identity cannot be changed")
++        identity["lab_run_id"] = str(lab_run_id)
++        updated = state.model_copy(
++            update={"authorized_content": canonical(identity), "state_version": state.state_version + 1}
++        )
++        timestamp = now()
++        with self.connection:
++            changed = self.connection.execute(
++                "UPDATE runtime_states SET state_version=?,state_json=? WHERE run_id=? AND state_version=?",
++                (updated.state_version, updated.model_dump_json(), updated.run_id, state.state_version),
++            ).rowcount
++            if changed != 1:
++                raise AOSFault(ErrorCode.UI_CHANGED, "Lab state changed before handle binding")
++            self.connection.execute(
++                "UPDATE steps SET state='lab_handle_bound' WHERE step_id=? AND ended_at IS NULL",
++                (updated.step_id,),
++            )
++            self.connection.execute(
++                "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,content_sha256,created_at) "
++                "VALUES(?,?,?,?,?,?,?)",
++                (
++                    identifier("snapshot"),
++                    updated.run_id,
++                    updated.step_id,
++                    updated.state_version,
++                    updated.model_dump_json(),
++                    digest(updated.model_dump(mode="json")),
++                    timestamp,
++                ),
++            )
+ 
+     async def start(self, session_id: str, request: AOSLabStartRequest) -> dict[str, object]:
+         self._check_lease(request.lease_id, request.generation)
+@@ -289,18 +579,69 @@
+             )
+         if existing is None:
+             timestamp = now()
++            desktop = self.controller.state()
++            state = State(
++                task_kind="ai_scientist",
++                task_id=task_id,
++                run_id=run_id,
++                step_id=step_id,
++                runtime_id=desktop["runtime_id"],
++                deployment_id="lab-external-job-v1",
++                state_version=0,
++                phase=Phase.EXECUTE,
++                owner="AGENT",
++                owner_lease_id=identifier("lease"),
++                original_goal="Run an allowlisted detached research job and verify its final report.",
++                normalized_goal="Run the registered Lab suite under the caller's bounded budget.",
++                success_criteria=("A terminal Lab report is retrieved and its digest is verified.",),
++                authorized_path="aos://lab/external-job",
++                authorized_content=canonical(
++                    {
++                        "job_id": job_id,
++                        "suite": request.suite,
++                        "request_sha256": request_sha,
++                        "lab_run_id": None,
++                    }
++                ),
++                observation="Only short Lab control actions are executed in this AOS session.",
++            )
++            start_arguments = {
++                "job_id": job_id,
++                "suite": request.suite,
++                "request_sha256": request_sha,
++            }
++            decision_id = identifier("decision")
++            action = Action(
++                task_id=task_id,
++                run_id=run_id,
++                step_id=step_id,
++                action_id=action_id,
++                runtime_id=state.runtime_id,
++                state_version=state.state_version,
++                owner_lease_id=state.owner_lease_id,
++                tool="lab.start",
++                arguments=start_arguments,
++                expected_effect="Create or recover one queued detached Lab run.",
++                deadline=time.time() + 5.0,
++                idempotency_key=f"lab-start:{request.idempotency_key}",
++                selected_option="start",
++            )
++            self._validate_lab_action(action, state)
++            decision = await self._decision_material(action, state)
++            if decision["selected_option"] != "start":
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Fixture decision denied the Lab start action")
+             with self.connection:
+                 self.connection.execute(
+                     "INSERT INTO tasks(task_id,original_goal,normalized_goal,language,"
+                     "success_criteria_json,"
+                     "workspace_scope_json,created_at) VALUES(?,?,?,?,?,?,?)",
+                     (
+-                        task_id,
+-                        "Run an allowlisted local AI Scientist research job.",
+-                        "Run an allowlisted local AI Scientist research job.",
++                        state.task_id,
++                        state.original_goal,
++                        state.normalized_goal,
+                         "en",
+-                        canonical({"terminal_report": "independently hash-verified"}),
+-                        canonical([]),
++                        canonical(state.success_criteria),
++                        canonical([state.authorized_path]),
+                         timestamp,
+                     ),
+                 )
+@@ -308,10 +649,10 @@
+                     "INSERT INTO runs(run_id,task_id,status,outcome,policy_version,"
+                     "environment_json,"
+                     "deployment_snapshot_json,started_at,ended_at,training_eligible) "
+-                    "VALUES(?,?,'running','unknown','lab-external-v1',?,?,?,NULL,0)",
++                    "VALUES(?,?,'running','unknown','lab-external-job-policy-v1',?,?,?,NULL,0)",
+                     (
+-                        run_id,
+-                        task_id,
++                        state.run_id,
++                        state.task_id,
+                         canonical({"external_job_id": job_id, "suite": request.suite}),
+                         canonical(
+                             {
+@@ -326,19 +667,77 @@
+                 self.connection.execute(
+                     "INSERT INTO steps(step_id,run_id,ordinal,state,started_at) "
+                     "VALUES(?,?,0,'lab_dispatch',?)",
+-                    (step_id, run_id, timestamp),
++                    (state.step_id, state.run_id, timestamp),
++                )
++                snapshot_id = identifier("snapshot")
++                self.connection.execute(
++                    "INSERT INTO runtime_states(run_id,state_version,state_json) VALUES(?,?,?)",
++                    (state.run_id, state.state_version, state.model_dump_json()),
++                )
++                self.connection.execute(
++                    "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,content_sha256,created_at) "
++                    "VALUES(?,?,?,?,?,?,?)",
++                    (
++                        snapshot_id,
++                        state.run_id,
++                        state.step_id,
++                        state.state_version,
++                        state.model_dump_json(),
++                        digest(state.model_dump(mode="json")),
++                        timestamp,
++                    ),
++                )
++                self.connection.execute(
++                    "INSERT INTO model_calls(call_id,run_id,step_id,deployment_id,role,request_json,"
++                    "response_json,status,created_at) VALUES(?,?,?,?, 'system1', ?,?,'ok',?)",
++                    (
++                        decision["call_id"],
++                        state.run_id,
++                        state.step_id,
++                        decision["deployment_id"],
++                        decision["request_json"],
++                        decision["response_json"],
++                        timestamp,
++                    ),
++                )
++                self.connection.execute(
++                    "INSERT INTO decisions(decision_id,run_id,step_id,snapshot_id,call_id,question,"
++                    "options_json,probabilities_json,selected_option,confidence,policy_result,created_at) "
++                    "VALUES(?,?,?,?,?,?,?,?,?,?,'allow',?)",
++                    (
++                        decision_id,
++                        state.run_id,
++                        state.step_id,
++                        snapshot_id,
++                        decision["call_id"],
++                        "Authorize the bounded detached Lab start action.",
++                        decision["options_json"],
++                        decision["probabilities_json"],
++                        decision["selected_option"],
++                        decision["confidence"],
++                        timestamp,
++                    ),
+                 )
+                 self.connection.execute(
+                     "INSERT INTO actions(action_id,run_id,step_id,decision_id,idempotency_key,tool,"
+                     "arguments_json,status,created_at) "
+-                    "VALUES(?,?,?,NULL,?,'lab.start',?,'intent',?)",
++                    "VALUES(?,?,?,?,?,'lab.start',?,'intent',?)",
+                     (
+-                        action_id,
+-                        run_id,
+-                        step_id,
+-                        f"lab-start:{request.idempotency_key}",
+-                        request_json,
++                        action.action_id,
++                        action.run_id,
++                        action.step_id,
++                        decision_id,
++                        action.idempotency_key,
++                        canonical(action.arguments),
+                         timestamp,
++                    ),
++                )
++                self.connection.execute(
++                    "INSERT INTO action_envelopes(action_id,envelope_json,payload_sha256) VALUES(?,?,?)",
++                    (
++                        action.action_id,
++                        canonical(action.model_dump(mode="json")),
++                        digest(action.model_dump(mode="json")),
+                     ),
+                 )
+                 self.connection.execute(
+@@ -364,10 +763,17 @@
+                         timestamp,
+                     ),
+                 )
++                self.connection.execute(
++                    "INSERT INTO aos_external_job_bindings(job_id,session_id,lease_id,generation,updated_at) "
++                    "VALUES(?,?,?,?,?)",
++                    (job_id, session_id, request.lease_id, request.generation, timestamp),
++                )
+                 self._event(job_id, "dispatch_intent", {"request_sha256": request_sha})
+             existing = self.connection.execute(
+                 "SELECT * FROM aos_external_jobs WHERE job_id=?", (job_id,)
+             ).fetchone()
++        elif not existing["lab_run_id"]:
++            self._validate_pending_start(existing, session_id, request, request_sha)
+         if existing["lab_run_id"]:
+             return self._public(existing)
+         # Repeated POST uses the same Lab idempotency key after a lost response.
+@@ -376,6 +782,17 @@
+         handle = await asyncio.to_thread(self.client.start, remote_request)
+         if existing["lab_run_id"] and existing["lab_run_id"] != str(handle.run_id):
+             raise RuntimeError("Lab idempotency response changed run identity")
++        with self.connection:
++            self.connection.execute(
++                "UPDATE aos_external_jobs SET lab_run_id=?,updated_at=? WHERE job_id=? "
++                "AND (lab_run_id IS NULL OR lab_run_id=?)",
++                (str(handle.run_id), now(), existing["job_id"], str(handle.run_id)),
++            )
++        self._bind_lab_handle(existing, handle.run_id)
++        current = self.connection.execute(
++            "SELECT * FROM aos_external_jobs WHERE job_id=?", (existing["job_id"],)
++        ).fetchone()
++        status_action_id = await self._record_control_action(current, "status")
+         # An idempotent POST can be a recovery after a lost response. Its ACK is
+         # only a handle: terminal outcomes must still pass status and report
+         # verification before AOS records success/failure.
+@@ -383,6 +800,9 @@
+         if remote.run_id != handle.run_id:
+             raise RuntimeError("Lab start acknowledgement and status identity differ")
+         await self._apply_observation(existing["job_id"], remote)
++        self._finish_control_action(
++            status_action_id, {"lab_run_id": str(handle.run_id), "state": remote.state}
++        )
+         row = self.connection.execute(
+             "SELECT * FROM aos_external_jobs WHERE job_id=?", (existing["job_id"],)
+         ).fetchone()
+@@ -408,7 +828,65 @@
+         row = self.connection.execute(
+             "SELECT * FROM aos_external_jobs WHERE job_id=?", (existing["job_id"],)
+         ).fetchone()
++        if self._desktop_takeover_stop_pending(existing["job_id"]):
++            await self._perform_takeover_stop(row)
++            row = self.connection.execute(
++                "SELECT * FROM aos_external_jobs WHERE job_id=?", (existing["job_id"],)
++            ).fetchone()
+         return self._public(row)
++
++    def _validate_pending_start(
++        self, row, session_id: str, request: AOSLabStartRequest, request_sha: str
++    ) -> None:
++        """Fence a retry of an unacknowledged POST to its original authority."""
++        desktop = self.controller.state()
++        binding = self.connection.execute(
++            "SELECT session_id,lease_id,generation FROM aos_external_job_bindings WHERE job_id=?",
++            (row["job_id"],),
++        ).fetchone()
++        if (
++            binding is None
++            or binding["session_id"] != session_id
++            or binding["session_id"] != self.controller.session_id
++            or binding["lease_id"] != request.lease_id
++            or binding["generation"] != request.generation
++            or desktop.get("owner") != "HUMAN"
++            or desktop.get("status") != "running"
++            or desktop.get("lease_id") != request.lease_id
++            or desktop.get("generation") != request.generation
++            or row["state"] != "dispatch_pending"
++            or row["request_sha256"] != request_sha
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Pending Lab dispatch lost its original authority")
++        state_row = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        action_row = self.connection.execute(
++            "SELECT a.*,e.envelope_json,e.payload_sha256 FROM actions a "
++            "JOIN action_envelopes e USING(action_id) WHERE a.action_id=?",
++            (row["action_id"],),
++        ).fetchone()
++        if state_row is None or action_row is None or action_row["status"] != "intent":
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Pending Lab dispatch has no durable intent")
++        state = State.model_validate_json(state_row["state_json"], strict=True)
++        action = Action.model_validate_json(action_row["envelope_json"], strict=True)
++        if (
++            state.task_kind != "ai_scientist"
++            or state.phase != Phase.EXECUTE
++            or state.owner != "AGENT"
++            or state.task_id != row["task_id"]
++            or state.run_id != row["run_id"]
++            or action.action_id != row["action_id"]
++            or action.tool != "lab.start"
++            or action.task_id != state.task_id
++            or action.run_id != state.run_id
++            or action.arguments.get("job_id") != row["job_id"]
++            or action.arguments.get("request_sha256") != request_sha
++            or action.selected_option != "start"
++            or action_row["payload_sha256"] != digest(action.model_dump(mode="json"))
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Pending Lab dispatch intent failed verification")
++        self._validate_lab_action(action, state)
+ 
+     async def _apply_observation(self, job_id: str, remote: LabRunStatus):
+         state = (
+@@ -462,7 +940,7 @@
+                 "SELECT * FROM aos_external_jobs WHERE job_id=?", (job_id,)
+             ).fetchone()
+             if report is not None and merged == state:
+-                self._record_verified_terminal(updated, report)
++                await self._record_verified_terminal(updated, report)
+             return updated
+ 
+     @staticmethod
+@@ -484,11 +962,15 @@
+         row = self._owned(session_id, job_id)
+         if not row["lab_run_id"]:
+             return self._public(row)
++        if row["state"] in {"completed", "stopped", "failed"}:
++            return self._public(row)
++        action_id = await self._record_control_action(row, "status")
+         run_id = UUID(row["lab_run_id"])
+         remote = await asyncio.to_thread(self.client.status, run_id)
+         if remote.run_id != run_id:
+             raise RuntimeError("Lab returned another run identity")
+         updated = await self._apply_observation(job_id, remote)
++        self._finish_control_action(action_id, {"lab_run_id": str(run_id), "state": remote.state})
+         return self._public(updated)
+ 
+     async def stop(
+@@ -501,39 +983,322 @@
+                 ErrorCode.UNSAFE_ACTION, "Lab dispatch has no acknowledged run handle yet"
+             )
+         run_id = UUID(row["lab_run_id"])
+-        stop_action_id = identifier("action")
+-        timestamp = now()
+-        with self.connection:
+-            self.connection.execute(
+-                "INSERT OR IGNORE INTO actions(action_id,run_id,step_id,decision_id,"
+-                "idempotency_key,tool,"
+-                "arguments_json,status,created_at) VALUES(?,?,?,NULL,?,'lab.stop',?,'intent',?)",
+-                (
+-                    stop_action_id,
+-                    row["run_id"],
+-                    row["step_id"],
+-                    f"lab-stop:{job_id}",
+-                    canonical({"lab_run_id": str(run_id), "generation": generation}),
+-                    timestamp,
+-                ),
+-            )
++        stop_action_id = await self._record_control_action(
++            row,
++            "stop",
++            idempotency_key=f"lab-stop:{job_id}",
++            require_human_lease=True,
++        )
++        recorded = self.connection.execute(
++            "SELECT status FROM actions WHERE action_id=?", (stop_action_id,)
++        ).fetchone()
++        if recorded is not None and recorded["status"] == "ok":
++            return self._public(row)
+         remote = await asyncio.to_thread(self.client.stop, run_id)
+         if remote.run_id != run_id:
+             raise RuntimeError("Lab stop response belongs to another run")
+         observed = await self._apply_observation(job_id, remote)
++        self._finish_control_action(
++            stop_action_id, {"lab_run_id": str(run_id), "state": observed["state"]}
++        )
++        with self.connection:
++            self._event(job_id, "stop_requested", {"lab_state": observed["state"]})
++        return self._public(observed)
++
++    async def stop_for_desktop_takeover(self, session_id: str) -> None:
++        """Request bounded stop for this session's detached jobs before ownership changes."""
++        rows = self.connection.execute(
++            "SELECT j.* FROM aos_external_jobs j JOIN aos_external_job_bindings b USING(job_id) "
++            "WHERE b.session_id=? AND j.state IN ('dispatch_pending','queued','running','stop_requested') "
++            "ORDER BY j.created_at LIMIT 9",
++            (session_id,),
++        ).fetchall()
++        if len(rows) > 8:
++            with self.connection:
++                self._event(
++                    rows[0]["job_id"],
++                    "dispatch_error",
++                    {"operation": "desktop_takeover_stop", "error_type": "active_job_limit"},
++                )
++        for row in rows:
++            if len(rows) <= 8:
++                with self.connection:
++                    self._event(
++                        row["job_id"],
++                        "stop_requested",
++                        {
++                            "reason": "desktop_takeover",
++                            "phase": "intent",
++                            "lab_run_id": row["lab_run_id"],
++                        },
++                    )
++            if len(rows) > 8:
++                with self.connection:
++                    self._event(
++                        row["job_id"],
++                        "dispatch_error",
++                        {"operation": "desktop_takeover_stop", "error_type": "active_job_limit"},
++                    )
++                self._pause_typed_run(row["run_id"])
++                continue
++            if not row["lab_run_id"]:
++                with self.connection:
++                    self._event(
++                        row["job_id"],
++                        "dispatch_error",
++                        {"operation": "desktop_takeover_stop", "error_type": "missing_lab_handle"},
++                    )
++                self._pause_typed_run(row["run_id"])
++                continue
++            await self._perform_takeover_stop(row)
++            self._pause_typed_run(row["run_id"])
++
++    def _pause_typed_run(self, run_id: str) -> None:
++        stored = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (run_id,)
++        ).fetchone()
++        run = self.connection.execute("SELECT status FROM runs WHERE run_id=?", (run_id,)).fetchone()
++        if stored is None or run is None or run["status"] != "running":
++            return
++        state = State.model_validate_json(stored["state_json"], strict=True)
++        if state.task_kind != "ai_scientist" or state.phase != Phase.EXECUTE or state.owner != "AGENT":
++            return
++        paused = state.model_copy(
++            update={
++                "phase": Phase.PAUSED,
++                "owner": "PAUSED",
++                "owner_lease_id": identifier("revoked"),
++                "state_version": state.state_version + 1,
++            }
++        )
++        timestamp = now()
++        with self.connection:
++            changed_run = self.connection.execute(
++                "UPDATE runs SET status='paused',outcome='unknown' WHERE run_id=? AND status='running'",
++                (run_id,),
++            ).rowcount
++            changed_state = self.connection.execute(
++                "UPDATE runtime_states SET state_version=?,state_json=? WHERE run_id=? AND state_version=?",
++                (paused.state_version, paused.model_dump_json(), run_id, state.state_version),
++            ).rowcount
++            if changed_run != 1 or changed_state != 1:
++                raise AOSFault(ErrorCode.UI_CHANGED, "Lab typed state changed during desktop takeover")
++            self.connection.execute(
++                "UPDATE steps SET state='PAUSED' WHERE step_id=? AND ended_at IS NULL",
++                (paused.step_id,),
++            )
++            self.connection.execute(
++                "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,content_sha256,created_at) "
++                "VALUES(?,?,?,?,?,?,?)",
++                (
++                    identifier("snapshot"),
++                    paused.run_id,
++                    paused.step_id,
++                    paused.state_version,
++                    paused.model_dump_json(),
++                    digest(paused.model_dump(mode="json")),
++                    timestamp,
++                ),
++            )
++
++    def _desktop_takeover_stop_pending(self, job_id: str) -> bool:
++        event = self.connection.execute(
++            "SELECT event_json FROM aos_external_job_events WHERE job_id=? "
++            "AND event_type='stop_requested' ORDER BY rowid DESC LIMIT 1",
++            (job_id,),
++        ).fetchone()
++        if event is None:
++            return False
++        try:
++            payload = json.loads(event["event_json"])
++        except (TypeError, json.JSONDecodeError):
++            return False
++        return payload.get("reason") == "desktop_takeover" and payload.get("phase") != "acknowledged"
++
++    async def _perform_takeover_stop(self, row) -> None:
++        if not row["lab_run_id"] or row["state"] in {"completed", "stopped", "failed"}:
++            return
++        try:
++            action_id = await self._record_control_action(
++                row,
++                "stop",
++                idempotency_key=f"lab-stop:{row['job_id']}",
++            )
++            action = self.connection.execute(
++                "SELECT status FROM actions WHERE action_id=?", (action_id,)
++            ).fetchone()
++            if action is not None and action["status"] == "ok":
++                with self.connection:
++                    self._event(
++                        row["job_id"],
++                        "stop_requested",
++                        {"reason": "desktop_takeover", "phase": "acknowledged", "lab_state": row["state"]},
++                    )
++                return
++            run_id = UUID(row["lab_run_id"])
++            remote = await asyncio.to_thread(self.client.stop, run_id)
++            if remote.run_id != run_id:
++                raise RuntimeError("Lab takeover stop response belongs to another run")
++            observed = await self._apply_observation(row["job_id"], remote)
++            self._finish_control_action(
++                action_id, {"lab_run_id": str(run_id), "state": observed["state"]}
++            )
++            with self.connection:
++                self._event(
++                    row["job_id"],
++                    "stop_requested",
++                    {"reason": "desktop_takeover", "phase": "acknowledged", "lab_state": observed["state"]},
++                )
++        except (OSError, RuntimeError, ValueError, TypeError, AOSFault) as error:
++            with self.connection:
++                self._event(
++                    row["job_id"],
++                    "dispatch_error",
++                    {"operation": "desktop_takeover_stop", "error_type": type(error).__name__},
++                )
++
++    def recover(
++        self,
++        session_id: str,
++        job_id: str,
++        lease_id: str,
++        generation: int,
++    ) -> dict[str, object]:
++        """Explicitly rebind a paused detached job; never submits a new Lab start."""
++        self._check_lease(lease_id, generation)
++        if session_id != self.controller.session_id:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab recovery session is not current")
++        row = self.connection.execute(
++            "SELECT j.*,b.session_id AS bound_session,b.lease_id AS bound_lease,"
++            "b.generation AS bound_generation FROM aos_external_jobs j "
++            "JOIN aos_external_job_bindings b USING(job_id) WHERE j.job_id=?",
++            (job_id,),
++        ).fetchone()
++        if row is None:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Unknown AOS Lab job")
++        if (
++            row["bound_session"] == session_id
++            and row["bound_lease"] == lease_id
++            and row["bound_generation"] == generation
++        ):
++            if row["state"] not in {"dispatch_pending", "queued", "running", "stop_requested"}:
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab job is terminal and cannot be rebound")
++            run = self.connection.execute(
++                "SELECT status FROM runs WHERE run_id=?", (row["run_id"],)
++            ).fetchone()
++            state_row = self.connection.execute(
++                "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++            ).fetchone()
++            if run is not None and run["status"] == "running" and state_row is not None:
++                current = State.model_validate_json(state_row["state_json"], strict=True)
++                if current.phase == Phase.EXECUTE and current.owner == "AGENT":
++                    return self._public(row)
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Current Lab binding is not an active resumable job")
++        if row["state"] not in {"queued", "running", "stop_requested"} or not row["lab_run_id"]:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Only acknowledged active Lab jobs can be rebound")
++        state_row = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        run_row = self.connection.execute(
++            "SELECT status FROM runs WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        if state_row is None or run_row is None or run_row["status"] != "paused":
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab takeover requires a paused AOS trajectory")
++        paused = State.model_validate_json(state_row["state_json"], strict=True)
++        try:
++            identity = json.loads(paused.authorized_content)
++        except (TypeError, json.JSONDecodeError):
++            raise AOSFault(ErrorCode.INVALID_OUTPUT, "Paused Lab state identity is malformed") from None
++        if (
++            paused.task_kind != "ai_scientist"
++            or paused.phase != Phase.PAUSED
++            or paused.owner != "PAUSED"
++            or paused.task_id != row["task_id"]
++            or paused.run_id != row["run_id"]
++            or not isinstance(identity, dict)
++            or identity.get("job_id") != row["job_id"]
++            or identity.get("lab_run_id") != row["lab_run_id"]
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Paused typed Lab state failed identity checks")
++        desktop = self.controller.state()
++        resumed = State.model_validate(
++            {
++                **paused.model_dump(),
++                "runtime_id": desktop["runtime_id"],
++                "state_version": paused.state_version + 1,
++                "phase": Phase.EXECUTE,
++                "owner": "AGENT",
++                "owner_lease_id": identifier("lease"),
++            }
++        )
++        timestamp = now()
+         with self.connection:
+             self.connection.execute(
+-                "UPDATE actions SET status='ok',result_json=?,completed_at=? WHERE run_id=? "
+-                "AND idempotency_key=? AND status='intent'",
++                "INSERT INTO aos_external_job_binding_events(event_id,job_id,from_session_id,"
++                "to_session_id,from_generation,to_generation,lease_id,created_at) "
++                "VALUES(?,?,?,?,?,?,?,?)",
+                 (
+-                    canonical({"lab_run_id": str(run_id), "state": observed["state"]}),
+-                    now(),
+-                    row["run_id"],
+-                    f"lab-stop:{job_id}",
++                    identifier("binding-event"),
++                    row["job_id"],
++                    row["bound_session"],
++                    session_id,
++                    row["bound_generation"],
++                    generation,
++                    lease_id,
++                    timestamp,
+                 ),
+             )
+-            self._event(job_id, "stop_requested", {"lab_state": observed["state"]})
+-        return self._public(observed)
++            changed_binding = self.connection.execute(
++                "UPDATE aos_external_job_bindings SET session_id=?,lease_id=?,generation=?,updated_at=? "
++                "WHERE job_id=? AND session_id=? AND lease_id=? AND generation=?",
++                (
++                    session_id,
++                    lease_id,
++                    generation,
++                    timestamp,
++                    row["job_id"],
++                    row["bound_session"],
++                    row["bound_lease"],
++                    row["bound_generation"],
++                ),
++            ).rowcount
++            if changed_binding != 1:
++                raise AOSFault(ErrorCode.UI_CHANGED, "Lab binding changed before takeover")
++            resumed_run = self.connection.execute(
++                "UPDATE runs SET status='running',outcome='unknown',ended_at=NULL "
++                "WHERE run_id=? AND status='paused'",
++                (row["run_id"],),
++            ).rowcount
++            if resumed_run != 1:
++                raise AOSFault(ErrorCode.UI_CHANGED, "Lab run changed before takeover")
++            changed_state = self.connection.execute(
++                "UPDATE runtime_states SET state_version=?,state_json=? WHERE run_id=? "
++                "AND state_version=?",
++                (resumed.state_version, resumed.model_dump_json(), resumed.run_id, paused.state_version),
++            ).rowcount
++            if changed_state != 1:
++                raise AOSFault(ErrorCode.UI_CHANGED, "Lab state changed before takeover")
++            self.connection.execute(
++                "UPDATE steps SET state='EXECUTE',ended_at=NULL WHERE step_id=?",
++                (resumed.step_id,),
++            )
++            self.connection.execute(
++                "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,"
++                "content_sha256,created_at) VALUES(?,?,?,?,?,?,?)",
++                (
++                    identifier("snapshot"),
++                    resumed.run_id,
++                    resumed.step_id,
++                    resumed.state_version,
++                    resumed.model_dump_json(),
++                    digest(resumed.model_dump(mode="json")),
++                    timestamp,
++                ),
++            )
++        rebound = self.connection.execute(
++            "SELECT * FROM aos_external_jobs WHERE job_id=?", (job_id,)
++        ).fetchone()
++        return self._public(rebound)
+ 
+     async def report(self, session_id: str, job_id: str) -> dict[str, object]:
+         row = self._owned(session_id, job_id)
+@@ -548,9 +1313,21 @@
+             or report.report.get("run_id") != row["lab_run_id"]
+         ):
+             raise RuntimeError("Lab report differs from its independently verified status receipt")
++        receipt_action = self.connection.execute(
++            "SELECT a.result_json,e.payload_sha256,e.envelope_json FROM actions a "
++            "JOIN action_envelopes e USING(action_id) WHERE a.run_id=? AND a.tool='lab.report' "
++            "AND a.status='ok' ORDER BY a.created_at DESC LIMIT 1",
++            (row["run_id"],),
++        ).fetchone()
++        if (
++            receipt_action is None
++            or json.loads(receipt_action["result_json"]).get("report_sha256")
++            != report.report_sha256
++        ):
++            raise RuntimeError("AOS has no typed report action for this verified report")
+         return {"job": self._public(row), "report": report.model_dump(mode="json")}
+ 
+-    def _record_verified_terminal(self, job_row, report: LabVerifiedReport) -> None:
++    async def _record_verified_terminal(self, job_row, report: LabVerifiedReport) -> None:
+         terminal_status = report.report["status"]
+         status, outcome = {
+             "completed": ("succeeded", "passed"),
+@@ -558,23 +1335,15 @@
+             "failed": ("failed", "failed"),
+         }[terminal_status]
+         timestamp = now()
+-        report_action_id = identifier("action")
+         actual = canonical({"report_sha256": report.report_sha256, "status": terminal_status})
+-        self.connection.execute(
+-            "INSERT OR IGNORE INTO actions(action_id,run_id,step_id,decision_id,"
+-            "idempotency_key,tool,"
+-            "arguments_json,status,result_json,created_at,completed_at) "
+-            "VALUES(?,?,?,NULL,?,'lab.report',?,'ok',?,?,?)",
+-            (
+-                report_action_id,
+-                job_row["run_id"],
+-                job_row["step_id"],
+-                f"lab-report:{job_row['job_id']}:{report.report_sha256}",
+-                canonical({"lab_run_id": job_row["lab_run_id"]}),
+-                actual,
+-                timestamp,
+-                timestamp,
+-            ),
++        report_action_id = await self._record_control_action(
++            job_row,
++            "report",
++            idempotency_key=f"lab-report:{job_row['job_id']}:{report.report_sha256}",
++        )
++        self._finish_control_action(
++            report_action_id,
++            {"lab_run_id": job_row["lab_run_id"], "report_sha256": report.report_sha256},
+         )
+         persisted_action = self.connection.execute(
+             "SELECT action_id FROM actions WHERE run_id=? AND idempotency_key=?",
+@@ -612,6 +1381,34 @@
+             "AND status IN ('running','waiting_human')",
+             (status, outcome, timestamp, job_row["run_id"]),
+         )
++        state_row = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (job_row["run_id"],)
++        ).fetchone()
++        if state_row is None:
++            raise RuntimeError("Verified Lab report has no typed AOS runtime state")
++        state = State.model_validate_json(state_row["state_json"])
++        if status == "succeeded":
++            terminal = state.advance(Phase.VERIFY).advance(Phase.SUCCEEDED, owner="PAUSED")
++        else:
++            terminal_phase = Phase.CANCELLED if status == "cancelled" else Phase.FAILED
++            terminal = state.advance(terminal_phase, owner="PAUSED")
++        self.connection.execute(
++            "UPDATE runtime_states SET state_version=?,state_json=? WHERE run_id=? AND state_version=?",
++            (terminal.state_version, terminal.model_dump_json(), terminal.run_id, state.state_version),
++        )
++        self.connection.execute(
++            "INSERT INTO state_snapshots(snapshot_id,run_id,step_id,state_version,state_json,content_sha256,created_at) "
++            "VALUES(?,?,?,?,?,?,?)",
++            (
++                identifier("snapshot"),
++                terminal.run_id,
++                terminal.step_id,
++                terminal.state_version,
++                terminal.model_dump_json(),
++                digest(terminal.model_dump(mode="json")),
++                timestamp,
++            ),
++        )
+ 
+     def _check_lease(self, lease_id: str, generation: int) -> None:
+         state = self.controller.state()
+@@ -628,7 +1425,9 @@
+ 
+     def _owned(self, session_id: str, job_id: str):
+         row = self.connection.execute(
+-            "SELECT * FROM aos_external_jobs WHERE job_id=? AND session_id=?", (job_id, session_id)
++            "SELECT j.* FROM aos_external_jobs j JOIN aos_external_job_bindings b USING(job_id) "
++            "WHERE j.job_id=? AND b.session_id=?",
++            (job_id, session_id),
+         ).fetchone()
+         if row is None:
+             raise AOSFault(ErrorCode.UNSAFE_ACTION, "Unknown AOS Lab job")
+--- a/src/aos/storage.py
++++ b/src/aos/storage.py
+@@ -51,7 +51,7 @@
+                         normalized_goal=state.normalized_goal, success_criteria_json=canonical(state.success_criteria),
+                         workspace_scope_json=canonical([state.authorized_path]), created_at=now())
+             self.insert("runs", run_id=state.run_id, task_id=state.task_id, status="running",
+-                        policy_version={"browser_form": "browser-form-policy-v1", "vision_canvas": "vision-canvas-policy-v1", "hello": "hello-policy-v1", "browser_local_navigation": "browser-local-navigation-policy-v1", "browser_staging_workflow": "browser-staging-workflow-policy-v1", "browser_remote_entry": "browser-remote-entry-policy-v1", "browser_remote_routes": "browser-remote-routes-policy-v1", "browser_remote_static_assets": "browser-remote-static-assets-policy-v1", "browser_remote_form": "browser-remote-form-policy-v1"}[state.task_kind],
++                        policy_version={"browser_form": "browser-form-policy-v1", "vision_canvas": "vision-canvas-policy-v1", "hello": "hello-policy-v1", "browser_local_navigation": "browser-local-navigation-policy-v1", "browser_staging_workflow": "browser-staging-workflow-policy-v1", "browser_remote_entry": "browser-remote-entry-policy-v1", "browser_remote_routes": "browser-remote-routes-policy-v1", "browser_remote_static_assets": "browser-remote-static-assets-policy-v1", "browser_remote_form": "browser-remote-form-policy-v1", "ai_scientist": "ai-scientist-lab-control-v1"}[state.task_kind],
+                         environment_json=canonical(runtime),
+                         deployment_snapshot_json=canonical(deployment), started_at=now())
+             self.insert("steps", step_id=state.step_id, run_id=state.run_id, ordinal=0,
+--- /dev/null
++++ b/database/migrations/0019_lab_external_job_rebinding.sql
+@@ -0,0 +1,69 @@
++-- Explicitly rebind an existing detached Lab handle after AOS process restart.
++-- This changes only the AOS control session; it never resubmits a Lab start.
++BEGIN IMMEDIATE;
++CREATE TABLE aos_external_job_bindings (
++    job_id TEXT PRIMARY KEY REFERENCES aos_external_jobs(job_id),
++    session_id TEXT NOT NULL REFERENCES desktop_sessions(session_id),
++    lease_id TEXT NOT NULL,
++    generation INTEGER NOT NULL CHECK(generation >= 0),
++    updated_at TEXT NOT NULL
++);
++INSERT INTO aos_external_job_bindings(job_id,session_id,lease_id,generation,updated_at)
++SELECT job_id,session_id,lease_id,generation,updated_at FROM aos_external_jobs;
++
++CREATE TABLE aos_external_job_binding_events (
++    event_id TEXT PRIMARY KEY,
++    job_id TEXT NOT NULL REFERENCES aos_external_jobs(job_id),
++    from_session_id TEXT NOT NULL REFERENCES desktop_sessions(session_id),
++    to_session_id TEXT NOT NULL REFERENCES desktop_sessions(session_id),
++    from_generation INTEGER NOT NULL CHECK(from_generation >= 0),
++    to_generation INTEGER NOT NULL CHECK(to_generation >= 0),
++    lease_id TEXT NOT NULL,
++    created_at TEXT NOT NULL,
++    CHECK(from_session_id != to_session_id OR from_generation != to_generation)
++);
++CREATE TRIGGER aos_external_job_binding_events_no_update
++BEFORE UPDATE ON aos_external_job_binding_events
++BEGIN SELECT RAISE(ABORT,'external job binding events are immutable'); END;
++CREATE TRIGGER aos_external_job_binding_events_no_delete
++BEFORE DELETE ON aos_external_job_binding_events
++BEGIN SELECT RAISE(ABORT,'external job binding events are immutable'); END;
++
++CREATE TRIGGER aos_external_job_binding_insert_guard
++BEFORE INSERT ON aos_external_job_bindings
++WHEN NOT EXISTS (
++    SELECT 1 FROM aos_external_jobs j
++    JOIN desktop_sessions s ON s.session_id=NEW.session_id
++    WHERE j.job_id=NEW.job_id AND j.session_id=NEW.session_id
++      AND j.lease_id=NEW.lease_id AND j.generation=NEW.generation
++      AND s.owner='HUMAN' AND s.status='running'
++      AND s.lease_id=NEW.lease_id AND s.generation=NEW.generation
++)
++BEGIN SELECT RAISE(ABORT,'external job binding must match its initial human lease'); END;
++
++CREATE TRIGGER aos_external_job_binding_update_guard
++BEFORE UPDATE ON aos_external_job_bindings
++WHEN NOT EXISTS (
++    SELECT 1 FROM aos_external_jobs j
++    JOIN runs r ON r.run_id=j.run_id
++    JOIN runtime_states rs ON rs.run_id=j.run_id
++    JOIN desktop_sessions s ON s.session_id=NEW.session_id
++    WHERE j.job_id=NEW.job_id
++      AND j.state IN ('dispatch_pending','queued','running','stop_requested')
++      AND r.status='paused'
++      AND json_extract(rs.state_json,'$.task_kind')='ai_scientist'
++      AND json_extract(rs.state_json,'$.phase')='PAUSED'
++      AND json_extract(rs.state_json,'$.owner')='PAUSED'
++      AND s.owner='HUMAN' AND s.status='running'
++      AND s.lease_id=NEW.lease_id AND s.generation=NEW.generation
++      AND EXISTS (
++          SELECT 1 FROM aos_external_job_binding_events e
++          WHERE e.job_id=OLD.job_id AND e.from_session_id=OLD.session_id
++            AND e.to_session_id=NEW.session_id AND e.from_generation=OLD.generation
++            AND e.to_generation=NEW.generation AND e.lease_id=NEW.lease_id
++      )
++)
++BEGIN SELECT RAISE(ABORT,'external job rebind requires paused typed work, fresh human lease and audit event'); END;
++INSERT INTO schema_migrations(version,name,applied_at)
++VALUES(19,'lab_external_job_rebinding',strftime('%Y-%m-%dT%H:%M:%fZ','now'));
++COMMIT;
+--- a/tests/test_dataset_audit.py
++++ b/tests/test_dataset_audit.py
+@@ -184,7 +184,7 @@
+             self.store.connection.execute("DELETE FROM schema_migrations WHERE version=7")
+         with self.assertRaisesRegex(ValueError, "unsupported_database_migrations"):
+             audit_database(self.database)
+-        self.assertEqual(self.store.connection.execute("SELECT count(*) FROM schema_migrations").fetchone()[0], 16)
++        self.assertEqual(self.store.connection.execute("SELECT count(*) FROM schema_migrations").fetchone()[0], 18)
+ 
+     def test_foreign_key_corruption_fails_instead_of_reporting_ready(self):
+         self.store.connection.execute("PRAGMA foreign_keys=OFF")
+--- a/tests/test_lab_external_jobs.py
++++ b/tests/test_lab_external_jobs.py
+@@ -11,6 +11,8 @@
+ 
+ import pytest
+ from aos.contracts import AOSFault
++from aos.computer import SafetyPolicy
++from aos.contracts import Action, Option, Phase, Prediction, State
+ from aos.lab_external import (
+     AOSLabStartRequest,
+     LabExternalJobCoordinator,
+@@ -18,6 +20,17 @@
+     LabRunStatus,
+     LabVerifiedReport,
+ )
++
++
++class DenyDecisionEngine:
++    identity = {"deployment_id": "fixture-deny-v1", "kind": "deterministic_fixture", "real_model": False}
++
++    async def decide(self, state, options):
++        del state
++        return Prediction(
++            selected_option="deny",
++            probabilities={option.id: 1.0 if option.id == "deny" else 0.0 for option in options},
++        )
+ 
+ 
+ class FakeController:
+@@ -29,11 +42,20 @@
+             "owner": "HUMAN",
+             "lease_id": "lease-current",
+             "generation": 3,
++            "runtime_id": "runtime",
+         }
+ 
+     def state(self):
+         assert threading.get_ident() == self.owner_thread
+         return dict(self.current)
++
++    def control(self, command):
++        if command in {"pause", "take-control", "stop", "restart"}:
++            self.current.update(owner="PAUSED", status="paused", lease_id="lease-revoked")
++            self.current["generation"] += 1
++        if command == "take-control":
++            self.current.update(owner="HUMAN", status="running", lease_id="lease-new")
++        return self.state()
+ 
+ 
+ class FakeLabClient:
+@@ -42,9 +64,13 @@
+         self.run_id = uuid4()
+         self.state = "queued"
+         self.report_document = None
++        self.fail_start_after_recording = False
++        self.fail_stop = False
+ 
+     def start(self, request):
+         self.start_calls.append(request)
++        if self.fail_start_after_recording:
++            raise OSError("simulated lost start acknowledgement")
+         if len(self.start_calls) > 1:
+             self.run_id = uuid4()
+         return LabRunHandle(run_id=self.run_id, state=self.state, reused=len(self.start_calls) > 1)
+@@ -66,6 +92,8 @@
+ 
+     def stop(self, run_id):
+         assert run_id == self.run_id
++        if self.fail_stop:
++            raise OSError("simulated Lab outage")
+         self.state = "stop_requested"
+         return self.status(run_id)
+ 
+@@ -74,8 +102,8 @@
+         return self.report_document
+ 
+ 
+-def _database():
+-    connection = sqlite3.connect(":memory:")
++def _database(path=":memory:"):
++    connection = sqlite3.connect(path)
+     connection.row_factory = sqlite3.Row
+     connection.execute("PRAGMA foreign_keys=ON")
+     migrations = Path(__file__).resolve().parents[1] / "database/migrations"
+@@ -131,6 +159,17 @@
+     assert db.execute("SELECT count(*) FROM runs WHERE status='running'").fetchone()[0] == 1
+     assert db.execute("SELECT tool FROM actions").fetchone()[0] == "lab.start"
+     assert lab.start_calls[0].idempotency_key != _request().idempotency_key
++    stored_state = State.model_validate_json(
++        db.execute("SELECT state_json FROM runtime_states").fetchone()[0]
++    )
++    assert stored_state.task_kind == "ai_scientist"
++    assert stored_state.phase == Phase.EXECUTE
++    assert db.execute("SELECT count(*) FROM state_snapshots").fetchone()[0] >= 2
++    assert db.execute(
++        "SELECT count(*) FROM actions a JOIN decisions d USING(decision_id) "
++        "JOIN action_envelopes e USING(action_id) WHERE a.tool LIKE 'lab.%' "
++        "AND d.policy_result='allow'"
++    ).fetchone()[0] >= 2
+ 
+ 
+ def test_remote_idempotency_is_namespaced_per_aos_session():
+@@ -139,6 +178,7 @@
+         db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
+     )
+     first = asyncio.run(coordinator.start("session-a", _request()))
++    controller.session_id = "session-b"
+     second = asyncio.run(coordinator.start("session-b", _request()))
+     assert first["lab_run_id"] != second["lab_run_id"]
+     keys = db.execute(
+@@ -170,9 +210,129 @@
+     job = asyncio.run(coordinator.start("session-a", _request()))
+     stop = asyncio.run(coordinator.stop("session-a", str(job["job_id"]), "lease-current", 3))
+     assert stop["state"] == "stop_requested"
++    repeated = asyncio.run(coordinator.stop("session-a", str(job["job_id"]), "lease-current", 3))
++    assert repeated["state"] == "stop_requested"
++    assert db.execute(
++        "SELECT count(*) FROM actions WHERE tool='lab.stop' AND status='ok'"
++    ).fetchone()[0] == 1
++    # Detached research read access continues after the foreground lease moves.
++    controller.current.update(owner="AGENT", lease_id=None, generation=4)
+     status = asyncio.run(coordinator.status("session-a", str(job["job_id"])))
+     assert status["state"] == "stop_requested"
+     assert db.execute("SELECT count(*) FROM aos_external_job_events").fetchone()[0] == 5
++
++
++def test_desktop_takeover_requests_bounded_stop_for_detached_job():
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    job = asyncio.run(coordinator.start("session-a", _request()))
++    asyncio.run(coordinator.stop_for_desktop_takeover("session-a"))
++    row = db.execute("SELECT state FROM aos_external_jobs WHERE job_id=?", (job["job_id"],)).fetchone()
++    assert row["state"] == "stop_requested"
++    assert lab.state == "stop_requested"
++    assert db.execute(
++        "SELECT count(*) FROM actions WHERE tool='lab.stop' AND status='ok'"
++    ).fetchone()[0] == 1
++    assert db.execute("SELECT status FROM runs").fetchone()[0] == "paused"
++
++
++def test_lab_outage_is_durable_but_does_not_block_desktop_takeover():
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    job = asyncio.run(coordinator.start("session-a", _request()))
++    lab.fail_stop = True
++    asyncio.run(coordinator.stop_for_desktop_takeover("session-a"))
++    assert db.execute("SELECT state FROM aos_external_jobs WHERE job_id=?", (job["job_id"],)).fetchone()[0] == "queued"
++    events = [
++        (row["event_type"], json.loads(row["event_json"]))
++        for row in db.execute(
++            "SELECT event_type,event_json FROM aos_external_job_events WHERE job_id=? ORDER BY rowid",
++            (job["job_id"],),
++        )
++    ]
++    assert any(kind == "stop_requested" and payload.get("phase") == "intent" for kind, payload in events)
++    assert any(kind == "dispatch_error" and payload.get("error_type") == "OSError" for kind, payload in events)
++    assert db.execute("SELECT status FROM runs").fetchone()[0] == "paused"
++    paused_state = State.model_validate_json(
++        db.execute("SELECT state_json FROM runtime_states").fetchone()[0]
++    )
++    assert paused_state.phase == Phase.PAUSED and paused_state.owner == "PAUSED"
++
++
++def test_lost_start_ack_cannot_be_reposted_with_a_new_lease():
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    lab.fail_start_after_recording = True
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    with pytest.raises(OSError):
++        asyncio.run(coordinator.start("session-a", _request()))
++    assert len(lab.start_calls) == 1
++    controller.current.update(lease_id="lease-replaced", generation=4)
++    with pytest.raises(AOSFault):
++        asyncio.run(
++            coordinator.start(
++                "session-a",
++                _request(lease_id="lease-replaced", generation=4),
++            )
++        )
++    assert len(lab.start_calls) == 1
++
++
++def test_finite_option_deny_prevents_external_start():
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db,
++        controller,
++        lab,
++        allowed_suites=frozenset({"synthetic.allowed.v1"}),
++        decision_engine=DenyDecisionEngine(),
++    )
++    with pytest.raises(AOSFault):
++        asyncio.run(coordinator.start("session-a", _request()))
++    assert lab.start_calls == []
++    assert db.execute("SELECT count(*) FROM aos_external_jobs").fetchone()[0] == 0
++    assert db.execute("SELECT count(*) FROM decisions").fetchone()[0] == 0
++
++
++def test_explicit_rebind_resumes_paused_typed_job_without_restarting_lab():
++    db, old_controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, old_controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    job = asyncio.run(coordinator.start("session-a", _request()))
++    state_row = db.execute(
++        "SELECT state_json FROM runtime_states WHERE run_id=?", (job["aos_run_id"],)
++    ).fetchone()
++    state = State.model_validate_json(state_row[0])
++    paused = state.model_copy(
++        update={"phase": Phase.PAUSED, "owner": "PAUSED", "owner_lease_id": "lease-revoked", "state_version": 1}
++    )
++    with db:
++        db.execute("UPDATE runtime_states SET state_version=1,state_json=? WHERE run_id=?", (paused.model_dump_json(), job["aos_run_id"]))
++        db.execute("UPDATE runs SET status='paused' WHERE run_id=?", (job["aos_run_id"],))
++        db.execute("UPDATE steps SET state='PAUSED' WHERE run_id=?", (job["aos_run_id"],))
++        db.execute("UPDATE desktop_sessions SET lease_id='lease-new',generation=4,owner='HUMAN',status='running' WHERE session_id='session-b'")
++    new_controller = FakeController()
++    new_controller.session_id = "session-b"
++    new_controller.current.update(lease_id="lease-new", generation=4)
++    recovered = LabExternalJobCoordinator(
++        db, new_controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    ).recover("session-b", str(job["job_id"]), "lease-new", 4)
++    assert recovered["lab_run_id"] == job["lab_run_id"]
++    assert len(lab.start_calls) == 1
++    resumed = State.model_validate_json(
++        db.execute("SELECT state_json FROM runtime_states WHERE run_id=?", (job["aos_run_id"],)).fetchone()[0]
++    )
++    assert resumed.phase == Phase.EXECUTE and resumed.owner == "AGENT"
++    assert db.execute("SELECT status FROM runs WHERE run_id=?", (job["aos_run_id"],)).fetchone()[0] == "running"
++    assert db.execute("SELECT count(*) FROM aos_external_job_binding_events WHERE job_id=?", (job["job_id"],)).fetchone()[0] == 1
++    with pytest.raises(AOSFault):
++        asyncio.run(coordinator.status("session-a", str(job["job_id"])))
+ 
+ 
+ def test_terminal_report_is_hash_checked_before_aos_marks_job_complete():
+@@ -221,6 +381,77 @@
+     with pytest.raises(AOSFault):
+         asyncio.run(coordinator.status("session-b", str(job["job_id"])))
+     assert not lab.start_calls[0].suite.startswith("http")
++
++
++def test_lab_safety_policy_rejects_wrong_tool_and_cross_job_identity():
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    result = asyncio.run(coordinator.start("session-a", _request()))
++    state = State.model_validate_json(
++        db.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (result["aos_run_id"],)
++        ).fetchone()[0]
++    )
++    correct = Action(
++        task_id=state.task_id,
++        run_id=state.run_id,
++        step_id=state.step_id,
++        action_id="action-" + "a" * 32,
++        runtime_id=state.runtime_id,
++        state_version=state.state_version,
++        owner_lease_id=state.owner_lease_id,
++        tool="lab.status",
++        arguments={"job_id": result["job_id"], "lab_run_id": result["lab_run_id"]},
++        expected_effect="Read one detached Lab job status.",
++        deadline=9_999_999_999.0,
++        idempotency_key="lab-status-test-0000000001",
++        selected_option="status",
++    )
++    SafetyPolicy.check(correct, state, state.runtime_id)
++    wrong_job = correct.model_copy(
++        update={"arguments": {**correct.arguments, "job_id": "external-job-" + "b" * 32}}
++    )
++    with pytest.raises(AOSFault):
++        SafetyPolicy.check(wrong_job, state, state.runtime_id)
++    wrong_tool = Action.model_validate(
++        {
++            **correct.model_dump(mode="json"),
++            "tool": "filesystem.read",
++            "arguments": {"path": state.authorized_path},
++            "selected_option": "filesystem.read",
++        },
++        strict=True,
++    )
++    with pytest.raises(AOSFault):
++        SafetyPolicy.check(wrong_tool, state, state.runtime_id)
++
++
++def test_typed_external_run_reconciles_after_store_reopen(tmp_path):
++    path = tmp_path / "aos-trajectory.sqlite"
++    db = _database(path)
++    controller, lab = FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    job = asyncio.run(coordinator.start("session-a", _request()))
++    run_id = job["aos_run_id"]
++    db.close()
++
++    from aos.storage import TrajectoryStore
++
++    reopened = TrajectoryStore(path)
++    state = reopened.state(run_id)
++    assert state.task_kind == "ai_scientist"
++    assert state.phase == Phase.PAUSED
++    assert reopened.connection.execute(
++        "SELECT status FROM runs WHERE run_id=?", (run_id,)
++    ).fetchone()[0] == "paused"
++    assert reopened.connection.execute(
++        "SELECT state FROM aos_external_jobs WHERE job_id=?", (job["job_id"],)
++    ).fetchone()[0] == "queued"
++    reopened.close()
+ 
+ 
+ def test_lab_http_wire_uses_strict_json_representations(tmp_path):
+@@ -456,3 +687,48 @@
+     asyncio.run(exercise())
+     assert len(lab.start_calls) == 1
+     assert db.execute("SELECT count(*) FROM aos_external_jobs").fetchone()[0] == 1
++
++
++def test_lab_stop_outage_does_not_block_real_console_take_control():
++    import httpx
++    from aos.desktop_console import create_console
++
++    db, controller, lab = _database(), FakeController(), FakeLabClient()
++    coordinator = LabExternalJobCoordinator(
++        db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++    )
++    app = create_console(
++        controller,
++        token="console-secret",
++        origin="http://testserver",
++        assets=Path(__file__).resolve().parents[1] / "computer",
++        scheduler=None,
++        lab_external_jobs=coordinator,
++    )
++
++    async def exercise():
++        async with httpx.AsyncClient(
++            transport=httpx.ASGITransport(app=app), base_url="http://testserver"
++        ) as client:
++            headers = {"Origin": "http://testserver"}
++            assert (await client.post("/api/login", headers=headers, json={"token": "console-secret"})).status_code == 200
++            started = await client.post("/api/lab/start", headers=headers, json=_request().model_dump(mode="json"))
++            assert started.status_code == 200
++            lab.fail_stop = True
++            controlled = await client.post("/api/control", headers=headers, json={"command": "take-control"})
++            assert controlled.status_code == 200
++            return controlled.json()
++
++    control_state = asyncio.run(exercise())
++    assert control_state["owner"] == "HUMAN"
++    assert lab.state == "queued"
++    assert len(lab.start_calls) == 1
++    assert db.execute(
++        "SELECT count(*) FROM aos_external_job_events WHERE event_type='dispatch_error'"
++    ).fetchone()[0] == 1
++    assert db.execute("SELECT state FROM aos_external_jobs").fetchone()[0] == "queued"
++    assert db.execute("SELECT status FROM runs").fetchone()[0] == "paused"
++    paused_state = State.model_validate_json(
++        db.execute("SELECT state_json FROM runtime_states").fetchone()[0]
++    )
++    assert paused_state.phase == Phase.PAUSED and paused_state.owner == "PAUSED"
+--- /dev/null
++++ b/services/laya/worker.py
+@@ -0,0 +1,162 @@
++import contextlib
++import hashlib
++import importlib.metadata
++import json
++import math
++import os
++from pathlib import Path
++import re
++import stat
++import sys
++import time
++
++
++MODEL_FILES = {
++    'README.md': '59e2d2cf0203fb309d31ca6f51c4c6ab758fa32cecd82cfcd3ce20425edea7b6',
++    'encoder/config.json': '5268d24ad3b77c8151de5dcb0762ba4391619aad9ab0bda33e36fb083cfeae6d',
++    'model.safetensors': '4fa56de72383a9d3efa9cfa78955733c81b9fc8067a587ca4beb82c78107a24e',
++    'rl_agent_config.json': 'ebf0cd524d92342a6be5e48e9fca3d7c2babfb5a56ccd79d2171ef5d8c7f7be8',
++    'tokenizer/tokenizer.json': '6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30',
++    'tokenizer/tokenizer_config.json': '08d4cf3ac4dca381759441b85b91a6d40e688471dcd33d15d6649eb0a9a854d1',
++}
++DEPENDENCIES = ('torch', 'transformers', 'safetensors', 'huggingface-hub', 'numpy', 'laya')
++REVISION = 'f9ab0b228f0fc0f14d873dbc99038f135c2da1b2'
++WHEEL_SHA256 = 'e3b3aa7bb65c1a154db1b2718e3a7f5ecb1a506800933b519d640f438c5d8ad5'
++
++
++def sha256(path):
++    with path.open('rb') as stream:
++        return hashlib.file_digest(stream, 'sha256').hexdigest()
++
++
++def verify_files(root, expected, *, ignored=()):
++    root = Path(root).absolute()
++    if root.is_symlink() or any(part.is_symlink() for part in root.parents):
++        raise ValueError('unsafe_model_root')
++    root = root.resolve(strict=True)
++    actual = set()
++    for path in root.rglob('*'):
++        relative = path.relative_to(root)
++        if any(part in ignored for part in relative.parts):
++            continue
++        if path.is_symlink():
++            raise ValueError('model_symlink_rejected')
++        if path.is_file():
++            metadata = path.stat()
++            if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
++                raise ValueError('model_file_not_private_regular')
++            actual.add(str(relative))
++    if actual != set(expected):
++        raise ValueError('model_file_set_differs')
++    for relative, checksum in expected.items():
++        path = Path(relative)
++        if path.is_absolute() or '..' in path.parts or sha256(root / path) != checksum:
++            raise ValueError('model_file_hash_differs')
++    return root
++
++
++def verify_manifest(manifest):
++    pins = json.loads(Path(manifest).read_text())
++    if (set(pins) != {'source', 'checkpoint_revision', 'tokenizer_revision', 'sdk_version',
++                      'wheel_sha256', 'model_path', 'model_files', 'sdk_path', 'sdk_files', 'dependencies'}
++            or pins['source'] != 'convaiinnovations/laya-typed-decisions'
++            or pins['sdk_version'] != '0.3.6'
++            or pins['checkpoint_revision'] != REVISION
++            or pins['tokenizer_revision'] != pins['checkpoint_revision']
++            or pins['wheel_sha256'] != WHEEL_SHA256
++            or pins['model_files'] != MODEL_FILES
++            or set(pins['dependencies']) != set(DEPENDENCIES)):
++        raise ValueError('invalid_laya_candidate_manifest')
++    model = verify_files(pins['model_path'], pins['model_files'], ignored={'.cache', 'manifest.json'})
++    sdk = verify_files(pins['sdk_path'], pins['sdk_files'], ignored={'__pycache__'})
++    sys.path.insert(0, str(sdk))
++    if {name: importlib.metadata.version(name) for name in DEPENDENCIES} != pins['dependencies']:
++        raise ValueError('laya_candidate_dependencies_differ')
++    return pins, model
++
++
++def validate_request(request):
++    if (not isinstance(request, dict) or set(request) != {'state', 'question', 'options'}
++            or not isinstance(request['state'], str) or not isinstance(request['question'], str)
++            or len(request['state']) > 4096 or len(request['question']) > 256
++            or not isinstance(request['options'], list) or not 2 <= len(request['options']) <= 10):
++        raise ValueError('invalid_laya_request')
++    options = request['options']
++    if any(not isinstance(option, dict) or set(option) != {'id', 'label'}
++           or not isinstance(option['id'], str) or not isinstance(option['label'], str)
++           or not option['id'] or not option['label']
++           or len(option['id']) > 80 or len(option['label']) > 240 for option in options):
++        raise ValueError('invalid_laya_option')
++    if len({option['id'] for option in options}) != len(options) or len({option['label'] for option in options}) != len(options):
++        raise ValueError('duplicate_laya_option')
++    return options
++
++
++def infer(agent, request, reused):
++    import torch
++
++    options = validate_request(request)
++    state_tokens = len(agent.tok.encode(request['state'], add_special_tokens=False))
++    question_tokens = len(agent.tok.encode(request['question'], add_special_tokens=False))
++    option_label_tokens = sum(len(agent.tok.encode(option['label'], add_special_tokens=False)) for option in options)
++    if state_tokens > 512 or question_tokens > 64 or option_label_tokens > 150:
++        raise ValueError('laya_candidate_token_budget')
++    if agent.device.type != 'cuda':
++        raise ValueError('laya_candidate_cuda_required')
++    torch.cuda.reset_peak_memory_stats()
++    started = time.perf_counter()
++    criteria = {option['id']: option['label'] for option in options}
++    with contextlib.redirect_stdout(sys.stderr):
++        answer = agent.predict(request['state'], {'next_action': {
++            'type': 'choice', 'instructions': request['question'], 'criteria': criteria}})['answers']['next_action']
++    torch.cuda.synchronize()
++    if agent.device.type != 'cuda':
++        raise ValueError('laya_candidate_cpu_fallback')
++    probabilities = answer['probabilities']
++    if set(probabilities) != set(criteria) or answer['choice'] not in criteria:
++        raise ValueError('invalid_laya_candidate_choice')
++    if any(type(value) not in (int, float) or not math.isfinite(value) or value < 0 for value in probabilities.values()):
++        raise ValueError('invalid_laya_candidate_probability')
++    total = sum(probabilities.values())
++    if not 0.999 <= total <= 1.001:
++        raise ValueError('invalid_laya_candidate_probability_total')
++    normalized = {key: value / total for key, value in probabilities.items()}
++    return {'prediction': {'selected_option': answer['choice'], 'probabilities': normalized},
++            'metrics': {'inference_ms': (time.perf_counter() - started) * 1000,
++                        'state_tokens': state_tokens, 'question_tokens': question_tokens,
++                        'option_label_tokens': option_label_tokens,
++                        'peak_vram_bytes': torch.cuda.max_memory_allocated(), 'reused': reused, 'device': 'cuda'}}
++
++
++def main():
++    if len(sys.argv) != 2:
++        raise ValueError('laya_candidate_manifest_required')
++    pins, model = verify_manifest(sys.argv[1])
++    import laya
++
++    with contextlib.redirect_stdout(sys.stderr):
++        agent = laya.load(str(model), device='cuda')
++    if agent.device.type != 'cuda':
++        raise ValueError('laya_candidate_cuda_required')
++    deployment_digest = hashlib.sha256(json.dumps(pins, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest()
++    calls = 0
++    while line := sys.stdin.buffer.readline(65537):
++        if len(line) > 65536 or not line.endswith(b'\n'):
++            raise ValueError('laya_candidate_request_exceeds_bound')
++        envelope = json.loads(line)
++        if (not isinstance(envelope, dict) or set(envelope) != {'request_id', 'request'}
++                or not isinstance(envelope['request_id'], str)
++                or re.fullmatch(r'[a-f0-9]{32}', envelope['request_id']) is None):
++            raise ValueError('invalid_laya_candidate_envelope')
++        response = infer(agent, envelope['request'], calls > 0)
++        calls += 1
++        response.update(request_id=envelope['request_id'], deployment_digest=deployment_digest)
++        payload = json.dumps(response, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
++        if len(payload) > 65535:
++            raise ValueError('laya_candidate_response_exceeds_bound')
++        sys.stdout.buffer.write(payload + b'\n')
++        sys.stdout.buffer.flush()
++
++
++if __name__ == '__main__':
++    main()
+--- a/MANIFEST.sha256
++++ b/MANIFEST.sha256
+@@ -40,6 +40,7 @@
+ 45e17a48f9524708fd1261b2c92cde4a06359b0a010b1e2e6207bcdabe5f7ece  database/migrations/0016_remote_https_form_cookie.sql
+ 38f9c5d75feedc8b34d7972482ddf1325a14533028b1b1d43a87c5bbb475c5fe  database/migrations/0017_remote_static_assets.sql
+ dfd3baaaba8c4165cf52c03eaac619adca3a8fd8d8f30f8832d288e786f0137b  database/migrations/0018_lab_external_jobs.sql
++aecb0a308a8cab4dcd8679e7284f378210c34037baf590af0fe10146e9bf53e9  database/migrations/0019_lab_external_job_rebinding.sql
+ effccb47e17fcadbdc9d62eea9a414622acc1d33ec248de14d6d778ae248dc68  database/remote_learning_migrations/0001_metadata.sql
+ 224c7178bdd5249c3d5972e54ab7cd32f18153df961bf2e909df30b500fc1c7d  datasets/README.md
+ 9569d384398f388b9e9db33c6121bb26eab3f2994f0cb5583970407101364c3c  docs/ARCHITECTURE.md
+@@ -278,7 +279,7 @@
+ 70fbd5cdf968fa3cc3360b1c59749e385f2e9d60cc3fd65f006e870ccc79e0c1  schemas/benchmark.schema.json
+ f92b6508e66cf9501e95afcbad050e7155795bad2c0d3b56844f4f0d01a8fe51  schemas/browser_observation.schema.json
+ 9614426015aad3d26bf94fafeb3f36b6d4272089d902f2b9e96b411e2ebf97f7  schemas/compound_sequence_start.schema.json
+-9351e56a1a0e8d633106e93990b8ff5f7f11200ce5220eb0b6ad6e715f83f478  schemas/dataset_audit.schema.json
++e8359da16be49cf223381a18e1ad87190efc051434bd3a1ebaea73c2fc178a74  schemas/dataset_audit.schema.json
+ aa2a471a8b71fc60522dc329c700db6e570eea3513bb5588bec559178cf45d7c  schemas/dataset_bound_loss.schema.json
+ 6f4622ee1ab5bdaff9f2038a60bae55b3c4a74646a6cedb857ddc023eb00f9cd  schemas/dataset_loss_probe.schema.json
+ f249437e968b971a5bc0967f8be3be51388fe464d1935af940990a7b10e040bd  schemas/dataset_manifest.schema.json
+@@ -443,6 +444,7 @@
+ b5ba2105fc1b6de5aba66819d62aa8663b5b27031726af57d13008559a73da0c  services/decider/row_replay.py
+ d5d1f6af56760827742aad2c0f8e04c678e34c9aeab406476cc74460b989ee4f  services/decider/tokenizer_probe.py
+ a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc  services/decider/worker.py
++788d834b1719b69fa8fe36e45af48f277f20768a1c0c8bde2682661da3392778  services/laya/worker.py
+ 98f9aad27c52f173020b9da11594752f8a864d5073e5cb045b6454427ad2f3a6  src/aos/__init__.py
+ 77d665164f9210e2f9f66d657958fa3d5c76383c4a2cf785fe923768ea32ea54  src/aos/benchmark.py
+ 90add06cbacf30b9b747abb5c16bc64d73c6d0b60d2c8da6b2c56fc25f086ec5  src/aos/benchmark_worker.py
+@@ -451,10 +453,10 @@
+ 2e40b8d2b21d8cffa2cee40dfddfd149207c6826735ae08ecbc3ac84fe409527  src/aos/browser_operator.py
+ 5e83557dd245a8b4b08702b6ec12a588a167a46ebf9733419c4393c7bd9381f5  src/aos/browser_worker.py
+ 5b3b5bbb8fd734a541a7c0caf780f55050f5dd0a23dc991bc71f27ab3caae289  src/aos/cli.py
+-832f1a72f1fbb461693904f23dde1100c7e010ba1229a8a3cbe57d8851aeb5a5  src/aos/computer.py
+-2badc0b9c0ebb6a01891cbad5e95959d1d4381e68eca23769a6eec59d3f3d5c8  src/aos/contracts.py
++ac26bd03f44da0a721392c4567deffa3592f7a7deb625332cc71c1431ebdd31e  src/aos/computer.py
++c9979759e29a4985ec38e57614e5cbe49392dea98a93b7c5e23848484912944e  src/aos/contracts.py
+ 4f41625a548f5919cc9c0ca0a0d430ab7cdfd7e01d6b08f4f16a5f381f7940b6  src/aos/dataset.py
+-321a227489fc03bedeb6df2e0805034e0a83ae39c797330ccfcf3cc0589037f9  src/aos/dataset_audit.py
++4ac95f2e8ea81a5351b10136fbce406b572762f1898393bf07bf9f8cf1e82042  src/aos/dataset_audit.py
+ ca665a71633f60f49e996e3d4a46aad655bde818ebc179d434e76a771f46c3f8  src/aos/dataset_bound_loss.py
+ 6d9c8859ba5acac7bb79ddcc77d3e51dc0f11dc80596a9ee297f010c5b6ebbc1  src/aos/dataset_loss.py
+ 920332d7917ca495b5911d77610512e30181548f962f7fadc2c1cc44872f89e6  src/aos/dataset_preflight.py
+@@ -472,7 +474,7 @@
+ 1dd413368cf6dd6bf03f5d35af4857c87393427ee187c519c0f3d0f606c5fcda  src/aos/desktop.py
+ fdbe95890d9e30037b15519b7efdc4a694f5dfa4b7bb22eec4a648baa645914e  src/aos/desktop_browser.py
+ cab57f586fcab751fb2e6d2260a343df2d69c2d436647930759766ae4ea34d10  src/aos/desktop_browser_worker.py
+-67f98f3bb26659642a6d0163b26289ef0602ea0a76ed25361d8196aed6ac63bc  src/aos/desktop_console.py
++8f2888fbd1dc14b3c178430139708261a89305618a9050c10346d4ffe0218f83  src/aos/desktop_console.py
+ 2bb1df27f8b5abcd4b3836ff3acbf474cca0b74abcd434eeecc098d0ba2af26f  src/aos/desktop_control.py
+ cd3771ebbceb49d7e521a6cf8f38532c30fa62b9f0eb9aa64bcf4bd4cde7eb47  src/aos/desktop_form_mcp.py
+ c839022da1105e6053032c271b69fd30b395a629a982af23cc7d54a69e42ff63  src/aos/desktop_form_mcp_worker.py
+@@ -491,7 +493,7 @@
+ 572b160808ad8a62e4ba18cb3a10718d6affe1025c1a10205bd267209020013e  src/aos/export.py
+ 5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5  src/aos/goal_plan.py
+ a158afa32f2616e253f83b5ea3742e3792ff25aed62e77864719f2f24b44c7c9  src/aos/inspection.py
+-8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb  src/aos/lab_external.py
++6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1  src/aos/lab_external.py
+ 0e91de0835c0848d6a076a3577b6aa619c41ef66c10a2f85b2a59091e383bcd0  src/aos/laya_candidate.py
+ 84e910d68b3afcb20139432dd82e378ccb5c74104d113ff3cc6aade7b8a7d630  src/aos/learning_candidate.py
+ 0da78732d48ccfa7d7ffe9e2c74d445ed13ab9d5e9ab884d47f4ce5d62d1c2b3  src/aos/learning_event_outbox.py
+@@ -559,7 +561,7 @@
+ 8459e825c4f188fad22d8183504531fe624a7222a3de069a90c00bbdc079ef58  src/aos/site_skill_validation_cli.py
+ 1f32202c1defb7d334af204c91193299f88dabdb653e9f8d7945bd8426a83361  src/aos/staging_skill_candidate.py
+ 30cd38523a89c91532d90695a916ad6436fd732e4adeb2d4e70896ae6e350671  src/aos/staging_workflow_operator.py
+-64d8563365f00315052cc1eaf700a49366f30756a26c8300f05c482753a91b90  src/aos/storage.py
++c557c07535b2967dd2ea2aa3fadbba8483632ec3b1a353111c90d4e92263b92d  src/aos/storage.py
+ e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592  src/aos/supervisor.py
+ 59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc  src/aos/task_intent.py
+ f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04  src/aos/task_plan.py
+@@ -593,7 +595,7 @@
+ adba589d09d2a691a06322a26e183664fed505dc93f2721a42557ee832561e24  tests/test_browser_transport_benchmark.py
+ 43c0cd872f0a9f8467ff67eb7a166f99191c71ed274bb3033a9e9e3d3d877990  tests/test_compound_execution.py
+ 8898d26d474d2fa1dca6f2af760642f0d081b3446e88c6c273a8ed14f3f56461  tests/test_dataset.py
+-610f8d5acf3c63a22ed255595c0df83be92a21fdad27f73c1181939bb0f288b4  tests/test_dataset_audit.py
++84dde2915938e1666902821b293fd6623a856b7ca9428ece13388a1f9ac59948  tests/test_dataset_audit.py
+ 0cecb6fb5d67b729458e83c419f759fb00024b4e07e92924e89229706a3fbb06  tests/test_dataset_bound_loss.py
+ 75095141d64bde722c1cf85485c4bb9e5f59b1c5bb498ac7bd4e067fa504b3ed  tests/test_dataset_loss.py
+ 676bb7ec751c318401191281410a7cb8ac4f026731c5c1b9447d05fd4718e582  tests/test_dataset_preflight.py
+@@ -625,7 +627,7 @@
+ 0ea02ba0e6d6b82778abfc9a693d78c13b068bc490aafde2d0d21b0199e21ca9  tests/test_goal_plan.py
+ 99839699b5354dccd62f85312a2ab58833d4310690478c65d4742f29423d49e6  tests/test_i18n_ui.py
+ 58e0546789ccf7738fd9d450c8bc76499e3182867fd02b5aebcf44503d6af722  tests/test_inspection.py
+-762197b3cc70405ebed5987eb8d5f931d8391e2a3c7803fb111d20a5fdd67034  tests/test_lab_external_jobs.py
++612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6  tests/test_lab_external_jobs.py
+ 794ca88d76cff0ee940c7e3323f1d282d411654b44ee9a13f14e8c41f9be79b7  tests/test_laya_candidate.py
+ f97f6fe04bf39ace4deaa556547e35f6b896016323f6f0355179a790a62b48ac  tests/test_learning_candidate.py
+ 276dd44a9798d3932ba7de41040ee47cb52702e9253381705a581edee9d0b26e  tests/test_learning_event_outbox.py
+@@ -717,6 +719,12 @@
+ c7f5d43525a9d4d32dc5188a12e9c9d8bce7749d676e75395f8fb4fdda70238a  ui/package.json
+ 7cb210d48ce1aa4a2f1d79336a88b3a081861c7664eff153a67de6315523433a  ui/pnpm-lock.yaml
+ 3564dfff27f396ed6c0bc1357d88d6c55071c1729d0e2d0c030f9c705ddb541c  ui/pnpm-workspace.yaml
++98a0ecb8443c115ad06938f1cdd01dca4e0bd7d2fc080573e2dc7828c0d1dd52  ui/src-tauri/Cargo.lock
++acc5e389d352f0b10560844e6bd18d3cfdcc4ba533ef811a57bd8146fe6ceb60  ui/src-tauri/Cargo.toml
++6aeeab41bc35efde4e3c2b644a6248f7fc06d24ae30b75c0d33491cbb0c1fa31  ui/src-tauri/build.rs
++14b7abe3c393ba0a1a7587cc96effc2c526fc906794304731181f9dc4ad20935  ui/src-tauri/icons/128x128.png
++3848905948934ff44b9bb410d2faf7ab15734f5d89a89564b158509e963ca6e0  ui/src-tauri/src/main.rs
++391f02776d2a17f6e1495b6613e97b59b0ae8ee27a56b3ff23f869ce1f6d3c52  ui/src-tauri/tauri.conf.json
+ bee45188e7a6c5ab532b1a9b6e754e930228e9928e90affd16ab362a874d8680  ui/src/CompoundPlan.tsx
+ e21eba1ca6465d9876b47d202f8b6d434b391c686fe807f5f657b6a790a3801d  ui/src/Computer.tsx
+ dd29b73903bf6a534e2efca85ea82e37744424cb64594757fba6ea25458995ea  ui/src/Development.tsx
+@@ -747,12 +755,6 @@
+ 8c9942b56dfaf92703a14885bd175d87cdc7295533e885f330d297d296654a40  ui/src/translations_core.ts
+ 3c32b42f9b83ea4710ed9c8944f38d1ca4325d8051222621fba59c960f371081  ui/src/translations_tasks.ts
+ e3453fc9e7920df9bc444613b3b8a3e9f3e66265905c58a10ad54c0a74a2deba  ui/src/web_applications.css
+-98a0ecb8443c115ad06938f1cdd01dca4e0bd7d2fc080573e2dc7828c0d1dd52  ui/src-tauri/Cargo.lock
+-acc5e389d352f0b10560844e6bd18d3cfdcc4ba533ef811a57bd8146fe6ceb60  ui/src-tauri/Cargo.toml
+-6aeeab41bc35efde4e3c2b644a6248f7fc06d24ae30b75c0d33491cbb0c1fa31  ui/src-tauri/build.rs
+-14b7abe3c393ba0a1a7587cc96effc2c526fc906794304731181f9dc4ad20935  ui/src-tauri/icons/128x128.png
+-3848905948934ff44b9bb410d2faf7ab15734f5d89a89564b158509e963ca6e0  ui/src-tauri/src/main.rs
+-391f02776d2a17f6e1495b6613e97b59b0ae8ee27a56b3ff23f869ce1f6d3c52  ui/src-tauri/tauri.conf.json
+ 7b525ae0d44e70dfd2cdaa38ae7a38de66b840e17c8d2e3390971f43ccccf1a5  ui/tsconfig.json
+ c66a5f2f0dd6ba63d8ac627f26cf1bd1915593d8022d21e5cbbddf59e0bb0fc3  ui/vite.config.ts
+ 0d359c98e6d04d27601b907a810c8090a1fa5db3479116e03937063629402a2c  uv.lock

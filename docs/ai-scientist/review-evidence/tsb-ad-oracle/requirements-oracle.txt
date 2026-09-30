@@ -1,0 +1,6 @@
+# Python 3.12.13; generated independently of application lockfile
+numpy==1.26.4
+scipy==1.13.1
+scikit-learn==1.5.2
+joblib==1.6.0
+threadpoolctl==3.7.0

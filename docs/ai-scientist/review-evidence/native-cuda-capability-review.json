@@ -1,0 +1,389 @@
+{
+  "schema": "native-cuda-capability-review.v1",
+  "observed_at": "2026-09-24T22:21:52.851816+00:00",
+  "scope": "Tiny Torch CUDA operation in a private user/network namespace; no model, AOS, scheduler or production lifecycle acceptance.",
+  "script_sha256": "97ef0e97f156de1bddd2903555ac3053f4d5a984218d572de9c066d9830d2417",
+  "worker_sha256": "28456d70b1a30f9a092b6e4ee842b18b05e7265d05360f98b0e6914aa49019e8",
+  "unit": "swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+  "checks": {
+    "host_preflight_passed": true,
+    "private_namespace": true,
+    "no_default_route": true,
+    "exact_cuda_result": true,
+    "one_mib_tensor": true,
+    "sm89_device": true,
+    "same_host_pid_and_cgroup": true,
+    "gpu_pid_visible_to_host": true,
+    "actual_unit_limits": true,
+    "worker_exited_zero": true,
+    "unit_terminal": true,
+    "owned_gpu_pid_gone": true,
+    "cgroup_drained": true,
+    "host_namespace_unchanged": true
+  },
+  "samples": [
+    {
+      "observed_at": "2026-09-24T22:21:52.914046+00:00",
+      "monotonic_seconds": 63133.124240555,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23446433792,
+      "swap_used_bytes": 2367737856,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82592681984,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 42.0,
+        "power_w": 13.72
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-09-24T22:21:53.199495+00:00",
+      "monotonic_seconds": 63133.409689292,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23208038400,
+      "swap_used_bytes": 2367737856,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82592681984,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 42.0,
+        "power_w": 13.69
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-09-24T22:21:53.485043+00:00",
+      "monotonic_seconds": 63133.695237735,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23161413632,
+      "swap_used_bytes": 2367737856,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82592681984,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 42.0,
+        "power_w": 13.69
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-09-24T22:21:53.773649+00:00",
+      "monotonic_seconds": 63133.983843883,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 22969143296,
+      "swap_used_bytes": 2367737856,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82592681984,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 318.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 42.0,
+        "power_w": 13.77
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        },
+        {
+          "pid": 2212392,
+          "process_name": "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/python",
+          "used_mib": 248.0,
+          "start_ticks": 6313310,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 1000,
+          "comm": "python",
+          "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+          "identity_readable": true,
+          "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "existing_display_exemption": false
+        }
+      ]
+    },
+    {
+      "observed_at": "2026-09-24T22:21:53.806574+00:00",
+      "monotonic_seconds": 63134.016768887,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 22976266240,
+      "swap_used_bytes": 2367737856,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82592681984,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 318.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 42.0,
+        "power_w": 13.77
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        },
+        {
+          "pid": 2212392,
+          "process_name": "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/python",
+          "used_mib": 248.0,
+          "start_ticks": 6313310,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 1000,
+          "comm": "python",
+          "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+          "identity_readable": true,
+          "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "existing_display_exemption": false
+        }
+      ]
+    }
+  ],
+  "before": {
+    "observed_at": "2026-09-24T22:21:52.880099+00:00",
+    "monotonic_seconds": 63133.090293206,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 23448334336,
+    "swap_used_bytes": 2367737856,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82592681984,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 62.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 42.0,
+      "power_w": 13.72
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      }
+    ]
+  },
+  "command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+    "--service-type=exec",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=200%",
+    "--property=TasksMax=64",
+    "--property=RuntimeMaxSec=30",
+    "--property=TimeoutStopSec=2",
+    "--property=KillMode=control-group",
+    "--property=NoNewPrivileges=yes",
+    "--property=UMask=0077",
+    "--setenv=CUDA_VISIBLE_DEVICES=0",
+    "--setenv=OMP_NUM_THREADS=2",
+    "--setenv=OPENBLAS_NUM_THREADS=2",
+    "--setenv=HF_HUB_OFFLINE=1",
+    "--setenv=VLLM_NO_USAGE_STATS=1",
+    "/usr/bin/unshare",
+    "--user",
+    "--map-root-user",
+    "--net",
+    "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/python",
+    "/run/user/1000/swapp-cuda-770c9137529f43e4a05bd146268cf594/worker.py",
+    "/run/user/1000/swapp-cuda-770c9137529f43e4a05bd146268cf594",
+    "net:[4026531833]"
+  ],
+  "unit_running": {
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "InvocationID": "c90480a687b24d89a5b3f07a85898110",
+    "RuntimeMaxUSec": "30s",
+    "MainPID": "2212392",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+    "MemoryPeak": "495001600",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "2147483648",
+    "MemorySwapMax": "0",
+    "TasksMax": "64",
+    "KillMode": "control-group"
+  },
+  "worker": {
+    "pid": 2212392,
+    "namespace": "net:[4026533035]",
+    "torch": "2.13.0+cu132",
+    "cuda": "13.2",
+    "device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "capability": [
+      8,
+      9
+    ],
+    "result": 524288.0,
+    "allocation_bytes": 1048576,
+    "peak_allocated_bytes": 2098688,
+    "peak_reserved_bytes": 4194304,
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service",
+    "no_default_route": true
+  },
+  "process_exit_code": 0,
+  "unit_terminal": {
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "RuntimeMaxUSec": "infinity",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "ControlGroup": "",
+    "MemoryPeak": "[not set]",
+    "CPUQuotaPerSecUSec": "infinity",
+    "MemoryMax": "infinity",
+    "MemorySwapMax": "infinity",
+    "TasksMax": "37347",
+    "KillMode": "control-group"
+  },
+  "after": {
+    "observed_at": "2026-09-24T22:21:54.208168+00:00",
+    "monotonic_seconds": 63134.4183637,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 23341006848,
+    "swap_used_bytes": 2367737856,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82592681984,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 62.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 42.0,
+      "power_w": 13.88
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      }
+    ]
+  },
+  "stdout": "{\"pid\": 2212392, \"namespace\": \"net:[4026533035]\", \"torch\": \"2.13.0+cu132\", \"cuda\": \"13.2\", \"device\": \"NVIDIA GeForce RTX 4070 Ti SUPER\", \"capability\": [8, 9], \"result\": 524288.0, \"allocation_bytes\": 1048576, \"peak_allocated_bytes\": 2098688, \"peak_reserved_bytes\": 4194304, \"cgroup\": \"0::/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-review-native-cuda-770c9137529f43e4a05bd146268cf594.service\", \"no_default_route\": true}\n",
+  "stderr": "",
+  "passed": true
+}

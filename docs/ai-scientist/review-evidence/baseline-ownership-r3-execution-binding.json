@@ -1,0 +1,34 @@
+{
+  "schema": "baseline-ownership-execution-binding.v1",
+  "session_id": 37747,
+  "completion_chunk": "5f1d52",
+  "exit_code": 1,
+  "source_head": "f2b9100ba2dcdb846ffafe0264bd7d1fcbacf8a1",
+  "driver_sha256": "b129717591cd88a2d10291b0ab7f8b3e662d45af2411f8496aeb535f87adae1d",
+  "sql_companion_sha256": "bb3ceb119161b3e6cd915165ffbc26d97533477d4a6145b24ea46e08711f2974",
+  "execution_evidence": "baseline-ownership-proof-033-bd4e0866d049.json",
+  "execution_evidence_sha256": "03a189f6f181fe8902dfc0be11ec4e3aaf79cee7b2110da98dd49da4862b98b5",
+  "migration_head": "0025_director_generations",
+  "migration_exit_code": 0,
+  "api_health": "ok",
+  "failure": "Production Director failed with ProgrammingError after measured baseline artifacts; exact SQLSTATE/message not retained. Numeric0.0 budget guard is a source-identified hypothesis pending direct PG regression.",
+  "actual_measurement_artifacts": 36,
+  "artifact_audit": {
+    "file": "baseline-ownership-r3-artifact-audit.json",
+    "sha256": "3fb50cfcb72bf946c2d5c4dedfa185d033c0bb513453c2d7046b90d5b5e4947b",
+    "chunk": "b6008c",
+    "exit_code": 0
+  },
+  "full_sql_subset_passed": true,
+  "fresh_final_database_matrix_verified": false,
+  "terminal_baseline_report_verified": false,
+  "queued_stop_scenario_started": false,
+  "cleanup": {
+    "run_cleanup_verified": true,
+    "api_process_reaped": true,
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "unrelated_container_inventory_unchanged": true,
+  "scope": "Actual synthetic baseline measurements retained; full dispatch/report failed. No public-data, GPU, model or AOS acceptance."
+}

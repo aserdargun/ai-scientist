@@ -1,0 +1,13 @@
+{
+  "source_url": "https://netman.aiops.org/wp-content/uploads/2019/08/OmniAnomaly_camera-ready.pdf",
+  "doi": "10.1145/3292500.3330672",
+  "path": "data/public/smd/7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4/source-paper.pdf",
+  "bytes": 6217028,
+  "sha256": "e09319f9f62505d6b49497484c9c2dd599e94d7bd484704d867c6bdb8f8652b3",
+  "physical_sampling_seconds": 60,
+  "timestamp_in_raw_files": false,
+  "absolute_time_origin": null,
+  "section": "Appendix A: DATASETS",
+  "policy": "relative source sample index times 60 seconds; no invented UTC origin",
+  "sampling_quote": "The observations in these three datasets are all equally-spaced 1 minute apart."
+}

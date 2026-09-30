@@ -1,0 +1,107 @@
+{
+  "schema": "baseline-ownership-execution-binding.v1",
+  "session_id": 56324,
+  "completion_chunk": "ad5ce8",
+  "exit_code": 0,
+  "service_runtime_seconds": 531.96,
+  "source_head": "c6fc212f69b18893ade15447aaa373ef6c345ddb",
+  "runtime_version": "0.33.2",
+  "driver_sha256": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+  "sql_companion_sha256": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2",
+  "diagnostics_helper_sha256": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+  "execution_evidence": "baseline-ownership-proof-033-432eef866da3.json",
+  "execution_evidence_sha256": "4e0ff7a5a9b6420765577a40f9f9f318bc716e64eb66fc835e75748e50a1a234",
+  "migration_head": "0025_director_generations",
+  "migration_exit_code": 0,
+  "image": "sha256:359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73",
+  "api_health": "ok",
+  "matrix": {
+    "experiment_count": 3,
+    "nonbaseline_rows": 0,
+    "score_rows": 36,
+    "seed_count": 3,
+    "task_count": 4,
+    "unique_cells": 36
+  },
+  "terminal_baseline_report_verified": true,
+  "report_sha256": "3dcdde08773710a1246634c61361df55c916c3485366de3dc412590fbe80feea",
+  "model_usage": {
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "queued_stop": {
+    "calibration_complete": false,
+    "http_stop_status": 200,
+    "job_count": 0,
+    "run_id": "d783e345-d5ab-4f2c-a255-6ab10e493ce3",
+    "score_count": 0,
+    "state": "stopped",
+    "task_count": 0,
+    "task_plan_count": 0
+  },
+  "intermediate_receipts": [
+    {
+      "canonical_payload_sha256": "085ed5477cad90364d57e2e46d9ea1110084c32a88b516901d86b75806507d58",
+      "path": "proof-checkpoints/sql-owner-cases.json",
+      "sha256": "1f5a426d460764ff2d3755414c95eacc438bf55e37d53c7071958d0ef1a48399",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "sql-owner-cases"
+    },
+    {
+      "canonical_payload_sha256": "ea9dd33c2b9e6300ca81cc6b8de8adfd74421412c4d797354196c53658b2af85",
+      "path": "proof-checkpoints/baseline-admitted.json",
+      "sha256": "cd13fadb79905b587b07b32263c480df15b4b33547c00d3131a2a073fb9f5c3f",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "baseline-admitted"
+    },
+    {
+      "canonical_payload_sha256": "c9037bb19d6d214ba7313d763f90176e5dc51a1214692b4274c49ab744329059",
+      "path": "proof-checkpoints/completed-baseline.json",
+      "sha256": "29eb87335a0b4c16876238a184432fe18fef17498cc9deedd8cef95bfe811eb9",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "completed-baseline"
+    },
+    {
+      "canonical_payload_sha256": "dbf9b6f02e2e810cc8ea48a2bdef838e096b834e27c4563c0e5b12ddc5c172a9",
+      "path": "proof-checkpoints/queued-stop.json",
+      "sha256": "d68265e21b32bf89a5bfdd697851dd08c8effd78478ed1dd1235a353a47da3da",
+      "source_sha256": {
+        "diagnostics_helper": "4b44e0d2548fcd78bf1efc874b18370ba20add656bbb59d64acaa1bc2bda74f0",
+        "driver": "44a7e6b1ba193eccb2eb7229393a5f73544a16b35f0a073db9d70b037edb58b5",
+        "sql_companion": "c1d380aaae423273768cee9d670fdfe0c4290406f50925667a4392bb053c63a2"
+      },
+      "stage": "queued-stop"
+    }
+  ],
+  "private_source_capture_root": "data/runtime/parallel-m0/baseline-ownership-proof-033/432eef866da344f5b85ef32fa5cefa52",
+  "cleanup": {
+    "run_cleanup_verified": true,
+    "api_process_reaped": true,
+    "owned_container_removed": true,
+    "credentials_removed": true,
+    "raw_owned_drain_verified": true,
+    "primary_run_terminal_semantics_verified": true,
+    "proof_source_capture_verified": true
+  },
+  "unrelated_container_inventory_unchanged": true,
+  "limitations": [
+    "Synthetic four-task suite, not public data.",
+    "Active worker stop, checkpoint interruption, takeover/restart and holdout generation proof not run.",
+    "Full CLI/API reports were verified during execution; only hashes and matrix metadata are retained after disposable PG cleanup, not complete report JSON.",
+    "No model, GPU, training or AOS acceptance."
+  ],
+  "scope": "Actual production CLI/API dispatch and independent Scorer: 3 algorithms x 4 synthetic tasks x 3 seeds; completed report and independent zero-work queued-stop verified."
+}

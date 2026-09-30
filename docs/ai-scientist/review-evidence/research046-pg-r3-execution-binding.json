@@ -1,0 +1,67 @@
+{
+  "schema": "research046-pg-execution-binding.v1",
+  "attempt": "r3",
+  "session_id": 75959,
+  "launch_chunk": "1d91f3",
+  "final_chunk": "33fa5a",
+  "process_exit_code": 1,
+  "service_runtime_seconds": 74.744,
+  "memory_peak_mb": 210.6,
+  "swap_bytes": 0,
+  "evidence": "research-integration-046-pg-b87b8eeb64ba.json",
+  "evidence_sha256": "e68da5ed8b03b5b6d13071c6a25dc94f2a6b919002cec4f2bdf51eef5941e344",
+  "migration_head": "0030_director_resume",
+  "test_passed_count": 29,
+  "tests_executed": 33,
+  "source_matches_snapshot": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "failures": [
+    {
+      "failure": {
+        "line": 178,
+        "message": "ValueError: existing application state digest conflicts with replay",
+        "path": "/home/cachyos/ai-scientist/data/runtime/research-integration-046-pg-smoke/b87b8eeb64ba4bc596ce6a4d17b3feb6/source/lab/director/holdout_replay.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_expired_historical_positive_suffix_then_seal[run_end-application]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    },
+    {
+      "failure": {
+        "line": 178,
+        "message": "ValueError: existing application state digest conflicts with replay",
+        "path": "/home/cachyos/ai-scientist/data/runtime/research-integration-046-pg-smoke/b87b8eeb64ba4bc596ce6a4d17b3feb6/source/lab/director/holdout_replay.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_expired_historical_positive_suffix_then_seal[run_end-state]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    },
+    {
+      "failure": {
+        "line": 117,
+        "message": "sqlalchemy.exc.ProgrammingError: (psycopg.errors.RaiseException) scored experiment requires scores for every planned task\nCONTEXT:  PL/pgSQL function guard_experiment_lifecycle() line 74 at RAISE\nSQL statement \"UPDATE lab.experiments SET status = target_status WHERE experiment_id = p_experiment_id\"\nPL/pgSQL function commit_experiment_documents(text,jsonb,text,text,jsonb,text,text,text) line 69 at SQL statement\n[SQL: \n                SELECT lab.commit_experiment_documents(\n                    %(experiment_id)s,\n                    CAST(%(experiment_json)s AS jsonb), %(experiment_sha256)s,\n                    %(experiment_blob_sha256)s, CAST(%(trajectory_json)s AS jsonb),\n                    %(trajectory_sha256)s, %(trajectory_blob_sha256)s, %(messages_blob_sha256)s\n                )\n                ]\n[parameters: {'experiment_id': 'exp_6773c32906bd4917b0846a848eb2874e', 'experiment_json': '{\"agent_version\":\"synthetic-runend-unavailable.v1\",\"baseline_name\":null,\"calibration_sha256\":\"6f7e252c84f6a8602416bd9606849947604fd90c28a9189db8d28a9 ... (1401 characters truncated) ... .0,\"status\":\"scored\",\"suite_id\":\"synthetic.runend-unavailable.6a82e599707e4f86\",\"suite_score\":0.5,\"suite_version\":3,\"system\":\"S1\",\"wall_seconds\":0.0}', 'experiment_sha256': 'fa38460e11ef3a9d42873ba02135c424889f4bef387124d6f4d95ba225d51acf', 'experiment_blob_sha256': 'fa38460e11ef3a9d42873ba02135c424889f4bef387124d6f4d95ba225d51acf', 'trajectory_json': '{\"adapter\":\"none\",\"agent_version\":\"synthetic-runend-unavailable.v1\",\"baseline_name\":null,\"calibration_sha256\":\"6f7e252c84f6a8602416bd9606849947604fd9 ... (857 characters truncated) ... ay\":null,\"thinking\":false,\"tool_calls\":0,\"top_p\":1.0,\"trajectory_id\":\"trj_42381465cf47467dbcddb3d16c1c9c0b\",\"usage_profile\":\"noncommercial_research\"}', 'trajectory_sha256': '3f5c78f1b3afc4201e31ec920604ebbd8a298f4798e36f1d7f106c34a7c2772c', 'trajectory_blob_sha256': '3f5c78f1b3afc4201e31ec920604ebbd8a298f4798e36f1d7f106c34a7c2772c', 'messages_blob_sha256': '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'}]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+        "path": "/home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/psycopg/cursor.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_expired_historical_positive_suffix_then_seal[keep_interval-state]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    },
+    {
+      "failure": {
+        "line": 117,
+        "message": "sqlalchemy.exc.ProgrammingError: (psycopg.errors.RaiseException) run update requires an owned or authorized transition\nCONTEXT:  PL/pgSQL function guard_director_run_update_statement() line 59 at RAISE\n[SQL: UPDATE lab.runs SET state='stop_requested',stop_requested=true WHERE run_id=%(run)s]\n[parameters: {'run': UUID('f1fd362d-6874-496c-8648-c882326b9ed2')}]\n(Background on this error at: https://sqlalche.me/e/20/f405)",
+        "path": "/home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/psycopg/cursor.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_stopped_first_baseline_closes_orphan_without_new_generation",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    }
+  ],
+  "driver_change": "Same 33 targets and bounds; maxfail=0 surfaces all independent failures in one run.",
+  "scope": "Real isolated PostgreSQL on synthetic ledger fixtures; 29 passed, 4 failed; full resume/stop acceptance remains open."
+}

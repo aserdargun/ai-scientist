@@ -1,0 +1,21 @@
+{
+  "schema": "local-console-quality-gate.v1",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "files": {
+    "console/__init__.py": "f3a1616483e765f0f441e82494a8432eb36719957628693f9b5f3dabd316929d",
+    "console/acceptance.py": "4b77a57321b94b3910eca9f8b754ee7136ba69c1bc8031fecdbe84bb2beea051",
+    "console/app.py": "5a150d03f8ee31becf6778c42f77ad012582c5d2d65b31a0601fb851046dc0eb",
+    "console/checks.py": "8a9e9318a759cbcc4f8950d80171e5a3654c848aa898f1432b381f978b242bba",
+    "console/host.py": "c521f2d798072cd65d671ee642f8a289b6f1543a7c689aa1242362a47c9ba2fb",
+    "console/server.py": "4ca07390cb906a9fd242f8237f1e554f67b95802272c5673b1c591a86d84c2b0",
+    "console/upstream.py": "85d66ff96add87fa2ffd36025f4655bd8582c4d1c8c015d3004b697d04689ab6",
+    "tests/test_console_acceptance.py": "f68c3b2b7ef12d3b41a6228ca0363a4c4dc46a8015433261c5dcd44824f66732",
+    "tests/test_console_checks.py": "c03e26212f3036157500332947424330ac8efe00cf7cc1d18d6d55a7ee698e8a",
+    "tests/test_console_host.py": "23d38a0dfa8165da5f772a443614305f1fde37a477963b01f227cd6862e74bc9",
+    "tests/test_console_upstream.py": "3821d7c8af4ee516cd3fe704b2d03f8dbbe1abe68a1f1ba4d1197c83c47e0ac2",
+    "ops/run-console.sh": "5a75a11ac78f59bbc24a164795f4c27d0fccf0f9607d898c9bfdf14c75e8a851"
+  },
+  "gate_sha256": "434a837a4f93668b579b0bb8154ce3656d26617dd607760a693bf0fff0e42594",
+  "gate": "docs/ai-scientist/evidence/quality-gate-local-console.json"
+}

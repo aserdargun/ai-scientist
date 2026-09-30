@@ -1,0 +1,128 @@
+{
+  "schema": "integration046-freeze.v1",
+  "source_root": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/research-integration-046",
+  "created_at": "2026-09-27T08:49:47.756330+00:00",
+  "payload_files": {
+    "lab/db/schema.py": "94b1adcdbdbc0e3d7323845421da25c3f5ff03e59ea92fec65b8ae1a5aa15f7d",
+    "lab/db/migrations/versions/0030_director_resume.py": "5d5b1f874e92d5337056d93481629e328e4e2823ff9a0975123593401a693638",
+    "lab/director/baseline_runner.py": "f5e8f2688988663f6eba3c2d3e5336e6c5d3bd39fd5aba1ec20237a41fc03b1a",
+    "lab/director/evaluation_recovery.py": "57cf7b0744713576eb7b1be8021c058ad3428f97ef48e0025cc50ae433679af9",
+    "lab/director/executor.py": "5d44ed03bf04db0e92a2f1b5b3968851a91bb04b4686197cbfa607e899f628b7",
+    "lab/director/explore.py": "b0d328c0300f33cb465652266f39ea7957929d30c1e09a1d693baa4f5b0b5bed",
+    "lab/director/fake_llm.py": "e6974dd9bee4b0d3d6dd97c44993fa16e67ad083aa86cdc48d9a57430517e296",
+    "lab/director/holdout.py": "f9bdda50a35076dd0f804fdd363544389b693eb17df718b1b8403bc9dc1df6ba",
+    "lab/director/holdout_replay.py": "22dcd1ca24b4f2ce3ec99d3c24f0d1188fcb24541cdf9868477b6e6f4aece4c2",
+    "lab/director/local_llm.py": "82a4ff74faa9f1b5c4f3b7033b1216db9fcc8f6e122258dc6e33381a16a602bc",
+    "lab/director/loop.py": "0ec23c22a0c9709fae2976bc363067f6c6e4f2a0895ba5fdc295fc04706f16f3",
+    "lab/director/resume.py": "2b44acea4a0d09105c314237fd220411d2c4a6967ef5ba86b38ac555b97b79ad",
+    "lab/director/runner.py": "13f8c1abb45738fab27f65c07047bac83842cd76d2d8ac7230291f321db5729a",
+    "lab/scorer/baseline_report.py": "b0c532b29dbdfc50fe197b2d0bedd3581ae2f7b225e77ecf85ee82b8a39e8b2c",
+    "lab/scorer/explore_report.py": "ad5015a093cb709b65f524396fab174ff20f74a1cf253949dfd31b1d59d0d30c",
+    "lab/scorer/resume_recovery.py": "2bdc9873107b0326ca203736748c894366b9e8b4a01b0d5f5cd59707801e607f",
+    "lab/scorer/service.py": "7da2323f15a045e09b5382c797426a82174afc8b3edca4f491dfe015455dad58",
+    "lab/scorer/supervisor.py": "7f471c5707ba8850f8d284c0ef613536730861b26345b4e9424e115effaeaccf",
+    "lab/scorer/worker.py": "06753e9f2d1f88acf0f5f8889e909264614005629e40f09232b2a893690482b6",
+    "tests/test_director_resume043.py": "ae092f477b81a7b5dd49116838e8894a2dcc9f0f6d91d5a4c672577ebe8465b1",
+    "tests/test_explore044.py": "825cd354a3b146b68c30ff10f390236883f013284ff5358ee452a691d589722f",
+    "tests/test_explore044_integration.py": "aed71c19c7744f3477a8a3417d04238377dfae38fa660feb17b48c277af13603",
+    "tests/test_postgres_resume043.py": "a98e5c0c7a716355ce024d5018978f6bd7a2988375323067ce2ea5c8bd002226",
+    "tests/test_postgres_resume046_chain.py": "5c789a0256ff47662fc5649253f590c51030dce2d9dbe4e9d4e21ba943befa5a",
+    "tests/test_postgres_run_end_unavailable.py": "62d04a03ec647ec0a1bc6d051f8a0217494c9b5bde9375d32575f57912b2f136",
+    "tests/test_postgres_terminal_finalization037.py": "475a30e7b6ae19e5c16023236cba6a74400309d6545ac8150a979f0db2d97b05",
+    "tests/test_scorer_finalizer_identity.py": "fb11372c728185fd9875cd01356ae034e424bc92b0bf104ab079afb690170684",
+    "lab/cli.py": "ebb22171cf5eeb7bcfb03edca7d458d1e245be2401e506a9e59024459f5387b7",
+    "lab/director/contracts.py": "a6a61bf34ca8fc9ae1c7e320e25f789f8429258b30e4c72ddd247411129e7cc5",
+    "lab/director/recovery.py": "738d4e03fc94c979d4c5d718a54e1e1d300825290565a49d49682001a1e69e74",
+    "lab/director/stop_closure.py": "a911b3ff76d30f2e09ce422630f535bf9912b1b4603a6624edb8b0f4d445af1f",
+    "lab/scorer/holdout_supervisor.py": "2751990b2d1f147c1b1dabe2283bde6af5bbc5e112aed0d8418b96b92adece09",
+    "lab/scorer/stop_recovery.py": "0e641def0d347724aee82163f5f907840b4887c15ffde9f9cc7d2b48c58450e2",
+    "tests/test_director_resume_entrypoint047.py": "66165c540a5b393c5165f2a3fa98c7a371b2b3ae06ce34d150323a993209a7b0",
+    "tests/test_mode_finalization0353.py": "2ea714df4ac19f2620ed07fdc39f70492661b0858c56159154d9b3af378e9910",
+    "tests/test_stopped_baseline_closure048.py": "2f0dbfdd5325e04d3e81235656ddac666f3a78ac2a8fffb537dd324a830521cd",
+    "lab/db/migrations/versions/0029_holdout_registration.py": "136c279cb11a63f2e731e448d61d975a1fa31c30b392825b03be9e46298386fe",
+    "tests/test_postgres_holdout_registration029.py": "a2da5cf6bf10249ce5472ebd4dd47cd9887518e06ac32f8a333f74a0addc5fb0",
+    "lab/scorer/task_semantics.py": "bbd978a1f8b0a965c280cab0354f01623bdf8e66e89163d283e5348db39fbe1a",
+    "tests/test_mode_scorer_time_axis.py": "b4fc9584f1e98eca5493433881f3ef237dbb6619262d1b9b37cb76b0cea9181b",
+    "tests/test_public_scorer_families.py": "4da058be64bafe53c7f00376cf04682becbd6b8d62c4dba3bd7cbc2e5bd41044",
+    "tests/test_director_harness_mismatch.py": "7916a925d40780607dfab036c0df1745a08a458efe4c071fa936a7828d6c1616",
+    "tests/test_director_primary_recovery.py": "c59c5e5ca0c2fa790fd93a4269b1869215df8cd4cb2e1a0196cc125d9dfa1e13",
+    "tests/test_director_seed_resume_review.py": "6f0b8ad346acea4922f8de6cee7980972a25329947fce577a692a99c898da081"
+  },
+  "overlay_only": true,
+  "base": "base045-source.json",
+  "component_manifests": {
+    "review-evidence/046-sol-owned-freeze.json": "e3292cdf9392bb73a343a20227d2bb419820267089803f1b1ba4c3f607be4752",
+    "review-evidence/entrypoint-stop048-freeze.json": "db1df7df1185a12caef8a346fd7fdd03fbad67cd376c06cb1c77ba376ce2d2b1"
+  },
+  "checks": {
+    "sol": {
+      "initial_cpu": "resume046-cpu-r1.json",
+      "post_append_cpu": "resume046-stop-cpu.json",
+      "mypy": "resume046-mypy-r1.json",
+      "ruff": "resume046-ruff-r3.json",
+      "stop_sql_helper_ruff": "resume046-stop-ruff-final.json",
+      "stop_tail_ruff": "resume046-stop-tail-ruff.json",
+      "pg_collection": "resume046-stop-collect-pg.json",
+      "schema_ruff": "resume046-schema-ruff.json",
+      "schema_compile": "resume046-schema-compile.json",
+      "pg_r1_fixture_fix_ruff": "resume046-pg-r1-fix-ruff.json",
+      "pg_r1_fixture_fix_compile": "resume046-pg-r1-fix-compile.json",
+      "pg_r2_sql_fix": [
+        "resume046-pg-r2-fix-ruff.json",
+        "resume046-pg-r2-fix-compile.json",
+        "resume046-pg-r2-fix-sql-contract.json"
+      ],
+      "r4_replay": "replay046-r4-checks.json",
+      "r4_fixture": [
+        "resume046-r3-fixture-format.json",
+        "resume046-r3-fixture-ruff.json",
+        "resume046-r3-fixture-compile.json"
+      ],
+      "gate_r1_compatibility": {
+        "source_root": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/release-integration-046",
+        "receipts": {
+          "release046-r1-compat-collect.json": "93721b814bb2ca4682dfb4b2fc5561731d7bd2aaa51a49c4821ef00be3affa74",
+          "release046-r1-compat-tests.json": "9b1d2fdf8ff486492f58d24f0b3b2f1d4dad9c7b9782c289067638ffb3442d57",
+          "release046-r1-compat-mypy.json": "0d4cbb45138de1ffd3ab9a9492012ed739877368987c6bf68debbd964614ef5b",
+          "release046-r1-compat-ruff.json": "d93a659fae25db754e31f00baa6c3d00c69f0c9d04e3f03a05ffb6ca8e640ba5",
+          "release046-r1-compat-ruff-final.json": "b2b72ce243399fde0d20ed14fef40a733112f695bd4e5c6aba999d013becaa5b"
+        },
+        "focused_cpu": 33,
+        "pg_test_count": 33,
+        "pg_runtime_helper_coverage": "same mixed-generation case now calls real six-argument helper"
+      }
+    },
+    "entrypoint_stop": {
+      "bandit": "6 modules, exit 0 (preexisting nosec prose warnings)",
+      "compile": "9 files, exit 0",
+      "cpu": "76 passed, 1 existing live dispatch test deselected",
+      "ruff": 0,
+      "strict_mypy": "6 modules, exit 0"
+    },
+    "postgres": "R4 passed33; six-argument production helper repaired aftergate inspection, same33 tests retained with actual helper assertions; R5 pending.",
+    "mandatory_gate": "R1 failed oldfixture engine seams and twoB608 fixed-source annotations;33 focused CPU pass afterrepair; next fullgate pending."
+  },
+  "limitations": [
+    "No PostgreSQL execution in this agent; 16 cases collected only.",
+    "CPU initial53 and repeated17 are separate runs, not70 unique tests.",
+    "PG drain and score/document fixtures are synthetic; no host drain, candidate execution or model proof.",
+    "Actual PostgreSQL, process/unit/sandbox, image and full gate evidence pending root",
+    "Lost calibration cannot resume research; explicit failure preserved",
+    "Post-takeover stops and partially scored/multiple interrupted baselines remain pending",
+    "External host unit/module policy acceptance remains unmeasured"
+  ],
+  "integration_notes": [
+    "Copy only listed payloads over current0353; preserve current console/UI, VERSION and root image policy.",
+    "0352 image lock is a recorded dependency, not an overlay payload; root must build/pin046 image.",
+    "Original 043 migration0028/0029_director_resume must not be copied; final revision0030 follows0029_holdout_registration.",
+    "SQL stop case uses explicitly synthetic abandoned document pair with unknown wall/fit/score; production immutable-manifest reconstruction has separate CPU tests.",
+    "No services, PG, Docker, model, GPU or AOS execution by this agent.",
+    "R2 correction overrides sibling original migration dependency98c447d with final0030 payload digest; sibling source files remain identical.",
+    "R4 retains historical positive application bytes without optional state digest; any present digest and failed run-end required digest remain validated in Python andSQL. Existing PG33 cases unchanged; periodic fixture deadline15s preserves actual expiry.",
+    "Gate repair adds three existing control-flow testfiles; no runtime guard weakened.0030 comments alone changed Python source, identicalAST/emittedSQL. Public050 is release-only, excluded from this PG overlay."
+  ],
+  "runtime_base_dependencies": {
+    "ops/sandbox-image.lock": "c5f5301cc5b9c4c556811a93d210e094b1bf4b7f149e6ac9c900b554515565ef"
+  },
+  "expected_pg_test_count": 33
+}

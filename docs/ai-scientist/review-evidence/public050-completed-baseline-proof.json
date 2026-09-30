@@ -1,0 +1,57 @@
+{
+  "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+  "report_sha256": "8cb2abd94ec92fad9079b69cb06bba44adb2a91867fd5699223c47afa15fd6ab",
+  "status": "completed",
+  "measured_scores": 36,
+  "api_database_report_equal": true,
+  "typed_report_valid": true,
+  "model_usage": {
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "scope": "Three selected TSB members plus SMD official 12k slices; baseline only, not public research acceptance",
+  "observer_execution": {
+    "session": 81357,
+    "launch_chunk": "634fc5",
+    "final_chunk": "1cd6bc",
+    "exit_code": 0
+  },
+  "admission_chunk": "298b8b",
+  "elapsed_wall_seconds": 670.7367101500058,
+  "metric": "VUS-PR arithmetic mean over fixed seeds 0,1,2 within each selected task",
+  "matrix": [
+    {
+      "dataset_id": "TSB-AD-M-Genesis",
+      "robust_z": 0.09007498789837012,
+      "iforest": 0.008256660659050312,
+      "ecod_train_frozen": 0.046342217812350386
+    },
+    {
+      "dataset_id": "TSB-AD-M-GECCO",
+      "robust_z": 0.03184943339381335,
+      "iforest": 0.13745581477094218,
+      "ecod_train_frozen": 0.12264881979639727
+    },
+    {
+      "dataset_id": "TSB-AD-M-CATSv2",
+      "robust_z": 0.03157035967633372,
+      "iforest": 0.018297506701567046,
+      "ecod_train_frozen": 0.02235371177835975
+    },
+    {
+      "dataset_id": "SMD",
+      "robust_z": 0.6515336578966533,
+      "iforest": 0.5155036816556687,
+      "ecod_train_frozen": 0.4792213738134844
+    }
+  ],
+  "browser_execution": {
+    "session": 83177,
+    "launch_chunk": "eb82e5",
+    "final_chunk": "776afd",
+    "exit_code": 0,
+    "checks_passed": 4,
+    "purpose_metadata_gap": "Current0.36 status lacks purpose for watched runs; narrow0.36.1 fix pending deployment."
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "checked_at": "2026-09-24T20:35:08.512110+00:00",
+  "source_sha256": "9eab797dfad4adf26421138258401a3699e717db9964b7e2e837c58e75825074",
+  "scope": "Actual loopback status/health/repeated queued-job stop calls during an owned live Director synthetic Docker/Scorer run. Does not stop the active research, test a GPU model, or prove full in-flight cancellation.",
+  "checks": {
+    "actual_processes_and_measured_research_active": true,
+    "health_status_and_repeated_stop_responsive": true,
+    "different_research_run_remains_running": true
+  },
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "elapsed_s": 0.0014712499978486449,
+      "status_code": 200,
+      "response": {
+        "status": "ok",
+        "service": "lab-api"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/dc3c31c7-7eb6-4164-9766-5af4fb2a67b1",
+      "elapsed_s": 0.0015733499967609532,
+      "status_code": 200,
+      "response": {
+        "run_id": "dc3c31c7-7eb6-4164-9766-5af4fb2a67b1",
+        "origin": "aos",
+        "state": "running",
+        "created_at": "2026-09-24T20:32:11.391702+00:00",
+        "updated_at": "2026-09-24T20:32:12.816144+00:00",
+        "stop_requested": false,
+        "report_sha256": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/runs/6a70f9be-30d3-4252-bec7-4a94e2ffd0dc/stop",
+      "elapsed_s": 0.0022366459961631335,
+      "status_code": 200,
+      "response": {
+        "run_id": "6a70f9be-30d3-4252-bec7-4a94e2ffd0dc",
+        "origin": "aos",
+        "state": "stop_requested",
+        "created_at": "2026-09-24T20:32:11.610094+00:00",
+        "updated_at": "2026-09-24T20:32:11.612652+00:00",
+        "stop_requested": true,
+        "report_sha256": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/runs/6a70f9be-30d3-4252-bec7-4a94e2ffd0dc/stop",
+      "elapsed_s": 0.0021146290018805303,
+      "status_code": 200,
+      "response": {
+        "run_id": "6a70f9be-30d3-4252-bec7-4a94e2ffd0dc",
+        "origin": "aos",
+        "state": "stop_requested",
+        "created_at": "2026-09-24T20:32:11.610094+00:00",
+        "updated_at": "2026-09-24T20:32:11.612652+00:00",
+        "stop_requested": true,
+        "report_sha256": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/dc3c31c7-7eb6-4164-9766-5af4fb2a67b1",
+      "elapsed_s": 0.001166581998404581,
+      "status_code": 200,
+      "response": {
+        "run_id": "dc3c31c7-7eb6-4164-9766-5af4fb2a67b1",
+        "origin": "aos",
+        "state": "running",
+        "created_at": "2026-09-24T20:32:11.391702+00:00",
+        "updated_at": "2026-09-24T20:32:12.816144+00:00",
+        "stop_requested": false,
+        "report_sha256": null
+      }
+    }
+  ],
+  "units": {
+    "swapp-review-api-3d39996179134d91b5ac3c2d5177ea10.service": {
+      "ActiveState": "active",
+      "InvocationID": "a32ec338ddd54babaa8f943d3e68ee7c",
+      "MainPID": "1943043"
+    },
+    "swapp-review-director-3d39996179134d91b5ac3c2d5177ea10.service": {
+      "ActiveState": "active",
+      "InvocationID": "d110bec8ce0343aaa3d2ea8890ca10c7",
+      "MainPID": "1943068"
+    }
+  },
+  "running_ledger": {
+    "state": "running",
+    "origin": "aos",
+    "owner_id": "aos:lab-service",
+    "scores": 12
+  },
+  "source_unchanged": true,
+  "script_sha256": "669eeead80e1c1e241fb7e41b987fdd90909af067a355ee71fcc006bfb7486e4",
+  "all_passed": true
+}

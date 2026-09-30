@@ -1,0 +1,39 @@
+{
+  "schema": "care-calibration-source-review.v1",
+  "created_at": "2026-09-27T00:36:30.983025+00:00",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_manifest": {
+    "base_commit": "7ba1a1b",
+    "source_tree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/calibration-031",
+    "files": {
+      "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+      "lab/scorer/care_calibration.py": "641dfbdc60769875da0c07957277ccf592de9630d74561e08a3e502c89740126",
+      "tests/test_postgres_care_calibration.py": "4ac4134e5a4e49b132a71bcb8d39d3e15319ab8e782d00a10bdc55df3cd3fd59",
+      "lab/db/schema.py": "de47de9c97a33a9ce49ed1e97716c1a17ee2fbe30251a01b091f3f5eb48dfb8d",
+      "lab/scorer/holdout.py": "a3b826d919cd5969df4a92038cb45a67cdbc0421208f763e1e9d3c59c6ca06ee",
+      "tests/test_care_baseline_calibration.py": "54487c44a0f8c8bd1223fa30c75ed9a18a0fc46677ad9dc8c6a75ab558b814a7",
+      "docs/ai-scientist/review-evidence/care-b-calibration-plan.md": "d99dccf2b53b9c2cffe5465b8e90ecb0e13596b46217f0209d14eab90170fa35"
+    },
+    "scope": "Storage lock-privilege fix plus unexecuted PostgreSQL tests"
+  },
+  "status": "ready_for_disposable_postgresql_storage_proof",
+  "resolved": [
+    "Scorer job lock through narrowly granted SECURITY DEFINER RPC",
+    "Fixed search_path and authenticated Scorer caller",
+    "Exact job UUID lock retained in caller transaction",
+    "No direct job UPDATE grant to Scorer"
+  ],
+  "test_limits": [
+    "R3 registry coverage is suite version rows, not task registration",
+    "R3 race catches generic DBAPIError; specific SQLSTATE not proven",
+    "Synthetic PDM labels and failure-window inclusive bounds differ; correction required before semantic reuse"
+  ],
+  "next_test_revision": "Worker adds task-trigger coverage, coherent synthetic semantics and exact race rejection assertion before root execution.",
+  "runner_requirement": "Four roles independently authenticate against same owned isolated DB/address/internal port/postmaster generation.",
+  "actual_db_execution": false,
+  "main_integration": false,
+  "measured_calibration": false
+}

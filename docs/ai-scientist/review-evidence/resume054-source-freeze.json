@@ -1,0 +1,38 @@
+{
+  "schema": "resume054-source-freeze.v1",
+  "base_commit": "fa28624d6702962834279bb99ad4e4b6bf390adc",
+  "version": "0.36.2",
+  "private_tree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/resume-fix-054",
+  "files": [
+    {
+      "path": "harness/VERSION",
+      "sha256": "3e973bed6c1218a9b28a1fd8405d5bdce2450ec4a0d20208d9ed1ca64623077c"
+    },
+    {
+      "path": "lab/director/runner.py",
+      "sha256": "f1034fb1800f24cabe0d64d2eaa4fcb4eec349a7aa1a2a9046f1cb2ab8aa0f87"
+    },
+    {
+      "path": "lab/director/loop.py",
+      "sha256": "710480930a52b3a4748e51cf7a9f8f4b4910bec600da1d460a4fb790558651e9"
+    },
+    {
+      "path": "tests/test_proposal_completion054.py",
+      "sha256": "8f7e69ac0d6ed57795b9a58af61eabeca446d534943e06f970564522b672bf47"
+    }
+  ],
+  "base_inventory": {
+    "path": "review-evidence/resume054-base.json",
+    "sha256": "0b830757de5a64f2a2f272f7e79ed0dc5cd81c96a19a7b90b8153d35460c83e8"
+  },
+  "checks": {
+    "path": "review-evidence/resume054-checks.json",
+    "sha256": "e2f81a5fae0f184c70c7f4cee01c810b02a07e4afc5dde8c473941965d62fb86"
+  },
+  "limitations": [
+    "No live SQL/OS restart or image/full-gate acceptance performed by this agent.",
+    "Legacy incomplete proposal without completion proof fails closed; prior failed053 receipts remain immutable.",
+    "Hash artifacts are real temp blobs; SQL owner/deadline and ledger persistence are mocked; seed budget exhaustion uses real execute_candidate_seed.",
+    "Generic stopped-proposal closure is outside this patch."
+  ]
+}

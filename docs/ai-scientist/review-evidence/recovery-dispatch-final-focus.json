@@ -1,0 +1,55 @@
+{
+  "schema": "isolated-recovery-review.v1",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/recovery",
+  "branch": "feat/luna-m0-recovery",
+  "base_commit": "92e2bdc",
+  "review_scope": "production queued dispatch claim, owner receipt, clean pre-measurement failure, local-Qwen direct principal guard",
+  "actual_exit_code": 0,
+  "test_result": {
+    "pytest": "3 passed in 3.60s",
+    "ruff": "All checks passed!",
+    "mypy": "Success: no issues found in 2 source files"
+  },
+  "command": [
+    "/usr/bin/systemd-run --user --wait --collect --quiet --pipe",
+    "--unit=luna-recovery-final-focus-review.service",
+    "--slice=swapp-gpu.slice",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=120",
+    "flock -n data/runtime/parallel-m0/cpu-check.lock",
+    "python -m pytest -q tests/test_director_dispatch_owner.py::test_direct_dispatch_launches_bounded_run_bound_service tests/test_director_dispatch_owner.py::test_direct_local_qwen_requires_matching_gpu_principal_before_launch tests/test_director_dispatch_owner.py::test_production_dispatch_claim_persists_actual_run_bound_owner",
+    "ruff check lab/cli.py lab/director/recovery.py lab/db/migrations/versions/0016_director_recovery.py tests/test_director_dispatch_owner.py tests/test_director_recovery_identity.py tests/test_director_recovery_pg_review.py tests/director_dispatch_owner_review.py",
+    "mypy lab/cli.py lab/director/recovery.py"
+  ],
+  "verified": {
+    "queued_run_claim_and_owner_receipt_share_transaction": true,
+    "owner_receipt_matches_actual_run_bound_unit_process_generation": true,
+    "run_started_event_persisted": true,
+    "intentional_failure_before_measurement_persists_run_failed_event": true,
+    "no_experiment_or_report_was_fabricated": true,
+    "local_qwen_mismatched_gpu_principal_rejected_before_child_launch": true,
+    "trusted_drain_remains_inline": true
+  },
+  "fixture_limits": {
+    "database": "private isolated PostgreSQL recovery test database",
+    "dispatch": "one private queued UUID through production dispatch-one ownership routing",
+    "provider": "trusted-registry/provider seam substituted with deterministic fixture",
+    "runner": "intentional exception before experiment measurement",
+    "model_or_gpu": "not invoked",
+    "docker_or_scorer": "not invoked",
+    "live_aos_or_main_database": "not touched"
+  },
+  "source_sha256": {
+    "lab/cli.py": "fe5c9e7ad9bd18a5f8a54266641c3b6fd7d4813e10452663b8e008671c0a3e31",
+    "lab/director/recovery.py": "f4ff16b1c15650d742b4e18cf74e97a5ff5e60a5156440dcaff804f362d08c12",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "tests/test_director_dispatch_owner.py": "ef0af84295ed9f2c776f595cd138da4090f5f2bf4f3358d035df8e37d3723a24",
+    "tests/test_director_recovery_identity.py": "3b092c3729463b1a00c3e3c5ed3872de0b9e48e513c1a7e1c9695471f361c656",
+    "tests/test_director_recovery_pg_review.py": "9671220d6e5d5761cb2fd6c0eba0d8a97f195c2905050cd48627ba02f8a99ce7",
+    "tests/director_recovery_owner.py": "39546a578338de5154cb821108254e13ae84a8b027f0d3a9d4c3fe1a109dff0d",
+    "tests/director_dispatch_owner_review.py": "bfb556a9be13dfc91d87720841cf416721e7348d1d186e61063a3f3cd5b42054"
+  }
+}

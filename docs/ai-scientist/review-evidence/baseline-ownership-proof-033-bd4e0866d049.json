@@ -1,0 +1,1271 @@
+{
+  "api": {
+    "auth": "local bearer",
+    "health": "ok",
+    "pid": 1047935,
+    "port": 48161
+  },
+  "api_process_reaped": true,
+  "container_id": "5ac3c5e98336348b2e73f89443fca8814779fab9879458e122a21901d9024878",
+  "container_name": "swapp-baseline-ownership-pg-bd4e0866d049",
+  "created_at": "2026-09-27T04:51:34.035541+00:00",
+  "credentials_removed": true,
+  "database": "swapp_lab_baseline_033_bd4e0866d049",
+  "driver_sha256": "b129717591cd88a2d10291b0ab7f8b3e662d45af2411f8496aeb535f87adae1d",
+  "endpoint": {
+    "container_ips": [
+      "172.17.0.2"
+    ],
+    "host": "127.0.0.1",
+    "port": 32797
+  },
+  "error": "production Director dispatch failed for the admitted baseline; exit=1, diagnostic_sha256=ce359203538ce94002d480d003aa92e72cafcf148dba3702f0a433b07d92bca3, private_log=director-dispatch-failure.log, detail={\"dispatch\": \"failed\", \"error_type\": \"ProgrammingError\", \"owner_exit_code\": 1, \"owner_unit\": \"swapp-ai-scientist-director-dispatch-8320bed85a7b4550b913394adf583f33.service\", \"run_id\": \"8320bed8-5a7b-4550-b913-394adf583f33\", \"state\": \"failed\"}\n",
+  "error_type": "RuntimeError",
+  "exit_code": 1,
+  "fixture_id": "bd4e0866d0494280b7c307cde97250c5",
+  "host_after": {
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2"
+    ],
+    "service_states": [
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update-tray.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-:1.2-org.freedesktop.secrets@0.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-broker.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "dirmngr.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "gnome-keyring-daemon.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "gpg-agent.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "keyboxd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "p11-kit-server.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-media-session.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-pulse.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "pipewire.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pulseaudio.service"
+      },
+      {
+        "active": "activating",
+        "sub": "start",
+        "unit": "rclone-gdrive-sync.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "rclone-gdrive.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "shelly-notifications.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-ai-scientist-console.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-review-baseline-ownership-033-r3.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-importd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-machined.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "wireplumber.service"
+      },
+      {
+        "active": "failed",
+        "sub": "failed",
+        "unit": "xdg-desktop-portal-gtk.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-desktop-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-document-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-permission-store.service"
+      }
+    ]
+  },
+  "host_before": {
+    "container_ids": [
+      "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+      "5eeb3894549e282cd159349aa96f9b915e4e9aa2bf32bf069637a5dbe288506a",
+      "83db78bff3deba99d80f69b82a25f6e7e19d0e3ed288faf6560be24e64ccf014",
+      "a39921a780729c2a920027e6d008d38edfeb227ba5a25cf38ac1b179b67208d2",
+      "afaae4dcfb4763930e16d50c9200b333709df37996f6491ad3e36227999c9ec6",
+      "ca765b5ff37ddd72993fcb588bc6c72f3778fb06b58bcefebbc153e9924bccef",
+      "cf98521498cabb78182ad3736c4f503a285966babac0ff95990b5c9da349eda2"
+    ],
+    "service_states": [
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update-tray.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "arch-update.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-:1.2-org.freedesktop.secrets@0.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "dbus-broker.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "dirmngr.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "gnome-keyring-daemon.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "gpg-agent.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "keyboxd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "p11-kit-server.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-media-session.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pipewire-pulse.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "pipewire.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "pulseaudio.service"
+      },
+      {
+        "active": "activating",
+        "sub": "auto-restart",
+        "unit": "rclone-gdrive-sync.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "rclone-gdrive.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "shelly-notifications.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-ai-scientist-console.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "swapp-review-baseline-ownership-033-r3.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-importd.service"
+      },
+      {
+        "active": "inactive",
+        "sub": "dead",
+        "unit": "systemd-machined.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "wireplumber.service"
+      },
+      {
+        "active": "failed",
+        "sub": "failed",
+        "unit": "xdg-desktop-portal-gtk.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-desktop-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-document-portal.service"
+      },
+      {
+        "active": "active",
+        "sub": "running",
+        "unit": "xdg-permission-store.service"
+      }
+    ]
+  },
+  "input": {
+    "family_cap": 0.25,
+    "family_shares": {
+      "synthetic-process-0:sensors:EVT": 0.25,
+      "synthetic-process-1:sensors:EVT": 0.25,
+      "synthetic-process-2:sensors:EVT": 0.25,
+      "synthetic-process-3:sensors:EVT": 0.25
+    },
+    "fixture_id": "bd4e0866-d049-4280-b7c3-07cde97250c5",
+    "label_row_count": 512,
+    "manifest_bytes": 46177,
+    "manifest_sha256": "9465d1a78a68738460b847e576b1c2748251ab48aab71b85e3219ab8db87c203",
+    "measured_score_count": 0,
+    "planned_score_count": 36,
+    "planner_database_readback": "not_run",
+    "private_profile_inputs_sha256": "01ee0ff30776d08fc24033dc14d702e9e0ab9cc69d8a937c1b9df4ad1d2e55a5",
+    "profile_count": 4,
+    "provider_constructed": false,
+    "registry_entry_sha256": "74681c1fa90dd12574449501665ab27539f710fb10e1f2e16af25e9f6574811d",
+    "registry_sha256": "56273327afaf0c93d247848f8ed208579e30f7c756c545f7c4bda0920a2aa3e9",
+    "scenario_sha256": "134e1ebea8e4ba9c6bb2d81026cfeb44c464a259b4740a3de4de892455cf347d",
+    "sql_profile_installation": "not_run",
+    "task_count": 4,
+    "two_task_rejection": {
+      "reason": "fewer than four independent families cannot satisfy the 0.25 cap",
+      "type": "ValueError"
+    },
+    "type_shares": {
+      "EVT": 1.0
+    }
+  },
+  "installed_fixture": {
+    "label_rows": 512,
+    "profiles": 4
+  },
+  "migration_exit_code": 0,
+  "migration_head": "0025_director_generations",
+  "migration_output_sha256": "f40820ee743e8df8fe89c74568b3308380ef1711bb132284fe93142ff1b71c3f",
+  "outer_cgroup": {
+    "cpu_period_us": 100000,
+    "cpu_quota_us": 50000,
+    "memory_max_bytes": 1073741824,
+    "swap_max_bytes": 0,
+    "tasks_max": 64
+  },
+  "owned_container_removed": true,
+  "owned_process_drain": {
+    "containers": [],
+    "drained": true,
+    "marker": null,
+    "runs": [
+      {
+        "run_id": "8320bed8-5a7b-4550-b913-394adf583f33",
+        "state": "failed"
+      },
+      {
+        "run_id": "95652165-b5da-4a0c-87b9-65671ab4169b",
+        "state": "stop_requested"
+      },
+      {
+        "run_id": "e1c10770-93de-423e-8307-8e5058de3848",
+        "state": "stop_requested"
+      }
+    ],
+    "score_job_count": 36,
+    "units": [
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-95652165b5da4a0c87b965671ab4169b.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-95652165b5da4a0c87b965671ab4169b.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-95652165b5da4a0c87b965671ab4169b.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-95652165b5da4a0c87b965671ab4169b.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-e1c1077093de423e83078e5058de3848.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-e1c1077093de423e83078e5058de3848.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-e1c1077093de423e83078e5058de3848.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-e1c1077093de423e83078e5058de3848.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-8320bed85a7b4550b913394adf583f33.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-director-dispatch-8320bed85a7b4550b913394adf583f33.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-finalize-8320bed85a7b4550b913394adf583f33.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-finalize-8320bed85a7b4550b913394adf583f33.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-ceb3cdc5ae3d4bf0885fed3d4c0fa128.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-ceb3cdc5ae3d4bf0885fed3d4c0fa128.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-5e3666b22fe8444897a925bbb8622f1a.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-5e3666b22fe8444897a925bbb8622f1a.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-45b2d88b7b6a401e97de7d84b94b6730.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-45b2d88b7b6a401e97de7d84b94b6730.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-8114d78bfd4a4386bd3fa569855c067a.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-8114d78bfd4a4386bd3fa569855c067a.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-7a3fbc1fda5243b8b4370259bb6f3150.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-7a3fbc1fda5243b8b4370259bb6f3150.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3f059c7888d84e528dbeaead4c48acf3.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-3f059c7888d84e528dbeaead4c48acf3.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-6d0878ae0c1f4d5595d1b682dfd77836.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-6d0878ae0c1f4d5595d1b682dfd77836.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-bf764cc0b91e4435a21f75393fafd1e9.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-bf764cc0b91e4435a21f75393fafd1e9.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-a28d446a378c4235be5ab8c1f30e1f47.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-a28d446a378c4235be5ab8c1f30e1f47.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-935455a726d74a03868f3cddc02d78d9.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-935455a726d74a03868f3cddc02d78d9.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-a5618e398ba246c58a51e940dcf55cd2.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-a5618e398ba246c58a51e940dcf55cd2.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3ccbb59bfe794e31bf77d35b49627c00.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-3ccbb59bfe794e31bf77d35b49627c00.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-07405f66990d4e0cbb9f873d1fe1f583.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-07405f66990d4e0cbb9f873d1fe1f583.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-c93f095fec754404a431b9fcd7a649ca.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-c93f095fec754404a431b9fcd7a649ca.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-4b4db3b41ee649a8b58b8198b0b695aa.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-4b4db3b41ee649a8b58b8198b0b695aa.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-199ecf60533f456aa192613e72e1dbe0.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-199ecf60533f456aa192613e72e1dbe0.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-77bba4d4279c48218a713788dd75ca06.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-77bba4d4279c48218a713788dd75ca06.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-dca33de0a3e7494dab17782f58767dc8.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-dca33de0a3e7494dab17782f58767dc8.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-df5c68fd01674f99ba1ba103a5234b12.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-df5c68fd01674f99ba1ba103a5234b12.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-964012fe9a654a97b750ddbcc9ee01e8.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-964012fe9a654a97b750ddbcc9ee01e8.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-6fe3499d66ba4a34846fbac2280ef632.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-6fe3499d66ba4a34846fbac2280ef632.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-50947b6b65cd40e0b2623600fd20cb2b.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-50947b6b65cd40e0b2623600fd20cb2b.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-ca6b6c80dd9549ff9eb2c77b9d02e3cf.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-ca6b6c80dd9549ff9eb2c77b9d02e3cf.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-28e58ebd66254d30b6688be9e0ebb273.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-28e58ebd66254d30b6688be9e0ebb273.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-1fb4e838b822430e9edebfc5b2baa961.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-1fb4e838b822430e9edebfc5b2baa961.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-bdcb915f829a4b6d8b6cb76610b2a585.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-bdcb915f829a4b6d8b6cb76610b2a585.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-e044b65e36c147d1abce669acbee4bb0.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-e044b65e36c147d1abce669acbee4bb0.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-ce6b764ce83346cfbe48aefd18a1d63c.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-ce6b764ce83346cfbe48aefd18a1d63c.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-304427aeed264b508d6a6c666986fba6.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-304427aeed264b508d6a6c666986fba6.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-70ad003adf45419f87ae131950b389dd.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-70ad003adf45419f87ae131950b389dd.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-44e61488f0a3412981c201c720238834.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-44e61488f0a3412981c201c720238834.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-40495bfd79124aea9aa812ce75c82213.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-40495bfd79124aea9aa812ce75c82213.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-8b3c48f494e44284aa77d484fe2148e9.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-8b3c48f494e44284aa77d484fe2148e9.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-1e3b94b135d54de9bc690752708a20b8.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-1e3b94b135d54de9bc690752708a20b8.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-0972f642d6024154a3cfddb837911cb7.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-0972f642d6024154a3cfddb837911cb7.service"
+      },
+      {
+        "cgroup_absent": true,
+        "cgroup_events": {},
+        "cgroup_procs": [],
+        "drained": true,
+        "expected_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-cf1ebee66f264be5bf68dbe1a891a5d6.service",
+        "properties": {
+          "ActiveState": "inactive",
+          "ControlGroup": "",
+          "InvocationID": "",
+          "LoadState": "not-found",
+          "MainPID": "0"
+        },
+        "unit": "swapp-ai-scientist-scorer-cf1ebee66f264be5bf68dbe1a891a5d6.service"
+      }
+    ]
+  },
+  "postgres_image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "primary_run_terminal_semantics_verified": true,
+  "raw_owned_drain_verified": true,
+  "run_cleanup_verified": true,
+  "sandbox_image_id": "sha256:8285dcadfd9b192b8d66d7e05039bee6a1c67940e32c187516a2f28d3069bef6",
+  "scenarios": {
+    "active_worker_stop": "not_run",
+    "generation_takeover_restart": "not_run",
+    "score_checkpoint_gap": "not_run",
+    "sql_owner_mutation_matrix": "initial_claim_and_owner_subset_passed"
+  },
+  "schema": "baseline-ownership-proof-033.v1",
+  "scope": "authenticated HTTP/CLI, one production dispatch with 36 measured scores, separate ownerless queued-stop report; no public-data/model/GPU/AOS claim",
+  "snapshot_matches_source": true,
+  "source_head": "f2b9100ba2dcdb846ffafe0264bd7d1fcbacf8a1",
+  "source_sha256": {
+    "Dockerfile.sandbox": "e9051b122769dd3eac6967e12a61d385b644c3539ea7fa4bc15c1b06fc9659ac",
+    "alembic.ini": "aab60ec24a4a1e0c65bed284631f8f19c2a2394d3110b8793f6d6078d8db3860",
+    "docker/sandbox/requirements.txt": "cfa6650061e68249c3dcff28d2002541df4c1a6b19bd9d0351a9119ed23e28ea",
+    "docs/ai-scientist/review-evidence/baseline-proof-inputs-032.py": "2d0fbaa127f27c60cb5d9967e9948410cf8bda3b7f6581915d7f1e26f6bb4f32",
+    "docs/ai-scientist/review-evidence/review_director_synthetic_scenario.py": "2a64715052fe2df0551a70c5ce237030e2888d3e6c99acc7352c2f8f7def179b",
+    "harness/VERSION": "d553a58a6837c95f31bae39ac344e63cc82fa81cc524966a7cd5174db38c8fa6",
+    "harness/__init__.py": "9dabc85ce30040e9e4c93992622dcbefcf3f7654fa14c9ffcacb3bc4f53d3ccd",
+    "harness/alarm.py": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103",
+    "harness/baselines.py": "abb4f46252934ed234951a9429b23cf545c53b4d7c5ea06f621bbf0d88dff909",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "harness/contracts.py": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599",
+    "harness/fingerprint.py": "289243f47b18cec08dabe1d07df040b1157bee823091c2bf6f447a7b5e181222",
+    "harness/guards.py": "d820e5026825c8f0ca588337c6d86cb99e8be6099b5ab5545b3256e958093d89",
+    "harness/metrics.py": "6d0b997d5b26ad1ed879450c04eaffbea2e094233847e5f8b3895b71b0b9e22c",
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "harness/referee.py": "a5952cb5e621b36ca8f491573642c96fe92216f243e460a36c87865de6f243f2",
+    "lab/__init__.py": "1a39d5e3ee50d08b91b175f667db7d5e6de2025f4e0fedac4659f0386407cc1a",
+    "lab/api/__init__.py": "408485dcde070bea88526c05d2d39f3653b9033e89540f9fa25aea72736f3be4",
+    "lab/api/app.py": "b302f5cb776a8f86cbf80539eca2bd76c5f23d1c51df38944026d10f10703f33",
+    "lab/api/contracts.py": "7ab39e9bdc536d7bea0b91423d9a6eeb4731c14dd8e20a944e70b7ca13ed47ed",
+    "lab/api/registry.py": "a58eed45a6513c93ab45ca2ffaf60bc4dee414ee7b7326dd44ab4f1daa8a242e",
+    "lab/cli.py": "af5ec7ae2249b8a73b2aeab6e7839a718349878059f19a2e78d7199fa4d7abdc",
+    "lab/db/__init__.py": "f52763d89d95a46b0ff8a514c3336dba74a9ea6292343091e1ce0efa3ebf1fe7",
+    "lab/db/migrations/__init__.py": "b9b682537c8c1c2adedde55ed6b45eaeaacd4d4d7804c65877373a029ad3d563",
+    "lab/db/migrations/env.py": "eef43a4e3cd91fbd408af738ed5c6baa80f4e0831d046aeba1f15d8e62c64e6f",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "lab/db/migrations/versions/0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896",
+    "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+    "lab/db/migrations/versions/0023_care_calibration_execution.py": "23f39209b59ea13c1a2f40e81a8ed7c3d60c6a4284810adc92079b9679d12541",
+    "lab/db/migrations/versions/0024_baseline_operation.py": "2669fde530813748da225812a712f60e64013bace4d516173f110f3e9fc29db9",
+    "lab/db/migrations/versions/0025_director_generations.py": "1451c83f17438795910623dce09743ba140ef7caa6942d03b456ce60c53bc23f",
+    "lab/db/schema.py": "c8ae93cc710440dadd4afe9d8b885a25b3a9201f6ebfd7b836f5981be9a5d60a",
+    "lab/db/task_plan.py": "2e946acc43f32179488948a636561742d22f7f11b2b4dbf4128517abc76b796a",
+    "lab/director/__init__.py": "947c4b6815906cd3fc868c7ea66844150f26f2476518fa75615a7405eb5e51bc",
+    "lab/director/artifacts.py": "d5131e0261611a4d3f494acbb0294b5c69df51b9f5a2e16981da488129b7b661",
+    "lab/director/baseline_operation.py": "857f269fe1240f3a5ce3ff4c5c1b40f185ec9daaf78cddd43d30476991bba81c",
+    "lab/director/baseline_runner.py": "f9b0897ed3130414d060f0167ab0512acf39ba8f87d6efe279358a0b679a637c",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "lab/director/budget.py": "4a0fd39420c24915fbaf2bbcb3b102ac17386545490d5806840c865bea9ef067",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/fake_llm.py": "7dd96f0060c80133bba897047626268796990b4ad11fc2a0f9c2591850f5c4c2",
+    "lab/director/holdout.py": "3173548fdb8157406620ad524899a72315ec96009b93ca3d9a27accc4e577ece",
+    "lab/director/journal.py": "c8022a9835fb18b744522d7b3e986689e57de9030420344ea079fcb364ee55cc",
+    "lab/director/ledger.py": "0ca6c2def4661670b5e99d91b2b6ae1d99a3abc6cd097934de072e38857fa599",
+    "lab/director/local_llm.py": "dc21385c1b8930a35f0f33fa10b661592fa10df43aa15ce4f5164a8e00ce271c",
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/director/ownership.py": "8ca75a75496a06bd12e146fbd72a2106cf4b8d18057951b08f4b4704e13314f3",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/recovery.py": "9f9999708c3a69f579210b430e924cbe9494a9c668b1739c1761564c0854aaed",
+    "lab/director/runner.py": "10c58376f953aac3552760bf8f7d32d7db207a20fb5bbc0b457bd9bbc10977d5",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_guards.py": "38916491f76a712bd2e46cf136c261cf0dd8da3cf07cadd98335b4237d81e0f7",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/director/task_plan.py": "aa9ac6dd9e3fb58c366147205dda9bf537beb5f0fb3a7b66dc960a252db87bf2",
+    "lab/llm/__init__.py": "d1b8ca22acbe93ce9d0849b05cb7dae7c875ac8e0b382aa2520915befab38527",
+    "lab/llm/aos_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab/llm/aos_gpu_executor.py": "148ec806adfbc921dbabbfc8442681587c14059103d28534a82453aa6f0d3bec",
+    "lab/llm/aos_gpu_service.py": "9332db586f64316bfeb82e45de09b9a88f9f859f8141cdeee56444720a8ff245",
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "lab/llm/native_runtime.py": "9ae0374c883e9ba518d08449820050354ac7c6618d864a5681374fe467062411",
+    "lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1",
+    "lab/llm/router.py": "0c5caf16c0e395b16a62625fc98d7f78ed35a690d689bb68097bece4d859e874",
+    "lab/referee/__init__.py": "f09a6e041b8ad74485df8868b2dc0a12c9a5999b62d45238caa4845247498a48",
+    "lab/replay.py": "300ac20b98346643a5f33048e659725cdd5d551cdf6133c65c52a79b77a2b676",
+    "lab/reporting.py": "dbf26e4fab99c99ba2385db47a8626e11849dc97b3c20a220633c54f81431a1a",
+    "lab/sandbox/__init__.py": "bd427df6fb5df35ac056fe351025b24ea3a18a2935eb904b48723ecd463cc0f7",
+    "lab/sandbox/candidate_entrypoint.py": "b71bf07c746dd8208835009517ab595f7ae99a0455c0cffe8799cb51e39d213d",
+    "lab/sandbox/docker_runner.py": "2127f6669064e36eb8168531db1384de8f99841d10e9c5600a8da203b64248ca",
+    "lab/sandbox/evaluation.py": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c",
+    "lab/sandbox/sandbox_wrapper.py": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+    "lab/scorer/__init__.py": "0f6e4bbd979497b6e287f4a10c91c66b9c432675c1bdc4d1d36a4462ebd6373b",
+    "lab/scorer/baseline_report.py": "2513a93c642cf0983fe6dcdec79ad91dc50d55b5c5f53e87265710f9e7ecb892",
+    "lab/scorer/care_calibration.py": "3af4d19467be4125b058f05316947bd1de836ef90c838d8f77eac77d4a9f453b",
+    "lab/scorer/care_calibration_supervisor.py": "0b2b48c9f3fabc6a9d9e9fb76b9879f316d8a3cab1d648f60083645a943fd064",
+    "lab/scorer/care_calibration_worker.py": "f2da3f2e4e3eed940620f4ffc2c558796103db9bc46e6752f5df0d4b511a325a",
+    "lab/scorer/care_holdout.py": "fbb458cbfd32318e39046575994c2ecb6c5d477172afe41fbb7529f22198e827",
+    "lab/scorer/holdout.py": "a3b826d919cd5969df4a92038cb45a67cdbc0421208f763e1e9d3c59c6ca06ee",
+    "lab/scorer/holdout_recovery.py": "ac2d11f60372a3db6581adc2b644f7e33eedeecc29196db9eea5d659111f57b1",
+    "lab/scorer/holdout_supervisor.py": "84e99abf17169b1f4ab6a99b7565b6703883772f0ad79f113dd6b5a012a63c42",
+    "lab/scorer/holdout_worker.py": "8d781d49919f1dfc8cd72982e0097e315c65d11df15fcfb9e765c3d5d22693a2",
+    "lab/scorer/jobs.py": "db53b2b11e3a8c8220417bf361289b8f8652fff840213e0c8465d60e46354ad7",
+    "lab/scorer/service.py": "3812f118818abaa45ec148ffd148887a6ba12cf240aaf72735678aeda53c24ab",
+    "lab/scorer/supervisor.py": "8bc15f5bdb88ae12fb5885a1e2ac0b490b2d5e3486534c9b25c948d946af7221",
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/worker.py": "1300bbb013d2fed294864e97160d2c48fa186620e0e705213f61b95d839ed6e7",
+    "lab/suite_limits.py": "7346f938ad21eef8e0eb633335d0618211ae893560d1c11b59c2b4360d1b49c2",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "4cb3b417b008b8406c2c34376f581f6c85c502c8885129bc49e68aeb9acd24ce",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b",
+    "ops/sandbox-image.lock": "37652a45e7e4a463208c270d81912a95b539af29e22a1a13c5d4e0dc50bba0ee",
+    "pyproject.toml": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5",
+    "vendor/__init__.py": "c6a56bc9e54e8248bb2f9294d394f7869e1f2959e1e7ebb17054b089da0546aa",
+    "vendor/tsb_ad_eval/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "vendor/tsb_ad_eval/NOTICE.md": "af8de8404b18d0a033fb5f5aeb8cb5148969b47f88ada2674d916324d5baf0fa",
+    "vendor/tsb_ad_eval/__init__.py": "e758702baf9c178c1c15542ce10d160b06c8ed2e0ab631738caa87d5daf4cf08",
+    "vendor/tsb_ad_eval/basic_metrics.py": "1fcddedf5ada1d5221f39ee568c7fddb9e7181bd7e1c19636c2cbecf40c97707",
+    "vendor/tsb_ad_eval/basic_metrics.pyi": "dee1dc8e503b5e815b5161d5c9646931ae61544b42ab2e3a9b6c9c5bf39ef0a1"
+  },
+  "source_still_matches_snapshot": true,
+  "source_worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/integration-033",
+  "sql_fixture_run_ids": [
+    "95652165-b5da-4a0c-87b9-65671ab4169b",
+    "e1c10770-93de-423e-8307-8e5058de3848"
+  ],
+  "sql_instance": [
+    "swapp_lab_baseline_033_bd4e0866d049",
+    "172.17.0.2",
+    5432,
+    "2026-09-27 04:51:35.100566+00"
+  ],
+  "sql_owner_cases": {
+    "all_ids_added_to_cleanup_set": true,
+    "auxiliary_run_ids": [
+      "95652165-b5da-4a0c-87b9-65671ab4169b",
+      "e1c10770-93de-423e-8307-8e5058de3848"
+    ],
+    "claims": {
+      "95652165-b5da-4a0c-87b9-65671ab4169b": {
+        "contract_count": 1,
+        "control_count": 1,
+        "deadline_at": "2026-09-27T05:01:38.239815+00:00",
+        "execution_sha256": "563f355a87d6a666380acf6449d392dabb944394ec87db0b1dad82d94855eb59",
+        "generation": 1,
+        "generation_count": 1,
+        "immutable_wall_seconds": 600.0,
+        "legacy_owner_count": 1,
+        "started_at": "2026-09-27T04:51:38.239815+00:00",
+        "started_event_count": 1,
+        "state": "running",
+        "worker_invocation_id": "bc9939f11223402da6a9c253f972b305",
+        "worker_pid": 1047633,
+        "worker_start_ticks": 3244861
+      },
+      "e1c10770-93de-423e-8307-8e5058de3848": {
+        "contract_count": 1,
+        "control_count": 1,
+        "deadline_at": "2026-09-27T05:01:38.259107+00:00",
+        "execution_sha256": "994b5199842ad6e811c4eb2f9914a564037ecd954eac6ee1b35cca6093e07f89",
+        "generation": 1,
+        "generation_count": 1,
+        "immutable_wall_seconds": 600.0,
+        "legacy_owner_count": 1,
+        "started_at": "2026-09-27T04:51:38.259107+00:00",
+        "started_event_count": 1,
+        "state": "running",
+        "worker_invocation_id": "bc9939f11223402da6a9c253f972b305",
+        "worker_pid": 1047633,
+        "worker_start_ticks": 3244861
+      }
+    },
+    "cross_target": {
+      "cross_run_direct_update": {
+        "message": "Director owner context is missing or bound to another run",
+        "sqlstate": "P0001"
+      },
+      "cross_run_register": {
+        "message": "run lifecycle lock target differs from captured owner",
+        "sqlstate": "P0001"
+      },
+      "run_b_experiment_id": "sql-proof-c921deecc7da4f818de54369e5ca92d9",
+      "valid_run_b_direct_update": true,
+      "valid_run_b_register": true
+    },
+    "identity_assertions_run_a": {
+      "director_malformed_context": {
+        "message": "Director owner context is malformed",
+        "sqlstate": "P0001"
+      },
+      "director_missing_context": {
+        "message": "Director owner context is missing or bound to another run",
+        "sqlstate": "P0001"
+      },
+      "director_null_generation": {
+        "message": "Director generation identity is malformed",
+        "sqlstate": "P0001"
+      },
+      "director_valid_context": "",
+      "director_valid_pair": "",
+      "director_wrong_execution": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "director_wrong_generation": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "director_wrong_invocation": {
+        "message": "Director generation is no longer current for this run",
+        "sqlstate": "P0001"
+      },
+      "scorer_null_generation": {
+        "message": "Scorer execution identity is malformed",
+        "sqlstate": "P0001"
+      },
+      "scorer_valid_pair": {
+        "admitted_generation": 1,
+        "execution_sha256": "563f355a87d6a666380acf6449d392dabb944394ec87db0b1dad82d94855eb59",
+        "run_id": "95652165-b5da-4a0c-87b9-65671ab4169b"
+      },
+      "scorer_wrong_execution": {
+        "message": "Scorer execution owner is stale or inactive",
+        "sqlstate": "P0001"
+      },
+      "scorer_wrong_generation": {
+        "message": "Scorer execution owner is stale or inactive",
+        "sqlstate": "P0001"
+      }
+    },
+    "kind": "sql_fixture_not_dispatcher_ownership_proof",
+    "process_identity": {
+      "worker_boot_id": "24ce6302-3913-4b99-9aea-3a5de341dfd1",
+      "worker_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-review-baseline-ownership-033-r3.service",
+      "worker_invocation_id": "bc9939f11223402da6a9c253f972b305",
+      "worker_pid": 1047633,
+      "worker_start_ticks": 3244861,
+      "worker_unit": "swapp-review-baseline-ownership-033-r3.service"
+    },
+    "runs_dispatched": 0,
+    "task_scores_inserted": 0,
+    "wall_tamper": {
+      "message": "run is not eligible for an initial Director claim",
+      "sqlstate": "P0001"
+    }
+  },
+  "sql_owner_cases_sha256": "bb3ceb119161b3e6cd915165ffbc26d97533477d4a6145b24ea46e08711f2974",
+  "verification_binding": {
+    "gate_sha256": "89c2f4edde78f776ba063963b2b52b7e4f806c56630cd248fd0d5a0263a85aca",
+    "image_parity_sha256": "78bbf45df622d13b202137ac8318ebf4bb2b803d0b685c79762480cfd563b6cd",
+    "sandbox_image": "sha256:8285dcadfd9b192b8d66d7e05039bee6a1c67940e32c187516a2f28d3069bef6",
+    "verified_runtime_input_count": 119
+  }
+}

@@ -1,0 +1,114 @@
+diff --git a/lab/llm/gpu_scheduler.py b/lab/llm/gpu_scheduler.py
+index 7a4d17a..3130436 100644
+--- a/lab/llm/gpu_scheduler.py
++++ b/lab/llm/gpu_scheduler.py
+@@ -153,8 +153,21 @@ def _process_identity_alive(identity: ProcessIdentity) -> bool:
+     return current is not None and current == identity
+ 
+ 
+-def _systemctl_show(unit: str) -> dict[str, str]:
+-    if not re.fullmatch(r"swapp-(?:aos|lab)-gpu-[a-z0-9_.@-]+\.service", unit):
++def _principal_unit_matches(owner: str, unit: str) -> bool:
++    if owner not in OWNERS:
++        return False
++    fixed_gpu_unit = re.fullmatch(rf"swapp-{owner}-gpu-[a-z0-9_.@-]+\.service", unit)
++    run_bound_lab_dispatch = (
++        owner == "lab"
++        and re.fullmatch(
++            r"swapp-ai-scientist-director-dispatch-[0-9a-f]{32}\.service", unit
++        )
++    )
++    return fixed_gpu_unit is not None or bool(run_bound_lab_dispatch)
++
++
++def _systemctl_show(unit: str, *, owner: str) -> dict[str, str]:
++    if not _principal_unit_matches(owner, unit):
+         raise ValueError("GPU service unit name is outside the fixed deployment namespace")
+     result = subprocess.run(  # nosec B603 -- fixed binary, fixed properties, validated unit
+         [
+@@ -202,7 +215,7 @@ class SystemdPrincipalResolver:
+         self._units = dict(units)
+         self._slice = aggregate_slice
+         for owner, unit in self._units.items():
+-            if not re.fullmatch(rf"swapp-{owner}-gpu-[a-z0-9_.@-]+\.service", unit):
++            if not _principal_unit_matches(owner, unit):
+                 raise ValueError("principal unit does not match its fixed owner")
+         if aggregate_slice != "swapp-gpu.slice":
+             raise ValueError("aggregate GPU slice is fixed by deployment")
+@@ -211,7 +224,7 @@ class SystemdPrincipalResolver:
+         if owner not in self._units:
+             raise LeaseConflict("unknown GPU principal")
+         identity = _current_process_identity()
+-        values = _systemctl_show(self._units[owner])
++        values = _systemctl_show(self._units[owner], owner=owner)
+         invocation = values["InvocationID"]
+         cgroup = values["ControlGroup"].rstrip("/")
+         expected_tail = "/" + self._units[owner]
+diff --git a/tests/test_gpu_scheduler.py b/tests/test_gpu_scheduler.py
+index 1890d4d..fcde1b2 100644
+--- a/tests/test_gpu_scheduler.py
++++ b/tests/test_gpu_scheduler.py
+@@ -12,13 +12,16 @@ from pathlib import Path
+ import pytest
+ 
+ from lab.llm.gpu_scheduler import (
++    SYSTEMD_PROPERTIES,
+     GpuLease,
+     LeaseConflict,
+     PrincipalReceipt,
+     ProcessIdentity,
+     SharedGpuScheduler,
++    SystemdPrincipalResolver,
+     _current_process_identity,
+     _process_identity_alive,
++    _systemctl_show,
+ )
+ 
+ 
+@@ -82,6 +85,46 @@ def _finish(scheduler: SharedGpuScheduler, lease: GpuLease, at: float) -> None:
+     scheduler.release(ready)
+ 
+ 
++def test_run_bound_director_dispatch_unit_is_only_a_lab_principal(monkeypatch) -> None:
++    aos_unit = "swapp-aos-gpu-review.service"
++    lab_unit = "swapp-ai-scientist-director-dispatch-0123456789abcdef0123456789abcdef.service"
++    resolver = SystemdPrincipalResolver({"aos": aos_unit, "lab": lab_unit})
++    assert resolver._units == {"aos": aos_unit, "lab": lab_unit}
++
++    calls: list[list[str]] = []
++
++    class Completed:
++        returncode = 0
++        stdout = "".join(f"{name}=active\n" for name in SYSTEMD_PROPERTIES)
++
++    def fake_run(command, **_kwargs):
++        calls.append(command)
++        return Completed()
++
++    monkeypatch.setattr("lab.llm.gpu_scheduler.subprocess.run", fake_run)
++    properties = _systemctl_show(lab_unit, owner="lab")
++    assert set(properties) == set(SYSTEMD_PROPERTIES)
++    assert calls[0][-1] == lab_unit
++
++    with pytest.raises(ValueError, match="fixed owner"):
++        SystemdPrincipalResolver({"aos": lab_unit, "lab": "swapp-lab-gpu-review.service"})
++    with pytest.raises(ValueError, match="fixed deployment namespace"):
++        _systemctl_show(lab_unit, owner="aos")
++
++
++@pytest.mark.parametrize(
++    "unit",
++    [
++        "swapp-lab-director-dispatch-0123456789abcdef0123456789abcdef.service",
++        "swapp-ai-scientist-director-dispatch-0123456789abcdef.service",
++        "swapp-ai-scientist-director-dispatch-0123456789abcdef0123456789abcdeG.service",
++    ],
++)
++def test_noncanonical_director_units_are_rejected(unit: str) -> None:
++    with pytest.raises(ValueError, match="fixed owner"):
++        SystemdPrincipalResolver({"aos": "swapp-aos-gpu-review.service", "lab": unit})
++
++
+ def test_submission_is_idempotent_and_rejects_changed_terms(tmp_path: Path) -> None:
+     scheduler = _scheduler(tmp_path / "gpu.sqlite")
+     _at(scheduler, 10)

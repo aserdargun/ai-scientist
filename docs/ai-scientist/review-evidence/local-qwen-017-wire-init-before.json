@@ -1,0 +1,11 @@
+{
+  "schema": "local-qwen-wire-init-review.v1",
+  "checked_at": "2026-09-25T02:00:42.835723+00:00",
+  "command_exit_code": 1,
+  "exception": "ValueError: GPU runtime directory must be private to the service owner",
+  "actual_mode_before": "0o755",
+  "api_run_created": false,
+  "model_started": false,
+  "action": "Restrict project-owned runtime directory to 0700; no code changes.",
+  "actual_mode_after": "0o700"
+}

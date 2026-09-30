@@ -1,0 +1,10 @@
+Running as unit: luna-aos-v3-inputverify-027a.service
+          Finished with result: oom-kill
+Main processes terminated with: code=killed, status=15/TERM
+               Service runtime: 1.066s
+             CPU time consumed: 527ms
+                   Memory peak: 512M (swap: 0B)
+
+The first verifier used Path.read_bytes() for the 3,763,692,048-byte model file and exceeded
+the 512 MiB unit memory limit. It did not change model data or invoke AOS/model code. The
+corrected streaming SHA-256 verifier passed in luna-aos-v3-inputverify-027b.service.

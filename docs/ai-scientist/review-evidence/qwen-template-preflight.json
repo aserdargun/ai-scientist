@@ -1,0 +1,21 @@
+{
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "tokenizer_class": "Qwen2Tokenizer",
+  "roles": {
+    "S1": {
+      "enable_thinking": false,
+      "rendered_tail": "nswer.<|im_end|>\n<|im_start|>user\nCompute 1 + 1.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "input_tokens": 31,
+      "rendered_sha256": "050bd25ce9afba41d02881fa862a4d5723c795a445663efd8968091c506af40b"
+    },
+    "S2": {
+      "enable_thinking": true,
+      "rendered_tail": "ocal test answer.<|im_end|>\n<|im_start|>user\nCompute 1 + 1.<|im_end|>\n<|im_start|>assistant\n<think>\n",
+      "input_tokens": 29,
+      "rendered_sha256": "84644253b2ec9f20f4cddfc3beb148f7c643463151cff726e690685c6c41b6af"
+    }
+  },
+  "network_offline": true,
+  "model_weights_loaded": false,
+  "generation_tested": false
+}

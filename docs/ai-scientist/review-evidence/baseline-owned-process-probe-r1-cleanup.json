@@ -1,0 +1,21 @@
+{
+  "schema": "baseline-owned-process-failure-cleanup.v1",
+  "created_at": "2026-09-27T03:41:02.110650+00:00",
+  "failed_probe": "baseline-owned-process-probe-9b0406f5f2a7.json",
+  "failed_session": 62232,
+  "failed_exit_code": 1,
+  "failed_completion_chunk": "969668",
+  "cause": "venv Python3.12.13 has neither os.pidfd_open nor signal.pidfd_send_signal",
+  "unit": "swapp-ai-scientist-director-dispatch-9b0406f5f2a74b2aa206746aa18eb3fd.service",
+  "read_only_followup": true,
+  "unit_show_exit": 0,
+  "unit_properties": {
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "MainPID": "0",
+    "ControlGroup": ""
+  },
+  "exact_cgroup_populated": false,
+  "drained": true,
+  "no_acceptance": true
+}

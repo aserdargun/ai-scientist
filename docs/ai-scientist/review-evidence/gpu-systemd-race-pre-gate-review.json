@@ -1,0 +1,374 @@
+{
+  "schema": "gpu-systemd-arbitration-review.v1",
+  "source_sha256": "314853c7457f2a8c303ddb439920aa186a0d7bd760bfc9163aad2219aba47944",
+  "script_sha256": "fd3a63f1b2989a1c1ed5f7cff35dc585d322a575b539fd155639ddaf17075816",
+  "runtime_directory": "data/runtime/gpu-systemd-review/1d99806fde0e4a04a413fde994e75ec1",
+  "scope": "Two real bounded systemd CPU services, production principal resolver and SQLite scheduler, real owned CPU child drain observer; no GPU/model/CUDA.",
+  "limitations": [
+    "CPU child death is not proof of CUDA drain or VRAM release.",
+    "Runtime GPU observer, model activation, AOS hooks and combined hardware acceptance remain open."
+  ],
+  "checks": {
+    "outside_process_cannot_claim_aos_principal": true,
+    "outside_process_cannot_claim_lab_principal": true,
+    "both_services_exited_zero": true,
+    "both_services_completed_ten_turns": true,
+    "twenty_strictly_alternating_principal_turns": true,
+    "strictly_increasing_fencing_tokens": true,
+    "live_child_release_rejected_every_turn": true,
+    "previous_child_dead_before_next_lease": true,
+    "measured_same_production_source": true,
+    "all_twenty_tickets_terminal_and_no_active_owner": true,
+    "owned_units_stopped": true
+  },
+  "unit_states": {
+    "aos": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "exited",
+      "InvocationID": "6bdc38586c124e52b9cf4b7fb60abb37",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "ControlGroup": "",
+      "MemoryPeak": "17043456",
+      "CPUQuotaPerSecUSec": "500ms",
+      "MemoryMax": "268435456",
+      "MemorySwapMax": "0",
+      "TasksMax": "16"
+    },
+    "lab": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "exited",
+      "InvocationID": "1c64306c3a294105992d0487e533c90b",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "ControlGroup": "",
+      "MemoryPeak": "16920576",
+      "CPUQuotaPerSecUSec": "500ms",
+      "MemoryMax": "268435456",
+      "MemorySwapMax": "0",
+      "TasksMax": "16"
+    }
+  },
+  "workers": {
+    "aos": {
+      "receipt": {
+        "owner": "aos",
+        "identity": {
+          "pid": 2204182,
+          "start_ticks": 6177593,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e"
+        },
+        "unit": "swapp-aos-gpu-review-1d99806fde0e4a04a413fde994e75ec1.service",
+        "invocation_id": "6bdc38586c124e52b9cf4b7fb60abb37"
+      },
+      "events": [
+        {
+          "owner": "aos",
+          "request_id": "aos-0",
+          "token": 1,
+          "acquired_at": 61776.081797217,
+          "child_pid": 2204215,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.13954432,
+          "released_at": 61776.159024088,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-1",
+          "token": 3,
+          "acquired_at": 61776.258328546,
+          "child_pid": 2204259,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.304482483,
+          "released_at": 61776.323741569,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-2",
+          "token": 5,
+          "acquired_at": 61776.442039368,
+          "child_pid": 2204310,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.490562028,
+          "released_at": 61776.514961229,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-3",
+          "token": 7,
+          "acquired_at": 61776.646615189,
+          "child_pid": 2204368,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.694233914,
+          "released_at": 61776.723971911,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-4",
+          "token": 9,
+          "acquired_at": 61776.841108146,
+          "child_pid": 2204430,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.895030284,
+          "released_at": 61776.913325836,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-5",
+          "token": 11,
+          "acquired_at": 61777.020046519,
+          "child_pid": 2204479,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.067342824,
+          "released_at": 61777.096323049,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-6",
+          "token": 13,
+          "acquired_at": 61777.205676115,
+          "child_pid": 2204528,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.254498443,
+          "released_at": 61777.276764962,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-7",
+          "token": 15,
+          "acquired_at": 61777.402230303,
+          "child_pid": 2204578,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.451430775,
+          "released_at": 61777.48298762,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-8",
+          "token": 17,
+          "acquired_at": 61777.602847539,
+          "child_pid": 2204628,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.650926342,
+          "released_at": 61777.679846245,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "aos",
+          "request_id": "aos-9",
+          "token": 19,
+          "acquired_at": 61777.810071302,
+          "child_pid": 2204684,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.844869435,
+          "released_at": 61777.863954828,
+          "release_while_child_alive_rejected": true
+        }
+      ],
+      "error": null,
+      "source_sha256": "314853c7457f2a8c303ddb439920aa186a0d7bd760bfc9163aad2219aba47944",
+      "source_unchanged": true
+    },
+    "lab": {
+      "receipt": {
+        "owner": "lab",
+        "identity": {
+          "pid": 2204186,
+          "start_ticks": 6177595,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e"
+        },
+        "unit": "swapp-lab-gpu-review-1d99806fde0e4a04a413fde994e75ec1.service",
+        "invocation_id": "1c64306c3a294105992d0487e533c90b"
+      },
+      "events": [
+        {
+          "owner": "lab",
+          "request_id": "lab-0",
+          "token": 2,
+          "acquired_at": 61776.175369927,
+          "child_pid": 2204237,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.222675069,
+          "released_at": 61776.241787763,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-1",
+          "token": 4,
+          "acquired_at": 61776.339924075,
+          "child_pid": 2204280,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.3864851,
+          "released_at": 61776.408271855,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-2",
+          "token": 6,
+          "acquired_at": 61776.538816187,
+          "child_pid": 2204334,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.586100269,
+          "released_at": 61776.610603084,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-3",
+          "token": 8,
+          "acquired_at": 61776.746089653,
+          "child_pid": 2204392,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.802828327,
+          "released_at": 61776.823197953,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-4",
+          "token": 10,
+          "acquired_at": 61776.93526759,
+          "child_pid": 2204453,
+          "child_exit_code": 0,
+          "child_exited_at": 61776.983324512,
+          "released_at": 61777.003410048,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-5",
+          "token": 12,
+          "acquired_at": 61777.115915517,
+          "child_pid": 2204506,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.167638438,
+          "released_at": 61777.188407838,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-6",
+          "token": 14,
+          "acquired_at": 61777.300785959,
+          "child_pid": 2204554,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.350344639,
+          "released_at": 61777.379952453,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-7",
+          "token": 16,
+          "acquired_at": 61777.504201448,
+          "child_pid": 2204604,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.563092672,
+          "released_at": 61777.581383485,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-8",
+          "token": 18,
+          "acquired_at": 61777.699641179,
+          "child_pid": 2204657,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.752871689,
+          "released_at": 61777.776114747,
+          "release_while_child_alive_rejected": true
+        },
+        {
+          "owner": "lab",
+          "request_id": "lab-9",
+          "token": 20,
+          "acquired_at": 61777.877285611,
+          "child_pid": 2204702,
+          "child_exit_code": 0,
+          "child_exited_at": 61777.908725168,
+          "released_at": 61777.926589857,
+          "release_while_child_alive_rejected": true
+        }
+      ],
+      "error": null,
+      "source_sha256": "314853c7457f2a8c303ddb439920aa186a0d7bd760bfc9163aad2219aba47944",
+      "source_unchanged": true
+    }
+  },
+  "turn_order": [
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab",
+    "aos",
+    "lab"
+  ],
+  "terminal_ticket_counts": {
+    "done": 20
+  },
+  "cleanup_units": {
+    "swapp-aos-gpu-review-1d99806fde0e4a04a413fde994e75ec1.service": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "InvocationID": "",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "0",
+      "ExecMainStatus": "0",
+      "ControlGroup": "",
+      "MemoryPeak": "[not set]",
+      "CPUQuotaPerSecUSec": "infinity",
+      "MemoryMax": "infinity",
+      "MemorySwapMax": "infinity",
+      "TasksMax": "37347"
+    },
+    "swapp-lab-gpu-review-1d99806fde0e4a04a413fde994e75ec1.service": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "InvocationID": "",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "0",
+      "ExecMainStatus": "0",
+      "ControlGroup": "",
+      "MemoryPeak": "[not set]",
+      "CPUQuotaPerSecUSec": "infinity",
+      "MemoryMax": "infinity",
+      "MemorySwapMax": "infinity",
+      "TasksMax": "37347"
+    }
+  },
+  "passed": true
+}

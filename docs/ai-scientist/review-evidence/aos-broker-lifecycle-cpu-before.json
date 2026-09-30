@@ -1,0 +1,21 @@
+{
+  "schema": "aos-broker-systemd-cpu-review.v1",
+  "scope": "Initialization failure before any child service, model, or GPU call. This is negative evidence, not a passed lifecycle review.",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python docs/ai-scientist/review-evidence/review_aos_broker_lifecycle.py --output docs/ai-scientist/review-evidence/aos-broker-lifecycle-cpu-before.json",
+  "actual_tool_exit_code": 1,
+  "error": {
+    "type": "ValueError",
+    "message": "total deadline must cover activation plus inference"
+  },
+  "observed_configuration": {
+    "max_activation_seconds": 600,
+    "max_inference_seconds": 540,
+    "max_total_seconds": 720
+  },
+  "frozen_directory": "data/runtime/gpu-cpu-review-6006cac54f734c79b2a01964c7bfdc16",
+  "draft_sha256": {
+    "lab_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab_gpu_executor.py": "b5ad2ebd6de2a8ba3f0cc1075c1ff4eb30702427c591d379994492f40317cbbb"
+  },
+  "processes_started": 0
+}

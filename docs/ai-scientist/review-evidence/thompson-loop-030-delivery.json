@@ -1,0 +1,40 @@
+{
+  "schema": "swapp-review-evidence.v1",
+  "task": "durable-thompson-director-loop-routing",
+  "base_commit": "d70dffcad1b746bf6f0cec9070c05a51a01fe852",
+  "branch": "feat/luna-m0-thompson-loop-030",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/thompson-loop-030",
+  "files": {
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/reporting.py": "771c12cf4e9472802b52cee39b644b59c50f74d91cc699c05efce9cc0697bfc1",
+    "tests/test_director_loop_strategy.py": "326c7d8fcda7ee4edc30b0105ef25b0d5a92294c0cb692950b1a38a0fbd9abab",
+    "tests/test_director_strategy.py": "6de52a376904c1eca7113aeb867a55c88272bf3190daa5ca854aa3e81a3fa62e"
+  },
+  "patch": {
+    "path": "review-evidence/thompson-loop-030.patch",
+    "sha256": "8f43beca00a77d3b7c356d91873cf848effddbb55deff89e24e5c13543a5c59a"
+  },
+  "verification": {
+    "resource_bounds": "flock cpu-check.lock outside systemd-run; MemoryMax=1G; CPUQuota=50%; TasksMax=64; MemorySwapMax=0",
+    "pytest": {
+      "command": "env PYTHONPATH=$PWD ./.venv/bin/pytest -q tests/test_director_strategy.py tests/test_director_loop_strategy.py tests/test_director_loop_core.py tests/test_holdout_loop_recovery.py tests/test_holdout_privacy.py",
+      "exit_code": 0,
+      "result": "86 passed, 3 warnings"
+    },
+    "mypy": {
+      "command": "env PYTHONPATH=$PWD ./.venv/bin/mypy --strict lab/director/loop.py lab/reporting.py tests/test_director_loop_strategy.py",
+      "exit_code": 0,
+      "result": "Success: no issues found in 3 source files"
+    },
+    "ruff_check": {"exit_code": 0, "result": "All checks passed"},
+    "ruff_format_check": {"exit_code": 0, "result": "4 files already formatted"},
+    "git_diff_check": {"exit_code": 0, "result": "clean"}
+  },
+  "scope_notes": [
+    "No commit made; root integration and full quality gate remain pending.",
+    "No live PostgreSQL, Docker, local model, or AOS execution was performed.",
+    "Infrastructure failure keeps the pending Thompson move, RNG, and posterior unchanged and stores consumed budget, then follows the existing terminal dispatcher failure behavior. The required research restart continuation contract remains open; no resumability claim is made.",
+    "Legacy v1 checkpoint is readable for reports but rejected for active-loop resume because it has no preregistered Thompson history.",
+    "The live R10 holdout API identity fixture must be changed to a valid preregistered v2 state before runtime PostgreSQL proof; preserve historical v1 report compatibility."
+  ]
+}

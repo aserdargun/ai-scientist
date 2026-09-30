@@ -1,0 +1,29 @@
+{
+  "schema": "fresh039-research-admission-safe-summary.v1",
+  "date": "2026-09-30",
+  "actual_outer_exit_code": 0,
+  "actual_execution": "session19699 / final4b8215",
+  "inner_exit_code": 0,
+  "phase_elapsed_seconds": 1.1649138927459717,
+  "receipt_sha256": "5c6b2e32f8305a7aa8edbb99fe8563a6b795ed4e79b2e8efbcfe822342368797",
+  "admission_artifact_sha256": "00854324e0cc607bc7e23678b764bb5be4a2377206b67c5faa96769d7a5ed5f1",
+  "driver_sha256": "6878f8f046255db0fd2b690b776d665b64f5be9292f206f09b05d749d781fff9",
+  "context_sha256": "abc06e7220097b6e11fdd83d28fc7c61bb290ddcc0cd801c99cd4e194808d337",
+  "state": "queued",
+  "reused": false,
+  "provider": "fake-json",
+  "real_model_acceptance": false,
+  "new_run_identity_equal_phase_receipt": true,
+  "private_campaign_owner_unchanged": true,
+  "runtime_source_fences_unchanged": true,
+  "research_dispatch_executed": false,
+  "research_complete": false,
+  "historical_failures_retained": [
+    "calibration outer120 despite inner135complete/child0",
+    "first register1",
+    "first diagnostic path failure",
+    "V3 setup existing log/ready guard1"
+  ],
+  "M0_10_complete": false,
+  "scope": "Production in-process ASGI admission of one fresh queued fixture-provider run only. No run ID, tokens, private profiles, score values, holdout labels or DSNs published."
+}

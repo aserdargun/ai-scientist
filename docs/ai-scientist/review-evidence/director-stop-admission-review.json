@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-09-24T20:00:25.838648+00:00",
+  "run_id": "af106628-3d4f-44bb-a9e3-09b1344d4f3f",
+  "scope": "Real authenticated ASGI API and PostgreSQL Director lease on one owned run. Direct proposal-entry admission uses well-typed synthetic identities and a counting provider which raises before generating output. No baseline/calibration fixture, model, Docker, GPU, AOS or full Director run is executed.",
+  "source_sha256": {
+    "lab/api/app.py": "c45a7fc87ad142b318eeb8d0f0273b584b18b6412b637688990ef38a596a6718",
+    "lab/director/runner.py": "66aa1fdaa5102e76b59ba7c5b4b8a8cab0de871038957e2db35e317a5fbc81f1",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e"
+  },
+  "checks": {
+    "api_stop_committed": true,
+    "provider_not_called_after_stop": true,
+    "checkpoint_denied_after_stop": true,
+    "no_blob_written_after_stop": true,
+    "only_stop_event_persisted": true
+  },
+  "proposal_error": "director_run_is_not_active",
+  "provider_calls_after_stop": 0,
+  "checkpoint_error": "director_run_is_not_active",
+  "new_blob_files_after_stop": [],
+  "owned_sql_fixture_removed": true,
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "7fceb424ede0f4ae2e8e3e0fc61268a564fe95aa55ada85f7f2613b2e634ef37"
+}

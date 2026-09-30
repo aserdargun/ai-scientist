@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-09-25T05:32:51.037260+00:00",
+  "scope": "Refresh this project editable entrypoint without dependency resolution; static unit verification only. Broker service and models were not started.",
+  "commands": [
+    {
+      "command": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "--offline",
+        "--no-deps",
+        "--editable",
+        "."
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Resolved 1 package in 0.83ms\n   Building swapp-ai-scientist @ file:///home/cachyos/ai-scientist\n      Built swapp-ai-scientist @ file:///home/cachyos/ai-scientist\nPrepared 1 package in 149ms\nUninstalled 1 package in 0.57ms\nInstalled 1 package in 1ms\n ~ swapp-ai-scientist==0.1.0 (from file:///home/cachyos/ai-scientist)\n"
+    },
+    {
+      "command": [
+        "systemd-analyze",
+        "--user",
+        "verify",
+        "ops/systemd/swapp-lab-gpu-broker.service"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "entrypoint_exists": true,
+  "entrypoint_sha256": "702d4f83b2ce00e196f3252284ed1a262353d13ba5cdd92389468538b6d799d5",
+  "unit_sha256": "70f651dd2122ee8c019e7159228ed4e0a363196c695b96fef4031575299bb531",
+  "pyproject_sha256": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+  "uv_lock_unchanged": true,
+  "all_passed": true
+}

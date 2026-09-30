@@ -1,0 +1,14 @@
+{
+  "schema": "vllm-cuda132-resolved-lock.v1",
+  "historical_lock_sha256": "577cdb9265a33d403be84bd61e2aba4063023428882767ae93491abf5ef28abe",
+  "wheel_sources_sha256": "daded4a8c5f9f5e18ba7ee724ff6c16b8eb0168e02f996020f3f98b8cbcde3ea",
+  "resolved_lock_path": "docs/ai-scientist/review-evidence/vllm-cuda132-resolved.lock",
+  "resolved_lock_sha256": "8e12fa7f848df8a786afc173e18bbf93b437a83763220b58f1f4e6d1e40f4691",
+  "exact_installed_package_version_matches": 196,
+  "modified_pin_names": [
+    "nvidia-cuda-crt",
+    "nvidia-cuda-nvcc",
+    "nvidia-nvvm"
+  ],
+  "scope": "Derived hash lock matching the installed environment; no fresh environment rebuild performed."
+}

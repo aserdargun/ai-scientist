@@ -1,0 +1,26 @@
+{
+  "schema": "public-scorer-025-outcome.v1",
+  "session_id": 35503,
+  "actual_exit_code": 0,
+  "source_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "harness_sha256": "2b03b630bbd46230438ad378913901c600695cb9836749686a18edf36370eebf",
+  "image": "sha256:1ea643751296a085de1c8df9453779243dd3359d721b363dd1a010e96af40bd2",
+  "manifest_sha256": "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c",
+  "completed_tasks": 27,
+  "families": {
+    "PDM": 12,
+    "NRM": 10,
+    "EVT": 5
+  },
+  "guards_passed": 27,
+  "elapsed_seconds": 394.5614967330039,
+  "driver_elapsed_seconds": 393.14347313300823,
+  "own_private_run_removed": true,
+  "sources_unchanged": true,
+  "evidence_sha256": {
+    "public-sandbox-scorer-025-review.json": "091f32533d55c4a9bfe00a05c17f701004bd3cfa69ba34ca62162252b19bd9c9",
+    "public-sandbox-scorer-025-command.json": "b0f2042ceaaea3165f660216ee04220bd067a8296555af38dfd4119893f0098d",
+    "review_public_sandbox_scorer_v3.py": "1e5be219e74ad17020d869faeab0c87bb830782221612ebf8a8d05d73926320f"
+  },
+  "scope": "Real public data, robust_z seed0, fresh Docker/guards/separateScorer. No full3algorithmx3seed calibration, LLM, Referee, AOS, holdout or training acceptance."
+}

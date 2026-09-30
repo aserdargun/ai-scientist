@@ -1,0 +1,40 @@
+{
+  "actual_final_test": {
+    "exit_code": 0,
+    "final_chunk": "36fcff",
+    "launch_chunk": "3e0755",
+    "passed": 5,
+    "scope": "Final formatted source, including aged120s resume/14cells exhaustion",
+    "seconds": 0.84,
+    "session_id": 81634,
+    "unit": "lab-baseline039-focused-r2"
+  },
+  "checked_at": "2026-09-29T22:41:09.778175+00:00",
+  "existing_reservation_and_deadline_preserved": true,
+  "files": {
+    "lab/director/baseline_runner.py": {
+      "after_sha256": "607111c7c2cb5fd3e6e8aad0d9c6872ffb492184aeb4b07ac675eff1366c1920",
+      "before_sha256": "f5e8f2688988663f6eba3c2d3e5336e6c5d3bd39fd5aba1ec20237a41fc03b1a"
+    },
+    "tests/test_director_baseline_records_review.py": {
+      "after_sha256": "4b40d5a8b0b43da9f9a0dea0f94852b399053dfcda029d73c54106cbed210674",
+      "before_sha256": "63c8d3138b288583a5f0c491fa0898a84e3cc006bc10c88815cc7531992d2a1b"
+    }
+  },
+  "full_gate_executed": false,
+  "image_rebuilt": false,
+  "new_reservation_rule": "min(task_count * per_task_seconds, int(budget.remaining_wall_seconds))",
+  "patch_sha256": "b1726ce4545e264d0be84a10b46fd31d1f9fc2d24ea5261467285cd1595fcdcd",
+  "per_task_cap_seconds": 600,
+  "private_receipt_sha256": "ffefbdf6692bcdb6143d0ebb0bdda84a0c4477e68f03055d36b71ac7fa61f615",
+  "promoted": false,
+  "regressions": [
+    "2 tasks at explicit90 yields group180; per-cell<=90",
+    "1 task at600 preserves group600",
+    "27tasks each35virtual seconds complete945s group;243mocked baseline cells",
+    "20s remaining clips reservation and stops with no terminal pair/frozen calibration",
+    "existing600s reservation aged120s yields14mock cells then exhaustion; original start/id/checkpoint bytes unchanged"
+  ],
+  "schema": "baseline039-regression-summary.v1",
+  "scope": "CPU regression fixtures: mocked SQL/Docker; real typed records, RunBudget and physical artifact files. Does not prove actual public research, local LLM, training or AOS acceptance."
+}

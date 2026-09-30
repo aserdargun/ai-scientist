@@ -1,0 +1,45 @@
+{
+  "schema": "qwen-research-main-integration.v1",
+  "base_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "patch_sha256": "05beb6c34fb39df5b3ebaa970d3e8c641047262f85da377d17be6271a4f5b111",
+  "files": [
+    {
+      "path": "lab/cli.py",
+      "base_sha256": "57f9ed1d344bc7d0a1bf3f8dde6ee9b81eab89024e611db058871609fc1bf371",
+      "final_sha256": "92a931defdc0cb09f22ce665785a355aea790ee96db9b5c62eb0778c1d284027"
+    },
+    {
+      "path": "lab/director/fake_llm.py",
+      "base_sha256": "ca469fe3d79ce3f6249f2907f7c733801e3db91359fb5a756cd88e79c30e9836",
+      "final_sha256": "7dd96f0060c80133bba897047626268796990b4ad11fc2a0f9c2591850f5c4c2"
+    },
+    {
+      "path": "lab/director/local_llm.py",
+      "base_sha256": "4f2861645d5debebc62bf43e99717a687b627447b205d933b096d08ca8cdc635",
+      "final_sha256": "dc21385c1b8930a35f0f33fa10b661592fa10df43aa15ce4f5164a8e00ce271c"
+    },
+    {
+      "path": "lab/llm/native_runtime.py",
+      "base_sha256": "171a2d41d4bd396238b237d116a7d497e7070b3dbe309a94aebb167b004ddcc4",
+      "final_sha256": "9ae0374c883e9ba518d08449820050354ac7c6618d864a5681374fe467062411"
+    },
+    {
+      "path": "tests/test_local_qwen_provider.py",
+      "base_sha256": "349aad50162bbe50c4eb77fb87e44a1da8d7242619192eedf63b323a14a79258",
+      "final_sha256": "bb66717c044fcbdb057d7306c3208b158800c662908515d10a431f354670600b"
+    },
+    {
+      "path": "tests/test_native_runtime.py",
+      "base_sha256": "1b44ea90e4ac2de76d4578ade7b948601d68f4ae2688825dae0ceb2194cd2588",
+      "final_sha256": "b9dfc2d7d0d80be197c71fc0cb8325a85007b6ba779eadca1ed09aba64a6b46a"
+    }
+  ],
+  "evidence_sha256": {
+    "check_qwen_multiline_grammar.py": "c9d7186b18356d1070338edf51ab16f9d160463cc713e87a808ad0f0700971e9",
+    "local-qwen-multiline-grammar-adr.md": "2c7a4094263993b4d87079bce1094a3fcd6dc53ffb22ecb36b5aabb0b49b9d06",
+    "qwen-multiline-grammar-check.json": "9324b254381c7f5757d9bc6500b372ad28a2a65b45b1d3787a891b719dffee91",
+    "qwen-multiline-grammar-diagnostics.v1.json": "9bf8bef5f1a292f7a45e18a0732e2f49ab99b206a396fa3c4d7fa0a7d8e0ccef"
+  },
+  "source_parity": "6/6",
+  "scope": "Source integration and CPU grammar evidence; actual GPU and full gate pending."
+}

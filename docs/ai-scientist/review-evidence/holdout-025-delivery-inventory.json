@@ -1,0 +1,39 @@
+{
+  "captured_at_utc": "2026-09-26T20:44:42.232077+00:00",
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-025-sourcebound.patch": "2eca67ecd8a0bdd35c9aab6f2293fbeb9b62eef189a1fb07ecfb2dda43a0f781",
+    "docs/ai-scientist/review-evidence/holdout-025-vertical-review-current.json": "a3db9a74d8c023f201afc4f0e404967f4111196f2621685278beafda85328718",
+    "docs/ai-scientist/review-evidence/holdout-025-vertical-review.json": "d81269d3bf77b092326b5ac35b3dbd8cc10d53cb70f5392f417fb4cb43a575d1",
+    "lab/cli.py": "7a2de9b0c0281f091fe906b109f0b0f925c16eb0ab7342cc6b9e169b7b285203",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "fd94935786a845df943be2e890464788ba2e69029cfa307af87ba13586306ce5",
+    "lab/db/schema.py": "1e95ef7fc6e82d72571fc004ea95d995203e5ee369502d2f835d59688b48a78c",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/holdout.py": "94da55257d086bdc1fe7c8a95863d3f4b6698346b3e5ce686cae3d5fb801daa4",
+    "lab/director/loop.py": "ff76cdbdae9cfceb9974bb572bbdd7bae0cb448d217e78ac17d31fed66a3e4c4",
+    "lab/director/runner.py": "754ba52faf91f4fa666d60354486aa0c15816ebcb462a5450004daf0b1fb117f",
+    "lab/reporting.py": "7e1c937f906d05e410d65959459fa9ff0a222f536560b01a635bcb37f398a9d9",
+    "lab/scorer/holdout.py": "e2ffaa672d451437bbd5cb9336d1fca9b6c8cc07d77aeec5d0a8389f398d9ccf",
+    "lab/scorer/holdout_supervisor.py": "363a0fe41bbf7c667dc5b87194d75cae9e775341a80100a4e65d494a4c22241b",
+    "lab/scorer/holdout_worker.py": "8d781d49919f1dfc8cd72982e0097e315c65d11df15fcfb9e765c3d5d22693a2",
+    "lab/scorer/supervisor.py": "05f11db53473afc92355fde4e042c86d3e0048c7cab5af0949d2127880f4e689",
+    "tests/test_holdout_privacy.py": "8182458e8331c803daab925e49290f84242fe44a7afb3add44063e38e2fccb0e",
+    "tests/test_postgres_holdout_api_identity.py": "e132707e46ee57e59eaeee934320eee6accb7201a41e0d46b91a3ea1f19b0b2c",
+    "tests/test_report_replay.py": "6c99e5495ddcc41bc73dd1d3ac60bb9c9425fe5dc04cfb8b05828f876f0eb7f3"
+  },
+  "migration": {
+    "down_revision": "0018_public_task_semantics",
+    "file": "lab/db/migrations/versions/0019_bounded_holdout.py",
+    "revision": "0019_bounded_holdout"
+  },
+  "patch": {
+    "bytes": 293029,
+    "path": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-025/docs/ai-scientist/review-evidence/holdout-025-sourcebound.patch",
+    "sha256": "2eca67ecd8a0bdd35c9aab6f2293fbeb9b62eef189a1fb07ecfb2dda43a0f781"
+  },
+  "review_receipt": {
+    "path": "docs/ai-scientist/review-evidence/holdout-025-vertical-review-current.json",
+    "sha256": "a3db9a74d8c023f201afc4f0e404967f4111196f2621685278beafda85328718"
+  },
+  "schema": "holdout-source-delivery-inventory.v1",
+  "source_base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02"
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "holdout-lifecycle-execution-failure.v1",
+  "actual_session": 89531,
+  "actual_exit_code": 1,
+  "completion_chunk": "7a9722",
+  "unit": "swapp-holdout-lifecycle-20260927-r8a.service",
+  "wall_seconds": 11.053,
+  "cpu_seconds": 3.301,
+  "reported_memory_peak": "196.6M",
+  "swap_bytes": 0,
+  "private_receipt": "data/runtime/holdout-030-lifecycle-fixture/5a91187f03914e1185e8e6f860249aa9/fixture-receipt.json",
+  "private_receipt_sha256": "d58c6ada06f6123cb86f600682e5800e646c7d568e825fc9852e5fc33a7a90fe",
+  "source_unchanged": true,
+  "failure_stage": "candidate_readiness",
+  "failure_code": "fixture_child_exited_before_ready",
+  "migration_exit_code": 0,
+  "setup_job_ids": [
+    "7bb7c161-ea90-46b5-8567-e3e47c5f1ba3",
+    "40806592-7f8a-4904-bc66-061c15b4bac8",
+    "163ef820-984a-4347-b096-307c757687ea"
+  ],
+  "production_cleanup_exit": 0,
+  "setup_worker_cleanup_exit": 0,
+  "owned_database_container_removed": true,
+  "credentials_removed": true,
+  "known_evidence_gap": "Already-exited pytest child output/exit was not collected, so actual test failure assertion is unavailable.",
+  "next_action": "Capture bounded sanitized child stdout/stderr and exit on every path before retry.",
+  "scope": "Three real setup Scorer units started on precomputed synthetic scores; no holdout reservation/ready worker or lifecycle acceptance."
+}

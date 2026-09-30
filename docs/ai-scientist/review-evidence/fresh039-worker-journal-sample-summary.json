@@ -1,0 +1,19 @@
+{
+  "collection_status": "unverifiable_or_nonzero",
+  "exact_normal_exit0_verified": false,
+  "readonly": true,
+  "worker_PID_quiescence_verified": false,
+  "no_MESSAGE_or_score_values": true,
+  "helper_sha256": "9774e565abd183746e55c73dcb223c2665d8ea1357caf8e3310dd344dc903828",
+  "root_ready_sha256": "fd486f686cbcbf42fcfc8548824e6cabe595a02fd9454e80b5406439e9b382e2",
+  "schema": "fresh039-worker-journal-sample-safe-summary.v1",
+  "date": "2026-09-30",
+  "actual_outer_exit_code": 0,
+  "actual_session": 77740,
+  "actual_terminal_chunk": "29d0fb",
+  "matched_metadata_event_count": 2,
+  "explicit_exit_field_count": 0,
+  "private_receipt_sha256": "3282a3c05a7b585a53fb6fdb541aae19c07f01c4728a0327f912b01c1403f2d5",
+  "scope": "One exact completed scored generation metadata sample. Collection integrity passed; actual worker exit and historical PID quiescence remain unverified. No memory probing, journal configuration changes or retries.",
+  "M0_10_complete": false
+}

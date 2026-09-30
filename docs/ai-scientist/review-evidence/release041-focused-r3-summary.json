@@ -1,0 +1,20 @@
+{
+  "schema": "release041-focused-r3-summary.v1",
+  "prospective_version": "0.41.0",
+  "candidate_version": "0.39.0",
+  "runtime_count": 306,
+  "actual_systemd_exit_code": 0,
+  "pytest_exit_code": 0,
+  "passed": 172,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source_unchanged": true,
+  "fixture_only_fix": true,
+  "production_bytes_changed_from_R2": false,
+  "original_R2_actual_exit_code": 1,
+  "original_R2_failed_tests": 6,
+  "receipt_sha256": "bc685c8effcddbfe972bf3eb6e7c3ad0c6cab3262ea3dd1e65ca3c32119c019e",
+  "full_quality_gate_passed": false,
+  "SQL_or_deployment_acceptance": false
+}

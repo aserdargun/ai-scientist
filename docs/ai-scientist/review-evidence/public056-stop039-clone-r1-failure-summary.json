@@ -1,0 +1,18 @@
+{
+  "schema": "public056-stop039-clone-failure-summary.v1",
+  "receipt_sha256": "3452191ece2b9ce7ee9d97eef33ec0f28580836c269c26fdca200f13b0b45f4d",
+  "root_ready_sha256": "2b640d99014a80e42def3133da8f92dd4c9443a6e39d597c140df72e8e8e0030",
+  "actual_exit_code": 1,
+  "runtime_seconds": 1.23,
+  "passed": false,
+  "observed_exception_type": "ProgrammingError",
+  "phase": "original read-only snapshot before dump",
+  "observed_proofs": 0,
+  "clone_container_created": false,
+  "private_dump_created": false,
+  "main_access": false,
+  "old_database_writes": false,
+  "exact_SQL_cause": "not yet measured",
+  "started_at": "2026-09-29T23:08:36.508223+00:00",
+  "finished_at": "2026-09-29T23:08:37.542653+00:00"
+}

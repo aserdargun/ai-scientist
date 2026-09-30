@@ -1,0 +1,38 @@
+{
+  "schema": "native-thinking-budget-source-review.v1",
+  "runtime_version": "vllm 0.30.0",
+  "scope": "Read-only installed-source inspection; actual behavior requires the separate real S2 run. No runtime package edits.",
+  "files": {
+    "entrypoints/openai/chat_completion/protocol.py": {
+      "sha256": "51fb06a943201ffdc0a0bbae44b79a996bdd6ae3373593a67666868d996451b2",
+      "finding": "Request field thinking_token_budget is forwarded to SamplingParams."
+    },
+    "sampling_params.py": {
+      "sha256": "f21efc98bf8ce8aab88eb67adb4207285e509a167d976e14d3e2e8282e024bea",
+      "finding": "Nonnegative integer or None input validator; local wrapper requires a positive value below total output cap."
+    },
+    "v1/engine/input_processor.py": {
+      "sha256": "c8abd8e4e14d99929d45a7ff3b2a74898269c5e2a7fa30b826623ee85e4ce813",
+      "finding": "Requests with thinking budget require enabled reasoning_config."
+    },
+    "engine/arg_utils.py": {
+      "sha256": "ead004ca266419cd25f54a7aefc0e20e1eb046f363b7f5cc977e14f52ee44bb1",
+      "finding": "Configured reasoning parser initializes reasoning_config."
+    },
+    "v1/sample/thinking_budget_state.py": {
+      "sha256": "962f8f55210eb0a431cb9c78b013e35f7a7dd58d06d6fb2e7fcff1b457356f8e",
+      "finding": "Budget state tracks prompt/generated think markers and forces the end marker when budget is reached."
+    },
+    "parser/qwen3.py": {
+      "sha256": "2fa80f910f0da453c2134027564a3859cb1f2ec01035198b40f11da37fe0ac0a",
+      "finding": "Qwen think marker strings are <think> and </think>."
+    }
+  },
+  "requested_profile": {
+    "enable_thinking": true,
+    "thinking_token_budget": 128,
+    "max_output_tokens": 512,
+    "inference_deadline_seconds": 30
+  },
+  "native_source_sha256": "c131e13117fb5757de40ba8439902b56ed47909827bd726c7d94cf7c72588b64"
+}

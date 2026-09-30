@@ -1,0 +1,69 @@
+{
+  "schema": "care-farm-b-root-review.v1",
+  "created_at": "2026-09-26T21:32:54.081773+00:00",
+  "base_commit": "fc28ea1710ff917da536a7faa591146d5dd624fa",
+  "files_sha256": {
+    "care-farm-b-source-audit.py": "5490266394166bf892f9f2dae680be41bbd3868bdeda26c9071572b246615490",
+    "care-farm-b-source-audit.json": "a075fbb1e5287406983908fa05b647768c04f6e3b278b1fea1aed22cccbecd00",
+    "care-farm-b-policy-analysis.py": "8692b096f7549529eaf64ae3012a476be16ff7934307485909af44bcf29cfcfc",
+    "care-farm-b-policy-analysis.json": "ac74320d562250d313f4dc21a94af73a6e59339397be340766152f6bd008f261"
+  },
+  "source_audit_scope": "Worker executed full pinned archive hash and sequential 15 Farm B CSV scan. Root reviewed source, checked frozen artifact hashes, independently checked journal and repeated derived policy analysis. Root did not repeat full archive scan.",
+  "worker_source_audit_exit_code": 0,
+  "worker_source_audit_journal": "Sep 27 00:25:19 cachyos systemd[1044]: Started [systemd-run] /usr/bin/python3 docs/ai-scientist/review-evidence/care-farm-b-source-audit.py --repository-root /home/cachyos/ai-scientist --output /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-farm-b-source-audit.json.\nSep 27 00:26:01 cachyos systemd[1044]: swapp-care-farm-b-source-audit-final-dc9dd0b521f74c64b03b234478a04e5c.service: Consumed 21.161s CPU time over 42.314s wall clock time, 1G memory peak.\n",
+  "journal_exit_code": 0,
+  "memory_note": "The full scan journal reports a rounded 1G memory peak under a 1GiB cap. This includes cgroup-accounted memory and is not a precise byte or Python-only heap measurement.",
+  "root_policy_replay": {
+    "tool_chunk_id": "65f659",
+    "exit_code": 0,
+    "unit": "swapp-care-farm-b-root-policy-20260927-a4e19.service",
+    "command": [
+      "systemd-run",
+      "--user",
+      "--pipe",
+      "--wait",
+      "--collect",
+      "--unit=swapp-care-farm-b-root-policy-20260927-a4e19.service",
+      "--property=MemoryMax=1G",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=50%",
+      "--property=TasksMax=64",
+      "--property=RuntimeMaxSec=60",
+      "--working-directory=/home/cachyos/ai-scientist",
+      "/usr/bin/python3",
+      "docs/ai-scientist/review-evidence/care-farm-b-policy-analysis.py"
+    ],
+    "service_runtime_ms": 32,
+    "cpu_ms": 23,
+    "reported_memory_peak": "7.6M",
+    "output_sha256_unchanged": true
+  },
+  "primary_sources_independently_read": [
+    "https://arxiv.org/html/2404.10320v2",
+    "https://aefdi.github.io/EnergyFaultDetector/care2compare_faq.html"
+  ],
+  "measured_summary": {
+    "all_anomaly_tasks_have_positive_healthy_unmasked_support": true,
+    "all_prediction_rows_total": 72128,
+    "event_eval_times_missing_points": 0,
+    "every_eval_is_full_600_second_grid": true,
+    "farm_b_task_count": 15,
+    "longest_contiguous_status_eligible_train_run_duration_hours_maximum_at_600s": 256.0,
+    "longest_contiguous_status_eligible_train_run_duration_hours_minimum_at_600s": 185.16666666666666,
+    "longest_contiguous_status_eligible_train_run_rows_maximum": 1536,
+    "longest_contiguous_status_eligible_train_run_rows_minimum": 1111,
+    "maximum_positive_healthy_points_per_pdm": 8404,
+    "minimum_positive_healthy_points_per_pdm": 2855,
+    "nrm_count": 9,
+    "pdm_count": 6,
+    "status_eligible_train_rows_scenario_before_embargo_maximum": 49236,
+    "status_eligible_train_rows_scenario_before_embargo_minimum": 43971,
+    "training_source_grid_missing_points": 1462
+  },
+  "limits": [
+    "No Farm B loader, Arrow serialization, registration or Scorer execution acceptance.",
+    "No Farm C dataset payloads opened by source audit.",
+    "Training/feature policy still awaiting Astra review; no runtime code changed.",
+    "No GPU, local model, AOS or database services launched."
+  ]
+}

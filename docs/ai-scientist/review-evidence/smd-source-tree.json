@@ -1,0 +1,930 @@
+{
+  "repository": "NetManAIOps/OmniAnomaly",
+  "source_url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/trees/master?recursive=1",
+  "files": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d4dbc05a6179b8f97b4dd32b7625198e90e9e88",
+      "size": 1080,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/4d4dbc05a6179b8f97b4dd32b7625198e90e9e88"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9502647a41585adb5c4653bab058d0915c22216a",
+      "size": 3604,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/9502647a41585adb5c4653bab058d0915c22216a"
+    },
+    {
+      "path": "ServerMachineDataset/LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a35f9e98caf3d5d6d6164ef9a303ec4216780c01",
+      "size": 1072,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/a35f9e98caf3d5d6d6164ef9a303ec4216780c01"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d61a908e062bd383f968dabe416ff521269cb220",
+      "size": 311,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d61a908e062bd383f968dabe416ff521269cb220"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "3de06f16510cf1c8d41f2972b56ed506b50469e7",
+      "size": 294,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/3de06f16510cf1c8d41f2972b56ed506b50469e7"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d91dde2f34ba28bbf85fd17e403fa937f7eae16e",
+      "size": 352,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d91dde2f34ba28bbf85fd17e403fa937f7eae16e"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1f1b1cb1fb6f978ee60486eb493b15cbd8b3f0d7",
+      "size": 421,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/1f1b1cb1fb6f978ee60486eb493b15cbd8b3f0d7"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e9a8b7190bb538cf6bbed56f387e9b02d95709e4",
+      "size": 276,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e9a8b7190bb538cf6bbed56f387e9b02d95709e4"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b5f6c5f48b1ece06b47a508ed528735e0a0ce553",
+      "size": 1127,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b5f6c5f48b1ece06b47a508ed528735e0a0ce553"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1422cf5a40c3ea314d8d18862a7d89ce2a23322f",
+      "size": 499,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/1422cf5a40c3ea314d8d18862a7d89ce2a23322f"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-1-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "9a570cd70069deb2ef8e8f1a3eb040108afefa69",
+      "size": 494,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/9a570cd70069deb2ef8e8f1a3eb040108afefa69"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e1dcecdd2c53646ff41b34c5b541cc5cebb38bb3",
+      "size": 389,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e1dcecdd2c53646ff41b34c5b541cc5cebb38bb3"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "5d32f19de76e85456606c2124df4c8ea2022dc20",
+      "size": 313,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/5d32f19de76e85456606c2124df4c8ea2022dc20"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "189c869ce8241a05ae8face51380804f27336601",
+      "size": 329,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/189c869ce8241a05ae8face51380804f27336601"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2bbe352b2042d0dc6fa312cdf095a94e80c5e57c",
+      "size": 460,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/2bbe352b2042d0dc6fa312cdf095a94e80c5e57c"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7a3dcac3f25506cd340099683cfacf31ee524cd9",
+      "size": 513,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/7a3dcac3f25506cd340099683cfacf31ee524cd9"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "737bd2fbdcb9628af3acc9f81f7ec66685597923",
+      "size": 320,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/737bd2fbdcb9628af3acc9f81f7ec66685597923"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "388f91825a82e59511cc97172a982c3084fcebc9",
+      "size": 457,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/388f91825a82e59511cc97172a982c3084fcebc9"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "fca07cc58ff17dc327fcdfcbcd31da2b27242659",
+      "size": 106,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/fca07cc58ff17dc327fcdfcbcd31da2b27242659"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-2-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "5ef64ed19b06c57cfd79c7a952a6977eed783a29",
+      "size": 376,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/5ef64ed19b06c57cfd79c7a952a6977eed783a29"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "10f44107441d76b0ae524bd311cbfece62512d99",
+      "size": 151,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/10f44107441d76b0ae524bd311cbfece62512d99"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-10.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d0746beb2a227a927b3df8c265a15326947495f5",
+      "size": 416,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d0746beb2a227a927b3df8c265a15326947495f5"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-11.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "cfc667a65e0136341baff9dc7d995cfc7850fc89",
+      "size": 159,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/cfc667a65e0136341baff9dc7d995cfc7850fc89"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "3176eea5fa50af3b2661f7c6b32f3580ead66fc7",
+      "size": 188,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/3176eea5fa50af3b2661f7c6b32f3580ead66fc7"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e29ee5f4aa05f89e742fb94aca43325f9410267c",
+      "size": 785,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e29ee5f4aa05f89e742fb94aca43325f9410267c"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1161482ce070a054fb0e7f2a252cd1af6476e290",
+      "size": 166,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/1161482ce070a054fb0e7f2a252cd1af6476e290"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "fbd87c033da75285c9f2513bd4b6558106e656b6",
+      "size": 254,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/fbd87c033da75285c9f2513bd4b6558106e656b6"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "afabf91e5c27d4a198037cc4b8d99c720f7dc413",
+      "size": 379,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/afabf91e5c27d4a198037cc4b8d99c720f7dc413"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "3544dd60d76181271e4bb6ae6c06022f7f91f4be",
+      "size": 247,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/3544dd60d76181271e4bb6ae6c06022f7f91f4be"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "8c72b2c5164cf0170e62a99b9910132bbd9e2f86",
+      "size": 226,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/8c72b2c5164cf0170e62a99b9910132bbd9e2f86"
+    },
+    {
+      "path": "ServerMachineDataset/interpretation_label/machine-3-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "0af845563eff0f0d49c299543ca7fad48f526dcc",
+      "size": 166,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/0af845563eff0f0d49c299543ca7fad48f526dcc"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "0c48ff71d3d72128731b7045f49a33d9383a969e",
+      "size": 9739818,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/0c48ff71d3d72128731b7045f49a33d9383a969e"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "86e8b1a03db0aa31edd8b95130fd79ba6693619c",
+      "size": 8103348,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/86e8b1a03db0aa31edd8b95130fd79ba6693619c"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "620621931063671396a635b296b9eed93aa77e9e",
+      "size": 8106426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/620621931063671396a635b296b9eed93aa77e9e"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "4ce08f550455ae6e6e383f85c8f93246d3f7a789",
+      "size": 8107794,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/4ce08f550455ae6e6e383f85c8f93246d3f7a789"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "093b8d44af05b4d3a92ac81bc0e1bda5a8ccca35",
+      "size": 8107452,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/093b8d44af05b4d3a92ac81bc0e1bda5a8ccca35"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "345df3517fa084e52c8958709a3cb68ff0f376fb",
+      "size": 8101638,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/345df3517fa084e52c8958709a3cb68ff0f376fb"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f717524daf4167710f1cacf81aeaed43b220fabe",
+      "size": 8104374,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/f717524daf4167710f1cacf81aeaed43b220fabe"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-1-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b29fdf6ce95c8ae47cfd8c061fd4bb5a57a8f781",
+      "size": 8105058,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b29fdf6ce95c8ae47cfd8c061fd4bb5a57a8f781"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f6d71b1f1595d2333dd963b39e4c54d5812cb7c8",
+      "size": 8103348,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/f6d71b1f1595d2333dd963b39e4c54d5812cb7c8"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "45867eb9cff6cf0f434ed9f4b3981dedbe923b16",
+      "size": 8105400,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/45867eb9cff6cf0f434ed9f4b3981dedbe923b16"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e6b14abd219100263093255532d8d13db5a53bad",
+      "size": 8101638,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e6b14abd219100263093255532d8d13db5a53bad"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "72895129d2a243d78d64a25fc1a9d1ef6d66e3b2",
+      "size": 8101638,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/72895129d2a243d78d64a25fc1a9d1ef6d66e3b2"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "774b3bb9e7603a4eb992dafd3a3b30ec07e75b43",
+      "size": 8101638,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/774b3bb9e7603a4eb992dafd3a3b30ec07e75b43"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "a7973287dcd76c15ef068ab63fbb95156559ff11",
+      "size": 9830106,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/a7973287dcd76c15ef068ab63fbb95156559ff11"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "db7058cc2e31c0f456e2b6aa0b0bc206e724e7bc",
+      "size": 8104032,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/db7058cc2e31c0f456e2b6aa0b0bc206e724e7bc"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "72ebea6c02c13112d10001f91d5e153774d4e766",
+      "size": 8106426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/72ebea6c02c13112d10001f91d5e153774d4e766"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-2-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "853289b07c1067c4ae998592655dd292d644f50d",
+      "size": 9822924,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/853289b07c1067c4ae998592655dd292d644f50d"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "936b6ddf1b981f049dca104c135b5e057fa41f7d",
+      "size": 9815400,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/936b6ddf1b981f049dca104c135b5e057fa41f7d"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-10.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7191328c304bd94cf16433b6cfa24334752a5a33",
+      "size": 8103006,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/7191328c304bd94cf16433b6cfa24334752a5a33"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-11.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "5f51ad22b02c859025936b8dc19cf43755edd238",
+      "size": 9814032,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/5f51ad22b02c859025936b8dc19cf43755edd238"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "fbedbc03660c4207ad3f52748bf850252b8a8cf8",
+      "size": 8106426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/fbedbc03660c4207ad3f52748bf850252b8a8cf8"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d41089fc31be0c609f736a1913f485c807dfc69e",
+      "size": 8106426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d41089fc31be0c609f736a1913f485c807dfc69e"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "994417b8a350a406452ae0a45bc7ae91f69a0651",
+      "size": 8100954,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/994417b8a350a406452ae0a45bc7ae91f69a0651"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b46ef99fb34a08613b2a50412b7242bb6d78e72e",
+      "size": 8102322,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b46ef99fb34a08613b2a50412b7242bb6d78e72e"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d074b9c2bad837079fc2eda5356a6a4d0ad6dde3",
+      "size": 9824292,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d074b9c2bad837079fc2eda5356a6a4d0ad6dde3"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "4deaedf4f43b736d5fc13f0b4b7d50863a71fdd4",
+      "size": 9817110,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/4deaedf4f43b736d5fc13f0b4b7d50863a71fdd4"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1fc673c2e62c047739db649e88c91efb045b10ca",
+      "size": 9816768,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/1fc673c2e62c047739db649e88c91efb045b10ca"
+    },
+    {
+      "path": "ServerMachineDataset/test/machine-3-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b76365fa344c435f64ce54259882186b0b10be72",
+      "size": 9819846,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b76365fa344c435f64ce54259882186b0b10be72"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2b1063d42ba0fa3db0fd9296e4686cb4bca50260",
+      "size": 56958,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/2b1063d42ba0fa3db0fd9296e4686cb4bca50260"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "29bdb081f95cf546ba6d499302fbdc4f6137de79",
+      "size": 47388,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/29bdb081f95cf546ba6d499302fbdc4f6137de79"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2eed09ad2e98125d25f2700918d86796ed22b0c4",
+      "size": 47406,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/2eed09ad2e98125d25f2700918d86796ed22b0c4"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b1745658b4a2efcd2b3c6af1f260b1a27a5a7ff3",
+      "size": 47414,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b1745658b4a2efcd2b3c6af1f260b1a27a5a7ff3"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2ba2cb279b1a6f813743db93af4f1fe832caf8b2",
+      "size": 47412,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/2ba2cb279b1a6f813743db93af4f1fe832caf8b2"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "bff3b67fc10d2b7c89c778f746390852b2c24bc8",
+      "size": 47378,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/bff3b67fc10d2b7c89c778f746390852b2c24bc8"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "120964780cc40a4c68ff1b68ddb7258094b564e9",
+      "size": 47394,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/120964780cc40a4c68ff1b68ddb7258094b564e9"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-1-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "40eea4944b436383e255f2eeb7255fac0f0edac4",
+      "size": 47398,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/40eea4944b436383e255f2eeb7255fac0f0edac4"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d072491a7f5d4fc5d6854e5d9cb782352834adcf",
+      "size": 47388,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d072491a7f5d4fc5d6854e5d9cb782352834adcf"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1cedfe43e4c6e25f6f416b2af78c6a95d0e63b2f",
+      "size": 47400,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/1cedfe43e4c6e25f6f416b2af78c6a95d0e63b2f"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "60880105c01c983ef1158f1cf7f4e2feb0607e98",
+      "size": 47378,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/60880105c01c983ef1158f1cf7f4e2feb0607e98"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "eb0965c3ff1e5c0168950dc51e5050ffdeb18c32",
+      "size": 47378,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/eb0965c3ff1e5c0168950dc51e5050ffdeb18c32"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "18e0cf48f655bc8021f2222c928a411d69c59eae",
+      "size": 47378,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/18e0cf48f655bc8021f2222c928a411d69c59eae"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "bcd73d41f984013358d1fbba9ef6dfd0bc74bbf7",
+      "size": 57486,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/bcd73d41f984013358d1fbba9ef6dfd0bc74bbf7"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2384b0bcdd87afa2b3b2d430a29062da66f33c51",
+      "size": 47392,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/2384b0bcdd87afa2b3b2d430a29062da66f33c51"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "43edaf5e053c966a0aa520eb7e0d20ba6dabbd30",
+      "size": 47406,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/43edaf5e053c966a0aa520eb7e0d20ba6dabbd30"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-2-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7e7bf05e3943348231d940b8f1654e147240f921",
+      "size": 57444,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/7e7bf05e3943348231d940b8f1654e147240f921"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "46242ec08583cddd5f08dcfe3191cef3f5a88624",
+      "size": 57400,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/46242ec08583cddd5f08dcfe3191cef3f5a88624"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-10.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "accb1de8b01fe9199e428de06ba78382f4a18c0b",
+      "size": 47386,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/accb1de8b01fe9199e428de06ba78382f4a18c0b"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-11.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "c027c2f0e38da95ddbd49a0c1d2a49ffc67bc251",
+      "size": 57392,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/c027c2f0e38da95ddbd49a0c1d2a49ffc67bc251"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "3bfe413eb37c82db4a823c49da9f35105ada73b6",
+      "size": 47406,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/3bfe413eb37c82db4a823c49da9f35105ada73b6"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "ef7b8f1126c1e4d94dfa4f3879f262081b441ddb",
+      "size": 47406,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/ef7b8f1126c1e4d94dfa4f3879f262081b441ddb"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "71ccfd12e7bc504320f7fbe6cd9974d1df93368d",
+      "size": 47374,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/71ccfd12e7bc504320f7fbe6cd9974d1df93368d"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d2b038344a723186fcdc788ea67faf1dc5e7e145",
+      "size": 47382,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/d2b038344a723186fcdc788ea67faf1dc5e7e145"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "98c30e746dc8b08c4c3883fc84396a2c06f3541b",
+      "size": 57452,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/98c30e746dc8b08c4c3883fc84396a2c06f3541b"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "34e2fa46ab80de19e65a02d016fdae28583a0351",
+      "size": 57410,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/34e2fa46ab80de19e65a02d016fdae28583a0351"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f175565bd6b285e1b3cce05d685280ed166324ad",
+      "size": 57408,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/f175565bd6b285e1b3cce05d685280ed166324ad"
+    },
+    {
+      "path": "ServerMachineDataset/test_label/machine-3-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "69f83c4d58b4410473ae9c6904c81e87da669b82",
+      "size": 57426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/69f83c4d58b4410473ae9c6904c81e87da669b82"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "01303e82d3033210d1bfd6272199fc42f2cf82d1",
+      "size": 9739818,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/01303e82d3033210d1bfd6272199fc42f2cf82d1"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "5027d3a80976a974afc4597a8e7402354a3d14a7",
+      "size": 8103348,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/5027d3a80976a974afc4597a8e7402354a3d14a7"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "253862b50af3ba881aac527e4cc2a56e32e25509",
+      "size": 8106084,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/253862b50af3ba881aac527e4cc2a56e32e25509"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e05a441ace8bb76b4949fe8930e809f5b1ebd51a",
+      "size": 8107452,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e05a441ace8bb76b4949fe8930e809f5b1ebd51a"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "6f916154de35a59f2b03afca1fcd096d14c2ebb7",
+      "size": 8107110,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/6f916154de35a59f2b03afca1fcd096d14c2ebb7"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "52c895f51cd4cac94b3800c98cda8b5bf5ceaede",
+      "size": 8101296,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/52c895f51cd4cac94b3800c98cda8b5bf5ceaede"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "b0f9440d017fb64821604d2efca1300ebf507161",
+      "size": 8104374,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/b0f9440d017fb64821604d2efca1300ebf507161"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-1-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "a38a45e1ae0f6e1f7d8ad4c3de9aca9f21d530c4",
+      "size": 8104716,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/a38a45e1ae0f6e1f7d8ad4c3de9aca9f21d530c4"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "85e6986e5955ad1137ee0492ab663c9998ab8c2b",
+      "size": 8103006,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/85e6986e5955ad1137ee0492ab663c9998ab8c2b"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "28275bdc7f3ced6550e78d840489869548c8d315",
+      "size": 8105058,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/28275bdc7f3ced6550e78d840489869548c8d315"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "c82505805b7c9166bf52734dea07a6557ce1ffba",
+      "size": 8101296,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/c82505805b7c9166bf52734dea07a6557ce1ffba"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "52d3c0c19b4de102e9c0724236cc6b2e064fcbc0",
+      "size": 8101638,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/52d3c0c19b4de102e9c0724236cc6b2e064fcbc0"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "cb59861e3f1164470cb1f5dce8ca05a869a8e7dd",
+      "size": 8101296,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/cb59861e3f1164470cb1f5dce8ca05a869a8e7dd"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "0cef966acf151b747c40c15a902b81bd6710cde5",
+      "size": 9830106,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/0cef966acf151b747c40c15a902b81bd6710cde5"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "c695bfc4b42d688680d0825b577a97809c7c1831",
+      "size": 8104032,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/c695bfc4b42d688680d0825b577a97809c7c1831"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "dc8c8fa5f78f9037108c806e45b155eea7ec493a",
+      "size": 8106084,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/dc8c8fa5f78f9037108c806e45b155eea7ec493a"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-2-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "ae01edd03cf87342fdb9d768c78e423f4b239747",
+      "size": 9822924,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/ae01edd03cf87342fdb9d768c78e423f4b239747"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-1.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "e2e5d6b3382370e36b2336dcde0d388a125eb016",
+      "size": 9815400,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/e2e5d6b3382370e36b2336dcde0d388a125eb016"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-10.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7fd68b1d1cfb6619b5426f760ae53b9b1273dfa1",
+      "size": 8102664,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/7fd68b1d1cfb6619b5426f760ae53b9b1273dfa1"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-11.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "335ca33f5670a73acef4da557cb3f32974a38ea9",
+      "size": 9813690,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/335ca33f5670a73acef4da557cb3f32974a38ea9"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-2.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "0159c59a689e376a08c120248579579d1d2799c2",
+      "size": 8106084,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/0159c59a689e376a08c120248579579d1d2799c2"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-3.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "aaf865412f625af2a91f2dfd388ffd513393fb05",
+      "size": 8106426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/aaf865412f625af2a91f2dfd388ffd513393fb05"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-4.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "a62c27c9396e64b7bff50ca09af2be46d33439a9",
+      "size": 8100954,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/a62c27c9396e64b7bff50ca09af2be46d33439a9"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-5.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "376264a15daa939208680dff40299d3807c9dbfe",
+      "size": 8101980,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/376264a15daa939208680dff40299d3807c9dbfe"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-6.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "bd86ae5dd7c9393b56a4b614f95232c79ccfc299",
+      "size": 9824292,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/bd86ae5dd7c9393b56a4b614f95232c79ccfc299"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-7.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "af5f4b0c9f67306e312a94e49eb19149d7ff45f8",
+      "size": 9817110,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/af5f4b0c9f67306e312a94e49eb19149d7ff45f8"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-8.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "200305b1ea1e87d45fb0568f7d73bf1c76100200",
+      "size": 9816426,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/200305b1ea1e87d45fb0568f7d73bf1c76100200"
+    },
+    {
+      "path": "ServerMachineDataset/train/machine-3-9.txt",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "11713d81ed1d844a6930af2a4c41c5154587f74c",
+      "size": 9819846,
+      "url": "https://api.github.com/repos/NetManAIOps/OmniAnomaly/git/blobs/11713d81ed1d844a6930af2a4c41c5154587f74c"
+    }
+  ],
+  "revision": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4",
+  "commit_tree_sha": "21290ec4209d64b0045278c54877f4ac4eb3488d",
+  "tree_api_response_sha": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4",
+  "note": "The trees endpoint response sha is retained as returned; immutable commit revision and commit tree object SHA are separate fields."
+}

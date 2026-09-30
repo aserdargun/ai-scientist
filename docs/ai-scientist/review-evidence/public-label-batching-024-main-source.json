@@ -1,0 +1,9 @@
+{
+  "schema": "public-label-batching-source.v1",
+  "files": {
+    "lab/director/public_suite.py": "8c1a037dae49022949ea0a02b004179389f2349fbc7ccd4b4484a64a99f2a992",
+    "tests/test_public_label_batching.py": "dd250073db1b5cd087bc541b72a58ca57cfcce2466bbdd46a8aa88cfc5960044"
+  },
+  "preimage": "efc606b7fd3dcfaee67657e2a009c3c011548fea71bc646db5f368efa40d2f1a",
+  "scope": "Batched labels inside existing task transaction; no profile identity or retry policy change."
+}

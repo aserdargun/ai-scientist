@@ -1,0 +1,61 @@
+{
+  "checked_at": "2026-09-24T10:36:12.491773+00:00",
+  "source_snapshot_sha256": "e4003a9423a8d6f5233d0fd3403d734b14a2d70fe06180d20c8831c37c2c61f7",
+  "scope": "Independent source snapshot and virtualenv; fixture tests only. No AOS service, Docker desktop or local model started. No live AOS files changed.",
+  "results": [
+    {
+      "command": [
+        "uv",
+        "pip",
+        "check",
+        "--python",
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using Python 3.12.13 environment at: /home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv\nChecked 29 packages in 0.45ms\nAll installed packages are compatible\n"
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+        "-c",
+        "from aos.contracts import REPO_ROOT; print(REPO_ROOT)"
+      ],
+      "exit_code": 0,
+      "stdout": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+        "scripts/validate_package.py"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 1080, in <module>\n    main()\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 1074, in main\n    exported,registry=validate_files()\n                      ^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 228, in validate_files\n    validators[schema+'.schema.json'].validate(payload)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\nKeyError: 'remote_learning_retention_report.schema.json'\n"
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+        "-m",
+        "unittest",
+        "tests.test_reusable_decider",
+        "tests.test_desktop_tasks"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "............{\"code\":\"UNSAFE_ACTION\",\"detail\":\"Scheduled task lost desktop ownership\",\"event\":\"failure\",\"evidence_refs\":[],\"retryable\":false,\"run_id\":\"run-7ccee54c1a8b4da2b9867cc8c7d70669\"}\n{\"code\":\"UNSAFE_ACTION\",\"detail\":\"Action state, lease, deadline or authority is invalid\",\"event\":\"failure\",\"evidence_refs\":[],\"retryable\":false,\"run_id\":\"run-84c8a1e000ff4f4293f4eb07a050f2ea\"}\n................{\"code\":\"TIMEOUT\",\"detail\":\"Approval expired; no action executed\",\"event\":\"failure\",\"evidence_refs\":[],\"retryable\":false,\"run_id\":\"run-40e32669fad5458a926ff2fc3cb36374\"}\n...{\"code\":\"INVALID_OUTPUT\",\"detail\":\"Decision output failed validation\",\"event\":\"failure\",\"evidence_refs\":[],\"retryable\":false,\"run_id\":\"run-16b55fa1f2a448d7b6c7b7fb3fe94787\"}\n....\n----------------------------------------------------------------------\nRan 35 tests in 0.895s\n\nOK\n"
+    }
+  ],
+  "after_unmanifested_source_addition": {
+    "checked_at": "2026-09-24T10:36:53.682664+00:00",
+    "source_snapshot_sha256": "c3655743380fa88e89f2ccf1e57063bf87f88e3f34f9d5fb010bb6a86159d284",
+    "command": [
+      "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv/bin/python",
+      "scripts/validate_package.py"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 1080, in <module>\n    main()\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 1076, in main\n    validate_manifest()\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 1068, in validate_manifest\n    check(hashlib.sha256(p.read_bytes()).hexdigest()==expected,'Manifest hash: '+name)\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source/scripts/validate_package.py\", line 27, in check\n    raise AssertionError(description)\nAssertionError: Manifest hash: README.md\n"
+  }
+}

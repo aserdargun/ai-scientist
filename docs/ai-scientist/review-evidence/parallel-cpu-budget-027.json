@@ -1,0 +1,46 @@
+{
+  "schema": "parallel-review-cpu-budget.v1",
+  "recorded_at": "2026-09-25T11:25:44.809951+00:00",
+  "host_observation_tool_chunk": "081920",
+  "parent_observation_tool_chunk": "ab6448",
+  "memory_total_bytes": 32757370880,
+  "memory_available_bytes": 22541225984,
+  "free_disk_bytes": 80852512768,
+  "logical_cpus": 12,
+  "root_review": {
+    "unit": "swapp-report-replay-twenty-027-v2.service",
+    "memory_current_bytes": 333352960,
+    "memory_max_bytes": 2147483648,
+    "cpu_quota_percent": 100,
+    "memory_swap_max": 0
+  },
+  "permitted_lock_exempt_work": [
+    {
+      "task": "training CPU-only lint/unit/type checks",
+      "memory_max_bytes": 1073741824,
+      "cpu_quota_percent": 50,
+      "tasks_max": 64
+    },
+    {
+      "task": "AOS read-only model SHA/reflink/private config and preflight",
+      "memory_max_bytes": 536870912,
+      "cpu_quota_percent": 50,
+      "tasks_max": 32
+    },
+    {
+      "task": "holdout CPU-only unit/type checks",
+      "memory_max_bytes": 1073741824,
+      "cpu_quota_percent": 50,
+      "tasks_max": 64
+    }
+  ],
+  "shared_lock_still_required_for": [
+    "Docker execution",
+    "Scorer/PostgreSQL live integration",
+    "full quality/build gates"
+  ],
+  "gpu_model_calls_authorized": false,
+  "memory_swap_max_all": 0,
+  "minimum_host_reserve_bytes": 6442450944,
+  "scope": "Bounded review-job scheduling only; not an AOS/Lab production coexistence measurement."
+}

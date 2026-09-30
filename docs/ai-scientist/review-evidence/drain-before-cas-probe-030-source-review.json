@@ -1,0 +1,95 @@
+{
+  "schema": "source_review.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "date": "2026-09-27",
+  "main_head": "d70dffcad1b746bf6f0cec9070c05a51a01fe852",
+  "execution": false,
+  "scope": "Read-only source review of private lifecycle probe and binding baseline CLI requirements; this artifact is the only reviewer write.",
+  "sources": {
+    "probe": {
+      "path": "data/runtime/parallel-m0/lifecycle-030/docs/ai-scientist/review-evidence/holdout-030-drain-before-cas-probe.py",
+      "sha256": "3d5f03552090d06dec7e7115ace1a388d18a571efdbfc61cc4cbf1adc6b4cd95"
+    },
+    "companion": {
+      "path": "data/runtime/parallel-m0/lifecycle-030/docs/ai-scientist/review-evidence/holdout-030-drain-before-cas-probe.md",
+      "sha256": "37f5c9946388570e0f13d45ed2c0971f56281f61e6a4b9c11ffcd4f62675f919"
+    },
+    "tests_after_root_correction": {
+      "path": "data/runtime/parallel-m0/lifecycle-030/tests/test_holdout030_drain_before_cas_probe.py",
+      "sha256": "aeb6eebf835ffe7a2cdb6256f4ba04f01fe04e78ae05699c799cec7057cea736"
+    }
+  },
+  "assessment": {
+    "static_design": "Suitable basis for independent drain-before-terminal-row-update evidence after the integration gates below. No execution approval or lifecycle acceptance is granted by this source review.",
+    "supported_order_if_integrated_and_proven": "all independent drain checks -> separate proof transaction commits -> trigger successfully reads matching proof -> terminal row update succeeds",
+    "unsupported_stronger_order": "proof transaction commits before trigger entry or before its sequence increment",
+    "required_assumption": "The verified owned worker/container generation cannot restart or recreate resources after the observation; pinning and normal stop/recovery fencing must establish this in the integrated driver.",
+    "positive_properties": [
+      "Raw read-only proc/systemd/cgroup/Docker/path observations are independent of production drain predicates.",
+      "Target hash binds run, reservation, nonce, worker generation, container, marker and source identities.",
+      "One-target trigger uses nextval before target/proof checks; CACHE 1 sequence is outside transaction rollback.",
+      "The assertion contains no intentional observer wait, advisory lock, FOR UPDATE, or production state mutation and returns NEW unchanged.",
+      "Exactly one attempt and a verified successful terminal transition are required; lost observer races and retries are inconclusive."
+    ]
+  },
+  "findings": [
+    {
+      "id": "P030-1",
+      "priority": "important",
+      "kind": "integration_gate",
+      "references": ["companion:54-78", "probe:493-531", "probe:558-618"],
+      "finding": "The probe remains an unintegrated helper, so neither ordering nor safe failure cleanup is demonstrated. Installation/cleanup helpers validate database prefix and role, not an exact frozen database endpoint/name; the exact identity verification remains a caller obligation.",
+      "required_action": "Integrate around the frozen R10 driver: verify exact owned DB endpoint/name, role DSNs, migration head, source bundle and host command context; pin a pre-stop live target; install before stop; await observer handshake; use the existing authenticated stop and separate recovery path; retain terminal receipt, protected ledger counts, proof and sequence before removing instrumentation. Require exactly one attempt. On failure remove only verified owned assertion/schema, then run original owned-run cleanup while retaining the failed/inconclusive result. Review this driver before DB/Docker execution."
+    },
+    {
+      "id": "P030-2",
+      "priority": "important",
+      "kind": "bounded_cleanup_gate",
+      "references": ["probe:220-260", "probe:264-312", "probe:384-442", "probe:534-555", "companion:68-75"],
+      "finding": "ObserverHandle.join returning None does not distinguish a completed unsuccessful observation from a still-live observer. There is no cancellation signal, database timeouts are not established inside proof commit, and each observation can exceed the polling deadline by its subprocess timeouts. The companion's stop/join promise is not supplied by this helper alone.",
+      "required_action": "Provide an explicit cancellation path or budget a bounded full join; always check completed and thread.is_alive before dropping the probe. Set finite connect/statement/lock timeouts on the private observer engine and reserve time for an in-flight observation plus commit and cleanup. If the thread or DB identity is uncertain, retain resources and fail closed. A focused CPU test should cover a join timeout so it cannot be interpreted as successful shutdown."
+    },
+    {
+      "id": "P030-3",
+      "priority": "minor",
+      "kind": "evidence_claim",
+      "references": ["companion:46-48", "probe:673-705"],
+      "finding": "The documented proof-commit-before-trigger-entry order is stronger than the SQL establishes. Entry and nextval precede the proof SELECT, so a proof can become visible between entry and that SELECT.",
+      "required_action": "Describe proof commit before the trigger's successful proof read and before terminal row update. This is sufficient for the intended drain-before-terminal-CAS claim; do not claim pre-entry ordering."
+    }
+  ],
+  "test_status": {
+    "reviewer_ran_tests": false,
+    "root_reported_first_run": "Bounded CPU r1, chunk b04ff7: exit 1; Ruff 0; pytest 3 failed, 11 passed. UUID round-trip constructors and a brittle SQL assertion failed.",
+    "root_reported_corrected_run": "Bounded CPU r2, chunk e8f91b: exit 0; Ruff 0; pytest 14 passed in 0.19 seconds. Root replaced test round-trip constructors with dataclasses.replace and corrected the revoked-role assertion. Probe and companion hashes remained unchanged.",
+    "limitation": "CPU contract and SQL-shape tests establish neither PostgreSQL compilation nor independent host-drain/CAS ordering. R10 final drained receipt remains separate evidence and does not itself establish ordering."
+  },
+  "baseline_scope": {
+    "binding_references": [
+      "docs/ai-scientist/02-luna-goal-brief-m0.md:72",
+      "docs/ai-scientist/01-ai-scientist-spec.md:463",
+      "docs/ai-scientist/01-ai-scientist-spec.md:465",
+      "docs/ai-scientist/01-ai-scientist-spec.md:967",
+      "docs/ai-scientist/01-ai-scientist-spec.md:1043"
+    ],
+    "proposed_adr": "data/runtime/parallel-m0/baseline-handoff-029/docs/ai-scientist/adr/0020-calibrated-baseline-handoff.md:3",
+    "decision": "An admitted standalone baseline operation with immutable baseline intent, its own bounded budget and a verified truthful terminal calibration report can satisfy the baseline CLI requirement. The binding texts do not require a standalone baseline command to leave a nonterminal calibrated run for later proposal continuation.",
+    "reason": "The required CLI inventory specifies baseline, while the research lifecycle specifies BASELINE then LOOP and restart continuity. The proposed ADR chooses an additional staged authorization/owner-generation workflow; its proposed status does not make that workflow a user requirement.",
+    "constraints": [
+      "Keep ordinary lab run baseline-to-proposal execution under its existing owner; current path is lab/cli.py:342-376.",
+      "Admit baseline intent before execution and bind suite/task set, harness/image pins, calibration and exact reconciled budget to the terminal report.",
+      "Do not apply baseline-only early termination to an already accepted research intent.",
+      "Report calibration completion explicitly; do not imply proposals, holdout approval or research/promotion success.",
+      "Do not relabel or transplant run-bound calibration into a new research run and reset consumed budget.",
+      "Retain idempotency, authorized owner, stop/recovery, Scorer isolation and resource-drain requirements."
+    ],
+    "restart_reconcile": "OPEN. Spec 3.3.1 at lines 465-466 still requires research Director restart continuity and bounded infrastructure retry. A terminal provider-infrastructure failure is truthful but is not resume support. The standalone baseline choice does not waive or complete this requirement."
+  },
+  "strategy_scope": {
+    "current_wrapper_reference": "lab/cli.py:690-715",
+    "assessment": "Persisting pending intent and reconciled budget before a specific provider-infrastructure exception can preserve audit and deterministic strategy state while producing truthful terminal failure. It must not be described as resumable while dispatcher claims only queued runs and the current wrapper fails nonterminal returns.",
+    "frozen_patch_review": "Pending; current review does not approve the changing strategy implementation."
+  },
+  "acceptance_change": "none",
+  "overall_m0_status": "All M0.1-M0.15 and AOS.1-AOS.7 remain in the goal; no acceptance item is completed or removed by this review."
+}

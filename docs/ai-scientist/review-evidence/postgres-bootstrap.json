@@ -1,0 +1,214 @@
+{
+  "timestamp": "2026-09-24T09:28:21.154186+00:00",
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "network",
+        "create",
+        "--internal",
+        "--driver",
+        "bridge",
+        "--label",
+        "org.swapp.component=ai-scientist-m0-ledger",
+        "swapp-lab-postgres-m0-network"
+      ],
+      "exit_code": 0,
+      "stdout": "2788b03dccba7d2eb55ff555400ef57e7dfb51b2dd74dbc07f14d6e71c9ebe71\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "volume",
+        "create",
+        "--label",
+        "org.swapp.component=ai-scientist-m0-ledger",
+        "swapp-lab-postgres-m0-data"
+      ],
+      "exit_code": 0,
+      "stdout": "swapp-lab-postgres-m0-data\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--detach",
+        "--name",
+        "swapp-lab-postgres-m0",
+        "--label",
+        "org.swapp.component=ai-scientist-m0-ledger",
+        "--restart=no",
+        "--network",
+        "swapp-lab-postgres-m0-network",
+        "--publish",
+        "127.0.0.1:55432:5432",
+        "--read-only",
+        "--security-opt=no-new-privileges",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=1",
+        "--pids-limit=128",
+        "--shm-size=64m",
+        "--tmpfs",
+        "/tmp:rw,nosuid,nodev,size=64m",
+        "--tmpfs",
+        "/var/run/postgresql:rw,nosuid,nodev,size=16m,mode=3775",
+        "--mount",
+        "type=volume,src=swapp-lab-postgres-m0-data,dst=/var/lib/postgresql/data",
+        "--mount",
+        "type=bind,src=/home/cachyos/ai-scientist/data/runtime/postgres/admin.secret,dst=/run/secrets/postgres-admin,readonly",
+        "--env",
+        "POSTGRES_DB=swapp_lab",
+        "--env",
+        "POSTGRES_USER=swapp_lab_admin",
+        "--env",
+        "POSTGRES_PASSWORD_FILE=/run/secrets/postgres-admin",
+        "--env",
+        "POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256",
+        "--log-opt",
+        "max-size=5m",
+        "--log-opt",
+        "max-file=2",
+        "postgres@sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+        "postgres",
+        "-c",
+        "shared_buffers=128MB",
+        "-c",
+        "work_mem=4MB",
+        "-c",
+        "max_connections=30",
+        "-c",
+        "temp_file_limit=131072",
+        "-c",
+        "max_wal_size=256MB"
+      ],
+      "exit_code": 0,
+      "stdout": "54dc908a61d98a5e0bc91a38b9e1c920d4990a86ce82490143c300b6ced8c042\n",
+      "stderr": ""
+    }
+  ],
+  "ready": true,
+  "admin_secret_location": "/home/cachyos/ai-scientist/data/runtime/postgres/admin.secret",
+  "admin_secret_mode": "0o600",
+  "limitations": [
+    "Infrastructure only; application schema and separate scorer/director roles are not initialized.",
+    "No AOS database, container or service changed."
+  ],
+  "network_correction": {
+    "timestamp": "2026-09-24T09:29:54.279070+00:00",
+    "reason": "Docker internal bridge did not publish the requested loopback port; switch only this newly created Lab network to a dedicated bridge with inter-container communication disabled.",
+    "commands": [
+      {
+        "command": [
+          "docker",
+          "stop",
+          "--time",
+          "10",
+          "swapp-lab-postgres-m0"
+        ],
+        "exit_code": 0,
+        "stdout": "Flag --time has been deprecated, use --timeout instead\nswapp-lab-postgres-m0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "docker",
+          "rm",
+          "swapp-lab-postgres-m0"
+        ],
+        "exit_code": 0,
+        "stdout": "swapp-lab-postgres-m0\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "docker",
+          "network",
+          "rm",
+          "swapp-lab-postgres-m0-network"
+        ],
+        "exit_code": 0,
+        "stdout": "swapp-lab-postgres-m0-network\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "docker",
+          "network",
+          "create",
+          "--driver",
+          "bridge",
+          "--opt",
+          "com.docker.network.bridge.enable_icc=false",
+          "--label",
+          "org.swapp.component=ai-scientist-m0-ledger",
+          "swapp-lab-postgres-m0-network"
+        ],
+        "exit_code": 0,
+        "stdout": "fa13284aea35796086f174919343008a94c632865ad0899749d95297291f698d\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "docker",
+          "run",
+          "--detach",
+          "--name",
+          "swapp-lab-postgres-m0",
+          "--label",
+          "org.swapp.component=ai-scientist-m0-ledger",
+          "--restart=no",
+          "--network",
+          "swapp-lab-postgres-m0-network",
+          "--publish",
+          "127.0.0.1:55432:5432",
+          "--read-only",
+          "--security-opt=no-new-privileges",
+          "--memory=512m",
+          "--memory-swap=512m",
+          "--cpus=1",
+          "--pids-limit=128",
+          "--shm-size=64m",
+          "--tmpfs",
+          "/tmp:rw,nosuid,nodev,size=64m",
+          "--tmpfs",
+          "/var/run/postgresql:rw,nosuid,nodev,size=16m,mode=3775",
+          "--mount",
+          "type=volume,src=swapp-lab-postgres-m0-data,dst=/var/lib/postgresql/data",
+          "--mount",
+          "type=bind,src=/home/cachyos/ai-scientist/data/runtime/postgres/admin.secret,dst=/run/secrets/postgres-admin,readonly",
+          "--env",
+          "POSTGRES_DB=swapp_lab",
+          "--env",
+          "POSTGRES_USER=swapp_lab_admin",
+          "--env",
+          "POSTGRES_PASSWORD_FILE=/run/secrets/postgres-admin",
+          "--env",
+          "POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256",
+          "--log-opt",
+          "max-size=5m",
+          "--log-opt",
+          "max-file=2",
+          "postgres@sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+          "postgres",
+          "-c",
+          "shared_buffers=128MB",
+          "-c",
+          "work_mem=4MB",
+          "-c",
+          "max_connections=30",
+          "-c",
+          "temp_file_limit=131072",
+          "-c",
+          "max_wal_size=256MB"
+        ],
+        "exit_code": 0,
+        "stdout": "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "host_authentication_pending": false
+}

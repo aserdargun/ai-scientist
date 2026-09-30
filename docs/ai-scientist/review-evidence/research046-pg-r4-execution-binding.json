@@ -1,0 +1,21 @@
+{
+  "schema": "research046-pg-execution-binding.v1",
+  "attempt": "r4",
+  "session_id": 28966,
+  "launch_chunk": "cfe66d",
+  "final_chunk": "9011b9",
+  "process_exit_code": 0,
+  "service_runtime_seconds": 89.318,
+  "memory_peak_mb": 198.9,
+  "swap_bytes": 0,
+  "evidence": "research-integration-046-pg-521fca77d007.json",
+  "evidence_sha256": "4b02446bd77d11217e05ea043fcc960e28f28612e3c898b1d7694819a2983413",
+  "migration_head": "0030_director_resume",
+  "test_passed_count": 33,
+  "tests_executed": 33,
+  "source_matches_snapshot": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "source_freeze_sha256": "5391a0ba17b4afad3eea0c4eb32d84eac7ec4d5b908489c17f9cec7ab407c23b",
+  "scope": "Real isolated PostgreSQL roles, ownership CAS, historical receipt replay and stopped typed-document/seal/report closure over synthetic ledger fixtures. No actual OS Director restart, model, AOS or main DB mutation."
+}

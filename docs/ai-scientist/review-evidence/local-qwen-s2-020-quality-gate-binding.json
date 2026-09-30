@@ -1,0 +1,63 @@
+{
+  "schema": "local-qwen-s2-020-quality-binding.v1",
+  "checked_at_utc": "2026-09-25T07:00:41.809579+00:00",
+  "scope": "Sampling/profile fix, image byte parity and all seven quality checks. Real S2 output remains truncated and is not accepted.",
+  "base_commit": "c0a9565",
+  "harness_version": "0.20.0",
+  "harness_sha256": "785c50737d514718a6127646cedbf6d8807f9f9044c84259a73c9eb3ea4d7201",
+  "harness_file_count": 62,
+  "sandbox_image": "sha256:cafb4f9c5b24f7598ec3ae7ebafa49b057f7a2d5dc9e3be74e41ff33569f8aa2",
+  "actual_sessions": {
+    "quality": {
+      "id": 1857,
+      "exit_code": 0
+    },
+    "image": {
+      "id": 6186,
+      "exit_code": 0
+    },
+    "first_s2": {
+      "id": 63534,
+      "exit_code": 1
+    },
+    "second_s2": {
+      "id": 19049,
+      "exit_code": 1
+    }
+  },
+  "artifacts": {
+    "local-qwen-s2-020-quality-command.json": "a3286ec5e3ec6c3e0afeab3a030cfe9cf45f0df7b4c7dc1bf0747c05ebff8bdf",
+    "local-qwen-s2-020-image-review.json": "d6e99d84b79a9309121bb0684fcdcca895959fd7d4828c8614ea0b3cf7f363bc",
+    "local-qwen-s2-profile-v2-review.json": "ee3e34d0a11da67d25d5295b1452bf7e2b91131a970a7f69f04b11933ec62f04",
+    "local-qwen-s2-profile-v2-after-review.json": "66db8c07848ddc1bdf74a2e04ad2f0cac08106ee1015b5f0523acb329cdcf056"
+  },
+  "quality_archive": "docs/ai-scientist/evidence/quality-gate-local-qwen-s2-020.json",
+  "quality_archive_sha256": "82adf6365fc17e940914a0efa82bdb855a1ae8fe3f152bbeaf66a47c3271367f",
+  "probe_image_scope": "The single model probe executed no sandbox work and recorded the prior image lock. The newly built image has identical model-runtime source bytes.",
+  "checks": {
+    "quality_process_exit_zero": true,
+    "seven_quality_commands_exit_zero": true,
+    "quality_sources_still_current": true,
+    "image_build_and_parity_exit_zero": true,
+    "image_source_still_current": true,
+    "image_lock_matches": true,
+    "model_probe_product_bytes_still_current": true,
+    "model_probe_source_stable": true,
+    "model_probe_failed_result_preserved": true,
+    "model_ticket_closed_and_drained": true
+  },
+  "passed": true,
+  "s2_accepted": false,
+  "pending_parallel_branches": [
+    "feat/luna-m0-recovery",
+    "feat/luna-m0-report-replay",
+    "feat/luna-m0-public-suite"
+  ],
+  "limitations": [
+    "S2 complete CandidateProposal still missing",
+    "six-proposal real research not accepted",
+    "AOS shared real research not accepted",
+    "known pre-launch rejection left one private diagnostic ticket active; no manual state repair",
+    "new recovery/public/report/replay source not integrated"
+  ]
+}

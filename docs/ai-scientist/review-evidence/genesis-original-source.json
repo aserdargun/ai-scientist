@@ -1,0 +1,204 @@
+{
+  "schema": "source-discovery.v1",
+  "dataset": "Genesis original source",
+  "source_url": "https://www.kaggle.com/api/v1/datasets/download/init-owl/genesis-demonstrator-data-for-machine-learning",
+  "source_archive": "data/public/genesis/source-2026-09-24/genesis-original.zip",
+  "archive_bytes": 588103,
+  "sha256": "14f4a5307ad4efd7759b052e5f6cbb93504a65148fc17b4a0087b8ef730c00c4",
+  "usage_profile": "noncommercial_research",
+  "license": "CC-BY-NC-SA-4.0 (official Kaggle metadata)",
+  "members": [
+    {
+      "path": "Genesis_AnomalyLabels.csv",
+      "bytes": 1044940,
+      "crc32": "a990102f"
+    },
+    {
+      "path": "Genesis_StateMachineLabel.csv",
+      "bytes": 1044940,
+      "crc32": "6790cdd9"
+    },
+    {
+      "path": "Genesis_lineardrive.csv",
+      "bytes": 604323,
+      "crc32": "7d792d75"
+    },
+    {
+      "path": "Genesis_normal.csv",
+      "bytes": 562114,
+      "crc32": "798e5636"
+    },
+    {
+      "path": "Genesis_pressure.csv",
+      "bytes": 672213,
+      "crc32": "996b8357"
+    }
+  ],
+  "documentation_members": [],
+  "csv_structure": [
+    {
+      "member": "Genesis_AnomalyLabels.csv",
+      "rows_including_header": 16221,
+      "first_line_columns": [
+        "Timestamp",
+        "Label",
+        "MotorData.ActCurrent",
+        "MotorData.ActPosition",
+        "MotorData.ActSpeed",
+        "MotorData.IsAcceleration",
+        "MotorData.IsForce",
+        "MotorData.Motor_Pos1reached",
+        "MotorData.Motor_Pos2reached",
+        "MotorData.Motor_Pos3reached",
+        "MotorData.Motor_Pos4reached",
+        "NVL_Recv_Ind.GL_Metall",
+        "NVL_Recv_Ind.GL_NonMetall",
+        "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "NVL_Recv_Storage.GL_I_Slider_IN",
+        "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "NVL_Recv_Storage.GL_LightBarrier",
+        "NVL_Send_Storage.ActivateStorage",
+        "PLC_PRG.Gripper",
+        "PLC_PRG.MaterialIsMetal"
+      ]
+    },
+    {
+      "member": "Genesis_StateMachineLabel.csv",
+      "rows_including_header": 16221,
+      "first_line_columns": [
+        "Timestamp",
+        "Label",
+        "MotorData.ActCurrent",
+        "MotorData.ActPosition",
+        "MotorData.ActSpeed",
+        "MotorData.IsAcceleration",
+        "MotorData.IsForce",
+        "MotorData.Motor_Pos1reached",
+        "MotorData.Motor_Pos2reached",
+        "MotorData.Motor_Pos3reached",
+        "MotorData.Motor_Pos4reached",
+        "NVL_Recv_Ind.GL_Metall",
+        "NVL_Recv_Ind.GL_NonMetall",
+        "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "NVL_Recv_Storage.GL_I_Slider_IN",
+        "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "NVL_Recv_Storage.GL_LightBarrier",
+        "NVL_Send_Storage.ActivateStorage",
+        "PLC_PRG.Gripper",
+        "PLC_PRG.MaterialIsMetal"
+      ]
+    },
+    {
+      "member": "Genesis_lineardrive.csv",
+      "rows_including_header": 7425,
+      "first_line_columns": [
+        "Timestamp",
+        "MotorData.ActCurrent",
+        "MotorData.ActSpeed",
+        "MotorData.IsAcceleration",
+        "MotorData.IsForce",
+        "MotorData.Motor_Pos1reached",
+        "MotorData.Motor_Pos2reached",
+        "MotorData.Motor_Pos3reached",
+        "MotorData.Motor_Pos4reached",
+        "MotorData.SetAcceleration",
+        "MotorData.SetCurrent",
+        "MotorData.SetForce",
+        "MotorData.SetSpeed",
+        "NVL_Recv_Ind.GL_Metall",
+        "NVL_Recv_Ind.GL_NonMetall",
+        "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "NVL_Recv_Storage.GL_I_Slider_IN",
+        "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "NVL_Recv_Storage.GL_LightBarrier",
+        "NVL_Send_Storage.ActivateStorage",
+        "PLC_PRG.Gripper",
+        "PLC_PRG.MaterialIsMetal",
+        "NVL_Recv_Storage.GL_X_TimeSlideIn",
+        "NVL_Recv_Storage.GL_X_TimeSlideOut"
+      ]
+    },
+    {
+      "member": "Genesis_normal.csv",
+      "rows_including_header": 7041,
+      "first_line_columns": [
+        "Timestamp",
+        "MotorData.ActCurrent",
+        "MotorData.ActSpeed",
+        "MotorData.IsAcceleration",
+        "MotorData.IsForce",
+        "MotorData.Motor_Pos1reached",
+        "MotorData.Motor_Pos2reached",
+        "MotorData.Motor_Pos3reached",
+        "MotorData.Motor_Pos4reached",
+        "MotorData.SetAcceleration",
+        "MotorData.SetCurrent",
+        "MotorData.SetForce",
+        "MotorData.SetSpeed",
+        "NVL_Recv_Ind.GL_Metall",
+        "NVL_Recv_Ind.GL_NonMetall",
+        "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "NVL_Recv_Storage.GL_I_Slider_IN",
+        "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "NVL_Recv_Storage.GL_LightBarrier",
+        "NVL_Send_Storage.ActivateStorage",
+        "PLC_PRG.Gripper",
+        "PLC_PRG.MaterialIsMetal",
+        "NVL_Recv_Storage.GL_X_TimeSlideIn",
+        "NVL_Recv_Storage.GL_X_TimeSlideOut"
+      ]
+    },
+    {
+      "member": "Genesis_pressure.csv",
+      "rows_including_header": 8477,
+      "first_line_columns": [
+        "Timestamp",
+        "MotorData.ActCurrent",
+        "MotorData.ActSpeed",
+        "MotorData.IsAcceleration",
+        "MotorData.IsForce",
+        "MotorData.Motor_Pos1reached",
+        "MotorData.Motor_Pos2reached",
+        "MotorData.Motor_Pos3reached",
+        "MotorData.Motor_Pos4reached",
+        "MotorData.SetAcceleration",
+        "MotorData.SetCurrent",
+        "MotorData.SetForce",
+        "MotorData.SetSpeed",
+        "NVL_Recv_Ind.GL_Metall",
+        "NVL_Recv_Ind.GL_NonMetall",
+        "NVL_Recv_Storage.GL_I_ProcessStarted",
+        "NVL_Recv_Storage.GL_I_Slider_IN",
+        "NVL_Recv_Storage.GL_I_Slider_OUT",
+        "NVL_Recv_Storage.GL_LightBarrier",
+        "NVL_Send_Storage.ActivateStorage",
+        "PLC_PRG.Gripper",
+        "PLC_PRG.MaterialIsMetal",
+        "NVL_Recv_Storage.GL_X_TimeSlideIn",
+        "NVL_Recv_Storage.GL_X_TimeSlideOut"
+      ]
+    }
+  ],
+  "tsb_crosscheck": {
+    "member": "TSB-AD-M/001_Genesis_id_1_Sensor_tr_4055_1st_15538.csv",
+    "original_rows": 16220,
+    "curated_rows": 16220,
+    "common_sensor_columns": 18,
+    "curated_sensor_columns": 18,
+    "equal_ordered_sensor_values": true,
+    "equal_anomaly_labels": false,
+    "original_timestamp_deltas": {
+      "minimum": -0.9509999752044678,
+      "median": 0.04699993133544922,
+      "maximum": 1.0429999828338623,
+      "nonpositive_count": 2
+    },
+    "timestamp_units": "numeric source Timestamp; unit interpretation still requires source documentation",
+    "binary_nonzero_label_mapping_matches": true,
+    "original_label_values": [
+      0,
+      1,
+      2
+    ]
+  }
+}

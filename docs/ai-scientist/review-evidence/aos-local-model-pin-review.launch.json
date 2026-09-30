@@ -1,0 +1,41 @@
+{
+  "output": "docs/ai-scientist/review-evidence/aos-local-model-pin-review.json",
+  "unit": "swapp-review-aos-model-pins-80bb70db5a51461ca638a491603783e6.service",
+  "systemd_run_exit_code": 0,
+  "checks": {
+    "decider_all_artifact_hashes_match": true,
+    "decider_manifest_unchanged": true,
+    "bonsai_all_artifact_hashes_match": true,
+    "bonsai_manifest_unchanged": true
+  },
+  "worker_exit_code": 0,
+  "elapsed_seconds": 6.282462100003613,
+  "error": null,
+  "command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-review-aos-model-pins-80bb70db5a51461ca638a491603783e6.service",
+    "--description=SWAPP read-only AOS model pin review",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--property=MemoryMax=256M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=16",
+    "--property=RuntimeMaxSec=180",
+    "--property=TimeoutStopSec=5",
+    "--property=KillMode=control-group",
+    "--property=Nice=19",
+    "--property=IOSchedulingClass=idle",
+    "--property=UMask=0077",
+    "--property=LimitFSIZE=1048576",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_aos_model_pins.py",
+    "--worker",
+    "--output",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-local-model-pin-review.json"
+  ]
+}

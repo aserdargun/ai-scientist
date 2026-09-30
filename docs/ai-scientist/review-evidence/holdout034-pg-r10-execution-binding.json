@@ -1,0 +1,38 @@
+{
+  "schema": "holdout034-pg-execution-binding.v1",
+  "attempt": "r10",
+  "evidence": "holdout-generation-034-pg-0fd5b49d0533.json",
+  "evidence_sha256": "3edd6cca770415285d287f61ddd010773b11221f42f9187a08970b4264254109",
+  "fixture_id": "0fd5b49d0533450db0c60738859caf9a",
+  "migration_exit_code": 0,
+  "test_exit_code": 0,
+  "collected_test_count": 22,
+  "executed_test_count": 22,
+  "failures": [],
+  "cleanup": {
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "source_checks": {
+    "source_now_matches_snapshot": true,
+    "snapshot_unchanged": true,
+    "runner_unchanged": true,
+    "pytest_observer_unchanged": true
+  },
+  "launch": {
+    "command": "/home/cachyos/ai-scientist/.venv/bin/python - <<'PY'\nimport hashlib,json,os\nfrom pathlib import Path\nroot=Path('/home/cachyos/ai-scientist')\nsource=root/'data/runtime/parallel-m0/holdout-generation-034'\nmanifest=source/'review-evidence/closure034-sol-freeze.json'\nassert hashlib.sha256(manifest.read_bytes()).hexdigest()=='59d863d21b4243e02f886443af868618ef396838f43e218687f79e65b7a5aa5e'\nfreeze=json.loads(manifest.read_bytes())\nfor name,digest in freeze['files'].items():\n    assert hashlib.sha256((source/name).read_bytes()).hexdigest()==digest,name\nassert all(check['exit_code']==0 for check in freeze['checks'].values())\nrunner=root/'data/runtime/parallel-m0/holdout-generation-034-checks/run_holdout034_pg.py'\nassert hashlib.sha256(runner.read_bytes()).hexdigest()=='2d936440f8e2e7d1c8bcd34ec3b0143b9dfb94aa0b19970d1e69eb5ddb32f9f4'\nargv=['flock',str(root/'data/runtime/parallel-m0/cpu-check.lock'),'systemd-run','--user','--wait','--pipe','--collect','--unit=swapp-review-holdout034-pg-r10.service','--slice=swapp-gpu.slice','--property=MemoryMax=1G','--property=MemorySwapMax=0','--property=CPUQuota=50%','--property=TasksMax=64','--property=RuntimeMaxSec=300','--property=TimeoutStopSec=30','--property=KillMode=control-group','--working-directory='+str(root),'--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=CUDA_VISIBLE_DEVICES=','--setenv=TMPDIR=/home/cachyos/.m0r10',str(root/'.venv/bin/python'),str(runner),'--execute-reviewed-pg']\nos.execvp(argv[0],argv)\nPY",
+    "tool_session_id": 76983,
+    "tool_initial_chunk_id": "7f2578",
+    "tool_completion_chunk_id": "0e8352",
+    "actual_exit_code": 0,
+    "service_runtime_seconds": 53.162,
+    "memory_peak_reported": "193.8M",
+    "swap_peak_bytes": 0
+  },
+  "freeze_manifest_sha256": "59d863d21b4243e02f886443af868618ef396838f43e218687f79e65b7a5aa5e",
+  "runner_sha256": "2d936440f8e2e7d1c8bcd34ec3b0143b9dfb94aa0b19970d1e69eb5ddb32f9f4",
+  "scope": "Actual role-separated PostgreSQL closure RPCs and production journal/lease chain over 22 cases. Holdout process is a test seam; no native worker/model/GPU/AOS/restart acceptance.",
+  "failure": null,
+  "acceptance_claim": false,
+  "test_passed_count": 22
+}

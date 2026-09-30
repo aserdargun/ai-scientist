@@ -1,0 +1,55 @@
+{
+  "schema": "report-replay-twenty-review.v1",
+  "started_at": "2026-09-25T11:19:30.107596+00:00",
+  "source_commit": "390a6c25e94e5da339457dd17e88749ed07c7795",
+  "harness_sha256": "0c96264015cf32f8be9f7d4ef1de0572987203e97b1d044f69e9af9af780cb71",
+  "image": "sha256:ed0e5d4620ea1d8099590dfe2bd8d4ba3118dcd576ed914468b17ef169363a34",
+  "driver_sha256": "babdbc80f1309f3cae84acd0e51077a6e9ef59f9fc182799dc22b9e44d845482",
+  "run_id": "eff66fb6-ed0d-490e-8219-2f0190ae8e33",
+  "inputs": {
+    "suite_file": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/suite.json",
+    "suite_manifest_sha256": "cc0b9551628c4dac801a393f989036ee103ee71ea08458c9b9e4143f3037269c",
+    "scenario_file": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/proposals.json",
+    "scenario_sha256": "67b81a84d8bf92676f30ff89c10d113d636840ceb256a3afed7048d1f8cab7ee"
+  },
+  "scope": "Frozen production CLI, real Docker/Scorer/PostgreSQL, synthetic source-only fake provider. No public research, GPU, model, holdout or AOS acceptance.",
+  "checks": {},
+  "database": "swapp_lab_m0_report_027_1e946abd",
+  "execution": {
+    "arguments": [
+      "run",
+      "--run-id",
+      "eff66fb6-ed0d-490e-8219-2f0190ae8e33",
+      "--suite-id",
+      "synthetic.director20.v1",
+      "--suite-file",
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/suite.json",
+      "--provider",
+      "fake-json",
+      "--scenario-file",
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/proposals.json",
+      "--proposal-limit",
+      "20",
+      "--seed-wall-seconds",
+      "90",
+      "--artifact-root",
+      "/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/blobs"
+    ],
+    "actual_exit_code": 1,
+    "elapsed_seconds": 1.2719279850134626,
+    "logs": {
+      "stdout": {
+        "path": "data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/run.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "data/runtime/parallel-m0/report-replay-027/data/runtime/report-replay-twenty/eff66fb6-ed0d-490e-8219-2f0190ae8e33/run.stderr",
+        "sha256": "48ff7c70a4ba77fa13907ccdae5f70e72e24b959dacb459aa77a40c4892252e6"
+      }
+    }
+  },
+  "error_type": "AssertionError",
+  "elapsed_seconds": 1.2916506350011332,
+  "source_unchanged": true,
+  "all_passed": false
+}

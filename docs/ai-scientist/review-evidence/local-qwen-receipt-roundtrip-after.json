@@ -1,0 +1,34 @@
+{
+  "schema": "local-qwen-receipt-roundtrip-review.v1",
+  "checked_at": "2026-09-25T01:19:05.964534+00:00",
+  "scope": "CPU-only fixture provider with mocked OwnedVllmRuntime. No GPU, model, PostgreSQL or AOS call.",
+  "checks": {
+    "provider_receipt_json_roundtrip": {
+      "passed": true
+    },
+    "proposal_turn_json_roundtrip": {
+      "passed": true
+    },
+    "checkpoint_canonical_roundtrip": {
+      "passed": true
+    },
+    "trajectory_receipt_canonical_roundtrip": {
+      "passed": true
+    },
+    "source_unchanged": {
+      "passed": true
+    }
+  },
+  "source_sha256": {
+    "lab/director/local_llm.py": "2d55750a24a721dcd69b714aa3468186b76a2347dd8a640a6c45d69949e46bdf",
+    "lab/director/fake_llm.py": "a9b5e54c17830e293a6a9a8f58c8dc89953c2c86647633216a3079225b9aad2e",
+    "tests/test_local_qwen_provider.py": "97adb4fb0e19d9f74f2f0562901279c24aea1c0df74619b10e0fb4702edae9f5"
+  },
+  "source_after_sha256": {
+    "lab/director/local_llm.py": "2d55750a24a721dcd69b714aa3468186b76a2347dd8a640a6c45d69949e46bdf",
+    "lab/director/fake_llm.py": "a9b5e54c17830e293a6a9a8f58c8dc89953c2c86647633216a3079225b9aad2e",
+    "tests/test_local_qwen_provider.py": "97adb4fb0e19d9f74f2f0562901279c24aea1c0df74619b10e0fb4702edae9f5"
+  },
+  "elapsed_seconds": 0.0006955439894227311,
+  "overall_exit_code": 0
+}

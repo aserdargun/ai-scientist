@@ -1,0 +1,10 @@
+{
+  "session": 22959,
+  "launch_chunk": "cbe764",
+  "final_chunk": "778731",
+  "exit_code": 0,
+  "elapsed_seconds": 6.557032930002606,
+  "changed_files": [
+    "ops/sandbox-image.lock"
+  ]
+}

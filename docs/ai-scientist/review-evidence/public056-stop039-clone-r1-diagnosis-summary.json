@@ -1,0 +1,18 @@
+{
+  "schema": "public056-stop039-clone-r1-diagnosis-summary.v1",
+  "source_sha256": "14c8aa79695d9e42f2420ada57904755002ac987b4ea408bb2e316959788ed49",
+  "queries_readonly": true,
+  "query_values_exposed": false,
+  "observed_sqlstate": "42501",
+  "safe_reason": "permission denied for table task_completions",
+  "denied_roles": [
+    "scorer",
+    "planner",
+    "director"
+  ],
+  "scope": "retained original056 read-only diagnostics",
+  "old_database_grants_changed": false,
+  "main_access": false,
+  "next_fix": "exact retained-container admin read-only hashing; no role grant expansion",
+  "clone_retry_executed": false
+}

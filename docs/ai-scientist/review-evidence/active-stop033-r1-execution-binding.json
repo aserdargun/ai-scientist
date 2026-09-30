@@ -1,0 +1,86 @@
+{
+  "schema": "active-stop-033-execution-binding.v1",
+  "scope": "one CPU-only synthetic Director-owned live FIT sandbox stop; no active Scorer/container, model, GPU, AOS, restart or full M0 claim",
+  "evidence": "active-stop-proof-033-eda013df36d7.json",
+  "evidence_sha256": "b3b82074080e7cf229613fe0e8a2209f90a11baa31a50f98750f9155ce5a2e31",
+  "launch": {
+    "command": "/home/cachyos/ai-scientist/.venv/bin/python - <<'PY'\nimport hashlib, os\nfrom pathlib import Path\nbase = Path('/home/cachyos/ai-scientist/data/runtime/parallel-m0/active-stop-proof-033')\nexpected = {'run_active_stop_proof.py':'481e27ce79856d8013863efbf691ad1c7cc14579238160693fb0f8632936743f','active_stop_proof_diagnostics.py':'05aa9a96bee6ff6a3b4634a3b5931b5263481f35bc0bfee62142c197b58c13dc','baseline_active_stop_case.py':'745ea86aec8676ac3a92fc42476cbfb1a9cda471bae11f62be4032db4fcb26a7'}\nfor name, digest in expected.items():\n    assert hashlib.sha256((base / name).read_bytes()).hexdigest() == digest, name\nassert Path('/home/cachyos/.m0r10').is_dir()\nargv = ['flock','/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock','systemd-run','--user','--wait','--pipe','--collect','--unit=swapp-review-active-stop-proof-033-r1.service','--slice=swapp-gpu.slice','--property=MemoryMax=1G','--property=MemorySwapMax=0','--property=CPUQuota=50%','--property=TasksMax=64','--property=RuntimeMaxSec=1800','--property=TimeoutStopSec=30','--property=KillMode=control-group','--working-directory=/home/cachyos/ai-scientist','--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=CUDA_VISIBLE_DEVICES=','--setenv=TMPDIR=/home/cachyos/.m0r10','/home/cachyos/ai-scientist/.venv/bin/python',str(base / 'run_active_stop_proof.py'),'--execute-reviewed','--source=/home/cachyos/ai-scientist/data/runtime/parallel-m0/integration-033','--expected-source-head=c6fc212f69b18893ade15447aaa373ef6c345ddb','--expected-postgres-image-id=sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67','--expected-sandbox-image-id=sha256:359759c90fc69e7b2c76d628e4b05f599ef28d028c524ea8102cbbdf2ad3cb73']\nos.execvp(argv[0], argv)\nPY",
+    "tool_session_id": 6844,
+    "tool_initial_chunk_id": "ad192a",
+    "tool_completion_chunk_id": "0d6361",
+    "actual_exit_code": 1,
+    "systemd_unit": "swapp-review-active-stop-proof-033-r1.service",
+    "service_runtime_seconds": 10.916,
+    "memory_peak_reported": "487.9M",
+    "swap_peak_bytes": 0
+  },
+  "inert_check": {
+    "tool_chunk_id": "a71d55",
+    "actual_exit_code": 0,
+    "scope": "3 source hashes and AST syntax, print-plan only; no product services"
+  },
+  "review": {
+    "agent": "/root/astra_thinker_high",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high",
+    "source_only": true,
+    "approved_single_bounded_attempt": true
+  },
+  "result": {
+    "outer_proof_passed": false,
+    "helper_status": "passed",
+    "acceptance_claim": false,
+    "run_id": "8692cdbb-08c8-48c2-bab0-8b8f2916c2b8",
+    "interrupted_component": "director_owned_baseline_sandbox",
+    "phase": "fit",
+    "terminal_state": "stopped",
+    "model_calls": 0,
+    "automatic_retry": false
+  },
+  "report_archive": {
+    "bytes": 4920,
+    "encoding": "canonical-json-utf8-no-trailing-newline",
+    "path": "canonical-reports/8692cdbb-08c8-48c2-bab0-8b8f2916c2b8.json",
+    "sha256": "e3d773d9b4e70006b166350adee05f453ba0e5c7646b56e61eedce7fe703de04",
+    "source": "authenticated_api_report_verified_against_director_db",
+    "private_runtime": "data/runtime/parallel-m0/active-stop-proof-033/runs/eda013df36d740f9989b3c8b46969697",
+    "independently_verified": true
+  },
+  "cleanup": {
+    "api_process_reaped": true,
+    "credentials_removed": true,
+    "owned_container_removed": true,
+    "raw_owned_drain_verified": true,
+    "run_cleanup_verified": true
+  },
+  "source_checks": {
+    "proof_source_capture_verified": true,
+    "source_still_matches_snapshot": true,
+    "snapshot_matches_source": true
+  },
+  "inventory": {
+    "container_ids_identical": true,
+    "service_diff": [
+      {
+        "unit": "rclone-gdrive-sync.service",
+        "before": {
+          "active": "activating",
+          "sub": "start",
+          "unit": "rclone-gdrive-sync.service"
+        },
+        "after": {
+          "active": "activating",
+          "sub": "auto-restart",
+          "unit": "rclone-gdrive-sync.service"
+        }
+      }
+    ],
+    "interpretation": "Outer equality gate failed because the recorded rclone-gdrive-sync.service substate changed from start to auto-restart. This record does not establish what caused that unrelated service transition."
+  },
+  "acceptance_totals": {
+    "passed": 10,
+    "partial": 8,
+    "open": 4,
+    "changed": false
+  }
+}

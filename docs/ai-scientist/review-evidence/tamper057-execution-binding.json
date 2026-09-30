@@ -1,0 +1,50 @@
+{
+  "schema": "tamper057-execution-binding.v1",
+  "session_id": 34680,
+  "start_chunk": "1f6fb2",
+  "final_chunk": "2d3edc",
+  "actual_exit_code": 0,
+  "test_seconds": 315.62,
+  "run_id": "47013410-a351-49e0-9ecc-5288ea7abf19",
+  "actual_baseline_scores": 9,
+  "next_proposal_rejections": 4,
+  "changed_contract_cli_exit_1_cases": 4,
+  "strict_pairs": 7,
+  "main_source_byte_parity": true,
+  "root_verification_chunks": [
+    "c72707",
+    "ec56a6"
+  ],
+  "source_reverted": true,
+  "database_and_credentials_removed": true,
+  "successful_restart_claim": false,
+  "real_model_acceptance": false,
+  "files_sha256": {
+    "tamper057-1-mutated-before.json": "5bfff27756d402e0b955f9b79ba15d7e122b589c1c88c5212961d5b0d4c7e909",
+    "tamper057-1-rejected-after.json": "6a89aae4e103550eed268d5d4f371df601a06a08ea2a4f75b749dcded576fd37",
+    "tamper057-1-cli-restart.json": "a0c1029d9757a5e4ad5c3e40e84b07efbacda8b6d831f457022bf9dfd153b3ae",
+    "tamper057-2-mutated-before.json": "e76754b524472937e0f207271f4e5d072f57d55f7587f131a33964359ef9e929",
+    "tamper057-2-rejected-after.json": "2a5089aa8b357fa92e63be02a284f73c6b11d32b99c53278cb78716bde4b129a",
+    "tamper057-2-cli-restart.json": "97d701a552a1386ebd425defa8101b37d37905ef17680e6b825cf3ca8993f79e",
+    "tamper057-3-mutated-before.json": "e76393eaea03d7cc7f9326d2ed221fb3016675f868e697cd5c49d94c492b5e78",
+    "tamper057-3-rejected-after.json": "254e640458dbf8bddb552b20decb9fb2c6a91fb00abd414f055d6cde617ef183",
+    "tamper057-3-cli-restart.json": "0b491f8fc5c12c6fb3ac2417cefa22d0000d33b0135f65afce9aeaea84696d22",
+    "tamper057-4-mutated-before.json": "58cf48e45b12183f0ca83ac33ba990990604281d2cadf747412e0fb8a6a91388",
+    "tamper057-4-rejected-after.json": "61b70e7240b9732eb02cf3ff3e626b3770badd7b62400af4f8d8dca10aa8a5aa",
+    "tamper057-4-cli-restart.json": "ced2de46b4fe29d62735a9ef417d71a12a57408674fdbabdbb140d7eb8a405d8",
+    "review057-run_tamper057_pg.py": "369216098f04bde074a7d49aa85485875ca864c78352f4aedf6ce4f4f48b00f1",
+    "review057-cleanup_tamper057.py": "7b42671beb6bae637541595c21b93aa3a7428b332128338759286bc8e815060a",
+    "review057-test_tamper057_pg_cli.py": "095a5f3bda9e56ed4098779d3c0b022825c3c54a2adf65de1a03a9d89e2a6df5",
+    "review057-tamper057_worker.py": "86cbcca77708741d32be0f91c2bcd95e3d2f8bb3ccc6030cbd9f0f19e3f534c0"
+  },
+  "console_acceptance": {
+    "http_status": 200,
+    "version": "0.37.0",
+    "passed": 11,
+    "partial": 7,
+    "open": 4,
+    "m0_2_status": "passed",
+    "m0_2_evidence_links": 3,
+    "verification_tool_chunk": "6cb921"
+  }
+}

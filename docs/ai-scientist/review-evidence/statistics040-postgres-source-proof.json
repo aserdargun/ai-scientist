@@ -1,0 +1,66 @@
+{
+  "schema": "postgres-source-statistics-proof.v1",
+  "source_sha256": {
+    "lab/operating_modes/snapshots.py": "cebb89719a809722732b3ad8ca977a9df1794c8d57092a7af905991e3828e62b",
+    "lab/analytics/statistics.py": "ba10984d03eebcc80acca33c27e83ecf629c402c9a4f61961e4c92956fcc782a"
+  },
+  "source_unchanged": true,
+  "snapshot_sha256": "95bc2a1ca875a9fb4b170a139e073dd9554ef4103c72614bcd6108e4a8cebf0c",
+  "reports": {
+    "train": {
+      "rows": 192,
+      "sensor_count": 4,
+      "regular_utc_timeline": true,
+      "report_path": "data/runtime/console-bootstrap-034/db-train-statistics.json",
+      "sha256": "ce6daf5582f2ceaa0988e7995e92a7848cec7889b6951a0d764bfcdbd4881d8a"
+    },
+    "evaluation": {
+      "rows": 96,
+      "sensor_count": 4,
+      "regular_utc_timeline": true,
+      "report_path": "data/runtime/console-bootstrap-034/db-evaluation-statistics.json",
+      "sha256": "75619fd6a6f38581bc0419e6848240e4a8899d7c185f2f28fc14affd843b373b"
+    }
+  },
+  "scope": "Actual read-only PostgreSQL source selection and separate train/evaluation descriptive statistics over288 locally synthetic rows; not browser or autonomous agent acceptance.",
+  "checked_at": "2026-09-27T07:51:15.674361+00:00",
+  "process_exit_code": 0,
+  "session": 46560,
+  "launch_chunk": "0a3f7c",
+  "final_chunk": "c513b5",
+  "preparation": {
+    "session": 48795,
+    "launch_chunk": "ddb5b6",
+    "final_chunk": "36ecb3",
+    "process_exit_code": 0
+  },
+  "first_attempt": {
+    "session": 88715,
+    "launch_chunk": "75efbb",
+    "final_chunk": "612c1c",
+    "process_exit_code": 1,
+    "failure": "Driver constructed strict tuple field units from Python list. Failed before source SQL read. Corrected driver uses JSON parsing; runtime unchanged."
+  },
+  "driver_sha256": "a4d0ebdb0c2370be0b5eb77f56bb25300ec63f33995110449ad1113b65293797",
+  "source_preparation": {
+    "schema": "synthetic-postgres-source-preparation.v1",
+    "checked_at": "2026-09-27T07:48:39.582254+00:00",
+    "database": "swapp_sensor_demo_041",
+    "source_id": "synthetic-db-fixture",
+    "rows": 288,
+    "sensors": [
+      "sensor_a",
+      "sensor_b",
+      "sensor_c",
+      "constant_sensor"
+    ],
+    "snapshot_sha256": "fba8e60be47d2a7ae2c81ab2e9b7a498bf9af91e9f27113605e5bf1bccdace9c",
+    "readonly_role": "swapp_sensor_demo_041_reader",
+    "read_only_default": "on",
+    "view_insert_allowed": false,
+    "underlying_table_select_allowed": false,
+    "catalog_path": "data/runtime/console-bootstrap-034/mode-source-catalog.json",
+    "catalog_sha256": "2498f4d37b21ec999fd7e57aab3125e0d67a2ea80d6522d985ad1ee88cc72342",
+    "scope": "Locally generated synthetic sensor data in real PostgreSQL; not plant data, trusted evaluator labels or agent scoring."
+  }
+}

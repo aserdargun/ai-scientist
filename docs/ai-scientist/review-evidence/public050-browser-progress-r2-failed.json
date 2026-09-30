@@ -1,0 +1,25 @@
+{
+  "schema": "public050-browser-proof.v1",
+  "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+  "checks": {
+    "public_baseline_suite_listed": true
+  },
+  "errors": [],
+  "blocked_requests": [],
+  "terminal_check": "pending",
+  "scope": "Existing run only; console watch allowed; no admission/stop/DB/service action.",
+  "watch_status": 200,
+  "observed_run": {
+    "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+    "origin": "local",
+    "state": "running",
+    "created_at": "2026-09-27T09:39:30.980346+00:00",
+    "updated_at": "2026-09-27T09:39:31.700256+00:00",
+    "stop_requested": false,
+    "report_sha256": null
+  },
+  "failure": {
+    "type": "AssertionError",
+    "message": "Locator expected to contain text 'CPU baseline'\nActual value: KOŞU DURUMUDeney ayrıntısıÇalışıyorKoşu UUID53424e63-903a-4e48-83a7-7b89eaad0ccaİşlemTür bilinmiyorOluşturulma27 Eyl 2026 12:39Güncelleme27 Eyl 2026 12:39KaynaklocalDurdurma isteğiYokRapor SHA-256Henüz yokDeneyi durdur \nCall log:\n  - Expect \"to_contain_text\" get_by_role(\"dialog\") with timeout 5000ms\n  - waiting for get_by_role(\"dialog\")\n    14 × locator resolved to <aside role=\"dialog\" tabindex=\"-1\" aria-modal=\"true\" class=\"run-drawer\" aria-labelledby=\"run-drawer-title\">…</aside>\n       - unexpected value \"KOŞU DURUMUDeney ayrıntısıÇalışıyorKoşu UUID53424e63-903a-4e48-83a7-7b89eaad0ccaİşlemTür bilinmiyorOluşturulma27 Eyl 2026 12:39Güncelleme27 Eyl 2026 12:39KaynaklocalDurdurma isteğiYokRapor SHA-256Henüz yokDeneyi durdur\"\n\nAria snapshot:\n- dialog \"Deney ayrıntısı\":\n  - text: KOŞU DURUMU\n  - heading \"Deney ayrıntısı\" [level=2]\n  - button \"Kapat\"\n  - text: Çalışıyor Koşu UUID\n  - code: 53424e63-903a-4e48-83a7-7b89eaad0cca\n  - term: İşlem\n  - definition: Tür bilinmiyor\n  - term: Oluşturulma\n  - definition: 27 Eyl 2026 12:39\n  - term: Güncelleme\n  - definition: 27 Eyl 2026 12:39\n  - term: Kaynak\n  - definition: local\n  - term: Durdurma isteği\n  - definition: Yok\n  - term: Rapor SHA-256\n  - definition: Henüz yok\n  - button \"Deneyi durdur\""
+  }
+}

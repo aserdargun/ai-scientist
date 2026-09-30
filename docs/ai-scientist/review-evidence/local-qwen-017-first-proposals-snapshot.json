@@ -1,0 +1,141 @@
+{
+  "schema": "local-qwen-running-snapshot.v1",
+  "checked_at": "2026-09-25T02:12:41.116469+00:00",
+  "scope": "Intermediate actual Director ledger and host snapshot; full six-proposal acceptance remains pending.",
+  "run_id": "b54c9282-ca69-4deb-9e28-ef50e36bf21c",
+  "state": "running",
+  "experiment_statuses": [
+    {
+      "experiment_number": null,
+      "kind": "baseline",
+      "system": "S1",
+      "status": "scored"
+    },
+    {
+      "experiment_number": null,
+      "kind": "baseline",
+      "system": "S1",
+      "status": "scored"
+    },
+    {
+      "experiment_number": null,
+      "kind": "baseline",
+      "system": "S1",
+      "status": "scored"
+    },
+    {
+      "experiment_number": 1,
+      "kind": "proposal",
+      "system": "S1",
+      "status": "scored"
+    }
+  ],
+  "scored_tasks": 40,
+  "proposal_checkpoints": [
+    {
+      "experiment_number": 1,
+      "checkpoint_sha256": "df84bf0b66b8b8ebbfb498a0b047f75539ae980f529d4f940d48769ca54b5a92",
+      "provider_receipt": {
+        "schema_version": "local-qwen-provider-receipt.v1",
+        "provider_id": "local-qwen.v1",
+        "model_id": "Qwen/Qwen3.5-9B",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "model_sha256": "70fcdd0b7bc5be5ae08a83e876df27fe829c48162103b440dc101149ce267213",
+        "profile_id": "qwen3.5-9b-fp8-per-tensor.s1-bounded-smoke.v1",
+        "profile_sha256": "fef6560dfa4989d0bd9103803fedf8b69ebbd9fba9065772d789bbbee534d461",
+        "requested_system": "S1",
+        "actual_system": "S1",
+        "fallback_from": null,
+        "failure_profile_id": null,
+        "failure_type": null,
+        "context_template": "director.candidate-contract.metadata-only.v2",
+        "context_sha256": "dd042ffc28dacf42ced201f0bd2cd74226df83273f175ff07156569e65cfab5e",
+        "prompt_sha256": "b4e96d16cc2bb802a6acf16a43b2a4f1f7c4f28b8ed49622479015a6e1dfa5ff",
+        "input_tokens": 860,
+        "output_tokens": 1049,
+        "attempts": [
+          {
+            "unit": "swapp-lab-gpu-turn-ce454359a9ee470692150c011841fa41.service",
+            "invocation_id": "cea5361f52d84cb9840cdd2720edbd28",
+            "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-ce454359a9ee470692150c011841fa41.service",
+            "main_pid": 2537314,
+            "main_start_ticks": 7678689,
+            "profile_id": "qwen3.5-9b-fp8-per-tensor.s1-bounded-smoke.v1",
+            "prompt_sha256": "b4e96d16cc2bb802a6acf16a43b2a4f1f7c4f28b8ed49622479015a6e1dfa5ff",
+            "prompt_utf8_bytes": 2896,
+            "preflight_prompt_tokens": 860,
+            "outcome": "completed",
+            "failure_type": null,
+            "wall_seconds": 112.71899117299472,
+            "prompt_tokens": 860,
+            "completion_tokens": 1049,
+            "startup_seconds": 78.30861117699533,
+            "inference_seconds": 21.45548162701016,
+            "drain_seconds": 0.5213865379919298,
+            "peak_host_memory_bytes": 10737418240,
+            "peak_gpu_memory_mib": 12786,
+            "cpu_usage_usec": 102655253
+          }
+        ],
+        "attempted_profile_ids": [
+          "qwen3.5-9b-fp8-per-tensor.s1-bounded-smoke.v1"
+        ],
+        "provider_config_sha256": "244d66f805becd0654bd9d2de88d849a7c181b292c7b7f672343d114e6d52624",
+        "provider_registry_entry_sha256": "f99e397f8df073ccd00160b4177de69b02c5dbff25e34a160c08fea6fa89e969",
+        "sampling_temperature": 0.7,
+        "sampling_top_p": 0.8,
+        "enable_thinking": false,
+        "thinking_token_budget": null
+      }
+    }
+  ],
+  "host": {
+    "observed_at": "2026-09-25T02:12:41.147280+00:00",
+    "monotonic_seconds": 76981.35748063,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 20480794624,
+    "swap_used_bytes": 3432198144,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82183376896,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 11466.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 49.0,
+      "power_w": 86.67
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      },
+      {
+        "pid": 2548378,
+        "process_name": "VLLM::EngineCore",
+        "used_mib": 11396.0,
+        "start_ticks": 7693530,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 1000,
+        "comm": "VLLM::EngineCor",
+        "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-turn-72366f0ea1f144b1a8c7d6117071afa2.service",
+        "identity_readable": true,
+        "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "existing_display_exemption": false
+      }
+    ]
+  }
+}

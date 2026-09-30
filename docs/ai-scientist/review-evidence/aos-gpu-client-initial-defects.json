@@ -1,0 +1,20 @@
+{
+  "scope": "Actual Linux ucred decoding and stripped-environment read-only systemctl probe; no broker/model started",
+  "actual_process": {
+    "pid": 2567171,
+    "uid": 1000,
+    "gid": 1000
+  },
+  "SO_PEERCRED_tuple": [
+    2567171,
+    1000,
+    1000
+  ],
+  "draft_client_decodes": {
+    "peer_pid": 1000,
+    "peer_uid": 1000
+  },
+  "stripped_env_systemctl_exit_code": 1,
+  "stripped_env_systemctl_stdout": "",
+  "stripped_env_systemctl_stderr": "Failed to connect to user scope bus via local transport: $DBUS_SESSION_BUS_ADDRESS and $XDG_RUNTIME_DIR not defined (consider using --machine=<user>@.host --user to connect to bus of other user)\n"
+}

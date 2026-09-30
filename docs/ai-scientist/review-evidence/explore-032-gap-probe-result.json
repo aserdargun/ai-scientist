@@ -1,0 +1,41 @@
+{
+  "schema": "explore-current-gap-execution-binding.v1",
+  "main_commit": "e9dc19c3863f420355388d7b0e0136fd1966fe61",
+  "harness_version": "0.32.0",
+  "actual_session": 50380,
+  "actual_exit_code": 0,
+  "completion_chunk": "c471ef",
+  "unit": "swapp-explore032-gap-20260927-r1.service",
+  "driver": "docs/ai-scientist/review-evidence/explore-032-gap-probe.py",
+  "driver_sha256": "9d1484932f4604d809f776a102c0ee444e34aea2ff3d458ff48e1382b48068d6",
+  "source_sha256": {
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "lab/llm/router.py": "0c5caf16c0e395b16a62625fc98d7f78ed35a690d689bb68097bece4d859e874",
+    "tests/test_director_loop_strategy.py": "ba35d7bd0287c019792ec45d0e96bd9ea1376af1e2111fb5cff7e9a1a8150124",
+    "docs/ai-scientist/01-ai-scientist-spec.md": "0c14e2647e01eda5a5556269656e60a224de42e1a6dccab6e1a90ecbfe1cb691",
+    "docs/ai-scientist/02-luna-goal-brief-m0.md": "a6ec46cc7ecebf3b9a4fdf6e6b043495d7119cdbee30afd36589007564ed2116"
+  },
+  "source_unchanged": true,
+  "scope": "Production DirectorLoop.run decision with injected in-memory fixture state. Calibration, storage, execution-identity and holdout setup are mocked. No preceding experiments, PG, Docker, models, GPU or AOS execution.",
+  "limits": {
+    "memory_bytes": 1073741824,
+    "cpu_quota_percent": 50,
+    "tasks": 64,
+    "swap_bytes": 0,
+    "runtime_seconds": 120,
+    "stop_seconds": 10,
+    "external_cpu_lock": true
+  },
+  "observed": {
+    "seeded_completed_proposals": 25,
+    "seeded_consecutive_non_keep": 25,
+    "proposal_limit": 35,
+    "status": "explore_family_unverified",
+    "next_ordinal": 26,
+    "provider_calls": 0,
+    "new_checkpoints": 0
+  },
+  "conclusion": "Reproduced an open implementation gap. Exit 0 confirms the reproduction, not M0 acceptance or EXPLORE completion."
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Final delivery binding of frozen AOS patch/package test sources, measured typed research run, and unchanged Lab gate/image. No live AOS deployment, public data, real model or GPU acceptance.",
+  "checks": {
+    "full_run_exit_zero": true,
+    "patch_digest": true,
+    "patch_payload_current": true,
+    "package_sources_current": true,
+    "run_sources_current": true,
+    "lab_sources_current": true,
+    "run_harness_matches_gate": true,
+    "run_image_matches_gate": true,
+    "quality_gate_digest": true,
+    "aos_package_commands_exit_zero": true,
+    "owned_cleanup": true
+  },
+  "all_passed": true,
+  "patch_sha256": "55c10428f40e010ea43002e13eac1e3a222b8a51835cd717905ee320882e5011",
+  "report_sha256": "f1af9ac304347278f0466c8a7bc8006f8d9972ff968021f3414645650ce055f3",
+  "run_evidence_sha256": "09896134f0f87a759201ebec80272bd022fc2ec6a1593c308ae5094ef14ab08d",
+  "package_evidence_sha256": "a052e7c497e90244c0939f278309569aa06e9acc2bcbd54c067b5437c7b3841d",
+  "lab_gate_sha256": "65324fdd743d75798c54736c639b8a37c9e42d578af9da92530beb3352ce9678"
+}

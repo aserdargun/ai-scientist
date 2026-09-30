@@ -1,0 +1,11 @@
+{
+  "schema": "current-guard-review-wrapper.v1",
+  "original_driver_sha256": "cba9d93874f068d1f769b15d9e16f9de7c1632594d377a6713b534a7626f7d7a",
+  "wrapper_sha256": "84880bc6e31f1a4f5221905bd39cfb4a50fb02538bd3a09d590fac8290e2f28f",
+  "output_path": "docs/ai-scientist/review-evidence/guard-docker-026-review.json",
+  "output_sha256": "ac92da90d0f3263d5f645690d899d91832330e3c80d1bcc08596f37c1d2345fc",
+  "exit_code": 0,
+  "case_catalog_unchanged": true,
+  "cpu_lock": "Held for each case; released between cases for parallel validation.",
+  "scope": "Real Docker negative/positive synthetic guard fixtures only. No GPU, DB, LLM, public-data or AOS execution."
+}

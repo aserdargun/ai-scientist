@@ -1,0 +1,36 @@
+from __future__ import annotations
+import fcntl, hashlib, json, os, subprocess, sys, time
+from datetime import UTC, datetime
+from pathlib import Path
+ROOT=Path('/home/cachyos/ai-scientist')
+EVIDENCE=ROOT/'docs/ai-scientist/review-evidence'
+PRIVATE=ROOT/'data/runtime/parallel-m0/integration-022'
+os.umask(0o077)
+def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+def sources():
+    paths=[p for name in ('harness','lab','vendor','tests','scripts') for p in sorted((ROOT/name).rglob('*')) if p.is_file() and '__pycache__' not in p.parts and p.suffix in ('.py','.pyi')]
+    paths += [ROOT/n for n in ('harness/VERSION','CONTRACT.md','pyproject.toml','uv.lock','Dockerfile.sandbox','docker/sandbox/requirements.txt','ops/sandbox-image.lock')]
+    return {str(p.relative_to(ROOT)):sha(p) for p in paths}
+def run(name,arguments,timeout):
+    command=['systemd-run','--user','--wait','--collect','--quiet','--pipe','--unit=swapp-review-integration-022-'+name+'.service','--slice=swapp-gpu.slice','--property=MemoryMax=3G','--property=MemorySwapMax=0','--property=CPUQuota=200%','--property=TasksMax=128','--property=RuntimeMaxSec='+str(timeout),'--working-directory='+str(ROOT),'--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=PYTHONPATH='+str(ROOT),'--setenv=PATH='+str(ROOT/'.venv/bin')+':/home/cachyos/.local/bin:/usr/local/bin:/usr/bin:/bin',str(ROOT/'.venv/bin/python'),*arguments]
+    start=time.monotonic();before=sources();stamp=datetime.now(UTC).isoformat()
+    log=PRIVATE/(name+'.log')
+    with log.open('wb') as stream:
+        result=subprocess.run(command,stdout=stream,stderr=subprocess.STDOUT,check=False,timeout=timeout+30)
+    after=sources()
+    record={'schema':'parallel-final-verification.v1','started_at':stamp,'command':command,'exit_code':result.returncode,'elapsed_seconds':time.monotonic()-start,'log_path':str(log.relative_to(ROOT)),'log_sha256':sha(log),'source_before':before,'source_after':after,'source_unchanged':before==after}
+    output=EVIDENCE/('parallel-integration-022-'+name+'-command.json')
+    assert not output.exists();output.write_text(json.dumps(record,indent=2)+'\n')
+    print(json.dumps({k:record[k] for k in ('exit_code','elapsed_seconds','source_unchanged','log_path')}),flush=True)
+    return result.returncode
+with (ROOT/'data/runtime/parallel-m0/cpu-check.lock').open('a') as lock:
+    print('Waiting for the shared CPU verification lock.',flush=True)
+    fcntl.flock(lock,fcntl.LOCK_EX)
+    print('Verification lock acquired; final 0.22 sources frozen.',flush=True)
+    code=run('image-resolved',['docs/ai-scientist/review-evidence/review_director_image.py','--output','docs/ai-scientist/review-evidence/parallel-integration-022-resolved-image-review.json'],360)
+    if code: sys.exit(code)
+    code=run('gate-resolved',['scripts/quality_gate.py'],600)
+    gate=ROOT/'docs/ai-scientist/evidence/quality-gate-latest.json'
+    archive=gate.with_name('quality-gate-parallel-integration-022-resolved.json')
+    assert not archive.exists();archive.write_bytes(gate.read_bytes())
+    sys.exit(code)

@@ -1,0 +1,30 @@
+{
+  "schema": "review-command-outcome.v1",
+  "exec_session": 82460,
+  "actual_exit_code": 0,
+  "tool_chunk": "6f5242",
+  "unit": "swapp-report-replay-verifier-027-v3.service",
+  "command": "systemd-run --user --wait --collect --pipe --quiet --unit=swapp-report-replay-verifier-027-v3.service --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=90 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027 --setenv=PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/report-replay-027 --setenv=OPENBLAS_NUM_THREADS=1 --setenv=OMP_NUM_THREADS=1 --setenv=MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_report_replay_twenty_v3.py",
+  "all_passed": true,
+  "check_count": 15,
+  "score_count": 80,
+  "verdict_counts": {
+    "KEEP": 1,
+    "KEEP_SIMPLER": 1,
+    "DISCARD": 5,
+    "REJECT": 13
+  },
+  "elapsed_seconds": 4.282956273003947,
+  "replayed_records": 22,
+  "replay_stage_counts": {
+    "primary": 7,
+    "confirmed": 2,
+    "terminal": 13
+  },
+  "sha256": {
+    "review_report_replay_twenty_v3.py": "04ae73b323e84dfba4e80c8900ffe788c694cdfa30759894d91cfdc9331c856c",
+    "report-replay-twenty-027-v3-review.json": "9e637f6e4311df154ae260f0dc3f3096e21c3b0aa81d6b3b6f0e0c0f844631ce",
+    "report-replay-twenty-027-v3.html": "2f37745f3d9d495f1e68ad02a1f07c6a772b8a0ea1c230c069c2bfe73259d169"
+  },
+  "scope": "Verify retained real Docker/Scorer 20-proposal run and rerun report/replay CLIs only. Synthetic source-only provider; no new experiments, public/model/GPU/holdout/AOS acceptance."
+}

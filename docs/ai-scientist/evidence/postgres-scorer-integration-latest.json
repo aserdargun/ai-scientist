@@ -1,0 +1,28 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--python",
+    "3.12",
+    "pytest",
+    "-q",
+    "-m",
+    "live",
+    "tests/test_postgres_scorer_integration.py"
+  ],
+  "created_at": "2026-09-24T10:37:12.208454+00:00",
+  "exit_code": 0,
+  "schema": "live_integration_check.v1",
+  "secrets_recorded": false,
+  "source_sha256": {
+    "lab/api/app.py": "ea75b417eb3054878382c4f2c8b1248b705471395029ae48c8e6e67181860490",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/schema.py": "265eb598bca2e6008f646390d24a03e3ea02be697e06d7a8a2d66d3137858f80",
+    "lab/scorer/service.py": "c7f13f7b499b62bec0fd76782c18be3c6895bfdb8ee318283803b5e271f8d1a0",
+    "tests/test_postgres_scorer_integration.py": "55f45528595320f24aadbfbe31c3670a24d8c37e2cbadccd33d18521ca187b09"
+  },
+  "stderr": "",
+  "stdout": ".                                                                        [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\ntests/test_postgres_scorer_integration.py::test_postgres_director_and_independent_scorer_share_only_verified_report\n  /home/cachyos/ai-scientist/lab/api/app.py:141: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    @app.on_event(\"shutdown\")\n\ntests/test_postgres_scorer_integration.py::test_postgres_director_and_independent_scorer_share_only_verified_report\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/fastapi/applications.py:4681: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    return self.router.on_event(event_type)  # ty: ignore[deprecated]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1 passed, 3 warnings in 0.85s\n"
+}

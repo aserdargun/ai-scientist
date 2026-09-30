@@ -1,0 +1,59 @@
+{
+  "schema": "local-qwen-smoke-input-preparation.v1",
+  "run_id": "7089275f-d7d2-4f46-b04b-27e809d15326",
+  "scope": "Only four synthetic EVT inputs; no fake proposals, DB installation, model invocation or scientific acceptance.",
+  "runtime_directory": "data/runtime/local-qwen-review/7089275f-d7d2-4f46-b04b-27e809d15326",
+  "suite_file": "data/runtime/local-qwen-review/7089275f-d7d2-4f46-b04b-27e809d15326/suite.json",
+  "suite_manifest_sha256": "c0c1e4d87fd26cb2a63b5da416e33ca4c415d15f8a5e8be7aa885d4fac2445da",
+  "suite_manifest_bytes": 45536,
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_local_qwen_inputs.py": "4d80815c658b2d04f2314b93f8c3c9f6296bbe649de5e48909aa106bab500be7",
+    "docs/ai-scientist/review-evidence/review_director_synthetic_scenario.py": "2a64715052fe2df0551a70c5ce237030e2888d3e6c99acc7352c2f8f7def179b"
+  },
+  "tasks": [
+    {
+      "task_id": "synthetic-task-0",
+      "profile_sha256": "a3a32c1ccf3d24cec55ce6e5f1dd03208bc5d4fb7763937d032329f4d0c40a21",
+      "train_rows": 128,
+      "evaluation_rows": 128,
+      "sensor_count": 2
+    },
+    {
+      "task_id": "synthetic-task-1",
+      "profile_sha256": "f0d63d10ff78a61ba6909acd02637006649a31c5be80d633e21c2a3728d54960",
+      "train_rows": 128,
+      "evaluation_rows": 128,
+      "sensor_count": 2
+    },
+    {
+      "task_id": "synthetic-task-2",
+      "profile_sha256": "dd61b7ab4b65c35e8f5dedb269e70751f7924cc89a0ba0433636ba1758b98bc1",
+      "train_rows": 128,
+      "evaluation_rows": 128,
+      "sensor_count": 2
+    },
+    {
+      "task_id": "synthetic-task-3",
+      "profile_sha256": "619731450a53e9ea3242f9cc0eb4dcdd3a771e81ad35a191dd6abd62152187cb",
+      "train_rows": 128,
+      "evaluation_rows": 128,
+      "sensor_count": 2
+    }
+  ],
+  "required_execution": {
+    "minimum_real_proposals": 6,
+    "minimum_S1_calls": 2,
+    "minimum_S2_calls": 2,
+    "real_guard_scorer_referee": true
+  },
+  "checks": {
+    "four_synthetic_evt_tasks": true,
+    "no_labels_in_suite": true,
+    "private_directory": true,
+    "private_manifest": true,
+    "no_provider_scenario_written": true,
+    "repeatable_profiles": true
+  },
+  "execution_started": false,
+  "preparation_passed": true
+}

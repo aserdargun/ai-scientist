@@ -1,0 +1,99 @@
+{
+  "schema": "source-structure-review.v1",
+  "dataset": "CARE to Compare",
+  "record_id": 15846963,
+  "archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+  "scope": "trusted source structure only; no production suite or split acceptance",
+  "farms": [
+    {
+      "farm": "A",
+      "dataset_files": 22,
+      "compressed_dataset_bytes": 157954851,
+      "uncompressed_dataset_bytes": 802864323,
+      "metadata_columns": [
+        "asset",
+        "event_id",
+        "event_label",
+        "event_start",
+        "event_start_id",
+        "event_end",
+        "event_end_id",
+        "event_description"
+      ],
+      "metadata_sha256": "9254667b70d73e8eb23e7143ad56f1c280ba020c8b3d9289ad56fcaa59270aa5",
+      "event_type_counts": {
+        "anomaly": 12,
+        "normal": 10
+      },
+      "sample_header_column_count": 86,
+      "sample_avg_column_count": 46,
+      "sample_reserved_columns": [
+        "time_stamp",
+        "asset_id",
+        "id",
+        "train_test",
+        "status_type_id"
+      ]
+    },
+    {
+      "farm": "B",
+      "dataset_files": 15,
+      "compressed_dataset_bytes": 399913361,
+      "uncompressed_dataset_bytes": 1365821398,
+      "metadata_columns": [
+        "asset_id",
+        "event_id",
+        "event_label",
+        "event_start",
+        "event_start_id",
+        "event_end",
+        "event_end_id",
+        "event_description"
+      ],
+      "metadata_sha256": "e27b4de2fc9f87b7c73ca5bc5a0950cb56cf666a26d9749c52c4aff7c473e681",
+      "event_type_counts": {
+        "anomaly": 6,
+        "normal": 9
+      },
+      "sample_header_column_count": 257,
+      "sample_avg_column_count": 63,
+      "sample_reserved_columns": [
+        "time_stamp",
+        "asset_id",
+        "id",
+        "train_test",
+        "status_type_id"
+      ]
+    },
+    {
+      "farm": "C",
+      "dataset_files": 58,
+      "compressed_dataset_bytes": 4945537642,
+      "uncompressed_dataset_bytes": 17818749714,
+      "metadata_columns": [
+        "asset_id",
+        "event_id",
+        "event_label",
+        "event_start",
+        "event_start_id",
+        "event_end",
+        "event_end_id",
+        "event_description"
+      ],
+      "metadata_sha256": "5c1e35122df6417d836a364ff5055ca4f5311b0c2c59b690733a08c89298ab80",
+      "event_type_counts": {
+        "anomaly": 27,
+        "normal": 31
+      },
+      "sample_header_column_count": 957,
+      "sample_avg_column_count": 238,
+      "sample_reserved_columns": [
+        "time_stamp",
+        "asset_id",
+        "id",
+        "train_test",
+        "status_type_id"
+      ]
+    }
+  ]
+}

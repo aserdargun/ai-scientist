@@ -1,0 +1,10 @@
+{
+  "schema": "holdout-migration-preparation-gate-launch-failure.v1",
+  "actual_exec_chunk": "ee7cf6",
+  "actual_exec_exit_code": 1,
+  "outer_unit": "swapp-holdout-migration-docs-gate-20260927-c513f.service",
+  "cause": "systemd user environment PATH lacked the project virtualenv; ruff executable was not found, so no quality command completed and no new gate JSON was produced. The wrapper then rejected the unchanged prior gate artifact.",
+  "stdout": "docs/ai-scientist/review-evidence/holdout-migration-preparation-gate-path-failure.stdout.txt",
+  "stdout_sha256": "4a07692e1cb5fa8cd87250b001cb6ec79ae147661bc273e422ba9701865e45e5",
+  "correction": "Pass an explicit PATH with the isolated project virtualenv and local uv binary directory to the next bounded unit."
+}

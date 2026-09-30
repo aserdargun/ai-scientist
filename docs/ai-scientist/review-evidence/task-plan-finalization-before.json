@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-09-24T11:04:32.802516+00:00",
+  "source_sha256": {
+    "lab/director/task_plan.py": "daf9b32cdce8968a3350e949da8eb5a767dbba9952345db3c75bcaf9b2fe4b27",
+    "lab/scorer/service.py": "c3de93642de4a148ba0ce37f8efabc544cd3130c64c15767aa454d936ff3488c",
+    "lab/scorer/worker.py": "09436ddcc753e05e151d2aa50143f5766ef966fd9a908e345f118411b62ae4fb"
+  },
+  "scope": "Actual PostgreSQL using own tiny synthetic fixture; exact state-read versus terminal-report interleaving. No GPU/AOS/public data.",
+  "late_plan_rejected": false,
+  "final_run_state": "completed",
+  "planned_tasks": [
+    "first-task",
+    "later-task"
+  ],
+  "reported_tasks": [
+    "first-task"
+  ],
+  "violation_reproduced": true,
+  "source_unchanged": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_task_plan_finalization.py",
+  "script_sha256": "5e769f3fadb61d03ecb1676c96d761b8472885fafaa272dbef56886c8cef7c84"
+}

@@ -1,0 +1,219 @@
+{
+  "base_head": "8ca07162c7080854310707594e4261f4145727c2",
+  "cleanup": [
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "81662a8655459ff0e11d72ecd198ec72bccbc51d368e6750d7f222866a45d635"
+    },
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "a91225ca8658b11de697980696132d2beea3d71ae27095db21c8e5a8fdeb2bb0"
+    },
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "34bdc3fd7c0842d69dbe1ff51e90e1a77412c4924f56e9b02d36d2240be9bd0e"
+    },
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "06dbdce368cda7dbb6759688fd0b4f7c1fbded8f5a8ee4fa16fac342ce23b831"
+    },
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "d33c53331d5896a38fb3bac5f2bdab22e42f8c50f2558f11bcac8b50f4949db1"
+    },
+    {
+      "absent": false,
+      "exit_code": 1,
+      "id": "f9f8e1215554fc8361df8d10c427135efc1a26ab2d228cea205a2a1e9d89926e"
+    }
+  ],
+  "collected": [
+    "tests/test_syscall_observer_live.py::test_clean_candidate_preserves_stdin_and_output",
+    "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics",
+    "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[swallowed_network_error]",
+    "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[supervisor_signal]",
+    "tests/test_syscall_observer_live.py::test_candidate_cannot_forge_reserved_wrapper_exit"
+  ],
+  "complete": false,
+  "containers": [
+    {
+      "id": "81662a8655459ff0e11d72ecd198ec72bccbc51d368e6750d7f222866a45d635",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_live.py::test_clean_candidate_preserves_stdin_and_output"
+    },
+    {
+      "id": "a91225ca8658b11de697980696132d2beea3d71ae27095db21c8e5a8fdeb2bb0",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics"
+    },
+    {
+      "id": "34bdc3fd7c0842d69dbe1ff51e90e1a77412c4924f56e9b02d36d2240be9bd0e",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics"
+    },
+    {
+      "id": "06dbdce368cda7dbb6759688fd0b4f7c1fbded8f5a8ee4fa16fac342ce23b831",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[swallowed_network_error]"
+    },
+    {
+      "id": "d33c53331d5896a38fb3bac5f2bdab22e42f8c50f2558f11bcac8b50f4949db1",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[supervisor_signal]"
+    },
+    {
+      "id": "f9f8e1215554fc8361df8d10c427135efc1a26ab2d228cea205a2a1e9d89926e",
+      "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+      "node": "tests/test_syscall_observer_live.py::test_candidate_cannot_forge_reserved_wrapper_exit"
+    }
+  ],
+  "deselected": 0,
+  "elapsed_seconds": 11.180923644000359,
+  "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+  "image_lock_sha256": "e36331f6797761e59a6f2e44d0950855b744fe41c143db5daefc3a7d90a9dd96",
+  "probe_sha256": "d7987f872ca072d865f8d767c2dea5a50d0ec0d109b5d55247016683e717adfa",
+  "pytest_exit_code": 0,
+  "reports": [
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_clean_candidate_preserves_stdin_and_output",
+      "outcome": "passed",
+      "seconds": 0.000772011999742972,
+      "when": "setup",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_clean_candidate_preserves_stdin_and_output",
+      "outcome": "passed",
+      "seconds": 1.1843602110002394,
+      "when": "call",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_clean_candidate_preserves_stdin_and_output",
+      "outcome": "passed",
+      "seconds": 7.562099972346914e-05,
+      "when": "teardown",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics",
+      "outcome": "passed",
+      "seconds": 0.00020357999983389163,
+      "when": "setup",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics",
+      "outcome": "passed",
+      "seconds": 7.9263822889997755,
+      "when": "call",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_compatibility049.py::test_observer_keeps_numeric_fit_score_threads_and_mode_diagnostics",
+      "outcome": "passed",
+      "seconds": 7.178399982876726e-05,
+      "when": "teardown",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[swallowed_network_error]",
+      "outcome": "passed",
+      "seconds": 0.00020899099990856485,
+      "when": "setup",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[swallowed_network_error]",
+      "outcome": "passed",
+      "seconds": 0.4520548380000946,
+      "when": "call",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[swallowed_network_error]",
+      "outcome": "passed",
+      "seconds": 6.592299996555084e-05,
+      "when": "teardown",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[supervisor_signal]",
+      "outcome": "passed",
+      "seconds": 0.00022578200014322647,
+      "when": "setup",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[supervisor_signal]",
+      "outcome": "passed",
+      "seconds": 0.4260726769998655,
+      "when": "call",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_forbidden_attempt_is_rejected_even_when_candidate_would_swallow_error[supervisor_signal]",
+      "outcome": "passed",
+      "seconds": 6.744600023012026e-05,
+      "when": "teardown",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_candidate_cannot_forge_reserved_wrapper_exit",
+      "outcome": "passed",
+      "seconds": 0.00020063500005562673,
+      "when": "setup",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_candidate_cannot_forge_reserved_wrapper_exit",
+      "outcome": "passed",
+      "seconds": 0.379774369000188,
+      "when": "call",
+      "xfail": false
+    },
+    {
+      "failure": null,
+      "node": "tests/test_syscall_observer_live.py::test_candidate_cannot_forge_reserved_wrapper_exit",
+      "outcome": "passed",
+      "seconds": 9.401599982084008e-05,
+      "when": "teardown",
+      "xfail": false
+    }
+  ],
+  "schema": "observer053-probe.v1",
+  "source_files": {
+    "harness/VERSION": "f1a49cdeb0cce1d8c2d7cde8b8ae660a88ddd2fe44f9e8c2aac95b5d4dad6105",
+    "lab/sandbox/docker_runner.py": "0408147345abca716605cbe26faa0cfdf26e49cf275818d56dc8ccbc9cc03018",
+    "lab/sandbox/evaluation.py": "a95e179c0a3ab1bdf3091d53d499d0c90009a8fbc186d0f8cf2f952d1708ad87",
+    "lab/sandbox/sandbox_wrapper.py": "7994bd9f68683f296e608f4815045085bc885a3c0dab7f80f311d96af6956444",
+    "lab/sandbox/syscall_observer.py": "bf8b81a3b95fce5c430c6685d60a802fc4d1cf516824cebffcccff3827df5fae",
+    "review-evidence/OBSERVER053_DELIVERY.md": "9f49548a884f65ae826939559182f90b0c498daf98819dc99e65969d41dc665f",
+    "tests/test_sandbox_runner.py": "e5e2665e1cd0a8810fc5d224146ea0ae7e8ab43319e291260bc6ebfa804bd26a",
+    "tests/test_syscall_observer.py": "215385a8c0fd5499936cd6d61fb2931c2bb890db565bf0e9ac7c76f650292c0e",
+    "tests/test_syscall_observer_compatibility049.py": "3db17b985fb7b93e55725ed63f77a237bb68abeac0c0d96c319c4e1213592303",
+    "tests/test_syscall_observer_live.py": "e67412db58180da759d4efbc088c03b81d40cf44d66fcdd3822fcc7334364808"
+  },
+  "source_inventory_sha256": "f8aa6cf55988950403f3b1cfb0dbcbda3c8883466eae5844e2f208f3314a10a1",
+  "source_verified_after": true,
+  "source_verified_before": true
+}

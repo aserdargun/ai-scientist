@@ -1,0 +1,113 @@
+{
+  "schema": "release041-deployment-safe-summary.v1",
+  "date": "2026-09-30",
+  "scope": "Actual main ledger migration and exact13-file source promotion from0.39.0 to0.41.0, after actual focused/SQL/image/gate/real-main-clone proof. Scientific acceptance remains separate.",
+  "installed_version": "0.41.0",
+  "installed_database_revision": "0035_scorer_process_provenance",
+  "installed_image": "sha256:dd00f5b81144103d7d084a08c4e99aceca2bf2f9a7ef0d39810bc22cfe718160",
+  "runtime_inventory_count": 306,
+  "clone_r3": {
+    "root_session": 87574,
+    "root_final_chunk": "ee5917",
+    "actual_root_wrapper_exit_code": 0,
+    "actual_receipt_exit_code": 0,
+    "private_receipt_sha256": "2ac271346b18c104aad8aad64dbdd18691ada4431a2fd70ce55e7617a17620ab",
+    "exact_catalog_row_reversal": true,
+    "restored_clone_semantics_equal_main": true,
+    "roles_acl_preserved": true,
+    "reupgrade_new_rpc_oid_expected": true,
+    "owner_only_explicit_acl_materialized_count": 12,
+    "main_unchanged": true,
+    "candidate_source_unchanged": true,
+    "owned_clone_stopped_retained": true,
+    "negative_sql_control_count": 7,
+    "actual_process_exit_evidence": false
+  },
+  "promotion": {
+    "root_session": 86085,
+    "root_final_chunk": "800c65",
+    "actual_root_wrapper_exit_code": 0,
+    "actual_receipt_exit_code": 0,
+    "private_receipt_sha256": "d628569a18706f3f69a7e97adc5bfd6ac8bc78fe5e2dd482ccd782f91e160104",
+    "source_version": "0.39.0",
+    "target_version": "0.41.0",
+    "old_database_revision": "0033_measured_baseline_stop",
+    "new_database_revision": "0035_scorer_process_provenance",
+    "exact_payload_count": 13,
+    "table_count": 47,
+    "preserved_existing_row_count": 234073,
+    "all_existing_table_rows_and_hashes_preserved": true,
+    "deadlines_generations_and_budget_checkpoints_preserved": true,
+    "non_function_catalog_roles_ACLs_preserved": true,
+    "only_expected_migration_function_changes": true,
+    "full_database_restore_used": false,
+    "three_owned_cpu_services": {
+      "swapp-ai-scientist-api.service": {
+        "ActiveState": "active",
+        "MemoryMax": "1073741824",
+        "MemorySwapMax": "0",
+        "CPUQuotaPerSecUSec": "1s",
+        "TasksMax": "32"
+      },
+      "swapp-ai-scientist-console.service": {
+        "ActiveState": "active",
+        "MemoryMax": "536870912",
+        "MemorySwapMax": "0",
+        "CPUQuotaPerSecUSec": "500ms",
+        "TasksMax": "64"
+      },
+      "swapp-ai-scientist-director-drain.service": {
+        "ActiveState": "active",
+        "MemoryMax": "2147483648",
+        "MemorySwapMax": "0",
+        "CPUQuotaPerSecUSec": "1s",
+        "TasksMax": "32"
+      }
+    },
+    "service_budgets_preserved": true,
+    "tunnel_unchanged": true
+  },
+  "independent_post_deployment_health": {
+    "api": {
+      "root_tool_chunk": "520502",
+      "actual_exit_code": 0,
+      "status": "ok"
+    },
+    "console": {
+      "root_tool_chunk": "5aeefe",
+      "actual_exit_code": 0,
+      "http_status": 200
+    },
+    "overview_and_existing_completed_modes_report": {
+      "root_tool_chunk": "d55dfd",
+      "http_status": 200
+    },
+    "overview_version": {
+      "root_tool_chunk": "2091ca",
+      "installed_version": "0.41.0"
+    }
+  },
+  "earlier_clone_failures": {
+    "R1": {
+      "root_session": 8053,
+      "root_final_chunk": "e75cb6",
+      "actual_exit_code": 1,
+      "private_receipt_sha256": "f1e190b324f50cb55fb37948506a740666662d7271a5d83907595aca36581a02",
+      "exact_old_failure_line_unknown": true,
+      "allocated_FK_trigger_names_in_cross_database_comparison": "Old semantic comparison removed OID fields but retained allocated RI_ConstraintTrigger names and matching definition names. Narrow builtin name normalization retained all other fields/counts/duplicates.",
+      "stopped_clone_and_failure_retained": true
+    },
+    "R2": {
+      "root_session": 80168,
+      "root_final_chunk": "08acd4",
+      "actual_exit_code": 1,
+      "private_receipt_sha256": "ce644b99b49fc40c0762473fd968ea5763037efac66d3f7ee36b2bbd2eb1d351",
+      "stage": "restored_clone_semantic_compare",
+      "proved_representation_differences": "12 explicit soleowner ACLs restored asNULL defaults; one exact three-literal view array text cast deparsed onto its elements.",
+      "correction": "Materialized original ACL asactualowner in ownclone and narrowly normalized only the exact known view expression. Exact withinclone security/catalog/data/DDL reversal invariants unchanged.",
+      "stopped_clone_and_failure_retained": true
+    }
+  },
+  "one_real_synthetic_worker_proof_summary_sha256": "51f319ee96ecb9fad912f3cdc959972cd7db2e77f837ee96058cb392a09533cd",
+  "full_public_research_holdout_local_LLM_GPU_AOS_M0_complete": false
+}

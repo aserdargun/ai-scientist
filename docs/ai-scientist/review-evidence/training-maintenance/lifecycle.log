@@ -1,0 +1,8 @@
+Running as unit: training-maintenance-lifecycle-proof-1790335891.service
+{"active_result_generation":true,"child_cgroup_removed":true,"child_invocation_id":"5d6c28762b75466ead78aa4986305676","child_pid":3383112,"child_start_ticks":11051190,"exact_stop_exit_code":0,"result_written_while_loaded":true,"schema":"training-maintenance-lifecycle-probe.v1","status":"pass","unit_became_not_found":true}
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 170ms
+             CPU time consumed: 49ms
+                   Memory peak: 11.5M (swap: 0B)
+OUTER_EXIT_CODE=0

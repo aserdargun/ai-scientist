@@ -1,0 +1,71 @@
+{
+  "date": "2026-09-24",
+  "observations": {
+    "gpu": {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=name,driver_version,memory.total,memory.used,compute_cap",
+        "--format=csv"
+      ],
+      "exit_code": 0,
+      "output": "name, driver_version, memory.total [MiB], memory.used [MiB], compute_cap\nNVIDIA GeForce RTX 4070 Ti SUPER, 615.71.09, 16376 MiB, 46 MiB, 8.9",
+      "stderr": ""
+    },
+    "os": {
+      "command": [
+        "cat",
+        "/etc/os-release"
+      ],
+      "exit_code": 0,
+      "output": "NAME=\"CachyOS Linux\"\nPRETTY_NAME=\"CachyOS\"\nID=cachyos\nID_LIKE=arch\nBUILD_ID=rolling\nANSI_COLOR=\"38;2;23;147;209\"\nHOME_URL=\"https://cachyos.org/\"\nDOCUMENTATION_URL=\"https://wiki.cachyos.org/\"\nSUPPORT_URL=\"https://discuss.cachyos.org/\"\nBUG_REPORT_URL=\"https://github.com/cachyos\"\nPRIVACY_POLICY_URL=\"https://terms.archlinux.org/docs/privacy-policy/\"\nLOGO=cachyos",
+      "stderr": ""
+    },
+    "memory": {
+      "command": [
+        "free",
+        "-h"
+      ],
+      "exit_code": 0,
+      "output": "total        used        free      shared  buff/cache   available\nMem:            30Gi       8.5Gi       2.1Gi        27Mi        20Gi        21Gi\nSwap:           30Gi       140Mi        30Gi",
+      "stderr": ""
+    },
+    "disk": {
+      "command": [
+        "df",
+        "-h",
+        "."
+      ],
+      "exit_code": 0,
+      "output": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/nvme0n1p2  928G  823G  103G  89% /home",
+      "stderr": ""
+    },
+    "python": {
+      "command": [
+        "uv",
+        "python",
+        "list",
+        "--only-installed"
+      ],
+      "exit_code": 0,
+      "output": "cpython-3.14.7-linux-x86_64-gnu     /usr/bin/python3.14\ncpython-3.14.7-linux-x86_64-gnu     /usr/bin/python3 -> python3.14\ncpython-3.14.7-linux-x86_64-gnu     /usr/bin/python -> python3\ncpython-3.13.14-linux-x86_64-gnu    /home/cachyos/.local/share/uv/python/cpython-3.13-linux-x86_64-gnu/bin/python3.13\ncpython-3.12.13-linux-x86_64-gnu    /home/cachyos/.local/share/uv/python/cpython-3.12-linux-x86_64-gnu/bin/python3.12",
+      "stderr": ""
+    },
+    "docker": {
+      "command": [
+        "docker",
+        "info",
+        "--format",
+        "Server={{.ServerVersion}} Cgroup={{.CgroupVersion}} CPUs={{.NCPU}} Memory={{.MemTotal}} DefaultRuntime={{.DefaultRuntime}}"
+      ],
+      "exit_code": 0,
+      "output": "Server=29.8.1 Cgroup=2 CPUs=12 Memory=32757370880 DefaultRuntime=runc",
+      "stderr": ""
+    }
+  },
+  "github_pr": "No remote; gh auth status failed (invalid stored token).",
+  "cpu": "AMD Ryzen 5 7600: 6 physical cores, 12 logical CPUs",
+  "gpu_live_test": "Not performed during review",
+  "vllm": "Not found on PATH",
+  "nvidia_container_toolkit": "Not found on PATH; no NVIDIA runtime in Docker info",
+  "postgres16": "Not observed; current running containers are unrelated"
+}

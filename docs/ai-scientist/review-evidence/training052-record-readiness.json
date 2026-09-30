@@ -1,0 +1,107 @@
+{
+  "schema": "training-record-readiness-audit.v1",
+  "created_at": "2026-09-27T10:26:07.476986+00:00",
+  "scope": "three_completed_CPU_projects_only",
+  "database_transaction_read_only": true,
+  "raw_messages_or_sensor_data_exported": false,
+  "models_called": 0,
+  "runs": [
+    {
+      "run_id": "26c9e91f-6db4-4733-bcb9-7ab698b2021b",
+      "verified_pairs": 3,
+      "kinds": {
+        "baseline": 3
+      },
+      "models": {
+        "baseline/no-llm.v1": 3
+      },
+      "quality_tiers": {
+        "bronze": 3
+      },
+      "unverified_scrub_flags": {
+        "secrets_scrubbed": 3,
+        "people_scrubbed": 3,
+        "raw_values_scrubbed": 3
+      },
+      "recorded_exclusions": {
+        "Baseline measurement; no proposal or Referee decision.": 3
+      },
+      "source_license_record_counts": {
+        "CC0-1.0": 3
+      },
+      "recorded_model_tokens": 0,
+      "training_export_eligibility": "not_verified_no_export_pipeline",
+      "experiment_trajectory_messages_hashes_verified": true
+    },
+    {
+      "run_id": "716a8941-e913-4307-982d-f643e800a216",
+      "verified_pairs": 6,
+      "kinds": {
+        "baseline": 3,
+        "proposal": 3
+      },
+      "models": {
+        "baseline/no-llm.v1": 3,
+        "operating-mode-grid.v1": 3
+      },
+      "quality_tiers": {
+        "bronze": 6
+      },
+      "unverified_scrub_flags": {
+        "secrets_scrubbed": 6,
+        "people_scrubbed": 6,
+        "raw_values_scrubbed": 6
+      },
+      "recorded_exclusions": {
+        "Baseline measurement; no proposal or Referee decision.": 3,
+        "labels and raw feature values were not supplied to the proposal provider": 3
+      },
+      "source_license_record_counts": {
+        "project-generated-synthetic": 6
+      },
+      "recorded_model_tokens": 0,
+      "training_export_eligibility": "not_verified_no_export_pipeline",
+      "experiment_trajectory_messages_hashes_verified": true
+    },
+    {
+      "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+      "verified_pairs": 3,
+      "kinds": {
+        "baseline": 3
+      },
+      "models": {
+        "baseline/no-llm.v1": 3
+      },
+      "quality_tiers": {
+        "bronze": 3
+      },
+      "unverified_scrub_flags": {
+        "secrets_scrubbed": 3,
+        "people_scrubbed": 3,
+        "raw_values_scrubbed": 3
+      },
+      "recorded_exclusions": {
+        "Baseline measurement; no proposal or Referee decision.": 3
+      },
+      "source_license_record_counts": {
+        "MIT": 3,
+        "CC-BY-NC-SA-4.0": 3,
+        "CC-BY-4.0": 3
+      },
+      "recorded_model_tokens": 0,
+      "training_export_eligibility": "not_verified_no_export_pipeline",
+      "experiment_trajectory_messages_hashes_verified": true
+    }
+  ],
+  "verified_pairs_total": 12,
+  "training_export_produced": false,
+  "source_sha256": "3b3c5267d2571d86c575612a69e679a64b536223b59ae9a2dc972b3e0503a59d",
+  "next_requirements": [
+    "versioned_derived_export_manifest",
+    "verified_scrub_results",
+    "training_and_redistribution_rights_policy",
+    "rollback_chain_eligibility",
+    "family_time_source_split_and_dedup",
+    "pinned_base_tokenizer_template_adapter_identity"
+  ]
+}

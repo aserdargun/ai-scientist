@@ -1,0 +1,32 @@
+[Unit]
+Description=SWAPP AI Scientist detached Director queue worker
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/ai-scientist
+EnvironmentFile=%h/.config/swapp-ai-scientist/lab-worker.env
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=OMP_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+Environment=NUMEXPR_NUM_THREADS=1
+Environment=BLIS_NUM_THREADS=1
+ExecStart=%h/ai-scientist/.venv/bin/lab director drain --poll-seconds 2
+Restart=on-failure
+RestartSec=5
+MemoryMax=2G
+MemorySwapMax=0
+CPUQuota=100%
+TasksMax=32
+OOMPolicy=stop
+KillMode=control-group
+TimeoutStopSec=20
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=%h/ai-scientist/data/runtime
+LockPersonality=yes
+RestrictSUIDSGID=yes
+
+[Install]
+WantedBy=default.target

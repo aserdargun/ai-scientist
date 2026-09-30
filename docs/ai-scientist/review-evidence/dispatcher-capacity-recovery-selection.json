@@ -1,0 +1,58 @@
+{
+  "checked_at": "2026-09-24T14:46:51.593866+00:00",
+  "scope": "Production dispatcher SELECT/control flow with in-memory SQLite rows and simulated capacity_busy return. Verifies recovery selection after capacity_busy; no live worker or PostgreSQL acceptance.",
+  "source_sha256": "c3713d2e88cf503f1be81962252eff7e54b3c1542546053e3095d96e3f9508a4",
+  "stopped_job": "311acdfb-dacb-45f5-a466-6b4051a9b653",
+  "queued_job": "cb2d07cc-ace0-4d47-9a49-0dbceda5a52d",
+  "calls": [
+    {
+      "kind": "normal",
+      "job_id": "cb2d07cc-ace0-4d47-9a49-0dbceda5a52d"
+    },
+    {
+      "kind": "recovery",
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653"
+    },
+    {
+      "kind": "normal",
+      "job_id": "cb2d07cc-ace0-4d47-9a49-0dbceda5a52d"
+    },
+    {
+      "kind": "recovery",
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653"
+    },
+    {
+      "kind": "normal",
+      "job_id": "cb2d07cc-ace0-4d47-9a49-0dbceda5a52d"
+    },
+    {
+      "kind": "recovery",
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653"
+    }
+  ],
+  "results": [
+    {
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653",
+      "state": "cancelled_after_drain",
+      "process_exit_code": "0",
+      "systemd_unit": "swapp-ai-scientist-scorer-311acdfbdacb45f5a4666b4051a9b653.service",
+      "research_status": "pending"
+    },
+    {
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653",
+      "state": "cancelled_after_drain",
+      "process_exit_code": "0",
+      "systemd_unit": "swapp-ai-scientist-scorer-311acdfbdacb45f5a4666b4051a9b653.service",
+      "research_status": "pending"
+    },
+    {
+      "job_id": "311acdfb-dacb-45f5-a466-6b4051a9b653",
+      "state": "cancelled_after_drain",
+      "process_exit_code": "0",
+      "systemd_unit": "swapp-ai-scientist-scorer-311acdfbdacb45f5a4666b4051a9b653.service",
+      "research_status": "pending"
+    }
+  ],
+  "recovery_called": true,
+  "all_passed": true
+}

@@ -1,0 +1,293 @@
+{
+  "schema": "sandbox058-handoff.v1",
+  "source_version": "0.37.0",
+  "production_source_changes": false,
+  "actual_tool": {
+    "session_id": 34318,
+    "launch_chunk": "848879",
+    "final_chunk": "2c6cc3",
+    "exit_code": 0,
+    "unit": "lab-sandbox058-live-r2-20260930.service",
+    "unit_seconds": 12.941,
+    "unit_memory_peak": "194M",
+    "unit_swap_peak": 0
+  },
+  "source_binding": {
+    "captured_head": "50a1e97e9042a7f3eac16e92acdfc892663ba7aa",
+    "runtime_file_count": 291,
+    "harness_sha256": "9a5d18593acf9cc99fab43c84f964ef097eabba579b980163971ad0149fb9287",
+    "harness_file_count": 114,
+    "sandbox_image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+    "capture_sha256": "2617dcb1d66c051c6f026af550f2dcfbae9f5453db3ee137c05d5fc78770681f",
+    "driver_sha256": "213f90309ed35ae5bdfef9e5726639d374877a39c03c405e717960acca629b02",
+    "test_sha256": "7d6aa17f294ec07aeaae3cbf3ce06e2a4781cb8451b9773ec505bc4966705b86"
+  },
+  "nodes": [
+    "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[resolver]",
+    "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[udp53]",
+    "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[http]",
+    "tests/test_sandbox058_boundaries.py::test_actual_typed_fit_cannot_see_eval_labels_or_metadata",
+    "tests/test_sandbox058_boundaries.py::test_actual_candidate_tool_injection_is_untrusted"
+  ],
+  "passed_count": 5,
+  "container_count": 6,
+  "elapsed_seconds": 12.115187217999846,
+  "network": {
+    "resolver": {
+      "actual_target": "sandbox058.invalid:443",
+      "evidence": {
+        "attempt": "resolver",
+        "exit_code": 68,
+        "reason": "forbidden_access",
+        "candidate_sha256": "0bebfb8d065fe0802e37bdc82b762d45705b80beaa1c15681c7b050e2246dcf3",
+        "domain": "sandbox058.invalid",
+        "network": "none"
+      }
+    },
+    "udp53": {
+      "actual_target": "192.0.2.53:53",
+      "evidence": {
+        "attempt": "udp53",
+        "exit_code": 68,
+        "reason": "forbidden_access",
+        "candidate_sha256": "df0ea70e4d39c7869ae452a576b5d02efabde958cb883d1a13c7b9ac74f98be1",
+        "domain": "sandbox058.invalid",
+        "network": "none"
+      }
+    },
+    "http": {
+      "actual_target": "http://192.0.2.80/",
+      "evidence": {
+        "attempt": "http",
+        "exit_code": 68,
+        "reason": "forbidden_access",
+        "candidate_sha256": "8d7a0b33bcb2884d8b030b7a2b2cd38d478ec68e91cd23e87ab72dec4f944066",
+        "domain": "sandbox058.invalid",
+        "network": "none"
+      }
+    }
+  },
+  "typed_visibility": {
+    "candidate_sha256": "2ce405016fcd00bfb59b9ed5d01abd500db1d97c58025a27b1527c9b4e01709e",
+    "fit_container": "swapp-lab-fit-93e55b59db6e4871a443ab879d41093e",
+    "score_container": "swapp-lab-score-1244a07fc7bd47ae9f6a1e6cc429dabd",
+    "fit_seconds": 2.3841957989998264,
+    "score_seconds": 6.3240757020003,
+    "fit_rows": 64,
+    "score_rows": 16,
+    "host_labels_sha256": "604a674725160ece13763828e766f7d1faa86426037c1c833a75df3ecbb2eb1c",
+    "host_eval_sha256": "9de09c03162261f0a2c677f4c34863d43d52df3f2e65e6c050d1f8849e56c3cf",
+    "fit_train_only_assertions_passed": true,
+    "host_files_unreadable": true,
+    "label_attrs_and_private_index_removed": true,
+    "scores": [
+      1000.0,
+      1001.0,
+      1002.0,
+      1003.0,
+      1004.0,
+      1005.0,
+      1006.0,
+      1007.0,
+      1008.0,
+      1009.0,
+      1010.0,
+      1011.0,
+      1012.0,
+      1013.0,
+      1014.0,
+      1015.0
+    ]
+  },
+  "trusted_tool_boundary": {
+    "candidate_sha256": "1c060114fc274af8b61a2dec7680284d2b4571fbfb4eba0eea91001cf86de2a1",
+    "sandbox_output_sha256": "3fc4da1d12c6ce354903997334e1db41546940e94a8285554ed1e199113841f3",
+    "container": "swapp-lab-score-91d0476e60264526b6393f76810e12a6",
+    "proposal_extra_fields_rejected": [
+      "tool_calls",
+      "shell",
+      "database",
+      "gpu",
+      "move_type"
+    ],
+    "instruction_text_inert": true,
+    "actual_sandbox_output_rejected_by_scorer_parser": true,
+    "host_canary_unchanged_sha256": "1cd263f1102656dd6b6cf1d626d1a96f9eba0406af3cb2a52560d473d4801052",
+    "model_invoked": false,
+    "tools_executed": false
+  },
+  "containers": [
+    {
+      "id": "cbeebbb7671571928a07a3817b7f34b354467b53e46e8a911ca997760cf0b074",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[resolver]",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/resolver/a12fd8b1c36a42dd9a33410a3f260ff8-9ttk20n9/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    },
+    {
+      "id": "3178994fad2f58d6cd69f452edbd8b69d74fef221679f0ebeebfba51c68d6a0e",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[udp53]",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/udp53/b65c184c2c7f4d1f83b9d2a015464243-5_nnli13/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    },
+    {
+      "id": "6aec0f70bca62f83d814dbcbdcf64ec5278c41ac89290c8c77f77fbabec4f260",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_network_attempt_is_rejected[http]",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/http/36a586812b0248c982f2685267b0a03b-gsskp4gl/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    },
+    {
+      "id": "d5d34a07b277867fb4651d09d3f5c52825792bcd35d4f7dd0ae5b53d2b89b7bb",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_typed_fit_cannot_see_eval_labels_or_metadata",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/typed/93e55b59db6e4871a443ab879d41093e-xo165___/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    },
+    {
+      "id": "474a16fb9028943e67ebafdd3610524468f16a4b38fe21382e16058a8f6ea255",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_typed_fit_cannot_see_eval_labels_or_metadata",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/typed/1244a07fc7bd47ae9f6a1e6cc429dabd-zfjz2jjp/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/typed/1244a07fc7bd47ae9f6a1e6cc429dabd-zfjz2jjp/fit-artifact",
+          "Destination": "/fit-artifact",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    },
+    {
+      "id": "56ec4d78756007cb4e0adc1e92e17eb9c6664b2dfff6fdd975747017660cb710",
+      "node": "tests/test_sandbox058_boundaries.py::test_actual_candidate_tool_injection_is_untrusted",
+      "valid": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/injection/91d0476e60264526b6393f76810e12a6-v7vemxsc/candidate",
+          "Destination": "/candidate",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/data/runtime/sandbox058/injection/91d0476e60264526b6393f76810e12a6-v7vemxsc/fit-artifact",
+          "Destination": "/fit-artifact",
+          "Mode": "",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "network_mode": "none"
+    }
+  ],
+  "cleanup": [
+    {
+      "id": "cbeebbb7671571928a07a3817b7f34b354467b53e46e8a911ca997760cf0b074",
+      "absent": true
+    },
+    {
+      "id": "3178994fad2f58d6cd69f452edbd8b69d74fef221679f0ebeebfba51c68d6a0e",
+      "absent": true
+    },
+    {
+      "id": "6aec0f70bca62f83d814dbcbdcf64ec5278c41ac89290c8c77f77fbabec4f260",
+      "absent": true
+    },
+    {
+      "id": "d5d34a07b277867fb4651d09d3f5c52825792bcd35d4f7dd0ae5b53d2b89b7bb",
+      "absent": true
+    },
+    {
+      "id": "474a16fb9028943e67ebafdd3610524468f16a4b38fe21382e16058a8f6ea255",
+      "absent": true
+    },
+    {
+      "id": "56ec4d78756007cb4e0adc1e92e17eb9c6664b2dfff6fdd975747017660cb710",
+      "absent": true
+    }
+  ],
+  "source_verified_after": true,
+  "private_admission_intent_absent": true,
+  "first_attempt": {
+    "actual_session_id": 86692,
+    "final_chunk": "fe0e8b",
+    "exit_code": 1,
+    "complete": false,
+    "passed_count": 4,
+    "container_count": 5,
+    "all_owned_containers_absent": true,
+    "reason": "Review test omitted mandatory raw score-phase fit_artifact; failure before sixth container creation. Original receipt and reviewed scripts preserved."
+  },
+  "limitations": [
+    "Synthetic sensor and host-only label/evaluation canaries, not public data or actual model inference.",
+    "Prompt payloads exercised unchanged trusted proposal/Scorer parsers plus actual sandbox output; no claim of model-level prompt-injection resistance.",
+    "DNS resolver and HTTP socket attempts rejected at syscall entry before network access; no packet reached an external service.",
+    "Network records share a generic domain metadata field; actual per-case targets above follow the hash-bound executed candidate source.",
+    "Previous 19 behavioral guards and admission-crash-window probe were not rerun; their older source-specific evidence is not recertified by this five-node proof."
+  ],
+  "artifact_sha256": {
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/network-http.json": "62abd7c9f2393fac30af5b20e899901b75a075cc4ed06ad9bf479d75a8ea1e14",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/network-resolver.json": "04aede2b955ff517b93d47c25c17a849aa36a5b67e4893c8a389cfe89afa5199",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/network-udp53.json": "a1b72bdd5853be5080f3a0ab3b035edca20c9115cc3fad5f9dcfa70411e0d194",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/receipt.json": "8ba6b9dea036654f26355de2df0bec66f9a964817db82fe20b3bce07d93a2721",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/tool-injection.json": "9f0ff135bed4d58b942793db84c77a56ad60e42a292f9a297d0d124b1f139757",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual-r2/typed-visibility.json": "2f34a6529bcef02db986437f1c0d18487d13441730b642d1d8c1eeb5d8fe57cc",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/source-capture-r2.json": "2617dcb1d66c051c6f026af550f2dcfbae9f5453db3ee137c05d5fc78770681f",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/run_sandbox058_r2.py": "213f90309ed35ae5bdfef9e5726639d374877a39c03c405e717960acca629b02",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/source/tests/test_sandbox058_boundaries.py": "7d6aa17f294ec07aeaae3cbf3ce06e2a4781cb8451b9773ec505bc4966705b86",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/actual/receipt.json": "7156c4d00b0188eef640e24abbb48192bc5a18cca58b087ca3e56a34532d7c66",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/r1-reviewed-scripts/run_sandbox058.py": "2d379c70341bf625be52329e606b488365918a5c02c472ef0791b903174595a1",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/r1-reviewed-scripts/source-capture.json": "fcb744d9958c46af9d333a4d4a36c357d931b3b1be2600c046cfb23a0782578c",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/sandbox-058/review-evidence/r1-reviewed-scripts/test_sandbox058_boundaries.py": "37200f787989bba968d3421ec01c4b455aaecea8585c178e384d215ed1ef7d4b"
+  }
+}

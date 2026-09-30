@@ -1,0 +1,115 @@
+{
+  "schema": "observer053-main-promotion-manifest.v1",
+  "private_root": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/observer-integration-053",
+  "main_head": "8ca07162c7080854310707594e4261f4145727c2",
+  "main_version": "0.36.3",
+  "proposed_version": "0.37.0",
+  "image": "sha256:38f74ab7c2e0a0ed5c1151dc37a827518e313f4550fbb00ee4690e238a5c1c40",
+  "source_inventory_sha256": "f8aa6cf55988950403f3b1cfb0dbcbda3c8883466eae5844e2f208f3314a10a1",
+  "files": [
+    {
+      "path": "lab/sandbox/docker_runner.py",
+      "current_main_sha256": "2127f6669064e36eb8168531db1384de8f99841d10e9c5600a8da203b64248ca",
+      "proposed_sha256": "0408147345abca716605cbe26faa0cfdf26e49cf275818d56dc8ccbc9cc03018",
+      "changed": true
+    },
+    {
+      "path": "lab/sandbox/evaluation.py",
+      "current_main_sha256": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c",
+      "proposed_sha256": "a95e179c0a3ab1bdf3091d53d499d0c90009a8fbc186d0f8cf2f952d1708ad87",
+      "changed": true
+    },
+    {
+      "path": "lab/sandbox/sandbox_wrapper.py",
+      "current_main_sha256": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+      "proposed_sha256": "7994bd9f68683f296e608f4815045085bc885a3c0dab7f80f311d96af6956444",
+      "changed": true
+    },
+    {
+      "path": "lab/sandbox/syscall_observer.py",
+      "current_main_sha256": null,
+      "proposed_sha256": "bf8b81a3b95fce5c430c6685d60a802fc4d1cf516824cebffcccff3827df5fae",
+      "changed": true
+    },
+    {
+      "path": "tests/test_sandbox_runner.py",
+      "current_main_sha256": "915a828c4ceba91fd53d5e872a34ed22bcc7fa14f49458d87cb11abbe618e730",
+      "proposed_sha256": "e5e2665e1cd0a8810fc5d224146ea0ae7e8ab43319e291260bc6ebfa804bd26a",
+      "changed": true
+    },
+    {
+      "path": "tests/test_syscall_observer.py",
+      "current_main_sha256": null,
+      "proposed_sha256": "215385a8c0fd5499936cd6d61fb2931c2bb890db565bf0e9ac7c76f650292c0e",
+      "changed": true
+    },
+    {
+      "path": "tests/test_syscall_observer_live.py",
+      "current_main_sha256": null,
+      "proposed_sha256": "e67412db58180da759d4efbc088c03b81d40cf44d66fcdd3822fcc7334364808",
+      "changed": true
+    },
+    {
+      "path": "tests/test_syscall_observer_compatibility049.py",
+      "current_main_sha256": null,
+      "proposed_sha256": "3db17b985fb7b93e55725ed63f77a237bb68abeac0c0d96c319c4e1213592303",
+      "changed": true
+    },
+    {
+      "path": "harness/VERSION",
+      "current_main_sha256": "b9e0c0d76f518fa276655ba0bddbf32d63b5a2de1d84c2925c8ce7aa4c0da55a",
+      "proposed_sha256": "f1a49cdeb0cce1d8c2d7cde8b8ae660a88ddd2fe44f9e8c2aac95b5d4dad6105",
+      "changed": true
+    },
+    {
+      "path": "ops/sandbox-image.lock",
+      "current_main_sha256": "a8111c9b59c1ff7f83f1dc9b9931fe249bfd55024dd750f0842460b91c1b8e94",
+      "proposed_sha256": "e36331f6797761e59a6f2e44d0950855b744fe41c143db5daefc3a7d90a9dd96",
+      "changed": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053-checks/gate-4dfa4ee66420.json",
+      "sha256": "c55db9e332d5069f2b3d41774f99ca6fc3fd1270a85404b0402d939f4b3d627b"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053-checks/gate-4dfa4ee66420-commands.json",
+      "sha256": "2ca9ddbf7384328eae8cdf90eda249059ce405f130c46b82982c84032d17f47a"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/docs/ai-scientist/review-evidence/observer-integration-053-image-8fe98fcc6912.json",
+      "sha256": "2486b944f62d4979a9180a96f77947acf527bcbb48fbf752a6ce93084d672034"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/review-evidence/probe-r5/receipt.json",
+      "sha256": "168ef95c086755158097ea91d31ab066bdb35d677674e496ed47b47792d7bb85"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/review-evidence/probe-security-r5.json",
+      "sha256": "d3adc7c00bf1ac4edc383536cfaf5ee31fad6e8c829ed31eddc76484245af4b2"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/review-evidence/probe-launch-r5.json",
+      "sha256": "5ac71fad67edeb5c305592cf23757f136ea15b8ad97710e9f04d9a5478a37ca3"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/review-evidence/probe-r5-strict-supplement.json",
+      "sha256": "ddc0be3d951ef8dbe75e348303c57603b477e2ab90db4ecfb5d6ba7684df6c99"
+    },
+    {
+      "path": "data/runtime/parallel-m0/observer-integration-053/review-evidence/probe-r5-verifier-unit.json",
+      "sha256": "ea01e0fbc0a453490b0b3ce04d88c602d4381b960d395beb8b6e40d17c40ae54"
+    }
+  ],
+  "private_code_changes_only": true,
+  "production_main_edited": false,
+  "candidate_entrypoint_sha256": "51c6805c91f597d7d247f88b8b937cd2ce205ca0e6009f74abd665c07a0a59a7",
+  "promotion_plan": [
+    "Root verifies current-main hashes immediately before applying only the10listedruntime/test/version/image files.",
+    "Root verifies unaffected integrated0363runtime bytes against the144-file image parity source map; never copy the old private Director/CLI/schema baseline.",
+    "Root prepares controlled0370installation/deployment and records new evidence; child does not restart live services or write liveSQL.",
+    "Retain R2-R5original failures and strict supplemental result; originalR5launcherexit1 stays explicit.",
+    "Keep broaderM0securitycases, containerpeaktelemetry and FarmB135 acceptance open until separately measured."
+  ]
+}

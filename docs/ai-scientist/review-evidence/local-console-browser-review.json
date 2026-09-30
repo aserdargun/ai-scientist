@@ -1,0 +1,57 @@
+{
+  "schema": "local-console-browser-review.v1",
+  "started_at": "2026-09-26T20:43:36.343999+00:00",
+  "checks": {
+    "real_acceptance_source": true,
+    "overview_real_counts_and_copy": true,
+    "all_three_status_filters": true,
+    "evidence_document_rendered": true,
+    "detail_and_escape": true,
+    "evidence_survives_refresh": true,
+    "bounded_actions_and_origin_guard": true,
+    "disconnected_api_does_not_invent_run": true,
+    "real_cpu_smoke_exit_zero": true,
+    "cpu_result_visible": true,
+    "smoke_does_not_change_acceptance": true,
+    "mobile_390px_no_overflow": true,
+    "no_browser_exceptions": true,
+    "browser_form_fixture_only": true
+  },
+  "method": "Playwright Chromium; Browser/IAB unavailable",
+  "model_or_research_started": false,
+  "viewport": {
+    "width": 1505,
+    "height": 1045
+  },
+  "acceptance": {
+    "total": 22,
+    "passed": 10,
+    "partial": 8,
+    "open": 4,
+    "source_sha256": "0d44619a09dd07a4e61bdecc942224ba70a399d5c7f9ab54abee72e1eb7c774e"
+  },
+  "above_fold_text": "AI Scientist\nYerel araştırma\nGenel bakış\nKabul maddeleri\nDeneyler\nSistem\nv0.29.0\nAraştırma kontrol merkezi\n\nTamamlanmayı izle, deneyleri çalıştır, kanıtları incele.\n\nKontrolü çalıştır\nM0 kabul durumu\n10 / 22\nmadde geçti\n10 Geçti\n8 Kısmi\n4 Açık\n\nBu oran kabul maddelerini gösterir; işin tamamlanma yüzdesi değildir.\n\nSıradaki işler\nKabul maddesi\nDurum\nKanıt\nYerel Qwen S1 / S2\nKısmi\nİncele\nHoldout ve gizlilik\nAçık\nİncele\nAOS ile birlikte çalışma\nAçık\nİncele\nQLoRA donanım ölçümü\nAçık\nİncele\n22 maddenin tümünü gör\nYerel sistem\nRAM\n21.2 GiB kullanılabilir / 30.5 GiB toplam\nGPU\nNVIDIA GeForce RTX 4070 Ti SUPER · 210 / 16376 MiB\nLab API\nLab API henüz yapılandırılmadı.\n!\nGPU denemeleri AOS koordinasyonunu bekliyor.\nDeneyler\nYeni deney\nHenüz bağlı bir deney yok\nLab API henüz yapılandırılmadı.\nKoşu kimliğini izle\nİzle\nKaynak: docs/ai-scientist/m0-acceptance.md\nÖlçüm zamanı: 26 Eyl 2026 23:43\nYenile",
+  "real_cpu_check": {
+    "id": "_5S4gsdZWU6icdOwEp9Mqg",
+    "state": "passed",
+    "started_at": "2026-09-26T20:43:39.329909+00:00",
+    "finished_at": "2026-09-26T20:43:42.736419+00:00",
+    "exit_code": 0,
+    "summary": "CPU-only check passed.",
+    "output": ".................................................                        [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\ntests/test_api_and_scorer.py::test_run_start_is_authenticated_idempotent_and_payload_bound\ntests/test_api_and_scorer.py::test_run_requests_are_bounded_and_strict\ntests/test_api_and_scorer.py::test_authenticated_aos_principal_binds_external_action_once\ntests/test_api_and_scorer.py::test_empty_stopped_plan_publishes_retrievable_zero_task_report\n  /home/cachyos/ai-scientist/lab/api/app.py:161: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    @app.on_event(\"shutdown\")\n\ntests/test_api_and_scorer.py::test_run_start_is_authenticated_idempotent_and_payload_bound\ntests/test_api_and_scorer.py::test_run_requests_are_bounded_and_strict\ntests/test_api_and_scorer.py::test_authenticated_aos_principal_binds_external_action_once\ntests/test_api_and_scorer.py::test_empty_stopped_plan_publishes_retrievable_zero_task_report\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/fastapi/applications.py:4681: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    return self.router.on_event(event_type)  # ty: ignore[deprecated]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n49 passed, 9 warnings in 2.58s\n"
+  },
+  "browser_form_fixture": {
+    "fixture_only": true,
+    "upstream_runs_created": 0,
+    "start_attempts": 3,
+    "same_payload_same_key": true,
+    "changed_payload_new_key": true,
+    "fake_provider_enabled_without_model_flag": true,
+    "suite_limit": 2,
+    "stop_and_report": true
+  },
+  "status": "passed",
+  "finished_at": "2026-09-26T20:43:44.548382+00:00",
+  "browser_errors": [],
+  "exit_code": 0
+}

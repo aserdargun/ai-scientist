@@ -1,0 +1,66 @@
+{
+  "checked_at": "2026-09-24T15:58:53.382067+00:00",
+  "scope": "Trusted baseline draft CPU numerical counterexamples, no sandbox/model/public/AOS run. ECOD reference is the already pinned upstream max(U_skew,U_l,U_r) formula with the declared train-frozen adaptation.",
+  "source_sha256": {
+    "harness/baselines.py": "5a87360ab1b5195ae6484305866da649b1c67890fe1816d1e2cdb683ad64b226"
+  },
+  "ecod_counterexamples": [
+    {
+      "case": "positive_skew",
+      "train": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        10.0
+      ],
+      "eval_value": -10.0,
+      "expected_maximum_tail_score": 1.791759469228055,
+      "actual": 0.0
+    },
+    {
+      "case": "negative_skew",
+      "train": [
+        -10.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eval_value": 10.0,
+      "expected_maximum_tail_score": 1.791759469228055,
+      "actual": 0.0
+    }
+  ],
+  "flat_train_alarm": {
+    "train": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "eval": [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "threshold": 5e-324,
+    "release": -2.220446049250313e-16,
+    "dwell": 1,
+    "scores": [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "alarms": [
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "source_unchanged": true
+}

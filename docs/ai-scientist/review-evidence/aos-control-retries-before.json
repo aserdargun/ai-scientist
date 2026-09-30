@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-09-24T20:57:53.383638+00:00",
+  "scope": "Actual typed AOS coordinator/policy and SQLite schema; fake controller/remote. One synthetic lost response and a manually persisted typed-state revocation. No live AOS, real HTTP, full restart, model or GPU acceptance.",
+  "source_sha256": {
+    "src/aos/lab_external.py": "5b0653db218aa64d05bedbe64a4a1a403c2fb566cecbc3874b4c9c9281043a19",
+    "src/aos/computer.py": "ac26bd03f44da0a721392c4567deffa3592f7a7deb625332cc71c1431ebdd31e",
+    "src/aos/contracts.py": "c9979759e29a4985ec38e57614e5cbe49392dea98a93b7c5e23848484912944e",
+    "tests/test_lab_external_jobs.py": "6641da0731e83a8fe5f2a27e1103d78d1883be7b56ec42a125ee25a514c85a6f"
+  },
+  "repeated_stop": {
+    "first_stop_state": "stop_requested",
+    "second_stop_error_type": "AOSFault",
+    "passed": false
+  },
+  "revoked_start_retry": {
+    "retry_error_type": "AOSFault",
+    "start_calls_after_revocation": 2,
+    "passed": false
+  },
+  "source_unchanged": true,
+  "script_sha256": "fc944f16a12d851f0f385c72a3b3bb8845f71e78be6c41ff42a0469beecd1859",
+  "all_passed": false
+}

@@ -1,0 +1,138 @@
+{
+  "checked_at": "2026-09-24T10:29:05.777029+00:00",
+  "runner_source_sha256": "331749d48436f6bfee28d52b5dc1789abdacb2010759a01b9a103c247d5c5dd5",
+  "image": "sha256:3f9df3002bccd1cb74aa5f6060da74dbdecc4c65fc0c8f712ecf67f0590754df",
+  "profile": {
+    "memory_bytes": 134217728,
+    "cpus": 0.25,
+    "timeout_seconds": 60
+  },
+  "scope": "Five controlled lifecycle crash windows, real Docker, distinct prior/current work roots, exact owned cleanup. No GPU or AOS. Does not simulate delayed daemon network requests or power loss.",
+  "cases": [
+    {
+      "window": "intent_before_create",
+      "cleanup": {
+        "swapp-lab-fit-a6fbf1b74a9c41d9957205ec689d227f": true,
+        "swapp-lab-fit-7ce603b012f14af3b87c5bd42efa094c": true
+      },
+      "persisted_full_id_before_kill": false,
+      "container_state_before_kill": "absent",
+      "workdir_exists_before_kill": true,
+      "killed_runner_returncode": -9,
+      "second_runner": {
+        "exit_code": 0,
+        "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+        "stderr": ""
+      },
+      "handoff": {
+        "first_container_state": "absent",
+        "first_workdir_removed": true,
+        "first_root_sibling_preserved": true
+      },
+      "independent_sentinel_running": true,
+      "intent_cleared": true,
+      "passed": true
+    },
+    {
+      "window": "created_before_id",
+      "cleanup": {
+        "swapp-lab-fit-ad93feaff0f4464ba094c707500585b1": true,
+        "swapp-lab-fit-f7de942a24a64f2a9e26a9c4d3c4478f": true
+      },
+      "persisted_full_id_before_kill": false,
+      "container_state_before_kill": "created",
+      "workdir_exists_before_kill": true,
+      "killed_runner_returncode": -9,
+      "second_runner": {
+        "exit_code": 0,
+        "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+        "stderr": ""
+      },
+      "handoff": {
+        "first_container_state": "absent",
+        "first_workdir_removed": true,
+        "first_root_sibling_preserved": true
+      },
+      "independent_sentinel_running": true,
+      "intent_cleared": true,
+      "passed": true
+    },
+    {
+      "window": "id_before_start",
+      "cleanup": {
+        "swapp-lab-fit-80c9ff9fcc424c3682f5c69020c7568b": true,
+        "swapp-lab-fit-5a4390a49c084637b484eb4100a4037d": true
+      },
+      "persisted_full_id_before_kill": true,
+      "container_state_before_kill": "created",
+      "workdir_exists_before_kill": true,
+      "killed_runner_returncode": -9,
+      "second_runner": {
+        "exit_code": 0,
+        "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+        "stderr": ""
+      },
+      "handoff": {
+        "first_container_state": "absent",
+        "first_workdir_removed": true,
+        "first_root_sibling_preserved": true
+      },
+      "independent_sentinel_running": true,
+      "intent_cleared": true,
+      "passed": true
+    },
+    {
+      "window": "running",
+      "cleanup": {
+        "swapp-lab-fit-27397b4db400448b97435977a285d984": true,
+        "swapp-lab-fit-b506d25e6f754073865b42218dda0352": true
+      },
+      "persisted_full_id_before_kill": true,
+      "container_state_before_kill": "running",
+      "workdir_exists_before_kill": true,
+      "killed_runner_returncode": -9,
+      "second_runner": {
+        "exit_code": 0,
+        "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+        "stderr": ""
+      },
+      "handoff": {
+        "first_container_state": "absent",
+        "first_workdir_removed": true,
+        "first_root_sibling_preserved": true
+      },
+      "independent_sentinel_running": true,
+      "intent_cleared": true,
+      "passed": true
+    },
+    {
+      "window": "removed_before_clear",
+      "cleanup": {
+        "swapp-lab-fit-157d52f4256e41098523e46c75274b6b": true,
+        "swapp-lab-fit-cc9ddda1b7d84128853d50835d4f613a": true
+      },
+      "persisted_full_id_before_kill": true,
+      "container_state_before_kill": "absent",
+      "workdir_exists_before_kill": false,
+      "killed_runner_returncode": -9,
+      "second_runner": {
+        "exit_code": 0,
+        "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+        "stderr": ""
+      },
+      "handoff": {
+        "first_container_state": "absent",
+        "first_workdir_removed": true,
+        "first_root_sibling_preserved": true
+      },
+      "independent_sentinel_running": true,
+      "intent_cleared": true,
+      "passed": true
+    }
+  ],
+  "sentinel_cleanup": true,
+  "source_unchanged_during_probe": true,
+  "script_sha256": "601bf19a1551077b2678ba3314ba796d6695950160c3e4defcb1690c12e6d0de",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_sandbox_admission_crash.py",
+  "all_passed": true
+}

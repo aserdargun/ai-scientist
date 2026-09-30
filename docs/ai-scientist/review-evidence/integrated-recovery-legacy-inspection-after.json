@@ -1,0 +1,89 @@
+{
+  "schema": "integrated-recovery-readonly.v2",
+  "checked_at": "2026-09-25T08:14:45.984068+00:00",
+  "scope": "Read-only production CLI against historical main DB rows; no apply/finalize/backfill/model calls.",
+  "source_sha256": {
+    "lab/director/recovery.py": "c431af6950631d66d9379b83c7e81dff67bba56e6da527bd9b6d63ed04c3319e",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/cli.py": "57f9ed1d344bc7d0a1bf3f8dde6ee9b81eab89024e611db058871609fc1bf371"
+  },
+  "records": [
+    {
+      "run_id": "b54c9282-ca69-4deb-9e28-ef50e36bf21c",
+      "command": [
+        "systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-review-legacy-inspect-b54c9282.service",
+        "--slice=swapp-gpu.slice",
+        "--property=MemoryMax=512M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=100%",
+        "--property=TasksMax=32",
+        "--property=RuntimeMaxSec=45",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "--setenv=OPENBLAS_NUM_THREADS=1",
+        "--setenv=OMP_NUM_THREADS=1",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "director",
+        "recovery",
+        "inspect",
+        "--run-id",
+        "b54c9282-ca69-4deb-9e28-ef50e36bf21c"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"active_score_job_states\": [], \"can_finalize\": false, \"experiment_count\": 5, \"incomplete_experiment_ids\": [], \"invalid_pair_ids\": [], \"missing_pair_ids\": [], \"owner\": null, \"owner_proven_dead\": null, \"payload_sha256\": \"3e5728ef043886f7c3f1f2aa7ede30c964979314a2d865043838218e8dc0d4ee\", \"recovery_blockers\": [\"owner_proof_missing\"], \"recovery_id\": \"497f7fea-033f-568f-ad2b-d5d951e2e0e0\", \"report_sha256\": null, \"report_valid\": false, \"run_id\": \"b54c9282-ca69-4deb-9e28-ef50e36bf21c\", \"run_state\": \"running\", \"score_completion_count\": null, \"score_task_count\": 44, \"terminal_experiments\": 5}\n",
+      "stderr": "",
+      "checks": {
+        "valid_existing_pairs": true,
+        "owner_missing_preserved": true,
+        "finalization_still_blocked": true,
+        "historical_state_preserved": true
+      }
+    },
+    {
+      "run_id": "75642033-6e46-4a73-82a9-9e1ecb6066d3",
+      "command": [
+        "systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-review-legacy-inspect-75642033.service",
+        "--slice=swapp-gpu.slice",
+        "--property=MemoryMax=512M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=100%",
+        "--property=TasksMax=32",
+        "--property=RuntimeMaxSec=45",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "--setenv=OPENBLAS_NUM_THREADS=1",
+        "--setenv=OMP_NUM_THREADS=1",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "director",
+        "recovery",
+        "inspect",
+        "--run-id",
+        "75642033-6e46-4a73-82a9-9e1ecb6066d3"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"active_score_job_states\": [], \"can_finalize\": false, \"experiment_count\": 2, \"incomplete_experiment_ids\": [\"exp_7bca30b528b6557c9121948a58bca001\"], \"invalid_pair_ids\": [], \"missing_pair_ids\": [\"exp_7bca30b528b6557c9121948a58bca001\"], \"owner\": null, \"owner_proven_dead\": null, \"payload_sha256\": \"e312d06617413529dbab8ae07b9241788652b4078740f6febb1301cefc469058\", \"recovery_blockers\": [\"owner_proof_missing\", \"experiments_nonterminal\", \"experiment_trajectory_pair_missing\"], \"recovery_id\": \"1653c05d-4807-5368-97d7-df61a5c1f098\", \"report_sha256\": null, \"report_valid\": false, \"run_id\": \"75642033-6e46-4a73-82a9-9e1ecb6066d3\", \"run_state\": \"stop_requested\", \"score_completion_count\": null, \"score_task_count\": 24, \"terminal_experiments\": 1}\n",
+      "stderr": "",
+      "checks": {
+        "valid_existing_pairs": true,
+        "owner_missing_preserved": true,
+        "finalization_still_blocked": true,
+        "historical_state_preserved": true
+      }
+    }
+  ],
+  "passed": true
+}

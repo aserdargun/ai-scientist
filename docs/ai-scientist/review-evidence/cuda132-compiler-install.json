@@ -1,0 +1,52 @@
+{
+  "schema": "isolated-vllm-cuda-compiler-repair.v1",
+  "source_manifest_sha256": "daded4a8c5f9f5e18ba7ee724ff6c16b8eb0168e02f996020f3f98b8cbcde3ea",
+  "install": {
+    "command": [
+      "/home/cachyos/.local/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/python",
+      "--offline",
+      "--no-deps",
+      "/home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_cuda_nvcc-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "/home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_cuda_crt-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "/home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_nvvm-13.2.78-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Using Python 3.12.13 environment at: data/runtime/vllm/.venv\nResolved 3 packages in 5ms\nPrepared 3 packages in 164ms\nUninstalled 3 packages in 70ms\nInstalled 3 packages in 26ms\n - nvidia-cuda-crt==13.4.92\n + nvidia-cuda-crt==13.2.78 (from file:///home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_cuda_crt-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl)\n - nvidia-cuda-nvcc==13.4.92\n + nvidia-cuda-nvcc==13.2.78 (from file:///home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_cuda_nvcc-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl)\n - nvidia-nvvm==13.4.92\n + nvidia-nvvm==13.2.78 (from file:///home/cachyos/ai-scientist/data/runtime/cuda132-repair/nvidia_nvvm-13.2.78-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl)\n"
+  },
+  "changes": {
+    "nvidia-cuda-crt": {
+      "before": "13.4.92",
+      "after": "13.2.78"
+    },
+    "nvidia-cuda-nvcc": {
+      "before": "13.4.92",
+      "after": "13.2.78"
+    },
+    "nvidia-nvvm": {
+      "before": "13.4.92",
+      "after": "13.2.78"
+    }
+  },
+  "dependency_check": {
+    "command": [
+      "/home/cachyos/.local/bin/uv",
+      "pip",
+      "check",
+      "--python",
+      "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/python"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Using Python 3.12.13 environment at: data/runtime/vllm/.venv\nChecked 196 packages in 1ms\nAll installed packages are compatible\n"
+  },
+  "freeze_exit_code": 0,
+  "lock_path": "docs/ai-scientist/review-evidence/vllm-cuda132-requirements.lock",
+  "lock_sha256": "e896eaca669d6602fcbf5e31b3e9df9e8bd6b1b744de291b37a6083ea0a00444",
+  "scope": "Only three compiler packages in project vLLM environment. System CUDA, Torch runtime, model, AOS, and historical lock unchanged.",
+  "passed": true
+}

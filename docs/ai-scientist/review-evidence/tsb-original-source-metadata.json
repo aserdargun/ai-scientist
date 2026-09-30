@@ -1,0 +1,141 @@
+[
+  {
+    "dataset": "GECCO",
+    "source_url": "https://zenodo.org/api/records/3884398",
+    "record_id": 3884398,
+    "doi": "10.5281/zenodo.3884398",
+    "license": {
+      "id": "cc-by-4.0"
+    },
+    "creators": [
+      {
+        "name": "Moritz, Steffen",
+        "affiliation": "Institute for Data Science, Engineering, and Analytics, Technische Hochschule Köln",
+        "orcid": "0000-0002-0085-1804"
+      },
+      {
+        "name": "Rehbach, Frederik",
+        "affiliation": "Institute for Data Science, Engineering, and Analytics, Technische Hochschule Köln"
+      },
+      {
+        "name": "Chandrasekaran, Sowmya",
+        "affiliation": "Institute for Data Science, Engineering, and Analytics, Technische Hochschule Köln"
+      },
+      {
+        "name": "Rebolledo, Margarita",
+        "affiliation": "Institute for Data Science, Engineering, and Analytics, Technische Hochschule Köln"
+      },
+      {
+        "name": "Thomas Bartz-Beielstein",
+        "affiliation": "Institute for Data Science, Engineering, and Analytics, Technische Hochschule Köln",
+        "orcid": "0000-0002-5938-5158"
+      }
+    ],
+    "files": [
+      {
+        "id": "da62887c-b941-4b10-a6db-24a98122ff7a",
+        "key": "4_ResourcePackage_GECCO_Industrial_Challenge_2018.zip",
+        "size": 1685345,
+        "checksum": "md5:a9ce2375c770bf8d3f04d2d45d62763c",
+        "links": {
+          "self": "https://zenodo.org/api/records/3884398/files/4_ResourcePackage_GECCO_Industrial_Challenge_2018.zip/content"
+        }
+      },
+      {
+        "id": "5dcde0dd-698c-4e3f-837c-ee149b2bb527",
+        "key": "1_gecco2018_water_quality.csv",
+        "size": 10784171,
+        "checksum": "md5:270bbe949b418e5d2d1dc47276fcc332",
+        "links": {
+          "self": "https://zenodo.org/api/records/3884398/files/1_gecco2018_water_quality.csv/content"
+        }
+      },
+      {
+        "id": "0d732e19-8cbc-4804-ae54-567b4bdb32ac",
+        "key": "2_CallForParticipation_GECCO_Industrial_Challenge_2018.pdf",
+        "size": 190529,
+        "checksum": "md5:597586b6f0c0a2cb399f44e30f0ab21f",
+        "links": {
+          "self": "https://zenodo.org/api/records/3884398/files/2_CallForParticipation_GECCO_Industrial_Challenge_2018.pdf/content"
+        }
+      },
+      {
+        "id": "a680dc94-d99f-4445-bf1e-6fd03eb92c8a",
+        "key": "3_Rules_GECCO_Industrial_Challenge_2018.pdf",
+        "size": 984955,
+        "checksum": "md5:8f150ea77a0c53c16141cd59f1aba45c",
+        "links": {
+          "self": "https://zenodo.org/api/records/3884398/files/3_Rules_GECCO_Industrial_Challenge_2018.pdf/content"
+        }
+      }
+    ],
+    "download_status": "metadata only"
+  },
+  {
+    "dataset": "CATSv2",
+    "source_url": "https://zenodo.org/api/records/8338435",
+    "record_id": 8338435,
+    "doi": "10.5281/zenodo.8338435",
+    "license": {
+      "id": "cc-by-4.0"
+    },
+    "creators": [
+      {
+        "name": "Patrick Fleith",
+        "affiliation": "Solenix Engineering GmbH"
+      }
+    ],
+    "files": [
+      {
+        "id": "1ff6cbd6-ddef-4b35-a4ae-4de7ae6df14c",
+        "key": "data.csv",
+        "size": 1465304610,
+        "checksum": "md5:92050471389956f07603b83f7dbf6d0e",
+        "links": {
+          "self": "https://zenodo.org/api/records/8338435/files/data.csv/content"
+        }
+      },
+      {
+        "id": "03479062-b8e2-47dd-9112-21b10781e955",
+        "key": "SLXENGDE-CATS-DDD - Controlled Anomalies Time Series - 02.00.pdf",
+        "size": 228485,
+        "checksum": "md5:30fee9cac0a83b8cd679b5e2f5dccf28",
+        "links": {
+          "self": "https://zenodo.org/api/records/8338435/files/SLXENGDE-CATS-DDD%20-%20Controlled%20Anomalies%20Time%20Series%20-%2002.00.pdf/content"
+        }
+      },
+      {
+        "id": "657948b8-4819-444c-b7a9-144b1bee4310",
+        "key": "data.parquet",
+        "size": 554563684,
+        "checksum": "md5:824309369c26902aa520e4b5209977f7",
+        "links": {
+          "self": "https://zenodo.org/api/records/8338435/files/data.parquet/content"
+        }
+      },
+      {
+        "id": "71324268-fa47-46b9-9323-94b9da90c167",
+        "key": "metadata.csv",
+        "size": 11297,
+        "checksum": "md5:cb52d1d73bf4bb54ebbfb466b94618de",
+        "links": {
+          "self": "https://zenodo.org/api/records/8338435/files/metadata.csv/content"
+        }
+      }
+    ],
+    "download_status": "metadata only"
+  },
+  {
+    "dataset": "Genesis",
+    "source_url": "https://www.kaggle.com/api/v1/datasets/list?search=genesis-demonstrator-data-for-machine-learning",
+    "metadata": [
+      {
+        "ref": "inIT-OWL/genesis-demonstrator-data-for-machine-learning",
+        "title": "Genesis demonstrator data for machine learning",
+        "licenseName": "CC BY-NC-SA 4.0",
+        "totalBytes": 588103,
+        "lastUpdated": "2018-07-23T14:55:44.45Z"
+      }
+    ]
+  }
+]

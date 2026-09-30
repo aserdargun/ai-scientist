@@ -1,0 +1,33 @@
+{
+  "schema": "guard-docker-launch-review.v1",
+  "unit": "swapp-lab-guard-review-5f8ed0c2.service",
+  "execution_exit_code": 0,
+  "final_output": "{\"name\": \"eval_statistics\", \"outcome\": \"causality\", \"passed\": true, \"elapsed_seconds\": 9.879490256000281}\n{\"name\": \"eval_statistics_small_scale\", \"outcome\": \"causality\", \"passed\": true, \"elapsed_seconds\": 9.93295797799874}\n{\"name\": \"centered_rolling\", \"outcome\": \"causality\", \"passed\": true, \"elapsed_seconds\": 9.441684130000795}\n{\"name\": \"constant_score\", \"outcome\": \"degenerate_constant_scores\", \"passed\": true, \"elapsed_seconds\": 1.32971160300076}\n{\"name\": \"nan_score\", \"outcome\": \"non_finite_scores\", \"passed\": true, \"elapsed_seconds\": 0.643731651998678}\n{\"name\": \"infinite_score\", \"outcome\": \"non_finite_scores\", \"passed\": true, \"elapsed_seconds\": 0.6482523150007182}\n{\"name\": \"wrong_length\", \"outcome\": \"score_length_or_index_mismatch\", \"passed\": true, \"elapsed_seconds\": 0.5358694220012694}\n{\"name\": \"time_ramp\", \"outcome\": \"position_bias\", \"passed\": true, \"elapsed_seconds\": 7.178274374000466}\n{\"name\": \"hardcoded_task_identity\", \"outcome\": \"hardcoding_task_id\", \"passed\": true, \"elapsed_seconds\": 0.0002557160005380865}\n{\"name\": \"hardcoded_eval_instant\", \"outcome\": \"hardcoding_timestamp\", \"passed\": true, \"elapsed_seconds\": 0.00017600700084585696}\n{\"name\": \"hardcoded_64_floats\", \"outcome\": \"hardcoding_numeric_sequence\", \"passed\": true, \"elapsed_seconds\": 0.00018496400298317894}\n{\"name\": \"hardcoded_64_negative_floats\", \"outcome\": \"hardcoding_numeric_sequence\", \"passed\": true, \"elapsed_seconds\": 0.00020273799964343198}\n{\"name\": \"slow_fit\", \"outcome\": \"timeout\", \"passed\": true, \"elapsed_seconds\": 1.1310264929998084}\n{\"passed\": true, \"cases\": 19, \"phase_attempts\": 106, \"elapsed_seconds\": 78.22619142999974}\n",
+  "unit_query_exit_code": 0,
+  "unit_after_execution": "LoadState=not-found\nActiveState=inactive\nControlGroup=\n",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-lab-guard-review-5f8ed0c2",
+    "--property=MemoryMax=1G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=64",
+    "--property=RuntimeMaxSec=900",
+    "--property=TimeoutStopSec=3",
+    "--property=KillMode=control-group",
+    "--property=OOMPolicy=stop",
+    "--property=NoNewPrivileges=yes",
+    "--setenv=OPENBLAS_NUM_THREADS=2",
+    "--setenv=OMP_NUM_THREADS=2",
+    "--setenv=MKL_NUM_THREADS=2",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_guard_docker.py"
+  ]
+}

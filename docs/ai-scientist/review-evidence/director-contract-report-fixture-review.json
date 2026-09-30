@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-09-24T15:29:51.092085+00:00",
+  "scope": "Strict record-schema fixtures and SQLite/in-process API/Scorer report fixtures, including hidden score filtering. No actual PostgreSQL roles, model, or 20-experiment Director run.",
+  "command": [
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_director_contracts.py",
+    "tests/test_api_and_scorer.py"
+  ],
+  "exit_code": 0,
+  "stdout": "...............                                                          [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\ntests/test_api_and_scorer.py::test_run_start_is_authenticated_idempotent_and_payload_bound\ntests/test_api_and_scorer.py::test_run_requests_are_bounded_and_strict\ntests/test_api_and_scorer.py::test_empty_stopped_plan_publishes_retrievable_zero_task_report\n  /home/cachyos/ai-scientist/lab/api/app.py:141: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    @app.on_event(\"shutdown\")\n\ntests/test_api_and_scorer.py::test_run_start_is_authenticated_idempotent_and_payload_bound\ntests/test_api_and_scorer.py::test_run_requests_are_bounded_and_strict\ntests/test_api_and_scorer.py::test_empty_stopped_plan_publishes_retrievable_zero_task_report\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/fastapi/applications.py:4681: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    return self.router.on_event(event_type)  # ty: ignore[deprecated]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n15 passed, 7 warnings in 0.84s\n",
+  "stderr": "",
+  "source_sha256": {
+    "lab/director/contracts.py": "de4baf4f7ebe05a2f69d162692f67b1b5a20a340bc7e21ea86b2b0ca3c192675",
+    "lab/scorer/service.py": "e1881f2133041f6cee0397208ecf51b54fbb3d88e55703ce4ca93b545b9bacf4",
+    "lab/db/schema.py": "33b4922a2d3e4fdd0fecb25a8782b69a6c2c8d1272f92252bb6a9a1dafcaed31",
+    "tests/test_director_contracts.py": "adb7d96c5b6d576a3c7014f66091b02df5032765a1be56ce431edad22500c64a",
+    "tests/test_api_and_scorer.py": "92702baaece6a39e56ed157c541307912150fa81bb03d5d9e9845fd93667ec05"
+  },
+  "source_unchanged": true
+}

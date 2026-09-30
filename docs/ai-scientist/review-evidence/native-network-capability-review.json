@@ -1,0 +1,88 @@
+{
+  "schema": "native-network-capability-review.v1",
+  "scope": "Host capability only; own loopback/Unix sockets, two short CPU units; no model/CUDA or runtime acceptance.",
+  "script_sha256": "46fb17a865dcab52454003f333b6de6d438863509e976a9bee90d5680900e293",
+  "checks": {
+    "owned_host_loopback_reachable_before": true,
+    "private_network_namespace_available": true,
+    "namespace_differs": true,
+    "host_tcp_blocked": true,
+    "private_loopback_works": true,
+    "private_unix_socket_works": true,
+    "no_default_route": true,
+    "owned_host_loopback_reachable_after": true,
+    "host_namespace_unchanged": true,
+    "owned_units_terminal": true
+  },
+  "systemd_ip_filter": {
+    "command": [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-review-network-deny-58943c3f3d7647de93edd5c79d6d5913.service",
+      "--service-type=exec",
+      "--property=MemoryMax=128M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=25%",
+      "--property=TasksMax=16",
+      "--property=RuntimeMaxSec=15",
+      "--property=TimeoutStopSec=2",
+      "--property=KillMode=control-group",
+      "--property=NoNewPrivileges=yes",
+      "--property=IPAddressDeny=any",
+      "/home/cachyos/ai-scientist/.venv/bin/python",
+      "-c",
+      "import json,socket; s=socket.socket(); s.settimeout(1); code=s.connect_ex(('127.0.0.1',55897)); print(json.dumps({'connect_errno':code,'blocked':code!=0})); s.close()"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"connect_errno\": 0, \"blocked\": false}\n",
+    "stderr": "",
+    "terminal_state_exit_code": 0,
+    "terminal_state": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "MainPID": "0"
+    }
+  },
+  "ip_filter_effective": false,
+  "private_network_namespace": {
+    "command": [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-review-network-namespace-58943c3f3d7647de93edd5c79d6d5913.service",
+      "--service-type=exec",
+      "--property=MemoryMax=128M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=25%",
+      "--property=TasksMax=16",
+      "--property=RuntimeMaxSec=15",
+      "--property=TimeoutStopSec=2",
+      "--property=KillMode=control-group",
+      "--property=NoNewPrivileges=yes",
+      "/usr/bin/unshare",
+      "--user",
+      "--map-root-user",
+      "--net",
+      "/home/cachyos/ai-scientist/.venv/bin/python",
+      "-c",
+      "\nimport json,os,socket,subprocess\nbefore='net:[4026531833]'\ncurrent=os.readlink('/proc/self/ns/net')\nif current==before: raise RuntimeError('refusing interface change in host namespace')\nsubprocess.run(['/usr/bin/ip','link','set','dev','lo','up'],check=True,timeout=3)\nwith socket.socket() as probe:\n    probe.settimeout(1)\n    host_errno=probe.connect_ex(('127.0.0.1',55897))\nwith socket.socket() as server:\n    server.bind(('127.0.0.1',0)); server.listen(1)\n    with socket.socket() as local:\n        local.settimeout(1); local.connect(server.getsockname())\n        accepted,_=server.accept(); accepted.close()\n        own_loopback=True\nwith socket.socket(socket.AF_UNIX) as pipe:\n    pipe.settimeout(1); pipe.connect('/run/user/1000/swapp-net-review-58943c3f3d7647de93edd5c79d6d5913/probe.sock')\n    uds_ok=pipe.recv(64)==b'owned-probe'\nroutes=open('/proc/net/route').read().splitlines()[1:]\ndefault_route=any(line.split()[1]=='00000000' for line in routes)\nprint(json.dumps({'namespace':current,'namespace_differs':current!=before,'host_tcp_errno':host_errno,'host_tcp_blocked':host_errno!=0,'private_loopback_works':own_loopback,'private_unix_socket_works':uds_ok,'no_default_route':not default_route}))\n"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"namespace\": \"net:[4026533035]\", \"namespace_differs\": true, \"host_tcp_errno\": 111, \"host_tcp_blocked\": true, \"private_loopback_works\": true, \"private_unix_socket_works\": true, \"no_default_route\": true}\n",
+    "stderr": "",
+    "terminal_state_exit_code": 0,
+    "terminal_state": {
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "MainPID": "0"
+    }
+  },
+  "private_namespace_checks_passed": true
+}

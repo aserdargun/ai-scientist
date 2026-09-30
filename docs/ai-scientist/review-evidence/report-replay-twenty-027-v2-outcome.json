@@ -1,0 +1,11 @@
+{
+  "schema": "review-command-outcome.v1",
+  "exec_session": 52314,
+  "actual_exit_code": 1,
+  "tool_chunk": "085d53",
+  "production_run_exit_code": 0,
+  "elapsed_seconds": 907.3336308199941,
+  "driver_sha256": "bc333aee080344f96e28aeb828ba324ee75f8a6e388d0f78fa715fd08bed3bc1",
+  "result_sha256": "098016f8e211fe854ed3a832e1a47d4e539ffde1f8aa625de996c4dc8d569855",
+  "failure": "Review chart expectation used unnormalized baseline experiment.suite_score (null); production report correctly takes registered three-seed calibration. All eight production run checks passed. Separate verifier v3 will validate retained run without rerunning experiments."
+}

@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-09-24T17:15:18.248288+00:00",
+  "scope": "Budget component checks only; no durable Director restart or phase accounting acceptance.",
+  "source_sha256": {
+    "lab/director/budget.py": "88a21a412d0a1741ffdc9629497470692b1a457bbfa0c66927a9679f8981b61f",
+    "tests/test_director_budget_review.py": "2e5453445f12e5b43e2e79a29c40f85472ee92c32f4a8077cb83378b8bef0a3c"
+  },
+  "source_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "tests/test_director_budget_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_director_budget_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "......                                                                   [100%]\n6 passed in 0.01s\n",
+      "stderr": ""
+    }
+  ],
+  "all_passed": true
+}

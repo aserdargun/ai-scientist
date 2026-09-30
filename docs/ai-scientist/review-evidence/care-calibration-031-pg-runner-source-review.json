@@ -1,0 +1,32 @@
+{
+  "schema": "calibration-pg-runner-source-review.v1",
+  "created_at": "2026-09-27T00:44:32.636623+00:00",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_manifest": {
+    "source_tree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030",
+    "files": {
+      "docs/ai-scientist/review-evidence/review_care_calibration031_pg.py": "e62ff474d46dd00f3ee1c0b7b6a7f7b27f5f57e0c29b0fadd0fcce2a6465e969",
+      "docs/ai-scientist/review-evidence/care-calibration-031-pg-runner.md": "c73a82f2fd5b60d0a5d8f9b23213df714b8bdbd0882ee867e481e91c2761ac00",
+      "tests/test_care_calibration031_pg_runner_safety.py": "08ccc87c5992c1883e19a467401cf4ecf34eb246a88ca124f2c252c0ef19d547"
+    }
+  },
+  "status": "ready_for_disposable_sql_fixture",
+  "checks": [
+    "Unique labelled container and full-ID ownership",
+    "Local PostgreSQL16 image digest and resource caps",
+    "Loopback-only ephemeral host port",
+    "All four role session_user and DB/address/internal port/postmaster identities",
+    "Byte-verified fixed source snapshot/test target/migration head",
+    "300second aggregate deadline with45second cleanup reserve",
+    "Credentials retained unless confirmed own DB removal/absence"
+  ],
+  "limits": [
+    "Opaque pre-Alembic/pytest failure type remains a diagnostic limitation",
+    "Synthetic135-receipt storage proof; no real data/candidate/worker/model calibration",
+    "Calibration runtime not integrated into main or0.30 image"
+  ],
+  "actual_execution": false
+}

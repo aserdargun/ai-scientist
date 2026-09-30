@@ -1,0 +1,45 @@
+{
+  "driver_sha256": "2d0fbaa127f27c60cb5d9967e9948410cf8bda3b7f6581915d7f1e26f6bb4f32",
+  "family_cap": 0.25,
+  "family_shares": {
+    "synthetic-process-0:sensors:EVT": 0.25,
+    "synthetic-process-1:sensors:EVT": 0.25,
+    "synthetic-process-2:sensors:EVT": 0.25,
+    "synthetic-process-3:sensors:EVT": 0.25
+  },
+  "fixture_id": "e49b0286-a157-448c-aa05-13ba4c7dddb4",
+  "label_row_count": 512,
+  "manifest_bytes": 46177,
+  "manifest_sha256": "6d7cd08c8c71096682e0848bc28ebb528dc9fcef5e34e6181e0822f7795d326b",
+  "measured_score_count": 0,
+  "planned_score_count": 36,
+  "planner_database_readback": "not_run",
+  "private_profile_inputs_sha256": "9aeca69db5f96d29763b7cfc9c30041bca3598ed33a42d7b28ee62ad1f19fa98",
+  "profile_count": 4,
+  "provider_constructed": false,
+  "registry_entry_sha256": "590fbdf3d9ee54a19b401ecaa9836653644aa7cc524df1ce3ec492b0dfa0b330",
+  "registry_sha256": "b8ecc73ca535480292e522d3b4dadc919f85ea83287d6f251b6882b2bac95ce3",
+  "runtime": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/baseline-proof-input-preparation/e49b0286a157448caa0513ba4c7dddb4",
+  "scenario_sha256": "134e1ebea8e4ba9c6bb2d81026cfeb44c464a259b4740a3de4de892455cf347d",
+  "schema": "baseline-proof-input-preparation.v1",
+  "scope": "Synthetic input preparation and production manifest/registry validation only. No SQL profile installation or Planner database readback, run admission, baseline measurement, API, worker, sandbox, provider, model, GPU or AOS execution.",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_director_synthetic_scenario.py": "2a64715052fe2df0551a70c5ce237030e2888d3e6c99acc7352c2f8f7def179b",
+    "harness/contracts.py": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599",
+    "lab/api/registry.py": "a58eed45a6513c93ab45ca2ffaf60bc4dee414ee7b7326dd44ab4f1daa8a242e",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3"
+  },
+  "source_unchanged": true,
+  "sql_profile_installation": "not_run",
+  "task_count": 4,
+  "two_task_rejection": {
+    "reason": "fewer than four independent families cannot satisfy the 0.25 cap",
+    "type": "ValueError"
+  },
+  "type_shares": {
+    "EVT": 1.0
+  }
+}

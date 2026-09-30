@@ -1,0 +1,16 @@
+{
+  "schema": "root-patch-integration.v1",
+  "main_base_commit": "55f85a0d45cad11164069cda85e7be2d317696bf",
+  "patch_base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "patch_sha256": "3d722c06a9ebf245e3cb9d7c1811488d27901d86cf20110f3b367eb99aae3997",
+  "files": {
+    "lab/cli.py": "94f0c693b52a37d63bf081ff7e0e6306fbb22cec8ca882f2dc18ce69aba40d6a",
+    "tests/test_shared_gpu_runtime_db.py": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f"
+  },
+  "independent_main_apply_check_exit": 0,
+  "patch_omission": "Initial patch contained CLI only; root copied the omitted untracked test with exact frozen SHA from agent worktree. Supplemental test-only patch requested; original evidence preserved.",
+  "byte_parity": true,
+  "agent_log_sha256_verified": true,
+  "full_quality_gate": "pending",
+  "live_services_changed": false
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "baseline-numeric-guard-execution-binding.v1",
+  "session_id": 4381,
+  "completion_chunk": "421ace",
+  "exit_code": 0,
+  "phase": "before_fix",
+  "source_head": "f2b9100ba2dcdb846ffafe0264bd7d1fcbacf8a1",
+  "driver_sha256": "d73e8f4d1956e82df9efe1baec3eb6ce43dd7720f1e02216a49bf4ba6ec62332",
+  "sql_companion_sha256": "a3248e8a35f18db6b1f9e020fdd587771d6990b1c8314d0ca7eb97edac169dc6",
+  "diagnostic_evidence": "baseline-ownership-sql-diagnostic-033-d0d6aa88d3eb.json",
+  "diagnostic_evidence_sha256": "39100fba2f801626b29b84dd2dae6bc355e09d728afcff76cd862e2e8589aaf1",
+  "numeric_zero_equivalence_defect_confirmed": true,
+  "observations": {
+    "float_zero": {
+      "expected_after_numeric_fix": {
+        "message": "baseline task plan is not sealed",
+        "sqlstate": "P0001"
+      },
+      "fixture_unchanged": true,
+      "input_reserved_wall_seconds": 0.0,
+      "observed": {
+        "message": "baseline budget receipt is invalid or unreconciled",
+        "returned_value": null,
+        "sqlstate": "P0001"
+      }
+    },
+    "integer_zero": {
+      "expected_after_numeric_fix": {
+        "message": "baseline task plan is not sealed",
+        "sqlstate": "P0001"
+      },
+      "fixture_unchanged": true,
+      "input_reserved_wall_seconds": 0,
+      "observed": {
+        "message": "baseline task plan is not sealed",
+        "returned_value": null,
+        "sqlstate": "P0001"
+      }
+    }
+  },
+  "cleanup": {
+    "run_cleanup_verified": true,
+    "api_process_reaped": true,
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "scope": "Direct PostgreSQL diagnosis on a valid claimed unsealed fixture. No baseline dispatch, score, calibration registration, final report or acceptance claim. R3 exact error remains unrecorded."
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "private056-completion-readonly.v1",
+  "captured_at": "2026-09-29T21:30:06.471095+00:00",
+  "jobs": [
+    {
+      "calibration_id": "5e99e4a8-ae14-4ce3-945b-363c53650135",
+      "deadline_at": "2026-09-30 01:00:16.500812+00:00",
+      "wall_limit_seconds": 14400,
+      "state": "incomplete",
+      "reserved_wall_seconds": 100
+    },
+    {
+      "calibration_id": "fe7c1350-0c16-4a56-a056-000000000002",
+      "deadline_at": "2026-09-30 01:00:05.999077+00:00",
+      "wall_limit_seconds": 13733,
+      "state": "complete",
+      "reserved_wall_seconds": 13500
+    }
+  ],
+  "actual_cells": 135,
+  "distinct_claims": 135,
+  "failed_claims": 0,
+  "all_succeeded": true,
+  "exact_grid": true,
+  "finite_bounded_values": true,
+  "task_summaries": 15,
+  "registered_versions": [],
+  "helper_freeze_sha256": "17cd01b950d4b0d292eb8889f4d7a228517b26eb0284ee1840c6e439fa036a83",
+  "launcher_receipt": "review-evidence/execution-calibrate-repair-b37c94efb29b.json",
+  "launcher_exit_code": 1,
+  "unit_main_exit_status": 120,
+  "real_model_acceptance": false
+}

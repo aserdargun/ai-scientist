@@ -1,0 +1,56 @@
+{
+  "schema": "care-calibration-source-review.v1",
+  "created_at": "2026-09-27T00:22:13.083720+00:00",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_manifest": {
+    "base_commit": "7ba1a1b",
+    "source_tree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/calibration-031",
+    "files": {
+      "lab/scorer/care_calibration.py": "b1c53ab9372733811c7918b31391e6f6bad4d3497a1733aaee31d3ea3735f054",
+      "lab/db/schema.py": "de47de9c97a33a9ce49ed1e97716c1a17ee2fbe30251a01b091f3f5eb48dfb8d",
+      "lab/db/migrations/versions/0022_care_baseline_calibration.py": "f45a2ca33df9682b2f68db1f719aa9af9d6ab429cc796bd8ec304c4a2fe04e69",
+      "lab/scorer/holdout.py": "a3b826d919cd5969df4a92038cb45a67cdbc0421208f763e1e9d3c59c6ca06ee",
+      "tests/test_care_baseline_calibration.py": "54487c44a0f8c8bd1223fa30c75ed9a18a0fc46677ad9dc8c6a75ab558b814a7",
+      "docs/ai-scientist/review-evidence/care-b-calibration-plan.md": "1d2fea7310649b57aa38c7a7aee8dc39d1f60d088d4f5e9e1eb29112df5b8cac"
+    },
+    "scope": "R1 storage fix review, no runtime execution or main integration"
+  },
+  "status": "one_storage_blocker_before_isolated_pg_proof",
+  "resolved_r1_findings": [
+    "Raw PDM/NRM semantics preserved after validation",
+    "Definer owner privileges preserved",
+    "Job-row locks serialize task/cell/summary/freeze and reject sealed additions",
+    "Committed exact receipts/freeze read before new insert/deadline check",
+    "Full installed task/context pre-dispatch binding",
+    "Alarm release <= threshold validation"
+  ],
+  "findings": [
+    {
+      "id": "scorer-job-lock-privilege",
+      "finding": "Scorer uses SELECT FOR UPDATE on calibration_jobs but has only SELECT grant; persistence/finalization will fail with SQLSTATE42501. Add narrow lock privilege without enabling job mutation."
+    }
+  ],
+  "required_pg_proof": [
+    "Actual Scorer receipt persistence and finalize",
+    "Exact/conflicting postdeadline replay",
+    "Concurrent addition vs freeze and rejection after sealing",
+    "Measured and ordinary registry registration",
+    "Director/Planner access denial"
+  ],
+  "worker_cpu_report": {
+    "tests_passed": 8,
+    "exit_code": 0,
+    "metric_scope": "Production PDM/NRM metric funcs with fixture sandbox outputs; no actual candidate measurement"
+  },
+  "actual_database_execution": false,
+  "main_integration": false,
+  "explicit_remaining_scope": [
+    "Claims/generation fencing",
+    "Crash-safe budgets",
+    "Supervisor and scheduler",
+    "Real135-cell calibration"
+  ]
+}

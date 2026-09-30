@@ -1,0 +1,32 @@
+{
+  "runner_source_sha256": "f985c6336e2282df814905aa31957db5e5e0f1c070ab371500f3cb7cce2745ec",
+  "image": "sha256:3f9df3002bccd1cb74aa5f6060da74dbdecc4c65fc0c8f712ecf67f0590754df",
+  "profile": {
+    "memory_bytes": 134217728,
+    "cpus": 0.25,
+    "timeout_seconds": 20
+  },
+  "scope": "Only probe-owned subprocess groups and exact container names",
+  "setup_note": "Initial /tmp work root correctly failed the 20 GiB free-disk guard; final probe uses the project data filesystem.",
+  "container_cleanup": {
+    "swapp-lab-fit-c518eed0131d4e05bd7d0533e14b2070": true,
+    "swapp-lab-fit-6cb67b2bee0d4611b5ef7ba576e13809": true,
+    "swapp-admission-sentinel-_oy7hd7s": true
+  },
+  "killed_runner_returncode": -9,
+  "first_container_running_after_runner_kill": true,
+  "second_runner": {
+    "exit_code": 0,
+    "stdout": "{\"phase\": \"fit\", \"artifacts\": 1}\n",
+    "stderr": ""
+  },
+  "first_container_running_after_second_finished": false,
+  "independent_sentinel_still_running": true,
+  "handoff": {
+    "first_container_running_before_second_launch": false
+  },
+  "capacity_violation_reproduced": false,
+  "recovery_passed": true,
+  "script_sha256": "5c5dd0e46367ff6fdded1b060a8056c217a792031b6826f156b573c4651fb28d",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_sandbox_admission_crash.py"
+}

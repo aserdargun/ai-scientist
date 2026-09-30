@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "lab.cli",
+    "director",
+    "resume",
+    "--run-id",
+    "fac65252-e14d-4014-9744-333b88083963",
+    "--restart-id",
+    "ae8df360-7cb2-48f5-b57a-7d0c79ad577d"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 4.480301654999494
+}

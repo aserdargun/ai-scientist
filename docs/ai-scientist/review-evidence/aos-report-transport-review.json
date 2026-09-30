@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-09-24T19:47:36.268598+00:00",
+  "scope": "Isolated AOS production client against a controlled authenticated loopback HTTP server. The 80-score report is retained actual Director20/Scorer output; small identity/hash controls are fixtures. No new research, real Lab server, AOS service, model or GPU run.",
+  "python": "3.12.13",
+  "source_sha256": "8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb",
+  "retained_evidence_sha256": "13b45d9688572a9d033d3354ac93312fe05400e9389055308a10704df0121271",
+  "retained_report_sha256": "6b63f31fa3a3d692f1cf220eb1799e721e4f91e0fa2056aa05e7335f48822aee",
+  "retained_task_score_count": 80,
+  "observations": {
+    "valid_minimal": {
+      "response_bytes": 271,
+      "expected_accept": true,
+      "actual_accept": true,
+      "error_type": null,
+      "passed": true
+    },
+    "retained_real_eighty_score_report": {
+      "response_bytes": 70876,
+      "expected_accept": true,
+      "actual_accept": true,
+      "error_type": null,
+      "passed": true
+    },
+    "wrong_inner_run_with_valid_hash": {
+      "response_bytes": 271,
+      "expected_accept": false,
+      "actual_accept": false,
+      "error_type": "ValueError",
+      "passed": true
+    },
+    "incorrect_report_hash": {
+      "response_bytes": 271,
+      "expected_accept": false,
+      "actual_accept": false,
+      "error_type": "ValueError",
+      "passed": true
+    }
+  },
+  "source_unchanged": true,
+  "script_sha256": "7542d23e4053a6728c6a0d91aebff46de572d4a8db2a29b756634eb29520f47f",
+  "owned_http_server_stopped": true,
+  "all_passed": true
+}

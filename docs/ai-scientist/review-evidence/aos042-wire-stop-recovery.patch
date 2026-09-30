@@ -1,0 +1,22 @@
+--- a/src/aos/lab_external.py
++++ b/src/aos/lab_external.py
+@@ -98,6 +98,7 @@
+ 
+     run_id: UUID
+     origin: Literal["aos"]
++    purpose: Literal["baseline", "research", "mode-grid"] | None = None
+     state: Literal["queued", "running", "stop_requested", "completed", "stopped", "failed"]
+     created_at: StrictStr
+     updated_at: StrictStr
+@@ -1168,7 +1169,10 @@
+         stop_action_id = await self._record_control_action(
+             row,
+             "stop",
+-            idempotency_key=f"lab-stop:{job_id}",
++            # A new explicit HUMAN binding authorizes a fresh stop intent;
++            # retain any prior uncertain intent from the old process/lease.
++            # Repeated calls within this same binding retain one action key.
++            idempotency_key=f"lab-stop:{job_id}:{session_id}:{generation}",
+             require_human_lease=True,
+         )
+         recorded = self.connection.execute(

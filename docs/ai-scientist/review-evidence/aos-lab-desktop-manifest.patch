@@ -1,0 +1,23 @@
+diff --git a/scripts/serve_desktop.py b/scripts/serve_desktop.py
+index 635fb27..0000000 100644
+--- a/scripts/serve_desktop.py
++++ b/scripts/serve_desktop.py
+@@ -46,6 +46,9 @@ def main():
+     parser.add_argument('--listen-fd', type=int, help=argparse.SUPPRESS)
+     parser.add_argument('--workspace', type=Path, default=REPO_ROOT / 'data/desktop-workspace')
+     parser.add_argument('--database', type=Path, default=REPO_ROOT / 'data/desktop-console.sqlite')
++    parser.add_argument('--desktop-manifest', type=Path,
++                        default=REPO_ROOT / 'models/desktop-manifest.json',
++                        help='Explicit private pin for the isolated desktop runtime')
+     parser.add_argument('--managed-retention', action='store_true', help=argparse.SUPPRESS)
+     parser.add_argument('--trajectory-database', type=Path, default=REPO_ROOT / 'data/aos.sqlite')
+     parser.add_argument('--web-profiles-root', type=Path, default=REPO_ROOT / 'data/web-applications')
+@@ -457,7 +457,7 @@ def main():
+     descriptor = os.open(key, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+     with os.fdopen(descriptor, 'w') as stream:
+         stream.write(token)
+-    runtime = DesktopRuntime(arguments.workspace, REPO_ROOT / 'models/desktop-manifest.json')
++    runtime = DesktopRuntime(arguments.workspace, arguments.desktop_manifest)
+     store = None
+     controller = None
+     scheduler = None

@@ -1,0 +1,18 @@
+{
+  "schema": "director-principal-main-integration.v1",
+  "source_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "patch_sha256": "0f65b41f6a52f10abf43cfd0d1d3245a5c496d1cd709bc84efdb0d6ca0778b16",
+  "files": [
+    {
+      "path": "lab/llm/gpu_scheduler.py",
+      "base_sha256": "de7305f448adfceffcc9a3934652f04ffcc9b5407d5509f179a97304416ad320",
+      "final_sha256": "ff98b0aab49f04d5a66ce3448b102a810337ba0f2b4f88f2c18fa48934827cec"
+    },
+    {
+      "path": "tests/test_gpu_scheduler.py",
+      "base_sha256": "581a887070c462e4e08f08fdc5b89e13c45bd62fb084c2276b83e9c72eb8795d",
+      "final_sha256": "a8225d02352de05d1d836eede5863ccd98d30bfa83d11bb955e22ae2b0a1c5e1"
+    }
+  ],
+  "scope": "Canonical run-bound Lab unit admission only. Runtime identity verification unchanged."
+}

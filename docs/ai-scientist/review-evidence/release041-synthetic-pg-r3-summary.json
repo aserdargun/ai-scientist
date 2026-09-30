@@ -1,0 +1,132 @@
+{
+  "schema": "release041-synthetic-pg-r3-safe-summary.v1",
+  "date": "2026-09-30",
+  "scope": "Actual isolated PostgreSQL execution on synthetic fixtures only; SQL/migration/recovery proof, not public measurements or real worker process exits.",
+  "pg040_r3": {
+    "private_receipt_sha256": "b13f02bf1e37b3816265d1cac42fc52b8e7a082436c8b7e71078073312d6df08",
+    "root_wrapper_tool_sha256": "878bf5a162bba16948e68cb4f89b802c5129ff94dd1e712523eeccc99e276e43",
+    "root_session": 64849,
+    "root_final_chunk": "b01aeb",
+    "actual_root_wrapper_exit_code": 0,
+    "actual_receipt_exit_code": 0,
+    "elapsed_seconds": 29.19442197600074,
+    "catalog_upgrade_downgrade_reupgrade_parity": true,
+    "completed_scenario_count": 3,
+    "scenarios": {
+      "99": {
+        "actual_cli_exit_code": 0,
+        "actual_observed_public_measurements": 0,
+        "state": "stopped",
+        "calibration_created": false,
+        "completed_pair_and_blob_bytes_retained": true,
+        "recovery_idempotent_replay_verified": true,
+        "referee_replay_claimed": false,
+        "request_budget_deadline_preserved": true
+      },
+      "180": {
+        "actual_cli_exit_code": 0,
+        "actual_observed_public_measurements": 0,
+        "state": "stopped",
+        "calibration_created": false,
+        "completed_pair_and_blob_bytes_retained": true,
+        "recovery_idempotent_replay_verified": true,
+        "referee_replay_claimed": false,
+        "request_budget_deadline_preserved": true
+      },
+      "243": {
+        "actual_cli_exit_code": 0,
+        "actual_observed_public_measurements": 0,
+        "state": "stopped",
+        "calibration_created": false,
+        "completed_pair_and_blob_bytes_retained": true,
+        "recovery_idempotent_replay_verified": true,
+        "referee_replay_claimed": false,
+        "request_budget_deadline_preserved": true
+      }
+    }
+  },
+  "rpc0035_r3": {
+    "private_receipt_sha256": "e3399ef34b5657ae0aa29b3102890d1261fd8f9cc44520403eafd1f31b8a9d28",
+    "root_wrapper_tool_sha256": "55e31b12e8d0c7c9535b0a5b9e1de43c9df10afbea6a5a9b17a505f804d97957",
+    "root_session": 73089,
+    "root_final_chunk": "8a054a",
+    "actual_root_wrapper_exit_code": 0,
+    "actual_receipt_exit_code": 0,
+    "phase": "completed",
+    "elapsed_seconds": 0.4626230929970916,
+    "pg040_receipt_sha256": "b13f02bf1e37b3816265d1cac42fc52b8e7a082436c8b7e71078073312d6df08",
+    "positive_readonly_rpc_count": 3,
+    "positive_readonly_rpc_kinds": {
+      "baseline": true,
+      "confirmation": true,
+      "primary": true
+    },
+    "negative_sql_control_count": 10,
+    "negative_sql": {
+      "holdout_profile": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "missing_completion": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "null_job": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "queued": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "raw_score_table_select": {
+        "sqlstate": "42501"
+      },
+      "sealed_profile": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "unauthorized_admin": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      },
+      "unauthorized_planner": {
+        "readonly_transaction": true,
+        "sqlstate": "42501"
+      },
+      "unauthorized_scorer": {
+        "readonly_transaction": true,
+        "sqlstate": "42501"
+      },
+      "unknown_job": {
+        "readonly_transaction": true,
+        "sqlstate": "P0001"
+      }
+    },
+    "existing_OIDs_ACLs_roles_views_triggers_rows_unchanged": true,
+    "all_preexisting_rows_retained_through_seed": true,
+    "rpc_calls_preserve_all_rows_and_catalog": true,
+    "actual_process_exit_evidence": false
+  },
+  "parent_budget": {
+    "memory_bytes": 2147483648,
+    "cpu_percent": 100,
+    "tasks": 128,
+    "swap_bytes": 0
+  },
+  "migration_sha256": {
+    "0034_multi_baseline_stop.py": "5d3aa692a8f2e9d36257f4e78b0821bfbb6adb14cd6824830566cc511afd6b6a",
+    "0035_scorer_process_provenance.py": "c8c779a4d3bb4269da8092fec30b15cd516a2c53712b6c50a7325bfb0585c0bb"
+  },
+  "preserved_pg040_r2_failure": {
+    "actual_root_wrapper_exit_code": 1,
+    "root_final_chunk": "562a37",
+    "bootstrap_catalog_passed_before_seed_failure": true,
+    "completed_scenario_count": 0,
+    "cause": "Fixture used the Scorer cgroup helper for a synthetic Director; production guard correctly rejected it. Separate R3 fixture repairs only that setup."
+  },
+  "actual_observed_public_measurements": 0,
+  "actual_worker_process_exit_acceptance": false,
+  "main_clone_or_promotion_acceptance": false,
+  "scientific_GPU_LLM_AOS_M0_acceptance": false
+}

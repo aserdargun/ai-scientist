@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-09-24T19:50:41.589890+00:00",
+  "scope": "Real AOS TrajectoryStore constructor/migrations/reconcile on a private temporary on-disk SQLite database, production external-job coordinator, fake controller and Lab transport. No live AOS database/service, actual Lab server, model or GPU.",
+  "source_sha256": {
+    "src/aos/lab_external.py": "8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb",
+    "src/aos/storage.py": "64d8563365f00315052cc1eaf700a49366f30756a26c8300f05c482753a91b90",
+    "tests/test_lab_external_jobs.py": "762197b3cc70405ebed5987eb8d5f931d8391e2a3c7803fb111d20a5fdd67034"
+  },
+  "before_restart": {
+    "job_state": "queued",
+    "aos_run_status": "running",
+    "runtime_state_count": 0
+  },
+  "reopen_succeeded": false,
+  "reopen_error": {
+    "type": "AOSFault",
+    "message": "Unknown run"
+  },
+  "handle_preserved": false,
+  "source_unchanged": true,
+  "all_passed": false,
+  "script_sha256": "c57a88fbeee93cd430e31f2abdbe4e1dd697d82992663b2869f1c9d59c3e1c38"
+}

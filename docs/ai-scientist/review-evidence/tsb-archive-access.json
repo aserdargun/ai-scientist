@@ -1,0 +1,10 @@
+{
+  "source_url": "https://www.thedatum.org/datasets/TSB-AD-M.zip",
+  "status": 200,
+  "headers": {
+    "Content-Type": "application/zip",
+    "Content-Length": "540383983",
+    "last-modified": "Sun, 10 May 2026 10:12:20 GMT"
+  },
+  "prefix_hex": "504b03040a0000000000791e57590000"
+}

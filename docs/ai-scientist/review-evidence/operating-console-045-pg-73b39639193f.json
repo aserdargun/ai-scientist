@@ -1,0 +1,934 @@
+{
+  "base_runner_sha256": "444f625efd67295a60973bf29ca92efb3f476022f482aeb980814d3b4a7976db",
+  "container_id": "73c30859ad49540e879b56beb4657d65d441d22fd3ae1b319df69b331b5ede1b",
+  "container_name": "swapp-mode-snapshot045-pg-73b39639193f",
+  "created_at": "2026-09-27T08:16:26.372717+00:00",
+  "credentials_removed": true,
+  "database": "swapp_lab_m0_holdout_030_045_73b39639193f",
+  "endpoint": {
+    "container_ips": [
+      "172.17.0.2"
+    ],
+    "container_port": 5432,
+    "published_host": "127.0.0.1",
+    "published_port": 32816
+  },
+  "exit_code": 0,
+  "expected_migration_head": "0028_mode_snapshot_install",
+  "fixture_id": "73b39639193f4ffebe4c1f6ba31aee62",
+  "image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "migration_exit_code": 0,
+  "migration_head": "0028_mode_snapshot_install",
+  "migration_output": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\nINFO  [alembic.runtime.migration] Running upgrade 0020_holdout_recovery -> 0021_run_end_unavailable, Fence run-end admission when no safe query can be started or resumed.\nINFO  [alembic.runtime.migration] Running upgrade 0020_holdout_recovery -> 0021_run_end_unavailable, Fence run-end admission when no safe query can be started or resumed.\nINFO  [alembic.runtime.migration] Running upgrade 0021_run_end_unavailable -> 0022_care_baseline_calibration, Persist private, measured Farm B baseline calibration and registry binding.\nINFO  [alembic.runtime.migration] Running upgrade 0021_run_end_unavailable -> 0022_care_baseline_calibration, Persist private, measured Farm B baseline calibration and registry binding.\nINFO  [alembic.runtime.migration] Running upgrade 0022_care_baseline_calibration -> 0023_care_calibration_execution, Add durable, no-refund cell admission and worker-generation fencing.\nINFO  [alembic.runtime.migration] Running upgrade 0022_care_baseline_calibration -> 0023_care_calibration_execution, Add durable, no-refund cell admission and worker-generation fencing.\nINFO  [alembic.runtime.migration] Running upgrade 0023_care_calibration_execution -> 0024_baseline_operation, Bind independent baseline completion to a whole-matrix Scorer receipt.\nINFO  [alembic.runtime.migration] Running upgrade 0023_care_calibration_execution -> 0024_baseline_operation, Bind independent baseline completion to a whole-matrix Scorer receipt.\nINFO  [alembic.runtime.migration] Running upgrade 0024_baseline_operation -> 0025_director_generations, Persist immutable Director execution pins and owner generations.\nINFO  [alembic.runtime.migration] Running upgrade 0024_baseline_operation -> 0025_director_generations, Persist immutable Director execution pins and owner generations.\nINFO  [alembic.runtime.migration] Running upgrade 0025_director_generations -> 0026_holdout_execution_owner, Bind first-generation holdout work and receipts to its immutable owner.\nINFO  [alembic.runtime.migration] Running upgrade 0025_director_generations -> 0026_holdout_execution_owner, Bind first-generation holdout work and receipts to its immutable owner.\nINFO  [alembic.runtime.migration] Running upgrade 0026_holdout_execution_owner -> 0027_terminal_finalization, Bound terminal report closure to durable same-owner receipts and a fixed CPU window.\nINFO  [alembic.runtime.migration] Running upgrade 0026_holdout_execution_owner -> 0027_terminal_finalization, Bound terminal report closure to durable same-owner receipts and a fixed CPU window.\nINFO  [alembic.runtime.migration] Running upgrade 0027_terminal_finalization -> 0028_mode_snapshot_install, Scorer-only atomic installation of bounded synthetic operating-mode snapshots.\nINFO  [alembic.runtime.migration] Running upgrade 0027_terminal_finalization -> 0028_mode_snapshot_install, Scorer-only atomic installation of bounded synthetic operating-mode snapshots.\n",
+  "outer_cgroup": {
+    "cpu_period_us": 100000,
+    "cpu_quota_us": 50000,
+    "memory_max_bytes": 1073741824,
+    "swap_max_bytes": 0,
+    "tasks_max": 64
+  },
+  "owned_container_removed": true,
+  "pytest_observer_path": "data/runtime/operating-console-045-pg-smoke/73b39639193f4ffebe4c1f6ba31aee62/pytest-observer/mode045_pytest_observer.py",
+  "pytest_observer_sha256": "fc3f656cadf75d547aaa3b0eacb25d76235494f00ae4ec442583b528511ff633",
+  "pytest_observer_unchanged": true,
+  "pytest_receipt_path": "data/runtime/operating-console-045-pg-smoke/73b39639193f4ffebe4c1f6ba31aee62/pytest-execution.json",
+  "pytest_receipt_sha256": "6ad63b2ca5d32cb9fbb0fb47903c635b9944c98f54ce0034fc8f623696457408",
+  "runner_sha256": "400e4b80ff86059476b9d3feafb7f98c71bc4723e16aa37774e43b15a54477ab",
+  "runner_snapshot": "data/runtime/operating-console-045-pg-smoke/73b39639193f4ffebe4c1f6ba31aee62/runner.py",
+  "runner_unchanged": true,
+  "schema": "operating-console-045-pg-review.v2",
+  "scope": "Same-generation failed/bitless closure synthetic SQL fixture only; no Scorer service, worker, sandbox, model or GPU",
+  "snapshot_unchanged": true,
+  "source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/operating-console-045",
+  "source_now_matches_snapshot": true,
+  "source_sha256": {
+    "Dockerfile.sandbox": "e9051b122769dd3eac6967e12a61d385b644c3539ea7fa4bc15c1b06fc9659ac",
+    "alembic.ini": "aab60ec24a4a1e0c65bed284631f8f19c2a2394d3110b8793f6d6078d8db3860",
+    "docker/sandbox/requirements.txt": "cfa6650061e68249c3dcff28d2002541df4c1a6b19bd9d0351a9119ed23e28ea",
+    "harness/VERSION": "645fd1a585b9e4297f053de5b2feaf97c6622366318bce9a9c8c0840ae9a49ea",
+    "harness/__init__.py": "9dabc85ce30040e9e4c93992622dcbefcf3f7654fa14c9ffcacb3bc4f53d3ccd",
+    "harness/alarm.py": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103",
+    "harness/baselines.py": "abb4f46252934ed234951a9429b23cf545c53b4d7c5ea06f621bbf0d88dff909",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "harness/contracts.py": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599",
+    "harness/fingerprint.py": "4a31a65ed8baea87642f5b04d846c180cb40951cbc5801eaa84ff0fb1b219e74",
+    "harness/guards.py": "d820e5026825c8f0ca588337c6d86cb99e8be6099b5ab5545b3256e958093d89",
+    "harness/metrics.py": "6d0b997d5b26ad1ed879450c04eaffbea2e094233847e5f8b3895b71b0b9e22c",
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "harness/referee.py": "a5952cb5e621b36ca8f491573642c96fe92216f243e460a36c87865de6f243f2",
+    "lab/__init__.py": "1a39d5e3ee50d08b91b175f667db7d5e6de2025f4e0fedac4659f0386407cc1a",
+    "lab/analytics/__init__.py": "783ce79c61a11faffbe724639b6aa145146f78dd484f23b09ae3185e17ad9c3b",
+    "lab/analytics/statistics.py": "ba10984d03eebcc80acca33c27e83ecf629c402c9a4f61961e4c92956fcc782a",
+    "lab/api/__init__.py": "408485dcde070bea88526c05d2d39f3653b9033e89540f9fa25aea72736f3be4",
+    "lab/api/app.py": "0e1df1392bccd64d0f62aa72ccc25600b3cb4eab5e49657903e7e49114f41cdd",
+    "lab/api/contracts.py": "7ab39e9bdc536d7bea0b91423d9a6eeb4731c14dd8e20a944e70b7ca13ed47ed",
+    "lab/api/mode_experiments.py": "f6ab0c4dae0d4f5c4bff44930209dca3116f45d9899afbd1bf9f5d779c41adce",
+    "lab/api/mode_sources.py": "a3fd96ff40818075c15963ab787560ffe02d229f2b173845c85bc7509eb801c2",
+    "lab/api/registry.py": "757e8486c1124599e4c8cbabf722110d718779225f1fcf7e965db2560936d7d1",
+    "lab/cli.py": "978527e250b29e195a8047e3a7a9506d9d9a4713cdea09cb9b46bd01769902c3",
+    "lab/db/__init__.py": "f52763d89d95a46b0ff8a514c3336dba74a9ea6292343091e1ce0efa3ebf1fe7",
+    "lab/db/migrations/__init__.py": "b9b682537c8c1c2adedde55ed6b45eaeaacd4d4d7804c65877373a029ad3d563",
+    "lab/db/migrations/env.py": "eef43a4e3cd91fbd408af738ed5c6baa80f4e0831d046aeba1f15d8e62c64e6f",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "lab/db/migrations/versions/0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896",
+    "lab/db/migrations/versions/0022_care_baseline_calibration.py": "06d096bb4ced57b9de053f6270710f7602524d3fb78c11f8dd6490c70dd5e3b6",
+    "lab/db/migrations/versions/0023_care_calibration_execution.py": "23f39209b59ea13c1a2f40e81a8ed7c3d60c6a4284810adc92079b9679d12541",
+    "lab/db/migrations/versions/0024_baseline_operation.py": "0224a417ac659b86d40a86fd822c20b7be305f5dff35f871c1ad67f254d28742",
+    "lab/db/migrations/versions/0025_director_generations.py": "dc0d6503ec56a746cf205abb8de34034dd1454451515628155cad4eae9b881c3",
+    "lab/db/migrations/versions/0026_holdout_execution_owner.py": "eb479f45a7f31634f51dabe6e2d8a0ee8bcbda4cc37ae8baac0b53ccab6d1377",
+    "lab/db/migrations/versions/0027_terminal_finalization.py": "44fecdddc6d22cfb8cc70ed322b8cc4dfed21ef679496c73454c3edc6e22bdd8",
+    "lab/db/migrations/versions/0028_mode_snapshot_install.py": "da67016da2b858d954b5576c49f8d2c75e226082a982919b2ca822818ee19e28",
+    "lab/db/schema.py": "fd3f957a579ffd770a5f3abd0e188203d6b3ee184afacf9c1de2cc47fbc6509d",
+    "lab/db/task_plan.py": "2e946acc43f32179488948a636561742d22f7f11b2b4dbf4128517abc76b796a",
+    "lab/director/__init__.py": "947c4b6815906cd3fc868c7ea66844150f26f2476518fa75615a7405eb5e51bc",
+    "lab/director/artifacts.py": "d5131e0261611a4d3f494acbb0294b5c69df51b9f5a2e16981da488129b7b661",
+    "lab/director/baseline_operation.py": "857f269fe1240f3a5ce3ff4c5c1b40f185ec9daaf78cddd43d30476991bba81c",
+    "lab/director/baseline_runner.py": "f9b0897ed3130414d060f0167ab0512acf39ba8f87d6efe279358a0b679a637c",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "lab/director/budget.py": "7f1fb7d95d49186607c8a4e412c6879c67fd23c9d30be4235a9bdfa09c20f944",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/fake_llm.py": "7dd96f0060c80133bba897047626268796990b4ad11fc2a0f9c2591850f5c4c2",
+    "lab/director/holdout.py": "79514292629d945c969757e17b9870291f7e5fb53c9746ae1218892bdc9d087e",
+    "lab/director/journal.py": "ec842b59b88a022c5db0bc36e55a3928d219bc9a27409a25802891f81ffbae06",
+    "lab/director/ledger.py": "0ca6c2def4661670b5e99d91b2b6ae1d99a3abc6cd097934de072e38857fa599",
+    "lab/director/local_llm.py": "dc21385c1b8930a35f0f33fa10b661592fa10df43aa15ce4f5164a8e00ce271c",
+    "lab/director/loop.py": "9c67ec8540aa30803441ea14fd10b36f87215607192e3a837a878e960d44c3e5",
+    "lab/director/ownership.py": "8ca75a75496a06bd12e146fbd72a2106cf4b8d18057951b08f4b4704e13314f3",
+    "lab/director/parameter_grid.py": "c9f2cb0fb95f11b4b8c17c9e7ca918696c2e8456bfdd2d55283a98e60e633544",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/recovery.py": "9f9999708c3a69f579210b430e924cbe9494a9c668b1739c1761564c0854aaed",
+    "lab/director/runner.py": "f706c3eaed37cd56099debd7ab9c9f5b95fe4857784576ed7dc3b392f229f72c",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_guards.py": "38916491f76a712bd2e46cf136c261cf0dd8da3cf07cadd98335b4237d81e0f7",
+    "lab/director/suite_manifest.py": "f225b556655cc7d454a88950711f173d176973560045d342b7e955048cddafbc",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/director/task_plan.py": "69c63e4a7fd025c98bcce125086689cbd649beefc5fa78e246346b43d8bd2a85",
+    "lab/llm/__init__.py": "d1b8ca22acbe93ce9d0849b05cb7dae7c875ac8e0b382aa2520915befab38527",
+    "lab/llm/aos_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab/llm/aos_gpu_executor.py": "148ec806adfbc921dbabbfc8442681587c14059103d28534a82453aa6f0d3bec",
+    "lab/llm/aos_gpu_service.py": "9332db586f64316bfeb82e45de09b9a88f9f859f8141cdeee56444720a8ff245",
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "lab/llm/native_runtime.py": "9ae0374c883e9ba518d08449820050354ac7c6618d864a5681374fe467062411",
+    "lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1",
+    "lab/llm/router.py": "0c5caf16c0e395b16a62625fc98d7f78ed35a690d689bb68097bece4d859e874",
+    "lab/operating_modes/DELIVERY.md": "550b594494d80b8983dec8538b525039449a1bceb1b8bf4cb80f2b3d228d90c2",
+    "lab/operating_modes/__init__.py": "3e7e185037319cbdc8047f95f6c62c51fc75a74a42f4b0fc518ee74137fbac2f",
+    "lab/operating_modes/candidate.py": "50413500a05801fb823bef0d546b6549d4e8b6fa28196ebe67ed2ddb77601b8b",
+    "lab/operating_modes/contracts.py": "342633af789ab4ee9c554dcf662a2a83927121691ca07028ea2d6449650b94ef",
+    "lab/operating_modes/evaluation.py": "4ec71027743e5a921e8795afc318c6a584abc91371d13455ac48aa40491a5b01",
+    "lab/operating_modes/model.py": "1db2f1b9c09189bc84a30f96da6cbe7feff1e074421482f594868024ca3f2e64",
+    "lab/operating_modes/snapshots.py": "cebb89719a809722732b3ad8ca977a9df1794c8d57092a7af905991e3828e62b",
+    "lab/referee/__init__.py": "f09a6e041b8ad74485df8868b2dc0a12c9a5999b62d45238caa4845247498a48",
+    "lab/replay.py": "300ac20b98346643a5f33048e659725cdd5d551cdf6133c65c52a79b77a2b676",
+    "lab/reporting.py": "dbf26e4fab99c99ba2385db47a8626e11849dc97b3c20a220633c54f81431a1a",
+    "lab/sandbox/__init__.py": "bd427df6fb5df35ac056fe351025b24ea3a18a2935eb904b48723ecd463cc0f7",
+    "lab/sandbox/candidate_entrypoint.py": "51c6805c91f597d7d247f88b8b937cd2ce205ca0e6009f74abd665c07a0a59a7",
+    "lab/sandbox/docker_runner.py": "2127f6669064e36eb8168531db1384de8f99841d10e9c5600a8da203b64248ca",
+    "lab/sandbox/evaluation.py": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c",
+    "lab/sandbox/sandbox_wrapper.py": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+    "lab/scorer/__init__.py": "0f6e4bbd979497b6e287f4a10c91c66b9c432675c1bdc4d1d36a4462ebd6373b",
+    "lab/scorer/baseline_report.py": "25bc4488b72f892d3cf5654868dd6506d66f5552ae61cc524541f0e542645483",
+    "lab/scorer/care_calibration.py": "3af4d19467be4125b058f05316947bd1de836ef90c838d8f77eac77d4a9f453b",
+    "lab/scorer/care_calibration_supervisor.py": "0b2b48c9f3fabc6a9d9e9fb76b9879f316d8a3cab1d648f60083645a943fd064",
+    "lab/scorer/care_calibration_worker.py": "f2da3f2e4e3eed940620f4ffc2c558796103db9bc46e6752f5df0d4b511a325a",
+    "lab/scorer/care_holdout.py": "fbb458cbfd32318e39046575994c2ecb6c5d477172afe41fbb7529f22198e827",
+    "lab/scorer/holdout.py": "638decbd7d417e891a1319380a2696843e925dcdcaec9e18b08db7acc784374c",
+    "lab/scorer/holdout_recovery.py": "ac2d11f60372a3db6581adc2b644f7e33eedeecc29196db9eea5d659111f57b1",
+    "lab/scorer/holdout_supervisor.py": "d0d4fab4aeef4859989e24927e8ce1f6594567d8c4595dde2125546c414d02a0",
+    "lab/scorer/holdout_worker.py": "ae37f8a3ddce57dbaa85700a064958dfad33ac06a53fd06b06014089ddcbe840",
+    "lab/scorer/jobs.py": "db53b2b11e3a8c8220417bf361289b8f8652fff840213e0c8465d60e46354ad7",
+    "lab/scorer/mode_diagnostics.py": "56ba9cffd6d238aa4f98a7e247e7d55ea118648c66c7de0760644fbcb789d663",
+    "lab/scorer/mode_snapshot.py": "f3658ead41eb7131d63a3eb343f1a4339141336ae748a1b43662b25c8f1520a4",
+    "lab/scorer/mode_snapshot_worker.py": "eca457af69ea1b22a76ebac6a4a638dc4eb2c9f554954dcde40fda0c5dbb0c3c",
+    "lab/scorer/service.py": "dd7b7eb4d9ce94ee904302f076b5964606d2b488c7143c2d554519e81f8b7727",
+    "lab/scorer/supervisor.py": "40fc09b4fce384ec636383454b28cd6a4748181ab2c55d496f8f40753eb3c2bf",
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/worker.py": "f663a1417be27a872d1857e676310bb1066b4c81c5e6c5ce59ba45d764a6ed9f",
+    "lab/suite_limits.py": "7346f938ad21eef8e0eb633335d0618211ae893560d1c11b59c2b4360d1b49c2",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "4cb3b417b008b8406c2c34376f581f6c85c502c8885129bc49e68aeb9acd24ce",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b",
+    "ops/sandbox-image.lock": "6ee52fdd98e2221ef8e569aaa9fc4b7774faa187cda59ed3932792aa0b4c3b1e",
+    "pyproject.toml": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+    "tests/director_dispatch_owner_review.py": "bfb556a9be13dfc91d87720841cf416721e7348d1d186e61063a3f3cd5b42054",
+    "tests/director_recovery_owner.py": "39546a578338de5154cb821108254e13ae84a8b027f0d3a9d4c3fe1a109dff0d",
+    "tests/test_alarm.py": "bd30430d75351fc9f0a7f29f901a3847fb41702b54ed49180597cc0c31c9d10d",
+    "tests/test_analytics_statistics.py": "ee0c20d0f1c2388960d09768ba2a7728dbcaa2a0919adcc0002997b624d003d0",
+    "tests/test_aos_gpu_executor.py": "9f3ef33635f1f600831c1003295e823656be2b1bf54008c648137b96ed222bf1",
+    "tests/test_api_and_scorer.py": "6a9899179d48693f769a5b4597293042c5db567eda20bc663c767605f4f74233",
+    "tests/test_baseline_admission_cli.py": "f95570bb2fcf57a18ddd6d36dda0c2c47f28da12dd60d47f5cc6d8b0a3b94e94",
+    "tests/test_baseline_dispatch.py": "42b81a813e58297c148e63d41719b29f5dbad96e1de6a926875e1a811e435b29",
+    "tests/test_baseline_stop_safety.py": "bf55549ba2c02ed87c3458435ff0298972f68b0a0e6fb306698c393d53578fc9",
+    "tests/test_baselines.py": "9a159fecc5e55e89f1cf9da7def7341719e5042c8c271d08db8a264d22583935",
+    "tests/test_blob_store.py": "ee06310820532b1defa064718d9d29717c53897233aef07708e46e6a7368eb02",
+    "tests/test_care_baseline_calibration.py": "a5ade83a09517c24b522f59795ec8c91ed2ee199dbd3ece7b2b3ca86e28b5305",
+    "tests/test_care_calibration031_pg_runner_safety.py": "cd3975070da9fba6f1d25df5fe00986d699a6ce39c933b3ea38fe91c814244bc",
+    "tests/test_care_holdout.py": "31fc053d72e4b47bd2e10e6d02e9f0421925bdc1d4cc9d27c47f3945c3719202",
+    "tests/test_console_acceptance.py": "f68c3b2b7ef12d3b41a6228ca0363a4c4dc46a8015433261c5dcd44824f66732",
+    "tests/test_console_checks.py": "c03e26212f3036157500332947424330ac8efe00cf7cc1d18d6d55a7ee698e8a",
+    "tests/test_console_host.py": "23d38a0dfa8165da5f772a443614305f1fde37a477963b01f227cd6862e74bc9",
+    "tests/test_console_upstream.py": "13dd9db05f5eeb5fe92e09c4e9e5ca8bb543f207f49081a769c8fce3b50c3d54",
+    "tests/test_director_artifacts.py": "e55369bccaf42a8115d86b4b2948aa1ae5d9d9734f012423fb5efc54934f27a9",
+    "tests/test_director_baseline_records_review.py": "63c8d3138b288583a5f0c491fa0898a84e3cc006bc10c88815cc7531992d2a1b",
+    "tests/test_director_budget_review.py": "3a361b4d642234bb1e1132b086e3ea26a995787ddc99ccd16079491dbf197a64",
+    "tests/test_director_confirmation_review.py": "25c7362bb2436d86d51a86200a78d68cb0f12709ab21eb5eddfbf20e4bf0f3b2",
+    "tests/test_director_contracts.py": "26b0c6e3741f5861650d5a4fbd7e3438d2e4a5326cbab0be8943211562b4e623",
+    "tests/test_director_dispatch.py": "46d9b61967673304a029563dc9ab07addb2f66e84704fc605742ed280ad8e942",
+    "tests/test_director_dispatch_owner.py": "ef0af84295ed9f2c776f595cd138da4090f5f2bf4f3358d035df8e37d3723a24",
+    "tests/test_director_execution_ownership.py": "1f2fd081a168597ca1e12c8aa711202d4380aedd3168f883e6b5fd8c7b488f83",
+    "tests/test_director_harness_mismatch.py": "8e8aeb72c8daeb7edec8989037bbf2fd6b76f21407dffe472c650b7586936ee5",
+    "tests/test_director_loop_core.py": "cdc6b3872b9d146eea9e4c0e09f665f03914f6e489233ac160ded9caf0b6d606",
+    "tests/test_director_loop_strategy.py": "a176cc868eba83b535af203e28583caff424007f4c03d99851a5a200676f1e9d",
+    "tests/test_director_parent_seed_review.py": "0e820fb1163390de09c2ceecce129d6ba2fbfa6fed1cac254a788f1ff061389d",
+    "tests/test_director_primary_recovery.py": "69e8cb095982cb09aef463b8d4d6e3cf9d9d5337c87a2f462bc4f6ecab87890a",
+    "tests/test_director_provider_overrun.py": "be2b8b36a7a445b602b6ebd4202ad5c9376e761c88455c5056126321aa798049",
+    "tests/test_director_recovery_identity.py": "5197e72347eeb9c764fe53b67dcffc00c1df4eecb2395aa65f086fbb230a876e",
+    "tests/test_director_recovery_pg_review.py": "9671220d6e5d5761cb2fd6c0eba0d8a97f195c2905050cd48627ba02f8a99ce7",
+    "tests/test_director_seed_resume_review.py": "bbdedf3597e40065a3a7a074a3b775ca41be7d4cd2e26a87c3607e964ecc7d03",
+    "tests/test_director_simplicity_review.py": "5c0a0c59ce86abad29c2af45ef8433388e44050a88a5680dd77da04fedd543dd",
+    "tests/test_director_strategy.py": "6de52a376904c1eca7113aeb867a55c88272bf3190daa5ca854aa3e81a3fa62e",
+    "tests/test_evaluation_guards.py": "ceb4db70743b378153cd4536c1d791562e8787f53ae6c00861d2570882de12e7",
+    "tests/test_evt_masks.py": "f91a53480b8c365845169e8c7fac32038b94059f0ec4f86d2d7898c6edc7030a",
+    "tests/test_fingerprint.py": "736f1adce78ea3558d8be34dfd4b7c254f9f1d5052f6c97a3985e9c5baacb691",
+    "tests/test_gpu_scheduler.py": "09d1586e2d82f0d1fd5adcf0a7452500684fe7672a3946c3458db06ec6d46935",
+    "tests/test_holdout026_closure_contract.py": "f5aa77dd909a725809df7e9d9e8ca1dcf9b375f7114b628e0ab4dbf4874451b5",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "54f66568af4f5b5b212e71645d74a54874d6dd658f7b5079a12bad7067063edb",
+    "tests/test_holdout030_lifecycle_review_preflight.py": "6b2d3542b42a5eb180bbf5d8e76106d5b1582aa374ca5264a71e6b36af9d4d6d",
+    "tests/test_holdout_loop_recovery.py": "31eb912489bc75c384cae77edea89a5ef5b6ee56e86a562a189e086961a26f95",
+    "tests/test_holdout_privacy.py": "b68b79190a2d12ad8bad5969f24174646c46ffce51504026b249fc6f8d968835",
+    "tests/test_holdout_recovery.py": "a0df42a560ff0cecf1f24911fa2510ca5216d9fbcd67c8362d3000490d738d49",
+    "tests/test_local_qwen_provider.py": "bb66717c044fcbdb057d7306c3208b158800c662908515d10a431f354670600b",
+    "tests/test_loop_family_primary_score.py": "cf976948e47f2bdb2b98064346e1f98606accb7e2882f6c771c74b38db0ae9a8",
+    "tests/test_mode_experiments041.py": "1e1a8be22669da9e05f2d24268dcea44fa46d5beff9fdcc7d961d38cd76fd288",
+    "tests/test_mode_snapshot_install028.py": "4532638ee16d2c4768fc690bb7299b2fe1a4c1afad4d241c2b638fb745e58c51",
+    "tests/test_native_runtime.py": "b9dfc2d7d0d80be197c71fc0cb8325a85007b6ba779eadca1ed09aba64a6b46a",
+    "tests/test_operating_modes.py": "c6c3d3053346a2e1a5f111670d029ed91f1be678948652322ab929a32a1d8996",
+    "tests/test_postgres_care_calibration.py": "33cebb03e4784ec4f1009e46365c7ca3c7dc9cd379f950c67563cee9a023b790",
+    "tests/test_postgres_care_farm_b_registration.py": "db4f548e1ea258e70da79b26c0ff520fa46126b545151749ff93912cfadb3846",
+    "tests/test_postgres_holdout026_closure.py": "f681cfdcb30450ad7014f4a15d92645aa35a688ba7428e3a71fc16fb41e856e2",
+    "tests/test_postgres_holdout030_journal.py": "80ea2cbb76e5e1809f9bd54e9368585558bbbc1c29577995ab688840848fec9a",
+    "tests/test_postgres_holdout030_recovery.py": "42822137255cbaa9c9c1011d74ff74ed4b97e83f9290e35fb99f98a19b7bf371",
+    "tests/test_postgres_holdout034_chain.py": "f3a1ab45d0b6d958f04ca14b8527c21d65055b3a2bb6693699a75b3cf5b04911",
+    "tests/test_postgres_holdout_api_identity.py": "9b0dbb2cfa8118b2d5da7af2bf9bc85d33e3375ca5fec05a585104cc625922cb",
+    "tests/test_postgres_mode_snapshot_install.py": "7fd9d7102adceec77d41aba539f36eaa7b6750566b2f48f597160ec2da57fc65",
+    "tests/test_postgres_public_family_scorer.py": "c568fb72acd5885996bd9390cac4ab71d554c60351b821b810f3349e306f71a3",
+    "tests/test_postgres_run_end_unavailable.py": "2fca28f61e3f21a68f1a8cfd050cbff6989f68206d3a00b50145e0651ef2dfff",
+    "tests/test_postgres_scorer_integration.py": "6b84ddb4525f150def6d055e3a3df16051c7b5fcff4b0044b7337556b7817564",
+    "tests/test_postgres_terminal_finalization037.py": "76a937a516e6847fbca95994c8280b7e5fc57bc900c5ac3a925af203ff7975f2",
+    "tests/test_public_data.py": "de78279f0df5234fad77419f3e18825c5f168c9a0e6a9fb7563c593bcb3099b4",
+    "tests/test_public_label_batching.py": "dd250073db1b5cd087bc541b72a58ca57cfcce2466bbdd46a8aa88cfc5960044",
+    "tests/test_public_scorer_families.py": "09eac1af87d1492ea713d221a36e5caf82adc2f1d1e8511441c0130998d2dfb8",
+    "tests/test_referee.py": "a73425086cf93e1d7073b1723471cf5027667c4e381d0c888cc1b14b8ff0de65",
+    "tests/test_referee_cumulative.py": "26256b82da75fd5e2c5ac778fb138ed4b9d155a214d09c1ca40e359784dba921",
+    "tests/test_report_replay.py": "ff731fc18b6de8a479a070dc0ae6084475eb481a09da16f6f3a30dabaabbd688",
+    "tests/test_runner_family_measurement_checkpoint.py": "d7e62880bd351562d0f72303d434e3388c707e22b5cdfdfc426d009830dac51e",
+    "tests/test_sandbox_runner.py": "915a828c4ceba91fd53d5e872a34ed22bcc7fa14f49458d87cb11abbe618e730",
+    "tests/test_scorer_finalizer_identity.py": "1e945ec1de1cc7942db46c9f71c0227795c321485f04bc281e2c4a95fca122ad",
+    "tests/test_scorer_invocation.py": "29f3fbcc2b6383c9c06f59e3afc430a7f92a5a24f043eab811bf84f8c0ba01cd",
+    "tests/test_shared_gpu_runtime_db.py": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f",
+    "tests/test_suite_guards.py": "0c037390db4fcefc8c3b4da267c6ec3537492279ae780e4e30dcee529150917c",
+    "tests/test_suite_manifest.py": "ffb0dcd39ea2d746951b180bf327c2c5a7a0e117a5489b9fe2b15d71ed5b67b0",
+    "tests/test_suite_weights.py": "c4626d46b3cfbe042ee56a9756f4af5e52683959ce2d48133d6d8e46367fc85d",
+    "tests/test_terminal_finalization037.py": "574fc7ac609022cf42fd0ea9cc21ed9d5ce9ce31eb5b3aaa8816e9e81f9c18ec",
+    "tests/test_training_maintenance.py": "2f6ae792a7d71709b031a02836ae4ecd1b83e8c79e1127b5c47385f72a792270",
+    "tests/test_tsb_source_order_split.py": "123f17594f109e7d01465154230de10cf362bff6e2350663e30376285025b5e1",
+    "tests/test_vus_golden.py": "b41cbe95e39153a69abf5d91854261025fcf443b81b86dab8ce9298161325f45",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5",
+    "vendor/__init__.py": "c6a56bc9e54e8248bb2f9294d394f7869e1f2959e1e7ebb17054b089da0546aa",
+    "vendor/tsb_ad_eval/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "vendor/tsb_ad_eval/NOTICE.md": "af8de8404b18d0a033fb5f5aeb8cb5148969b47f88ada2674d916324d5baf0fa",
+    "vendor/tsb_ad_eval/__init__.py": "e758702baf9c178c1c15542ce10d160b06c8ed2e0ab631738caa87d5daf4cf08",
+    "vendor/tsb_ad_eval/basic_metrics.py": "1fcddedf5ada1d5221f39ee568c7fddb9e7181bd7e1c19636c2cbecf40c97707",
+    "vendor/tsb_ad_eval/basic_metrics.pyi": "dee1dc8e503b5e815b5161d5c9646931ae61544b42ab2e3a9b6c9c5bf39ef0a1"
+  },
+  "sql_instance": [
+    "swapp_lab_m0_holdout_030_045_73b39639193f",
+    "172.17.0.2",
+    5432,
+    "2026-09-27 08:16:27.460043+00"
+  ],
+  "test_execution": {
+    "all_collected_tests_passed": true,
+    "collected_test_count": 32,
+    "collected_test_ids": [
+      "tests/test_postgres_mode_snapshot_install.py::test_scorer_snapshot_install_success_and_exact_retry",
+      "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change0]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change4]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change5]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change6]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change7]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change8]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change9]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change10]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change11]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change12]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change13]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change14]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change15]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_wrong_hash_noncanonical_and_stale_labels_leave_rows_unchanged",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[profile]",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[labels]",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[semantics]"
+    ],
+    "deselected_test_ids": [],
+    "executed_test_count": 32,
+    "executed_test_ids": [
+      "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[labels]",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[profile]",
+      "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[semantics]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change0]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change10]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change11]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change12]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change13]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change14]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change15]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change4]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change5]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change6]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change7]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change8]",
+      "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change9]",
+      "tests/test_postgres_mode_snapshot_install.py::test_scorer_snapshot_install_success_and_exact_retry",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-1]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-2]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-3]",
+      "tests/test_postgres_mode_snapshot_install.py::test_snapshot_wrong_hash_noncanonical_and_stale_labels_leave_rows_unchanged"
+    ],
+    "phase_outcomes": [
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_scorer_snapshot_install_success_and_exact_retry",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_scorer_snapshot_install_success_and_exact_retry",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_scorer_snapshot_install_success_and_exact_retry",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_director_planner_cannot_execute_snapshot_rpc[2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_profiles-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_labels-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_rpc_adds_no_direct_table_write_grants[dataset_task_semantics-3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change0]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change0]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change0]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change1]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change2]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change3]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change4]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change4]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change4]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change5]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change5]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change5]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change6]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change6]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change6]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change7]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change7]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change7]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change8]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change8]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change8]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change9]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change9]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change9]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change10]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change10]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change10]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change11]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change11]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change11]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change12]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change12]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change12]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change13]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change13]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change13]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change14]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change14]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change14]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change15]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change15]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_invalid_snapshot_bundle_never_changes_existing_rows[change15]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_wrong_hash_noncanonical_and_stale_labels_leave_rows_unchanged",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_wrong_hash_noncanonical_and_stale_labels_leave_rows_unchanged",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_snapshot_wrong_hash_noncanonical_and_stale_labels_leave_rows_unchanged",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[profile]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[profile]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[profile]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[labels]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[labels]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[labels]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[semantics]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "setup"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[semantics]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "call"
+      },
+      {
+        "nodeid": "tests/test_postgres_mode_snapshot_install.py::test_existing_registration_conflicts_are_not_repaired_or_overwritten[semantics]",
+        "outcome": "passed",
+        "wasxfail": null,
+        "when": "teardown"
+      }
+    ]
+  },
+  "test_exit_code": 0,
+  "test_output": "................................                                         [100%]\n32 passed in 2.59s\n",
+  "test_passed_count": 32,
+  "test_sha256": {
+    "tests/test_postgres_mode_snapshot_install.py": "7fd9d7102adceec77d41aba539f36eaa7b6750566b2f48f597160ec2da57fc65"
+  },
+  "test_skipped_or_deselected": false,
+  "test_targets": [
+    "tests/test_postgres_mode_snapshot_install.py"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "gpu-lease-review.v1",
+  "scheduler_source_sha256": "0643dc61df4d7c62e03a1936322b0865640d4cef273b3d83db2e98b10b4d157c",
+  "scenario": "two actual CPU processes; simulated resource owner, no GPU/model",
+  "old_lease": {
+    "fencing_token": 1,
+    "owner": "lab"
+  },
+  "new_lease": null,
+  "old_owner_process_still_alive": true,
+  "new_owner_exit_code": 0,
+  "expired_live_owner_handoff_blocked": true,
+  "trusted_recovery_without_verifier": false,
+  "acceptance": "quarantine regression only; no real GPU capacity or coexistence evidence"
+}

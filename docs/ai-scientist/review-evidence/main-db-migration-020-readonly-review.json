@@ -1,0 +1,21 @@
+{
+  "checked_at_utc": "2026-09-25T07:18:54.650857+00:00",
+  "database": "swapp_lab",
+  "main_source_has_migration_0016": false,
+  "main_source_has_migration_0018": false,
+  "profile_family_counts": [
+    {
+      "count": 8,
+      "task_family": "EVT"
+    }
+  ],
+  "recovery_owner_table_present": false,
+  "required_integration_action": "Reconcile this historical temporary 0018-on-0015 state with the final 0015\u21920016\u21920018 migration chain before applying integrated recovery/public code. Do not modify existing runs or fabricate migration success.",
+  "revision": [
+    "0018_public_task_semantics"
+  ],
+  "schema": "main-db-migration-readonly-review.v1",
+  "scope": "Read-only observation; no schema, role, run, or score changed.",
+  "semantics_rows": 0,
+  "view_sha256": "9fa3f53dd5db12d3630f7c9ea56c61fdb1ec4cedcfc84b1df2df8ec6f4f7e61b"
+}

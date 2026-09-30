@@ -1,0 +1,152 @@
+{
+  "schema": "console034-connected-bootstrap.v1",
+  "checked_at": "2026-09-27T07:47:00.967727+00:00",
+  "main_commit": "7ca5334",
+  "url": "http://127.0.0.1:8788",
+  "api_url": "http://127.0.0.1:8766",
+  "database": "swapp-lab-postgres-m0 / swapp_lab / 127.0.0.1:55432",
+  "database_limits": {
+    "memory_bytes": 536870912,
+    "cpus": 1,
+    "pids": 128
+  },
+  "migration": {
+    "before": "0018_public_task_semantics",
+    "after": "0026_holdout_execution_owner",
+    "actual_exit_code": 0,
+    "chunk": "f46b34",
+    "historical_row_count": 2,
+    "historical_tables_count": 18,
+    "historical_identity_state_and_table_counts_preserved": true,
+    "backup_path": "data/runtime/console-bootstrap-034/pre-034-ledger.dump",
+    "backup_sha256": "600247069359df395c75d22e0dea4cbbfbad66a91921511f08fd8af19f75b95a"
+  },
+  "private_principal_path": "data/runtime/console-bootstrap-034/principals.json",
+  "registry_path": "data/runtime/console-bootstrap-034/registry.json",
+  "profile_count": 4,
+  "label_row_count": 512,
+  "fixture_id": "82a5c426-0c92-4761-aeea-859e57a03399",
+  "models_enabled": false,
+  "units": {
+    "swapp-ai-scientist-api.service": {
+      "ActiveState": "active",
+      "InvocationID": "fff2adcbbf834673979c30cdc1618551",
+      "MainPID": "1531165",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "1073741824",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    },
+    "swapp-ai-scientist-director-drain.service": {
+      "ActiveState": "active",
+      "InvocationID": "c32e1723559042ff90b42dc3f89e9b14",
+      "MainPID": "1531168",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "2147483648",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    },
+    "swapp-ai-scientist-console.service": {
+      "ActiveState": "active",
+      "InvocationID": "050efa5cde1c4d77af4dad1870ce5b00",
+      "MainPID": "1531548",
+      "CPUQuotaPerSecUSec": "500ms",
+      "MemoryMax": "536870912",
+      "MemorySwapMax": "0",
+      "TasksMax": "64",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    }
+  },
+  "browser": {
+    "flow": "Console -> Deneyler -> Yeni deney -> CPU baseline -> durable run status",
+    "browser_path": "Browser plugin not available; cached Playwright Chromium",
+    "viewports": [
+      {
+        "width": 1505,
+        "height": 1045
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "checks": {
+      "page_identity_nonblank": true,
+      "no_framework_overlay": true,
+      "desktop_no_horizontal_overflow": true,
+      "actual_baseline_admitted": true,
+      "mobile_no_horizontal_overflow": false,
+      "console_health": true
+    },
+    "url": "http://127.0.0.1:8788/",
+    "title": "AI Scientist · Kontrol merkezi",
+    "start_status": 202,
+    "request": {
+      "suite": "synthetic.baseline-proof.v1",
+      "program_version": "fixture-v1",
+      "idempotency_key": "52e54d56-95f0-4c9d-873d-3e109d46d369",
+      "budget": {
+        "experiments": 0,
+        "wall_seconds": 1800,
+        "model_tokens": 0
+      }
+    },
+    "start": {
+      "run_id": "26c9e91f-6db4-4733-bcb9-7ab698b2021b",
+      "state": "queued",
+      "reused": false
+    }
+  },
+  "browser_actual_exit_code": 1,
+  "browser_launch_chunk": "58aa75",
+  "browser_final_chunk": "b21def",
+  "browser_session": 8084,
+  "browser_failure": "Mobile horizontal overflow after admitted run; new UI worker fixing it. First attempt failed exact-label test locator before admission.",
+  "scope": "Actual browser -> authenticated main API -> durable Director -> real Docker -> independent Scorer -> completed36measurement report; locally synthetic baseline only. Mobile row overflow remains pending041. Not operating-mode UI, full agent, model or AOS acceptance.",
+  "completion": {
+    "checked_at": "2026-09-27T07:55:08.299926+00:00",
+    "actual_report_browser_session": 50987,
+    "launch_chunk": "002e86",
+    "final_chunk": "3183da",
+    "process_exit_code": 0,
+    "browser": {
+      "flow": "Existing baseline -> live completion -> Rapor -> verified report",
+      "run_id": "26c9e91f-6db4-4733-bcb9-7ab698b2021b",
+      "errors": [],
+      "checks": {
+        "report_rendered": true,
+        "completed_status": true,
+        "no_framework_overlay": true,
+        "no_console_errors": true,
+        "desktop_no_horizontal_overflow": true
+      },
+      "status": {
+        "run_id": "26c9e91f-6db4-4733-bcb9-7ab698b2021b",
+        "origin": "local",
+        "state": "completed",
+        "created_at": "2026-09-27T07:44:50.985760+00:00",
+        "updated_at": "2026-09-27T07:53:18.073598+00:00",
+        "stop_requested": false,
+        "report_sha256": "0322a9f36dbcdc71d8750e81a2d30ee96ee55efb116e2b68cfec10c6b2769261",
+        "purpose": "baseline"
+      }
+    },
+    "report_file": "docs/ai-scientist/review-evidence/console034-completed-baseline-report.json",
+    "report_file_sha256": "45c07b8ee388404ac549dc43c87816d87618587a74675a330e80ab7693b66131",
+    "report_sha256": "0322a9f36dbcdc71d8750e81a2d30ee96ee55efb116e2b68cfec10c6b2769261",
+    "db_report_equal_to_api": true,
+    "typed_report_valid": true,
+    "scorer_rows": 36,
+    "model_usage": {
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "main_source_unchanged": true,
+    "screenshot": "/tmp/ai-scientist-console034/completed-report.png"
+  }
+}

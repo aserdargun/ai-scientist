@@ -1,0 +1,84 @@
+{
+  "schema": "care-farm-a-status-policy-review.v1",
+  "base_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "scope": "Read-only source interpretation followed by isolated CARE Farm A materialization; no task was removed, relabeled, window-selected, or scored.",
+  "source": {
+    "dataset_record_url": "https://zenodo.org/records/15846963",
+    "dataset_version": "v6",
+    "archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+    "source_manifest_sha256": "55433394759fee3782eb51c8350446561268acd837f2d44624d07a8b1505ec20",
+    "local_readme_member": "CARE_To_Compare/README.txt",
+    "local_readme_sha256": "0bc9fa689cb28a6fa1439d15047f7f6b77beca53614a304bc86494f8dd6b9456",
+    "official_note_excerpt_under_25_words": "In wind farm A status_type_id labels can be ignored while evaluating prediction time frames of error events with metrics like the CARE-score.",
+    "interpretation": "The v6 record says Farm A status_type_id is derived from the EDP failure logbook and intended for training-data filtering. Therefore it is not an evaluation mask for Farm A; source gaps and missing selected measurements remain masked. Training still uses only statuses 0 and 2."
+  },
+  "related_author_source": {
+    "url": "https://aefdi.github.io/EnergyFaultDetector/care2compare_faq.html",
+    "relevant_sections": ["General label semantics", "Which timestamps are used for pointwise evaluation?"],
+    "interpretation": "The author-maintained FAQ distinguishes event_label ground truth from status_type_id and says prediction-time status exclusion applies to Farms B/C, not Farm A."
+  },
+  "implementation": {
+    "old_public_data_sha256": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021",
+    "new_public_data_sha256": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "old_public_suite_sha256": "8c1a037dae49022949ea0a02b004179389f2349fbc7ccd4b4484a64a99f2a992",
+    "new_public_suite_sha256": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "changed_identity": {
+      "feature_policy": "care_named_physical_averages_train_status_only.v3",
+      "split_policy": "care_Adev_train_healthy_embargo_1day_prediction_status_eval_ignored.v3",
+      "public_suite_id": "public-ad-v1",
+      "public_suite_version": 3,
+      "task_session_suffix": "farm-A-status-eval-ignored.v3"
+    }
+  },
+  "validation": {
+    "synthetic_regression_command": "pytest tests/test_public_data.py tests/test_suite_manifest.py",
+    "synthetic_regression_exit_code": 0,
+    "synthetic_regression_passed": 10,
+    "ruff_command": "ruff check harness/public_data.py lab/director/public_suite.py tests/test_public_data.py",
+    "ruff_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "all_22_source_materialization": {
+      "command_scope": "materialize_care_development(repository_root=/home/cachyos/ai-scientist); isolated review worktree code; no database writes",
+      "systemd_unit": "swapp-care-mask-review-1790330159.service",
+      "actual_exit_code": 0,
+      "wall_seconds": 10.574,
+      "cpu_seconds": 8.997,
+      "memory_peak": "403.6M; swap 0B",
+      "task_count": 22,
+      "pdm_count": 12,
+      "nrm_count": 10,
+      "all_pdm_have_unmasked_evaluation": true,
+      "all_pdm_have_unmasked_positive_event_samples": true,
+      "all_nrm_have_unmasked_evaluation": true,
+      "task_exposure": [
+        {"task_id":"care-a-000","family":"PDM","samples":2881,"masked":43,"healthy_unmasked":2838,"positive_unmasked":2012},
+        {"task_id":"care-a-010","family":"PDM","samples":1297,"masked":28,"healthy_unmasked":1269,"positive_unmasked":981},
+        {"task_id":"care-a-013","family":"NRM","samples":3583,"masked":0,"healthy_unmasked":3583,"positive_unmasked":0},
+        {"task_id":"care-a-014","family":"NRM","samples":1901,"masked":0,"healthy_unmasked":1901,"positive_unmasked":0},
+        {"task_id":"care-a-017","family":"NRM","samples":2793,"masked":12,"healthy_unmasked":2781,"positive_unmasked":0},
+        {"task_id":"care-a-022","family":"PDM","samples":1153,"masked":5,"healthy_unmasked":1148,"positive_unmasked":1005},
+        {"task_id":"care-a-024","family":"NRM","samples":2715,"masked":1,"healthy_unmasked":2714,"positive_unmasked":0},
+        {"task_id":"care-a-025","family":"NRM","samples":2423,"masked":0,"healthy_unmasked":2423,"positive_unmasked":0},
+        {"task_id":"care-a-026","family":"PDM","samples":1441,"masked":0,"healthy_unmasked":1441,"positive_unmasked":1009},
+        {"task_id":"care-a-003","family":"NRM","samples":3302,"masked":0,"healthy_unmasked":3302,"positive_unmasked":0},
+        {"task_id":"care-a-038","family":"NRM","samples":2689,"masked":145,"healthy_unmasked":2544,"positive_unmasked":0},
+        {"task_id":"care-a-040","family":"PDM","samples":4975,"masked":36,"healthy_unmasked":4939,"positive_unmasked":4508},
+        {"task_id":"care-a-042","family":"PDM","samples":1585,"masked":2,"healthy_unmasked":1583,"positive_unmasked":1007},
+        {"task_id":"care-a-045","family":"PDM","samples":1441,"masked":1,"healthy_unmasked":1440,"positive_unmasked":1008},
+        {"task_id":"care-a-051","family":"PDM","samples":2393,"masked":0,"healthy_unmasked":2393,"positive_unmasked":1673},
+        {"task_id":"care-a-068","family":"PDM","samples":2305,"masked":10,"healthy_unmasked":2295,"positive_unmasked":2014},
+        {"task_id":"care-a-069","family":"NRM","samples":2593,"masked":0,"healthy_unmasked":2593,"positive_unmasked":0},
+        {"task_id":"care-a-071","family":"NRM","samples":2449,"masked":0,"healthy_unmasked":2449,"positive_unmasked":0},
+        {"task_id":"care-a-072","family":"PDM","samples":2017,"masked":0,"healthy_unmasked":2017,"positive_unmasked":1009},
+        {"task_id":"care-a-073","family":"PDM","samples":1729,"masked":0,"healthy_unmasked":1729,"positive_unmasked":1009},
+        {"task_id":"care-a-084","family":"PDM","samples":1441,"masked":4,"healthy_unmasked":1437,"positive_unmasked":1005},
+        {"task_id":"care-a-092","family":"NRM","samples":1774,"masked":0,"healthy_unmasked":1774,"positive_unmasked":0}
+      ]
+    }
+  },
+  "limitations": [
+    "This verifies source materialization and scorer exposure counts, not public Scorer execution or holdout acceptance.",
+    "The repaired policy is specific to CARE Farm A; this change must not be applied to Farm B or C.",
+    "All CARE event records remain present. Eligibility was not selected using candidate scores."
+  ]
+}

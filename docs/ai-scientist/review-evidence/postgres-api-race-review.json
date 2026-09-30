@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-09-24T10:09:23.914701+00:00",
+  "scope": "Real PostgreSQL + actual FastAPI app via in-process ASGI; no HTTP listener or AOS/model claim.",
+  "source_sha256": {
+    "lab/api/app.py": "ea75b417eb3054878382c4f2c8b1248b705471395029ae48c8e6e67181860490",
+    "lab/api/contracts.py": "f807717214e2af070c5877bd57256070c936a712ab5e369b7cfa1cc536283823",
+    "lab/db/schema.py": "b3078736fdf4bddf289d255ce28e9527ea6d0d3a228f69309809b532aa3f5542"
+  },
+  "checks": {
+    "unauthenticated_rejected": true,
+    "one_created_one_reused": true,
+    "same_run_id": true,
+    "changed_payload_rejected": true,
+    "foreign_owner_hidden": true,
+    "stops_idempotent": true,
+    "restart_does_not_restart_work": true,
+    "one_durable_run": true,
+    "one_accept_one_stop_event": true,
+    "source_stable_during_probe": true
+  },
+  "concurrent_starts": [
+    {
+      "http_status": 202,
+      "body": {
+        "run_id": "40dfcf26-9ed4-452e-8b84-2ddfdbbeecfa",
+        "state": "queued",
+        "reused": false
+      }
+    },
+    {
+      "http_status": 200,
+      "body": {
+        "run_id": "40dfcf26-9ed4-452e-8b84-2ddfdbbeecfa",
+        "state": "queued",
+        "reused": true
+      }
+    }
+  ],
+  "concurrent_stops": [
+    {
+      "http_status": 200,
+      "body": {
+        "run_id": "40dfcf26-9ed4-452e-8b84-2ddfdbbeecfa",
+        "origin": "local",
+        "state": "stop_requested",
+        "created_at": "2026-09-24T10:09:23.953982+00:00",
+        "updated_at": "2026-09-24T10:09:23.975816+00:00",
+        "stop_requested": true,
+        "report_sha256": null
+      }
+    },
+    {
+      "http_status": 200,
+      "body": {
+        "run_id": "40dfcf26-9ed4-452e-8b84-2ddfdbbeecfa",
+        "origin": "local",
+        "state": "stop_requested",
+        "created_at": "2026-09-24T10:09:23.953982+00:00",
+        "updated_at": "2026-09-24T10:09:23.975816+00:00",
+        "stop_requested": true,
+        "report_sha256": null
+      }
+    }
+  ],
+  "reopened_app_start": {
+    "http_status": 200,
+    "body": {
+      "run_id": "40dfcf26-9ed4-452e-8b84-2ddfdbbeecfa",
+      "state": "stop_requested",
+      "reused": true
+    }
+  },
+  "stored_run_count": 1,
+  "stored_events": [
+    "run.accepted",
+    "run.stop_requested"
+  ],
+  "cleanup_deleted_probe_runs": 1,
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_postgres_api_races.py",
+  "script_sha256": "19606ef1c8429b78090c814dc032b54324d9d30a5b6ec48985ec0d783e8bb1f2"
+}

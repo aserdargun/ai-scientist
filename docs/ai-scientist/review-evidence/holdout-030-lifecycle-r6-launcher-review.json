@@ -1,0 +1,32 @@
+{
+  "schema": "holdout-lifecycle-launcher-source-review.v1",
+  "created_at": "2026-09-27T00:26:42.512977+00:00",
+  "reviewer": {
+    "agent": "astra_thinker",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_manifest": {
+    "base_commit": "7ba1a1b",
+    "source_tree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030",
+    "files": {
+      "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "544ebe7feb2a7597dcb3152452d60b1e00cac48a7386c391903bbe4a97586fad",
+      "tests/test_holdout030_lifecycle_fixture_safety.py": "8c46521d5e760f952180680498b8344e50ee88d75c8d6ec2f066eae37b9217d6",
+      "docs/ai-scientist/review-evidence/holdout-030-lifecycle-driver-cpu-review.json": "13d5fbc1a46ee5e7503968546f63337dbf2188af05203538891fa9f91bed1cd1",
+      "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.md": "7522821140487f6d159becbab1cd85d96ccf7606dad8a6243994a6c0ccf562f9",
+      "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py": "af348e618845d2a71b6cc5de87fec32d91c5b43051a49e5011c7969a66aee1ad",
+      "tests/test_holdout030_lifecycle_review_preflight.py": "e11b8cefbbb88c4d51e584fa33800e54cd8a6a42c55a0a08e0b3891ff06af48e"
+    }
+  },
+  "status": "ready_for_isolated_fixture_execution",
+  "resolved_r5_findings": [
+    "Missing pre-reservation run/job rows accepted only with recorded exact unit/cgroup and process identity checks",
+    "Owned new-session pytest process group reaped before external recovery to release lifecycle locks"
+  ],
+  "scope_limits": [
+    "Synthetic baseline ledger",
+    "In-process authenticated API",
+    "Independent drain-before-SQL-CAS ordering unproven"
+  ],
+  "actual_lifecycle_execution": false
+}

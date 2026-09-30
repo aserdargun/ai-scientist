@@ -1,0 +1,42 @@
+{
+  "schema": "holdout-migration-preparation-gate.v1",
+  "created_at": "2026-09-26T22:01:40.672228+00:00",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "base_commit": "2d1afb9038e38253f274aae9d0aba482fe488c36",
+  "harness_sha256": "3be08c30da6132aada7d2bba0d8211e19d46c34eedd85f3349356a917031dd91",
+  "harness_files": 76,
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-030-migration-smoke-23579382eaa8.json": "30a22bca7cea330672b12853b1a40d270b0f31d56f715b51a097ab3070f4a220",
+    "docs/ai-scientist/review-evidence/holdout-030-migration-smoke-6f173f6d512b.json": "cce4b26a9f506f3092d0882ba1f5648a5dcb31550e25598b041e0782efd1e34e",
+    "docs/ai-scientist/review-evidence/holdout-030-migration-smoke-83b698710aa4.json": "806d2092327fc7748803001fc5c1a51d81a00fd21ced27229393110c62f7e6dd",
+    "docs/ai-scientist/review-evidence/review_holdout_030_migrations.py": "6568e826b157db563385e0548a78e758806e2795aafb35b25266f04d36717a6f",
+    "docs/ai-scientist/review-evidence/holdout-migration-preparation-gate-path-failure.json": "da9dbccd77cc486456b4dde7ab852ae4eb6a505d7fe39dac64ed7139915e773b",
+    "docs/ai-scientist/review-evidence/holdout-migration-preparation-gate-path-failure.stdout.txt": "4a07692e1cb5fa8cd87250b001cb6ec79ae147661bc273e422ba9701865e45e5",
+    "CHANGELOG.md": "1ff712ea5e381925b6b4a3a50b3d82b0e526c427ad2ad70705e549a34bae0b1f",
+    "docs/ai-scientist/32-holdout-integration-review.md": "3a9e2ee703fd7749a40957bbcb8055eee0d57fd8e7f06ffd3a98b42e8ebd9fcf",
+    "docs/ai-scientist/m0-acceptance.md": "412dbfa772c9008f13119923fcd64a549c9f1a613447d9bb508e3a807a0ad9b2"
+  },
+  "gate": "docs/ai-scientist/evidence/quality-gate-holdout-migration-preparation.json",
+  "gate_sha256": "822d762709406989128ab74d8993495baf8e168dc7bac71530dad2e1231a7068",
+  "scope": "Main 0.29 plus disposable migration/role evidence and recovery review documents. Private holdout-030 runtime, revised recovery and Farm B loader changes are excluded.",
+  "actual_exec_session": 28532,
+  "actual_exec_exit_code": 0,
+  "outer_unit": "swapp-holdout-migration-docs-gate-20260927-e4c68.service",
+  "service_runtime_seconds": 50.682,
+  "cpu_time_seconds": 48.179,
+  "reported_memory_peak": "510.3M",
+  "swap_bytes": 0,
+  "artifact_snapshot_verification": {
+    "actual_exec_chunk": "53913d",
+    "actual_exec_exit_code": 0,
+    "all_three_snapshot_and_frozen_driver_hashes_match": true
+  },
+  "pytest_summary": "========= 389 passed, 7 skipped, 13 deselected, 13 warnings in 10.16s ==========",
+  "staged_diff_check": {
+    "raw_exit_code": 2,
+    "raw_output": "docs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1741: trailing whitespace.\n+  /home/cachyos/ai-scientist/lab/api/app.py:161: DeprecationWarning: \ndocs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1743: trailing whitespace.\n+  \ndocs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1746: trailing whitespace.\n+          \ndocs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1753: trailing whitespace.\n+  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/fastapi/applications.py:4681: DeprecationWarning: \ndocs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1755: trailing whitespace.\n+  \ndocs/ai-scientist/review-evidence/holdout-migration-preparation-quality-gate.stdout.txt:1758: trailing whitespace.\n+          \n",
+    "excluding_raw_stdout_exit_code": 0,
+    "reason": "Preserve raw quality-tool output exactly; trailing whitespace appears only in captured dependency warning lines."
+  }
+}

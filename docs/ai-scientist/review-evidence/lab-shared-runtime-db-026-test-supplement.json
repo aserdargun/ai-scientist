@@ -1,0 +1,34 @@
+{
+  "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "combined_apply_check": {
+    "diff_check_exit": 0,
+    "final_lab_cli_sha256": "94f0c693b52a37d63bf081ff7e0e6306fbb22cec8ca882f2dc18ce69aba40d6a",
+    "final_test_sha256": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f",
+    "method": "temporary clean git worktree at the stated base; source patch apply-check+apply followed by test-only patch apply-check+apply",
+    "source_patch_apply_check_exit": 0,
+    "test_patch_apply_check_exit": 0,
+    "worktree_removed": true
+  },
+  "note": "The original patch was generated before the test file was tracked and contains only lab/cli.py. Preserve original patch and review JSON bytes; this separate add-file patch supplies the test file and corrects patch scope.",
+  "schema": "lab-shared-gpu-runtime-db-026-test-supplement.v1",
+  "source_patch": {
+    "path": "lab-shared-runtime-db-026.patch",
+    "sha256": "3d722c06a9ebf245e3cb9d7c1811488d27901d86cf20110f3b367eb99aae3997"
+  },
+  "supplements": "lab-shared-runtime-db-026-review.json",
+  "test_execution": {
+    "actual_exit_code": 0,
+    "stdout_sha256": "cce0dae87d62824aefb4b9a702c35162b1ca5f34df016955a7367882b8b9cc1c",
+    "summary": "10 passed; Ruff passed; mypy passed; py_compile passed",
+    "systemd_after_collect": "LoadState=not-found; ActiveState=inactive",
+    "unit": "luna-shared-runtime-db-026-final-logged.service"
+  },
+  "test_file": {
+    "path": "tests/test_shared_gpu_runtime_db.py",
+    "sha256": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f"
+  },
+  "test_only_patch": {
+    "path": "lab-shared-runtime-db-026-tests-only.patch",
+    "sha256": "a6896129152ed837f5ffe04ba6f5ddb3fa735aec7ee1c3c7f7fb12f03813afa1"
+  }
+}

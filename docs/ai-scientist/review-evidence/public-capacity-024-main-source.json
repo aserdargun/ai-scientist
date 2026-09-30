@@ -1,0 +1,19 @@
+{
+  "schema": "public-capacity-source-integration.v1",
+  "source_root": "data/runtime/parallel-m0/public-suite",
+  "before": {
+    "lab/suite_limits.py": null,
+    "lab/api/registry.py": "209c4f8a2a98085f0a54b9c103dea4c08381cb5d16d1013fbc90c5edd10e3e67",
+    "lab/director/suite_manifest.py": "91a0011ddff5170a89265b6199aa6f4aa769c2089597a7a401d5d060756add1c",
+    "lab/director/public_suite.py": "9c68dcf6ef76ef3384c6360f214d96c06d2ae777f3868347881831b99d55b825",
+    "tests/test_suite_manifest.py": "86f11a1a2fb54c8271f843df77b4e8d0a444f6175a52bc06235ff734d2004f03"
+  },
+  "after": {
+    "lab/suite_limits.py": "7346f938ad21eef8e0eb633335d0618211ae893560d1c11b59c2b4360d1b49c2",
+    "lab/api/registry.py": "a58eed45a6513c93ab45ca2ffaf60bc4dee414ee7b7326dd44ab4f1daa8a242e",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/director/public_suite.py": "efc606b7fd3dcfaee67657e2a009c3c011548fea71bc646db5f368efa40d2f1a",
+    "tests/test_suite_manifest.py": "ffb0dcd39ea2d746951b180bf327c2c5a7a0e117a5489b9fe2b15d71ed5b67b0"
+  },
+  "initial_attempt": "Hash preflight exited1 without writes due to a 65-character registry hash typo in handoff; actual reviewed file hash is recorded above. Dependent launcher exited1 before execution because no source was copied."
+}

@@ -1,0 +1,109 @@
+{
+  "captured_at": "2026-09-27T10:54:26.719016+00:00",
+  "cwd": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/resume-fix-054",
+  "scope": "CPU only; inert SQL/seed fixtures; no services, PG, containers, models or network",
+  "commands": [
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m pytest --collect-only -q tests/test_proposal_completion054.py -m 'not live and not gpu'",
+      "session": 63640,
+      "chunks": [
+        "e4f7ab",
+        "1ad883"
+      ],
+      "exit_code": 0,
+      "result": "17 tests collected in 1.01s"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 /home/cachyos/ai-scientist/.venv/bin/python -m ruff check lab/director/runner.py tests/test_proposal_completion054.py",
+      "chunks": [
+        "4d23d3"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q tests/test_proposal_completion054.py -m 'not live and not gpu'",
+      "session": 22414,
+      "chunks": [
+        "c67257",
+        "3a9524"
+      ],
+      "exit_code": 1,
+      "result": "17 failed in 1.48s; temp filesystem production artifact 20GiB reserve prevented writes before provider; subsequently fixture-only MIN_FREE_DISK_BYTES=0 for tiny temp blobs; production quota unchanged"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q -x tests/test_proposal_completion054.py -m 'not live and not gpu'",
+      "session": 98892,
+      "chunks": [
+        "279c37",
+        "db046b"
+      ],
+      "exit_code": 0,
+      "result": "17 passed in 0.80s"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m mypy --follow-imports=silent lab/director/runner.py",
+      "session": 99686,
+      "chunks": [
+        "4e28c3",
+        "73f2da"
+      ],
+      "exit_code": 0,
+      "result": "1 source file clean"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 /home/cachyos/ai-scientist/.venv/bin/python -m ruff check lab/director/runner.py tests/test_proposal_completion054.py",
+      "chunks": [
+        "b58096"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 /home/cachyos/ai-scientist/.venv/bin/python -m ruff check --fix lab/director/runner.py lab/director/loop.py tests/test_proposal_completion054.py",
+      "chunks": [
+        "b2879a"
+      ],
+      "exit_code": 0,
+      "result": "1 import ordering correction"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m pytest --collect-only -q tests/test_proposal_completion054.py -m 'not live and not gpu'",
+      "chunks": [
+        "52b9b2"
+      ],
+      "exit_code": 0,
+      "result": "19 tests collected in 0.75s"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q -x tests/test_proposal_completion054.py -m 'not live and not gpu'",
+      "session": 63199,
+      "chunks": [
+        "dbd1ae",
+        "cf9a4a"
+      ],
+      "exit_code": 0,
+      "result": "19 passed in 0.87s"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python -m mypy --follow-imports=silent lab/director/runner.py lab/director/loop.py",
+      "chunks": [
+        "569a03"
+      ],
+      "exit_code": 0,
+      "result": "2 source files clean"
+    },
+    {
+      "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock timeout 45s prlimit --as=2147483648 --cpu=30 /home/cachyos/ai-scientist/.venv/bin/python -m ruff check lab/director/runner.py lab/director/loop.py tests/test_proposal_completion054.py",
+      "chunks": [
+        "6cf2f9"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "python AST parse of runner.py, loop.py and tests/test_proposal_completion054.py (no imports)",
+      "chunks": [
+        "4a91d0"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "schema": "aos042-cpu-lifecycle-summary.v1",
+  "checked_date": "2026-09-30",
+  "scope": "Real isolated AOS child processes/SQLite/typed tools/lease policy/Lab HTTP and console TCP; explicitly synthetic desktop and FixtureDecisionEngine; existing isolated PostgreSQL reused.",
+  "full_m0_aos_2_3_accepted": false,
+  "live_aos_modified": false,
+  "gpu_used": false,
+  "real_model_used": false,
+  "patch": {
+    "path": "aos042-wire-stop-recovery.patch",
+    "sha256": "43903e67a7fd88aed9a9ff234c7d89b0f6978b4c0a1b15f9e14d056fa98e6daf",
+    "baseline_lab_external_sha256": "cb9e67b51bb3084390009c60aa256d283bf3ed345e183fb905588f2e61531a64",
+    "r3_lab_external_sha256": "c08b86a2561e51c462e2ebd80b213586da6fdfffc926ae6e26805eed109fd04c",
+    "changes": [
+      "typed optional purpose matching Lab API status",
+      "new explicitly authorized HUMAN session/generation stop key; old uncertain intent immutable"
+    ]
+  },
+  "actual_attempts": {
+    "r1": {
+      "sha256": "4ca89844e48ad878a11729cd6d8754f60790c85cf4b6c1f415f5d637e6cc5615",
+      "all_passed": false,
+      "checks": {
+        "disk_reserve": true,
+        "memory_reserve": true,
+        "first_process_ready": true,
+        "lease_changed_after_await_rejected": true,
+        "stale_start_no_intent": true,
+        "concurrent_starts_success": false
+      },
+      "failed_check": "concurrent_starts_success",
+      "error_type": "AssertionError",
+      "actual_exit_code": 1,
+      "terminal_chunk": "cb5307",
+      "reason": "Lab purpose field rejected as extra_forbidden after run handle bound"
+    },
+    "r2": {
+      "sha256": "327f7fb72edd7a6a816be69f0934cde514220f71da2fcaaf1a5e2de1521e7b03",
+      "all_passed": false,
+      "checks": {
+        "disk_reserve": true,
+        "memory_reserve": true,
+        "first_process_ready": true,
+        "lease_changed_after_await_rejected": true,
+        "stale_start_no_intent": true,
+        "concurrent_starts_success": true,
+        "concurrent_same_key_same_job": true,
+        "one_durable_aos_job": true,
+        "wrong_tool_policy_rejected": true,
+        "child_graceful_close_885874": true,
+        "child_exit_zero_885874": true,
+        "different_process": true,
+        "same_sqlite_job": true,
+        "reopen_paused": true,
+        "old_lease_restart_rejected": true,
+        "unbound_status_rejected": true,
+        "recover_requires_new_permission": true,
+        "explicit_new_lease_rebind": true,
+        "rebound_real_http_status": true,
+        "real_console_takeover_during_http_outage": true,
+        "outage_recovery_requires_current_lease": true
+      },
+      "failed_check": null,
+      "error_type": "TimeoutError",
+      "actual_exit_code": 1,
+      "terminal_chunk": "b9b33a",
+      "reason": "21 controls passed then 180-second inflight observation barrier timed out"
+    },
+    "continuation_r2": {
+      "sha256": "dfe0cabf6591b3d8debd4d58f8c08567cc70f3da9842181fba1b52ef89c49a58",
+      "all_passed": false,
+      "checks": {
+        "same_sqlite_reopen": true,
+        "exact_existing_run": true,
+        "fresh_human_permission": true,
+        "explicit_same_handle_recover": true,
+        "current_authorized_stop": false
+      },
+      "failed_check": "current_authorized_stop",
+      "error_type": "AssertionError",
+      "actual_exit_code": 1,
+      "terminal_chunk": "2037da",
+      "reason": "Old uncertain stop key rejected; no new stop HTTP dispatch"
+    },
+    "continuation_r3": {
+      "sha256": "241cffc8ec29238665543bf343524d397806cbb37c9cc7454410aa756be38063",
+      "all_passed": true,
+      "checks": {
+        "same_sqlite_reopen": true,
+        "exact_existing_run": true,
+        "fresh_human_permission": true,
+        "explicit_same_handle_recover": true,
+        "current_authorized_stop": true,
+        "idempotent_repeat_stop": true,
+        "foreground_continues": true,
+        "no_new_aos_or_lab_job": true,
+        "child_closed": true,
+        "child_exit_zero": true
+      },
+      "failed_check": null,
+      "error_type": null,
+      "actual_exit_code": 0,
+      "terminal_chunk": "d8fdba",
+      "same_existing_lab_run": true,
+      "new_lab_start": false
+    }
+  },
+  "read_only_sqlite_preservation": {
+    "one_durable_external_job": true,
+    "old_uncertain_stop_retained": true,
+    "one_new_completed_stop_action": true,
+    "state": "stop_requested"
+  },
+  "root_reported_director_observation": {
+    "source": "Root orchestration actual execution observations; separate process/unit evidence retained privately",
+    "before_stop": {
+      "active": true,
+      "pid": 886262
+    },
+    "after_stop": {
+      "inactive": true,
+      "main_pid": 0,
+      "run_state": "stop_requested",
+      "completed_score_jobs": 14,
+      "active_score_jobs": 0
+    },
+    "outer_dispatch_waiter": {
+      "actual_exit_code": 1,
+      "terminal_chunk": "93128d",
+      "error_type": "RuntimeError"
+    },
+    "actual_scorer_inflight_drain": false
+  },
+  "limitations": [
+    "No claimed Scorer process interval was observed; completed jobs are not inflight drain proof",
+    "R2 timeout exit1 remains failed despite successful earlier checks",
+    "Outer dispatcher waiter exit1 remains failed",
+    "No real desktop/model/GPU/public data/full coexistence or full M0.AOS.2/.3 closure",
+    "Stop report required separate normal product recovery; automatic one-request terminal stop was not proved."
+  ],
+  "focused_aos_tests": {
+    "executed": true,
+    "passed": 26,
+    "pytest_reported_seconds": 6.38,
+    "scope": "Existing tests/test_lab_external_jobs.py only in own R3 AOS source; fixture transports/controllers where those existing tests specify them. This verifies source regressions, not another live Lab run.",
+    "unit": "lab-aos042-focused-r3-1790746500.service",
+    "stdout_sha256": "e3fe37aa29a505cfc4d104099a07fe27b31f23ddc58dfd1ffaf43d1d8e1077c0",
+    "source_after_sha256": "c08b86a2561e51c462e2ebd80b213586da6fdfffc926ae6e26805eed109fd04c",
+    "source_unchanged": true,
+    "resource_caps": {
+      "memory_max_bytes": 2147483648,
+      "cpu_quota_percent": 100,
+      "tasks_max": 128,
+      "swap_max_bytes": 0,
+      "runtime_max_seconds": 120
+    },
+    "journal_measured_resources": {
+      "cpu_seconds": 0.884,
+      "wall_seconds": 6.608,
+      "memory_peak_text": "66.9M"
+    },
+    "outer_shell_exit_code": null,
+    "outer_shell_metadata_retained": false,
+    "collected_unit_load_state": "not-found",
+    "limitation": "Original exec call emitted stdout only and did not retain wrapper session/exit metadata. Collected-unit default ExecMainStatus=0 is not used as exit proof. Pytest summary reports 26 passed; no optional rerun performed."
+  },
+  "helper_sha256": {
+    "setup_lab.py": "9510c3a961831bee2efd24ed646e637d3f7b8afd68eddfd859012b9c2fd052b8",
+    "runner.py": "6f9a500c9f19b3846de0c27ae3a691ee25f1b70288d8f0d42ae390a66a06b2b8",
+    "runner-r2.py": "a777dbedcef3fe8c8eabc39994f3ad6b3b7772204deda41b05f425d65e716c74",
+    "runner-r3.py": "8047dec8a6553f7cf157fd549c87128d4575af3bf8c8a75232941ea132234afb",
+    "continue_r2.py": "03b6a7915cf6e0b530addbf7ddb74c1d68fe3198a05a8d1a5ccbae3f148a1d6e",
+    "continue_r3.py": "5f3359fd036128e5833a2b204c73f0decacbfd4dc12a44d1b1316fcb0fc07db8"
+  },
+  "normal_terminal_recovery": {
+    "inspect_actual_exit_code": 0,
+    "inspect_terminal_chunk": "8ca1f6",
+    "apply_actual_exit_code": 0,
+    "apply_actual_session": 92579,
+    "apply_terminal_chunk": "19632a",
+    "normal_product_cli": true,
+    "action": "finalized_stopped",
+    "finalizer_exit_code": 0,
+    "recovery_state": "completed",
+    "source_plan_sha256": "58ba014483eb3bba72bb1b8b3fbc31d9575e616459f714638c6b43de8ec241dc",
+    "apply_receipt_sha256": "692e47399a690b8ad59c473230d1d8874236616504bd18f1d0f94cb9919c54cd",
+    "independent_api_readback": {
+      "actual_http_status": 200,
+      "actual_scorer_inflight_drain": false,
+      "report_sha256": "18f12a5d2d5efa712eb324d06f7bfe38d711152fd351f9724198b5f760ae0825",
+      "report_status": "stopped",
+      "research_completed": false,
+      "run_state": "stopped",
+      "verified": true
+    },
+    "api_readback_terminal_chunk": "8f1b36",
+    "limitation": "Original dispatch waiter remains exit1; returned recovery inspection includes pre-finalization state, so independent actual DB/API state is authoritative. No fresh research run or Scorer inflight claim."
+  }
+}

@@ -1,0 +1,288 @@
+diff --git a/MANIFEST.sha256 b/MANIFEST.sha256
+index f978341..7e8cef0 100644
+--- a/MANIFEST.sha256
++++ b/MANIFEST.sha256
+@@ -525,7 +525,7 @@ d9b1544789160d77f485462ef43b8a538a29eeda75d6ec221e1b4136a316f70f  src/aos/deskto
+ 5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5  src/aos/goal_plan.py
+ aca4c0186dc31131d0446b9c02471ba4d49856e7b0c78fb39d130f31da327af4  src/aos/gpu_turn.py
+ a158afa32f2616e253f83b5ea3742e3792ff25aed62e77864719f2f24b44c7c9  src/aos/inspection.py
+-68e193583a9279638bc63adda62c4b402fc32ccc3e12b72690627584dcc414dc  src/aos/lab_external.py
++cb9e67b51bb3084390009c60aa256d283bf3ed345e183fb905588f2e61531a64  src/aos/lab_external.py
+ 0e91de0835c0848d6a076a3577b6aa619c41ef66c10a2f85b2a59091e383bcd0  src/aos/laya_candidate.py
+ 84e910d68b3afcb20139432dd82e378ccb5c74104d113ff3cc6aade7b8a7d630  src/aos/learning_candidate.py
+ 0da78732d48ccfa7d7ffe9e2c74d445ed13ab9d5e9ab884d47f4ce5d62d1c2b3  src/aos/learning_event_outbox.py
+@@ -665,7 +665,7 @@ edad4014a51d635483f7347e47621d1d53eb6ee951cfb545374f5881d2d720bc  tests/test_dev
+ 0ea02ba0e6d6b82778abfc9a693d78c13b068bc490aafde2d0d21b0199e21ca9  tests/test_goal_plan.py
+ 99839699b5354dccd62f85312a2ab58833d4310690478c65d4742f29423d49e6  tests/test_i18n_ui.py
+ 58e0546789ccf7738fd9d450c8bc76499e3182867fd02b5aebcf44503d6af722  tests/test_inspection.py
+-e54be520fef8721628422623a456e639e0efb67e0a4687199d75d32c67591c5e  tests/test_lab_external_jobs.py
++54da140e7c9edfd8995c87eb4819583d6ead71fbae21d918593fd5a3b5180cf7  tests/test_lab_external_jobs.py
+ 794ca88d76cff0ee940c7e3323f1d282d411654b44ee9a13f14e8c41f9be79b7  tests/test_laya_candidate.py
+ f97f6fe04bf39ace4deaa556547e35f6b896016323f6f0355179a790a62b48ac  tests/test_learning_candidate.py
+ 276dd44a9798d3932ba7de41040ee47cb52702e9253381705a581edee9d0b26e  tests/test_learning_event_outbox.py
+diff --git a/src/aos/lab_external.py b/src/aos/lab_external.py
+index fc023d1..8366169 100644
+--- a/src/aos/lab_external.py
++++ b/src/aos/lab_external.py
+@@ -368,6 +368,7 @@ class LabExternalJobCoordinator:
+         idempotency_key: str | None = None,
+         require_human_lease: bool = False,
+     ) -> str:
++        session_id = self.controller.session_id
+         desktop = self.controller.state()
+         binding = self.connection.execute(
+             "SELECT session_id,lease_id,generation FROM aos_external_job_bindings WHERE job_id=?",
+@@ -389,7 +390,8 @@ class LabExternalJobCoordinator:
+         ).fetchone()
+         if stored is None:
+             raise AOSFault(ErrorCode.INVALID_OUTPUT, "Lab AOS trajectory has no typed runtime state")
+-        state = State.model_validate_json(stored["state_json"])
++        state_json = stored["state_json"]
++        state = State.model_validate_json(state_json, strict=True)
+         if (
+             state.task_kind != "ai_scientist"
+             or state.owner != "AGENT"
+@@ -421,6 +423,20 @@ class LabExternalJobCoordinator:
+             if previous["status"] != "intent":
+                 raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control action is not retryable")
+             return previous["action_id"]
++        # Control authorization is a deterministic host policy, never the
++        # local research model. Even so, keep the await boundary fenced: a
++        # concurrent takeover/restart must not let a stale stop intent escape.
++        decision = await self._decision_material(f"lab.{operation}", operation, state)
++        if decision["selected_option"] != operation:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control authorization was denied")
++        self._revalidate_control_context(
++            row,
++            session_id=session_id,
++            binding=binding,
++            state_json=state_json,
++            desktop=desktop,
++            require_human_lease=require_human_lease,
++        )
+         action_id = identifier("action")
+         action = Action(
+             task_id=state.task_id,
+@@ -433,14 +449,13 @@ class LabExternalJobCoordinator:
+             tool=f"lab.{operation}",
+             arguments={"job_id": row["job_id"], "lab_run_id": row["lab_run_id"]},
+             expected_effect=f"Perform one bounded Lab {operation} control operation.",
++            # Start the short action window after authorization so a delayed
++            # policy path cannot persist an already-expired intent.
+             deadline=time.time() + 5.0,
+             idempotency_key=request_key,
+             selected_option=operation,
+         )
+         self._validate_lab_action(action, state)
+-        decision = await self._decision_material(f"lab.{operation}", operation, state)
+-        if decision["selected_option"] != operation:
+-            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control authorization was denied")
+         timestamp = now()
+         decision_id = identifier("decision")
+         snapshot_id = identifier("snapshot")
+@@ -513,6 +528,58 @@ class LabExternalJobCoordinator:
+             )
+         return action_id
+ 
++    def _revalidate_control_context(
++        self,
++        row,
++        *,
++        session_id: str,
++        binding,
++        state_json: str,
++        desktop: dict[str, object],
++        require_human_lease: bool,
++    ) -> None:
++        """Fence a typed control action after policy evaluation and before intent."""
++        if self.controller.session_id != session_id:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control session changed during authorization")
++        current_binding = self.connection.execute(
++            "SELECT session_id,lease_id,generation FROM aos_external_job_bindings WHERE job_id=?",
++            (row["job_id"],),
++        ).fetchone()
++        if current_binding is None or tuple(current_binding) != tuple(binding):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control binding changed during authorization")
++        current_row = self.connection.execute(
++            "SELECT run_id,action_id,lab_run_id,state FROM aos_external_jobs WHERE job_id=?",
++            (row["job_id"],),
++        ).fetchone()
++        if (
++            current_row is None
++            or current_row["run_id"] != row["run_id"]
++            or current_row["action_id"] != row["action_id"]
++            or current_row["lab_run_id"] != row["lab_run_id"]
++            or current_row["state"] != row["state"]
++        ):
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab control target changed during authorization")
++        current_state = self.connection.execute(
++            "SELECT state_json FROM runtime_states WHERE run_id=?", (row["run_id"],)
++        ).fetchone()
++        if current_state is None or current_state["state_json"] != state_json:
++            raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab typed state changed during authorization")
++        if require_human_lease:
++            current_desktop = self.controller.state()
++            if (
++                current_desktop.get("owner") != "HUMAN"
++                or current_desktop.get("status") != "running"
++                or current_desktop.get("lease_id") != desktop.get("lease_id")
++                or current_desktop.get("generation") != desktop.get("generation")
++                or current_desktop.get("runtime_id") != desktop.get("runtime_id")
++                or tuple(current_binding) != (
++                    session_id,
++                    desktop.get("lease_id"),
++                    desktop.get("generation"),
++                )
++            ):
++                raise AOSFault(ErrorCode.UNSAFE_ACTION, "Lab stop lease changed during authorization")
++
+     def _finish_control_action(self, action_id: str, result: dict[str, object]) -> None:
+         with self.connection:
+             changed = self.connection.execute(
+diff --git a/tests/test_lab_external_jobs.py b/tests/test_lab_external_jobs.py
+index e8a53ee..8518c00 100644
+--- a/tests/test_lab_external_jobs.py
++++ b/tests/test_lab_external_jobs.py
+@@ -46,9 +46,11 @@ class DelayedAllowDecisionEngine:
+         self.entered = asyncio.Event()
+         self.release = asyncio.Event()
+         self.completed_at = None
++        self.calls = 0
+ 
+     async def decide(self, state, options):
+         del state
++        self.calls += 1
+         self.entered.set()
+         if self.delay_seconds:
+             await asyncio.sleep(self.delay_seconds)
+@@ -94,6 +96,8 @@ class FakeLabClient:
+         self.report_document = None
+         self.fail_start_after_recording = False
+         self.fail_stop = False
++        self.status_calls = 0
++        self.stop_calls = 0
+ 
+     def start(self, request):
+         self.start_calls.append(request)
+@@ -105,6 +109,7 @@ class FakeLabClient:
+ 
+     def status(self, run_id):
+         assert run_id == self.run_id
++        self.status_calls += 1
+         report_sha256 = None
+         if self.report_document is not None:
+             report_sha256 = self.report_document.report_sha256
+@@ -120,6 +125,7 @@ class FakeLabClient:
+ 
+     def stop(self, run_id):
+         assert run_id == self.run_id
++        self.stop_calls += 1
+         if self.fail_stop:
+             raise OSError("simulated Lab outage")
+         self.state = "stop_requested"
+@@ -397,6 +403,105 @@ def test_background_status_and_stop_are_separate_from_foreground_scheduler():
+     assert db.execute("SELECT count(*) FROM aos_external_job_events").fetchone()[0] == 5
+ 
+ 
++def test_control_authorization_revalidates_lease_after_policy_await():
++    async def scenario():
++        db, controller, lab = _database(), FakeController(), FakeLabClient()
++        coordinator = LabExternalJobCoordinator(
++            db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++        )
++        job = await coordinator.start("session-a", _request())
++        original = coordinator._decision_material
++        entered, release = asyncio.Event(), asyncio.Event()
++
++        async def delayed(tool, operation, state):
++            entered.set()
++            await release.wait()
++            return await original(tool, operation, state)
++
++        coordinator._decision_material = delayed
++        stop = asyncio.create_task(
++            coordinator.stop("session-a", str(job["job_id"]), "lease-current", 3)
++        )
++        await entered.wait()
++        controller.current.update(owner="HUMAN", lease_id="lease-new", generation=4)
++        release.set()
++        with pytest.raises(AOSFault):
++            await stop
++        assert lab.state == "queued"
++        assert lab.stop_calls == 0
++        assert db.execute("SELECT count(*) FROM actions WHERE tool='lab.stop'").fetchone()[0] == 0
++
++    asyncio.run(scenario())
++
++
++def test_control_authorization_revalidates_session_after_policy_await():
++    async def scenario():
++        db, controller, lab = _database(), FakeController(), FakeLabClient()
++        coordinator = LabExternalJobCoordinator(
++            db, controller, lab, allowed_suites=frozenset({"synthetic.allowed.v1"})
++        )
++        job = await coordinator.start("session-a", _request())
++        original = coordinator._decision_material
++        entered, release = asyncio.Event(), asyncio.Event()
++
++        async def delayed(tool, operation, state):
++            entered.set()
++            await release.wait()
++            return await original(tool, operation, state)
++
++        coordinator._decision_material = delayed
++        prior_status_calls = lab.status_calls
++        prior_status_actions = db.execute(
++            "SELECT count(*) FROM actions WHERE tool='lab.status'"
++        ).fetchone()[0]
++        status = asyncio.create_task(coordinator.status("session-a", str(job["job_id"])))
++        await entered.wait()
++        controller.session_id = "session-b"
++        release.set()
++        with pytest.raises(AOSFault):
++            await status
++        assert lab.status_calls == prior_status_calls
++        assert db.execute(
++            "SELECT count(*) FROM actions WHERE tool='lab.status'"
++        ).fetchone()[0] == prior_status_actions
++
++    asyncio.run(scenario())
++
++
++def test_repeated_status_authorization_uses_host_policy_without_model_calls():
++    async def scenario():
++        db, controller, lab = _database(), FakeController(), FakeLabClient()
++        engine = DelayedAllowDecisionEngine()
++        engine.release.set()
++        coordinator = LabExternalJobCoordinator(
++            db,
++            controller,
++            lab,
++            allowed_suites=frozenset({"synthetic.allowed.v1"}),
++            decision_engine=engine,
++        )
++        job = await coordinator.start("session-a", _request())
++        prior_status_calls = lab.status_calls
++        prior_control_decisions = db.execute(
++            "SELECT count(*) FROM decisions d JOIN model_calls m USING(call_id) "
++            "WHERE d.run_id=? AND m.deployment_id='lab-control-policy-v1'",
++            (job["aos_run_id"],),
++        ).fetchone()[0]
++        for _ in range(5):
++            observed = await coordinator.status("session-a", str(job["job_id"]))
++            assert observed["state"] == "queued"
++        assert engine.calls == 1
++        assert lab.status_calls == prior_status_calls + 5
++        controls = db.execute(
++            "SELECT count(*) FROM decisions d JOIN model_calls m USING(call_id) "
++            "WHERE d.run_id=? AND m.deployment_id='lab-control-policy-v1'",
++            (job["aos_run_id"],),
++        ).fetchone()[0]
++        assert controls == prior_control_decisions + 5
++
++    asyncio.run(scenario())
++
++
+ def test_desktop_takeover_requests_bounded_stop_for_detached_job():
+     db, controller, lab = _database(), FakeController(), FakeLabClient()
+     coordinator = LabExternalJobCoordinator(

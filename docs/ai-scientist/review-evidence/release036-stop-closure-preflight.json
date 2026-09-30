@@ -1,0 +1,38 @@
+{
+  "run_id": "404d9a45-f1fb-4f91-a842-0edcd44bc1b9",
+  "recovery_id": "6017769b-0762-5266-8f7f-55d0f520287a",
+  "run_state": "stop_requested",
+  "payload_sha256": "175ebba5130c8409a917621977a99bef0cd1231f479f747f183ffa2525f8e9c6",
+  "report_sha256": null,
+  "report_valid": false,
+  "owner": {
+    "payload_sha256": "175ebba5130c8409a917621977a99bef0cd1231f479f747f183ffa2525f8e9c6",
+    "worker_pid": 1594495,
+    "worker_start_ticks": 4494921,
+    "worker_boot_id": "24ce6302-3913-4b99-9aea-3a5de341dfd1",
+    "worker_unit": "swapp-ai-scientist-director-drain.service",
+    "worker_invocation_id": "28dcb051b0e44333887f059e3361bdc3",
+    "worker_cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service"
+  },
+  "owner_proven_dead": true,
+  "experiment_count": 1,
+  "terminal_experiments": 0,
+  "incomplete_experiment_ids": [
+    "exp_dc8e977665e454878151b589a548148e"
+  ],
+  "missing_pair_ids": [
+    "exp_dc8e977665e454878151b589a548148e"
+  ],
+  "invalid_pair_ids": [],
+  "active_score_job_states": [
+    "queued"
+  ],
+  "score_task_count": 3,
+  "score_completion_count": null,
+  "recovery_blockers": [
+    "score_jobs_active",
+    "experiments_nonterminal",
+    "experiment_trajectory_pair_missing"
+  ],
+  "can_finalize": false
+}

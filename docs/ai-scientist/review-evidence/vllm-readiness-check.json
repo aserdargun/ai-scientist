@@ -1,0 +1,31 @@
+{
+  "runtime_directory": "data/runtime/vllm/.venv",
+  "requirements_lock_sha256": "577cdb9265a33d403be84bd61e2aba4063023428882767ae93491abf5ef28abe",
+  "versions_observed": {
+    "vllm": "0.30.0",
+    "torch": "2.13.0+cu132",
+    "transformers": "5.17.0",
+    "numpy": "2.3.5",
+    "huggingface-hub": "1.32.0"
+  },
+  "cpu_only_import_exit_code": 0,
+  "torch_cuda_build": "13.2",
+  "torch_cuda_initialized": false,
+  "serve_help_exit_code": 0,
+  "serve_help_sha256": "52c33797879e38b5a61db6fd52a8afe63feaf19cc710075a3a11325b0d5daeb0",
+  "serve_help_stderr": "W0924 12:21:56.351000 616797 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/opt/cuda'\n",
+  "model_inference_started": false,
+  "gpu_capacity_verified": false,
+  "dependency_check": {
+    "command": [
+      "uv",
+      "pip",
+      "check",
+      "--python",
+      "data/runtime/vllm/.venv/bin/python"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Using Python 3.12.13 environment at: data/runtime/vllm/.venv\nChecked 196 packages in 1ms\nAll installed packages are compatible\n"
+  }
+}

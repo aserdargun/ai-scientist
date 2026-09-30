@@ -1,0 +1,32 @@
+{
+  "schema": "research046-pg-execution-binding.v1",
+  "attempt": "r1",
+  "session_id": 46780,
+  "launch_chunk": "6cd7a7",
+  "final_chunk": "a30065",
+  "process_exit_code": 1,
+  "service_runtime_seconds": 59.011,
+  "memory_peak_mb": 197.2,
+  "swap_bytes": 0,
+  "evidence": "research-integration-046-pg-f87b7b3e0d0e.json",
+  "evidence_sha256": "4d4c3cd0393ea364eac1bec445dce4a8e21b91819289dd0ae5964fda47859fb4",
+  "migration_head": "0030_director_resume",
+  "test_passed_count": 27,
+  "source_matches_snapshot": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "failures": [
+    {
+      "failure": {
+        "line": 490,
+        "message": "ValueError: run-end reservation checkpoint is not bound to its owner",
+        "path": "/home/cachyos/ai-scientist/data/runtime/research-integration-046-pg-smoke/f87b7b3e0d0e4b56b1b621c5a7db433d/source/lab/director/journal.py"
+      },
+      "nodeid": "tests/test_postgres_resume046_chain.py::test_expired_historical_positive_suffix_then_seal[run_end-none]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    }
+  ],
+  "scope": "Real isolated PostgreSQL roles and production persistence over synthetic ledger fixtures; no OS process restart, model, AOS or main database mutation."
+}

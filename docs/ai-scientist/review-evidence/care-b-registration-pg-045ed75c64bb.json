@@ -1,0 +1,726 @@
+{
+  "schema": "holdout-030-recovery-sql.v1",
+  "created_at": "2026-09-26T22:52:40.746138+00:00",
+  "test_target": "tests/test_postgres_care_farm_b_registration.py",
+  "scope": "Disposable PostgreSQL registration/reload of real Farm B data with explicitly synthetic normalization bindings; no actual baseline/holdout scoring, 10 KEEP, canary or GPU/AOS acceptance.",
+  "snapshot": "data/runtime/holdout-030-pg-smoke/045ed75c64bb4acd9ef316e42a70d2e4/source",
+  "frozen_driver": "data/runtime/holdout-030-pg-smoke/045ed75c64bb4acd9ef316e42a70d2e4/review_driver.py",
+  "source_sha256": {
+    "alembic.ini": "aab60ec24a4a1e0c65bed284631f8f19c2a2394d3110b8793f6d6078d8db3860",
+    "harness/VERSION": "a68641c6aacd345c4931a6217331d2bf43398c7bc134666a2f756953eab407aa",
+    "harness/__init__.py": "9dabc85ce30040e9e4c93992622dcbefcf3f7654fa14c9ffcacb3bc4f53d3ccd",
+    "harness/alarm.py": "ea591e8f12467ad9e97646c09c8c58c15621a343a368e9f4c0b056d777071103",
+    "harness/baselines.py": "abb4f46252934ed234951a9429b23cf545c53b4d7c5ea06f621bbf0d88dff909",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "harness/contracts.py": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599",
+    "harness/fingerprint.py": "289243f47b18cec08dabe1d07df040b1157bee823091c2bf6f447a7b5e181222",
+    "harness/guards.py": "d820e5026825c8f0ca588337c6d86cb99e8be6099b5ab5545b3256e958093d89",
+    "harness/metrics.py": "6d0b997d5b26ad1ed879450c04eaffbea2e094233847e5f8b3895b71b0b9e22c",
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "harness/referee.py": "a5952cb5e621b36ca8f491573642c96fe92216f243e460a36c87865de6f243f2",
+    "lab/__init__.py": "1a39d5e3ee50d08b91b175f667db7d5e6de2025f4e0fedac4659f0386407cc1a",
+    "lab/api/__init__.py": "408485dcde070bea88526c05d2d39f3653b9033e89540f9fa25aea72736f3be4",
+    "lab/api/app.py": "aa4475d0bb04a91d7ef4ab8a1d701bf3c7587656e52dfb026d88df5ab0fe571b",
+    "lab/api/contracts.py": "a2f1885e9ea714655439ec882c04bee48afb88193495f0d2455562f337f08313",
+    "lab/api/registry.py": "a58eed45a6513c93ab45ca2ffaf60bc4dee414ee7b7326dd44ab4f1daa8a242e",
+    "lab/cli.py": "c94afadc2ea210817442f0c3ff3113d117d5b894aacb3fd502c372cebb8fb01b",
+    "lab/db/__init__.py": "f52763d89d95a46b0ff8a514c3336dba74a9ea6292343091e1ce0efa3ebf1fe7",
+    "lab/db/migrations/__init__.py": "b9b682537c8c1c2adedde55ed6b45eaeaacd4d4d7804c65877373a029ad3d563",
+    "lab/db/migrations/env.py": "eef43a4e3cd91fbd408af738ed5c6baa80f4e0831d046aeba1f15d8e62c64e6f",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "lab/db/migrations/versions/0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65",
+    "lab/db/migrations/versions/0021_run_end_unavailable.py": "561c02c501231e28398f9254ef2f52dc419a1a09ab33bd5bf83d414ac4700896",
+    "lab/db/schema.py": "df04682b165f23b5ffc8b3363be5dec1bf10fa966b351e1d6da2dd4aab82e2bf",
+    "lab/db/task_plan.py": "2e946acc43f32179488948a636561742d22f7f11b2b4dbf4128517abc76b796a",
+    "lab/director/__init__.py": "947c4b6815906cd3fc868c7ea66844150f26f2476518fa75615a7405eb5e51bc",
+    "lab/director/artifacts.py": "300c0f20c41c12d72e73cde0f6645b1831df60095d90975ea631ef51a00fbec5",
+    "lab/director/baseline_runner.py": "f9b0897ed3130414d060f0167ab0512acf39ba8f87d6efe279358a0b679a637c",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "lab/director/budget.py": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+    "lab/director/contracts.py": "ec7b5cd3a6520ffed66f234fca5502bffcad1ab3d209be4a3e0cbfc870a6bff1",
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/fake_llm.py": "7dd96f0060c80133bba897047626268796990b4ad11fc2a0f9c2591850f5c4c2",
+    "lab/director/holdout.py": "071289982012aa3065e08b02bfad552d696919fdc31957b1c53af75c1476c9d6",
+    "lab/director/journal.py": "b816777c762d6779218f9bec991b68fcad19fa1613a95b544f02f2b2612a297e",
+    "lab/director/ledger.py": "a6a6fae74e04f8cae1ae8ec7d04ef625476f58e73164300328e3e6cc82aa77c2",
+    "lab/director/local_llm.py": "dc21385c1b8930a35f0f33fa10b661592fa10df43aa15ce4f5164a8e00ce271c",
+    "lab/director/loop.py": "186f4606f587be9e19074e470f73a45e6b9aa0b8da44416328da779002d8829e",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/recovery.py": "c431af6950631d66d9379b83c7e81dff67bba56e6da527bd9b6d63ed04c3319e",
+    "lab/director/runner.py": "10c58376f953aac3552760bf8f7d32d7db207a20fb5bbc0b457bd9bbc10977d5",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_guards.py": "38916491f76a712bd2e46cf136c261cf0dd8da3cf07cadd98335b4237d81e0f7",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/director/task_plan.py": "337d9b3a6897475a990cce20c3b5ca2aad78c76cd20475f720111323e17c595c",
+    "lab/llm/__init__.py": "d1b8ca22acbe93ce9d0849b05cb7dae7c875ac8e0b382aa2520915befab38527",
+    "lab/llm/aos_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab/llm/aos_gpu_executor.py": "148ec806adfbc921dbabbfc8442681587c14059103d28534a82453aa6f0d3bec",
+    "lab/llm/aos_gpu_service.py": "9332db586f64316bfeb82e45de09b9a88f9f859f8141cdeee56444720a8ff245",
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "lab/llm/native_runtime.py": "9ae0374c883e9ba518d08449820050354ac7c6618d864a5681374fe467062411",
+    "lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1",
+    "lab/llm/router.py": "0c5caf16c0e395b16a62625fc98d7f78ed35a690d689bb68097bece4d859e874",
+    "lab/referee/__init__.py": "f09a6e041b8ad74485df8868b2dc0a12c9a5999b62d45238caa4845247498a48",
+    "lab/replay.py": "300ac20b98346643a5f33048e659725cdd5d551cdf6133c65c52a79b77a2b676",
+    "lab/reporting.py": "54baa1de048e0bd0c42ef0a7c8a38491f7a39aac616321912fb4c0e29752cb2e",
+    "lab/sandbox/__init__.py": "bd427df6fb5df35ac056fe351025b24ea3a18a2935eb904b48723ecd463cc0f7",
+    "lab/sandbox/candidate_entrypoint.py": "b71bf07c746dd8208835009517ab595f7ae99a0455c0cffe8799cb51e39d213d",
+    "lab/sandbox/docker_runner.py": "b1b03f7e0063587d5626bcedb2735b87798b6f3e4158c8fd2afe9c3854043216",
+    "lab/sandbox/evaluation.py": "c2f20b6e4ae140b641ed9781c7ee316b0bb4142c09e29c157dff0a6c930b961c",
+    "lab/sandbox/sandbox_wrapper.py": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+    "lab/scorer/__init__.py": "0f6e4bbd979497b6e287f4a10c91c66b9c432675c1bdc4d1d36a4462ebd6373b",
+    "lab/scorer/care_holdout.py": "274fb02e2ea3efd7516a87ab3dfb1d6212a622340869b39466836a03200bf97d",
+    "lab/scorer/holdout.py": "faebe61389316443295a903342a7a52577ec6644ec105accaaa2a05eb9c9be04",
+    "lab/scorer/holdout_recovery.py": "ac2d11f60372a3db6581adc2b644f7e33eedeecc29196db9eea5d659111f57b1",
+    "lab/scorer/holdout_supervisor.py": "84e99abf17169b1f4ab6a99b7565b6703883772f0ad79f113dd6b5a012a63c42",
+    "lab/scorer/holdout_worker.py": "8d781d49919f1dfc8cd72982e0097e315c65d11df15fcfb9e765c3d5d22693a2",
+    "lab/scorer/jobs.py": "4e71d2cd3c5868e5ca698b40533f211b28c134c5916820866f1fc78dc6514647",
+    "lab/scorer/service.py": "0eb2306f2ce61dc8aac51e2504d8cde3c640488aea245ee07fca5265ee0ac246",
+    "lab/scorer/supervisor.py": "f782bf031a4e57c137680648b078550248a2cc161d78468208c281bef5dc6efd",
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/worker.py": "72a535086892d858e3992005009f508ae8e97e80baebf8f0c37f01a57dcc5496",
+    "lab/suite_limits.py": "7346f938ad21eef8e0eb633335d0618211ae893560d1c11b59c2b4360d1b49c2",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "4cb3b417b008b8406c2c34376f581f6c85c502c8885129bc49e68aeb9acd24ce",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b",
+    "ops/sandbox-image.lock": "b13fb5bde69e3ccd6e88ab27245f3b13be5a549587a34da9b285fc8a23e30313",
+    "pyproject.toml": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+    "tests/director_dispatch_owner_review.py": "bfb556a9be13dfc91d87720841cf416721e7348d1d186e61063a3f3cd5b42054",
+    "tests/director_recovery_owner.py": "39546a578338de5154cb821108254e13ae84a8b027f0d3a9d4c3fe1a109dff0d",
+    "tests/test_alarm.py": "bd30430d75351fc9f0a7f29f901a3847fb41702b54ed49180597cc0c31c9d10d",
+    "tests/test_aos_gpu_executor.py": "9f3ef33635f1f600831c1003295e823656be2b1bf54008c648137b96ed222bf1",
+    "tests/test_api_and_scorer.py": "1cf14fc8a8f88d5659331d6b246c9b57904cd2b298f2c6428d9cb43019859443",
+    "tests/test_baselines.py": "9a159fecc5e55e89f1cf9da7def7341719e5042c8c271d08db8a264d22583935",
+    "tests/test_blob_store.py": "ee06310820532b1defa064718d9d29717c53897233aef07708e46e6a7368eb02",
+    "tests/test_care_holdout.py": "31fc053d72e4b47bd2e10e6d02e9f0421925bdc1d4cc9d27c47f3945c3719202",
+    "tests/test_console_acceptance.py": "f68c3b2b7ef12d3b41a6228ca0363a4c4dc46a8015433261c5dcd44824f66732",
+    "tests/test_console_checks.py": "c03e26212f3036157500332947424330ac8efe00cf7cc1d18d6d55a7ee698e8a",
+    "tests/test_console_host.py": "23d38a0dfa8165da5f772a443614305f1fde37a477963b01f227cd6862e74bc9",
+    "tests/test_console_upstream.py": "3821d7c8af4ee516cd3fe704b2d03f8dbbe1abe68a1f1ba4d1197c83c47e0ac2",
+    "tests/test_director_artifacts.py": "e55369bccaf42a8115d86b4b2948aa1ae5d9d9734f012423fb5efc54934f27a9",
+    "tests/test_director_baseline_records_review.py": "63c8d3138b288583a5f0c491fa0898a84e3cc006bc10c88815cc7531992d2a1b",
+    "tests/test_director_budget_review.py": "2e5453445f12e5b43e2e79a29c40f85472ee92c32f4a8077cb83378b8bef0a3c",
+    "tests/test_director_confirmation_review.py": "25c7362bb2436d86d51a86200a78d68cb0f12709ab21eb5eddfbf20e4bf0f3b2",
+    "tests/test_director_contracts.py": "26b0c6e3741f5861650d5a4fbd7e3438d2e4a5326cbab0be8943211562b4e623",
+    "tests/test_director_dispatch.py": "8d3f998909b2a781c8cf4edca1e888c2b2d2df78972f8dbcd978357568338445",
+    "tests/test_director_dispatch_owner.py": "ef0af84295ed9f2c776f595cd138da4090f5f2bf4f3358d035df8e37d3723a24",
+    "tests/test_director_harness_mismatch.py": "5ce47b1605046c79b8a7dfe42608a13f2ecdcb3e0c3141caea91639552f67d2a",
+    "tests/test_director_loop_core.py": "cdc6b3872b9d146eea9e4c0e09f665f03914f6e489233ac160ded9caf0b6d606",
+    "tests/test_director_parent_seed_review.py": "0e820fb1163390de09c2ceecce129d6ba2fbfa6fed1cac254a788f1ff061389d",
+    "tests/test_director_primary_recovery.py": "69e8cb095982cb09aef463b8d4d6e3cf9d9d5337c87a2f462bc4f6ecab87890a",
+    "tests/test_director_provider_overrun.py": "be2b8b36a7a445b602b6ebd4202ad5c9376e761c88455c5056126321aa798049",
+    "tests/test_director_recovery_identity.py": "5197e72347eeb9c764fe53b67dcffc00c1df4eecb2395aa65f086fbb230a876e",
+    "tests/test_director_recovery_pg_review.py": "9671220d6e5d5761cb2fd6c0eba0d8a97f195c2905050cd48627ba02f8a99ce7",
+    "tests/test_director_seed_resume_review.py": "bbdedf3597e40065a3a7a074a3b775ca41be7d4cd2e26a87c3607e964ecc7d03",
+    "tests/test_director_simplicity_review.py": "5c0a0c59ce86abad29c2af45ef8433388e44050a88a5680dd77da04fedd543dd",
+    "tests/test_director_strategy.py": "b956eb4ffb3774f5087b91b387ba32ef1445f082eb316c5ed4b4dd19516ea5d1",
+    "tests/test_evaluation_guards.py": "ceb4db70743b378153cd4536c1d791562e8787f53ae6c00861d2570882de12e7",
+    "tests/test_evt_masks.py": "f91a53480b8c365845169e8c7fac32038b94059f0ec4f86d2d7898c6edc7030a",
+    "tests/test_fingerprint.py": "0b8622aaa6f67a724b3f162c4a521d25830451911509a83ec771c49b0e4e203e",
+    "tests/test_gpu_scheduler.py": "09d1586e2d82f0d1fd5adcf0a7452500684fe7672a3946c3458db06ec6d46935",
+    "tests/test_holdout_loop_recovery.py": "854c2945f6c65483bf82f2aa48a048a3124d58ca67f7f37ceb9baa257201673e",
+    "tests/test_holdout_privacy.py": "3188a5b8b696e239366b8869e08af494513b36417d5a2a824debde899c315762",
+    "tests/test_holdout_recovery.py": "24c3d2b29761a6c00d4c4ce8b80b01666e465f43d84a7e2de5ae75ab6dfbf721",
+    "tests/test_local_qwen_provider.py": "bb66717c044fcbdb057d7306c3208b158800c662908515d10a431f354670600b",
+    "tests/test_loop_family_primary_score.py": "cf976948e47f2bdb2b98064346e1f98606accb7e2882f6c771c74b38db0ae9a8",
+    "tests/test_native_runtime.py": "b9dfc2d7d0d80be197c71fc0cb8325a85007b6ba779eadca1ed09aba64a6b46a",
+    "tests/test_postgres_care_farm_b_registration.py": "db4f548e1ea258e70da79b26c0ff520fa46126b545151749ff93912cfadb3846",
+    "tests/test_postgres_holdout030_recovery.py": "42822137255cbaa9c9c1011d74ff74ed4b97e83f9290e35fb99f98a19b7bf371",
+    "tests/test_postgres_holdout_api_identity.py": "c738df836102f6b7e67ed7a8d6db58e0c47652f55c3ca92eb0dd8cceb881f926",
+    "tests/test_postgres_public_family_scorer.py": "c568fb72acd5885996bd9390cac4ab71d554c60351b821b810f3349e306f71a3",
+    "tests/test_postgres_run_end_unavailable.py": "f7803f987c964a6626298b877be965dd001650f60aaa7fd96b399ef25abb0ad2",
+    "tests/test_postgres_scorer_integration.py": "6b84ddb4525f150def6d055e3a3df16051c7b5fcff4b0044b7337556b7817564",
+    "tests/test_public_data.py": "de78279f0df5234fad77419f3e18825c5f168c9a0e6a9fb7563c593bcb3099b4",
+    "tests/test_public_label_batching.py": "dd250073db1b5cd087bc541b72a58ca57cfcce2466bbdd46a8aa88cfc5960044",
+    "tests/test_public_scorer_families.py": "09eac1af87d1492ea713d221a36e5caf82adc2f1d1e8511441c0130998d2dfb8",
+    "tests/test_referee.py": "a73425086cf93e1d7073b1723471cf5027667c4e381d0c888cc1b14b8ff0de65",
+    "tests/test_referee_cumulative.py": "26256b82da75fd5e2c5ac778fb138ed4b9d155a214d09c1ca40e359784dba921",
+    "tests/test_report_replay.py": "ff731fc18b6de8a479a070dc0ae6084475eb481a09da16f6f3a30dabaabbd688",
+    "tests/test_runner_family_measurement_checkpoint.py": "d7e62880bd351562d0f72303d434e3388c707e22b5cdfdfc426d009830dac51e",
+    "tests/test_sandbox_runner.py": "915a828c4ceba91fd53d5e872a34ed22bcc7fa14f49458d87cb11abbe618e730",
+    "tests/test_scorer_invocation.py": "29f3fbcc2b6383c9c06f59e3afc430a7f92a5a24f043eab811bf84f8c0ba01cd",
+    "tests/test_shared_gpu_runtime_db.py": "1e4dbdee8e3b79c713478d198e82b71df486899b699933ded42ea56d6ab5208f",
+    "tests/test_suite_guards.py": "0c037390db4fcefc8c3b4da267c6ec3537492279ae780e4e30dcee529150917c",
+    "tests/test_suite_manifest.py": "ffb0dcd39ea2d746951b180bf327c2c5a7a0e117a5489b9fe2b15d71ed5b67b0",
+    "tests/test_suite_weights.py": "c4626d46b3cfbe042ee56a9756f4af5e52683959ce2d48133d6d8e46367fc85d",
+    "tests/test_training_maintenance.py": "2f6ae792a7d71709b031a02836ae4ecd1b83e8c79e1127b5c47385f72a792270",
+    "tests/test_tsb_source_order_split.py": "123f17594f109e7d01465154230de10cf362bff6e2350663e30376285025b5e1",
+    "tests/test_vus_golden.py": "b41cbe95e39153a69abf5d91854261025fcf443b81b86dab8ce9298161325f45",
+    "uv.lock": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5",
+    "vendor/__init__.py": "c6a56bc9e54e8248bb2f9294d394f7869e1f2959e1e7ebb17054b089da0546aa",
+    "vendor/tsb_ad_eval/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "vendor/tsb_ad_eval/NOTICE.md": "af8de8404b18d0a033fb5f5aeb8cb5148969b47f88ada2674d916324d5baf0fa",
+    "vendor/tsb_ad_eval/__init__.py": "e758702baf9c178c1c15542ce10d160b06c8ed2e0ab631738caa87d5daf4cf08",
+    "vendor/tsb_ad_eval/basic_metrics.py": "1fcddedf5ada1d5221f39ee568c7fddb9e7181bd7e1c19636c2cbecf40c97707",
+    "vendor/tsb_ad_eval/basic_metrics.pyi": "dee1dc8e503b5e815b5161d5c9646931ae61544b42ab2e3a9b6c9c5bf39ef0a1"
+  },
+  "script_sha256": "aa0ba4c4460eb3ba5c39755860e7e32e0ca437ecd99aa03fd933aab4693b3147",
+  "checks": [
+    {
+      "role": "director",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.read_run_end_admission_registration(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_run_end_admission_registration(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_run_end_admission_registration(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.read_run_end_unavailable(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_run_end_unavailable(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_run_end_unavailable(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.fence_run_end_unavailable(uuid,text,text,text,text,integer,text,text,integer,double precision,text,integer)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.fence_run_end_unavailable(uuid,text,text,text,text,integer,text,text,integer,double precision,text,integer)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.fence_run_end_unavailable(uuid,text,text,text,text,integer,text,text,integer,double precision,text,integer)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "table": "lab.holdout_run_end_unavailable",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "table": "lab.holdout_run_end_unavailable",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "table": "lab.holdout_run_end_unavailable",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": null,
+      "expected_sqlstate": null,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_run_end_admission_registration",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": null,
+      "expected_sqlstate": null,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "fence_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "table": "lab.holdout_run_end_unavailable",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_run_end_admission_registration",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "fence_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "table": "lab.holdout_run_end_unavailable",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": null,
+      "expected_sqlstate": null,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_run_end_admission_registration",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "fence_run_end_unavailable",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "table": "lab.holdout_run_end_unavailable",
+      "sqlstate": "42501",
+      "passed": true
+    }
+  ],
+  "image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "container_id": "72f06a4504d61dce6b16011606676d3ed39b6d40872c90db9acd560c09ba9df9",
+  "container_name": "swapp-holdout-030-pg-smoke-045ed75c64bb",
+  "database": "swapp_lab_m0_holdout_030_045ed75c64bb",
+  "port": 32781,
+  "migration_exit_code": 0,
+  "migration_output": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\nINFO  [alembic.runtime.migration] Running upgrade 0020_holdout_recovery -> 0021_run_end_unavailable, Fence run-end admission when no safe query can be started or resumed.\nINFO  [alembic.runtime.migration] Running upgrade 0020_holdout_recovery -> 0021_run_end_unavailable, Fence run-end admission when no safe query can be started or resumed.\n",
+  "revision": "0021_run_end_unavailable",
+  "trigger_exists": true,
+  "unavailable_trigger_count": 3,
+  "test_command": [
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--tb=short",
+    "--basetemp",
+    "/home/cachyos/ai-scientist/data/runtime/holdout-030-pg-smoke/045ed75c64bb4acd9ef316e42a70d2e4/source/data/runtime/review-pytest",
+    "-m",
+    "live",
+    "tests/test_postgres_care_farm_b_registration.py"
+  ],
+  "test_exit_code": 0,
+  "test_output": ".                                                                        [100%]\n1 passed in 40.33s\n",
+  "test_passed_count": 1,
+  "test_skipped_or_deselected": false,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "source_now_matches_snapshot": true,
+  "snapshot_unchanged": true,
+  "exit_code": 0,
+  "root_execution": {
+    "session_id": 89405,
+    "completion_chunk": "241c8f",
+    "actual_exit_code": 0,
+    "unit": "swapp-care-b-registration-pg-20260927-d6a20.service",
+    "wall_seconds": 43.554,
+    "cpu_seconds": 21.053,
+    "memory_peak_reported": "1G",
+    "swap_peak_bytes": 0,
+    "limits": {
+      "MemoryMax": "1G",
+      "MemorySwapMax": 0,
+      "CPUQuota": "50%",
+      "TasksMax": 64,
+      "RuntimeMaxSec": 360
+    }
+  },
+  "aggregate_report": {
+    "path": "docs/ai-scientist/review-evidence/care-b-registration-readback.json",
+    "sha256": "59ef99e5dfe42c5384015971b82bdfb0c5cb483136e627e49a1e44b91da9b461",
+    "snapshot_path": "data/runtime/holdout-030-pg-smoke/045ed75c64bb4acd9ef316e42a70d2e4/source/data/runtime/review-private/care-registration-report.json"
+  }
+}

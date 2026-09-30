@@ -1,0 +1,33 @@
+{
+  "started_at": "2026-09-24T09:13:59.322781+00:00",
+  "finished_at": "2026-09-24T09:16:44.326131+00:00",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=ai-scientist-vllm-install",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--property=RuntimeMaxSec=1800",
+    "--property=MemoryMax=6G",
+    "--property=CPUQuota=200%",
+    "--property=Nice=10",
+    "--property=IOWeight=10",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "/home/cachyos/.local/bin/uv",
+    "pip",
+    "install",
+    "--python",
+    "data/runtime/vllm/.venv/bin/python",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--torch-backend=auto",
+    "vllm==0.30.0"
+  ],
+  "exit_code": 0,
+  "log_path": "data/runtime/setup/vllm-install.log",
+  "stop_reason": null,
+  "free_bytes_after": 86821122048,
+  "model_service_started": false
+}

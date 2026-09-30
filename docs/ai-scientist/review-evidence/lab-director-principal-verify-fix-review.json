@@ -1,0 +1,79 @@
+{
+  "schema": "lab-director-principal-verify-fix-review.v1",
+  "base": {
+    "meaning": "Initial principal-namespace delta already integrated by root; this incremental patch is based on those exact source bytes.",
+    "source_sha256": {
+      "lab/llm/gpu_scheduler.py": "ff98b0aab49f04d5a66ce3448b102a810337ba0f2b4f88f2c18fa48934827cec",
+      "tests/test_gpu_scheduler.py": "a8225d02352de05d1d836eede5863ccd98d30bfa83d11bb955e22ae2b0a1c5e1"
+    }
+  },
+  "final_sha256": {
+    "lab/llm/gpu_scheduler.py": "f2c5e55016b37f5ba34c50e59a8ec3bb49e6146dce5ae39d9733f2721e335b2a",
+    "tests/test_gpu_scheduler.py": "cd1b419341d18659961fb84c29e74406a3ec1031dc5dc694b8467214925b5de5"
+  },
+  "patch": {
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/lab-director-principal-verify-fix.patch",
+    "sha256": "bfe902e70040195cba1730affef9683fc1a3a9766b737c7f7a6c6d8a7ff6acd7",
+    "bytes": 2099,
+    "git_apply_check_exit": 0,
+    "source_byte_parity": "2/2"
+  },
+  "increment": {
+    "code": "SystemdPrincipalResolver.verify passes owner into owner-bound `_systemctl_show` validation.",
+    "tests": "Positive verify fixture uses the fixed Lab owner and configured GPU slice; a real unit probe executes resolve then verify."
+  },
+  "callsite_audit": {
+    "command": "rg -n \"_systemctl_show\\(\" lab/llm/gpu_scheduler.py",
+    "result": "All call sites are owner scoped: resolve passes owner variable; verify passes receipt.owner."
+  },
+  "validation": {
+    "unit": "luna-director-principal-final.service",
+    "command": "PYTHONPATH=. /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q tests/test_gpu_scheduler.py && /home/cachyos/ai-scientist/.venv/bin/ruff check lab/llm/gpu_scheduler.py tests/test_gpu_scheduler.py && /home/cachyos/ai-scientist/.venv/bin/python -m py_compile lab/llm/gpu_scheduler.py tests/test_gpu_scheduler.py",
+    "exit_code": 0,
+    "stdout": "17 passed in 0.25s; Ruff clean; py_compile clean; runtime 428ms; CPU 433ms; peak 72.1M; swap 0B",
+    "log": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/lab-director-principal-final-validation.log",
+      "sha256": "c08cb0a1e7c1df28b46386b875534c59837b44740c55ac0cfa5ed2bbd3bf8feb"
+    },
+    "limits": "bounded user systemd + shared CPU lock; MemoryMax=2G, MemorySwapMax=0, CPUQuota=100%, TasksMax=128, RuntimeMaxSec=240s"
+  },
+  "real_systemd_probe": {
+    "unit": "swapp-ai-scientist-director-dispatch-a7742015b0494fba81c9d888ef872578.service",
+    "command": "PYTHONPATH=. /home/cachyos/ai-scientist/.venv/bin/python /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/probe_lab_director_dispatch_principal.py --lab-unit=<unit>",
+    "exit_code": 0,
+    "owner": "lab",
+    "verified": true,
+    "identity_fields": [
+      "PID",
+      "start_ticks",
+      "boot_id",
+      "InvocationID",
+      "MainPID",
+      "ControlGroup",
+      "current cgroup",
+      "swapp-gpu.slice"
+    ],
+    "actual_cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-ai-scientist-director-dispatch-a7742015b0494fba81c9d888ef872578.service",
+    "database_opened": false,
+    "cli_claim": false,
+    "gpu_requested": false,
+    "resource_limits": "MemoryMax=512M, MemorySwapMax=0, CPUQuota=100%, TasksMax=32, RuntimeMaxSec=60s",
+    "cleanup": "systemd-run --collect; LoadState=not-found, ActiveState=inactive",
+    "helper": {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/probe_lab_director_dispatch_principal.py",
+      "sha256": "95c03331551d61fd348ba1e13febd4261c156919656279391bca341077955f77"
+    },
+    "log": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/evidence/lab-director-principal-systemd-probe.log",
+      "sha256": "6c97d0bd90180130af84e0d3a519a1f8c7bb1e5bae7fadcea07f153a67419d69"
+    }
+  },
+  "development_failure": {
+    "exit_code": 1,
+    "reason": "First rerun used a fixture cgroup outside the configured swapp-gpu.slice; resolver.verify correctly rejected it. Fixture corrected before final 17-test success.",
+    "evidence": "See preceding tool output; failed test was test_principal_verification_keeps_owner_bound_unit_lookup."
+  },
+  "limitations": [
+    "No model/GPU inference or Director database/CLI claim. This verifies only current Lab principal process identity and run-bound namespace."
+  ]
+}

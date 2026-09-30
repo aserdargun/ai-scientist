@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-09-24T18:45:16.547110+00:00",
+  "run_id": "91f63207-da20-4ada-9ff2-7cc433fb1b37",
+  "scope": "Production label-free suite loader and actual Planner PostgreSQL role. Four synthetic profiles; no baseline, Docker, model or Director20 execution.",
+  "source_sha256": "4f478969c19540b5d686c17be7edf693cc9df823d4efe867121d27995b518541",
+  "inputs": {
+    "suite_file": "/home/cachyos/ai-scientist/data/runtime/director-manifest-review/91f63207-da20-4ada-9ff2-7cc433fb1b37/suite.json",
+    "suite_manifest_sha256": "ac8e725181e67658b343e2745041d4d68506f8b4f3f1c82b1bd27ea260f243ef",
+    "scenario_file": "/home/cachyos/ai-scientist/data/runtime/director-manifest-review/91f63207-da20-4ada-9ff2-7cc433fb1b37/proposals.json",
+    "scenario_sha256": "91747f91991f55f9d43ae9fb3de7b1700bb5f9d29505dd970af3110007dceda3"
+  },
+  "checks": {
+    "valid_manifest_and_exact_hash": true,
+    "task_ids_bound_to_hardcoding_guard": true,
+    "planner_has_no_label_read_grant": true,
+    "reject_profile_hash": true,
+    "reject_sample_count": true,
+    "reject_label_field": true,
+    "reject_provenance_identity": true,
+    "reject_non_dev_profile": true
+  },
+  "owned_fixtures_removed": true,
+  "source_unchanged": true,
+  "all_passed": true
+}

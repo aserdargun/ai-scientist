@@ -1,0 +1,27 @@
+{
+  "schema": "holdout-030-first-gate-failure.v1",
+  "session_id": 63320,
+  "completion_chunk": "63aeaf",
+  "actual_exit_code": 1,
+  "unit": "swapp-integration-030-gate-20260927-a38b7.service",
+  "wall_seconds": 59.286,
+  "cpu_seconds": 55.504,
+  "memory_peak_reported": "479.9M",
+  "swap_peak_bytes": 0,
+  "gate_sha256": "d35ed3e4fe17160b3204b66dc8a084640e71cd6125d0bccc965a15c553ec8cab",
+  "stdout_sha256": "f5f7e168897a6a98d40f1e0c5e5b6f73dd933c92c79ee63bf4289718610e58df",
+  "image": "sha256:c955501e0ed7acaa23925a17ab94c8e6168b048c84f150f0987471ee807aae2b",
+  "failures": [
+    "Bandit B101: production assert for required reservation",
+    "Bandit B110: silent exception while publishing failure",
+    "pytest: missing care-b-prefix-materialization.py review helper in main integration"
+  ],
+  "passed_commands": [
+    "ruff",
+    "pylint",
+    "mypy (94 sources)",
+    "wheel build",
+    "wheel import"
+  ],
+  "pytest": "486 passed, 1 failed, 7 skipped, 22 deselected"
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "holdout-lifecycle-diagnostic-source-review.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "source_worktree": "data/runtime/parallel-m0/lifecycle-030",
+  "reviewed_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "c44355cb03a1376818fd27644d3d0f85b32c020aa690bd1665f6c292a7ead0ba",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "aa8f457fdf75e7bba53029b9adfd9a29fddd22128d2e3d6ee8c5045ddc8f4ee5"
+  },
+  "status": "correction_requested",
+  "finding": "Raw byte tail is cut before secret redaction; a password crossing the retained-tail boundary can leave a suffix in the receipt. Discard the first partial line before sanitization and add boundary regression.",
+  "accepted_scope": [
+    "already-exited child exit capture",
+    "wait/reap before cleanup"
+  ],
+  "live_execution": false
+}

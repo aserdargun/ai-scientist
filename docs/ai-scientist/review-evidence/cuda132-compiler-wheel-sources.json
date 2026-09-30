@@ -1,0 +1,43 @@
+{
+  "schema": "cuda-compiler-wheel-provenance.v1",
+  "packages": [
+    {
+      "name": "nvidia-cuda-nvcc",
+      "version": "13.2.78",
+      "source": "https://pypi.org/pypi/nvidia-cuda-nvcc/13.2.78/json",
+      "release_page": "https://pypi.org/project/nvidia-cuda-nvcc/13.2.78/",
+      "wheel": "data/runtime/cuda132-repair/nvidia_cuda_nvcc-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/65/0f/c7c7d538c61794130e759ad74710ab5aa8cab1f700ee1754381f8c665605/nvidia_cuda_nvcc-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "size": 44040318,
+      "sha256": "c3bd144dd9b6b25e062589acb7bbd43d93d3120c72fad71da808f9817aba1239",
+      "requires_dist": [
+        "Requires-Dist: nvidia-nvvm",
+        "Requires-Dist: nvidia-cuda-runtime",
+        "Requires-Dist: nvidia-cuda-crt"
+      ]
+    },
+    {
+      "name": "nvidia-cuda-crt",
+      "version": "13.2.78",
+      "source": "https://pypi.org/pypi/nvidia-cuda-crt/13.2.78/json",
+      "release_page": "https://pypi.org/project/nvidia-cuda-crt/13.2.78/",
+      "wheel": "data/runtime/cuda132-repair/nvidia_cuda_crt-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/ea/78/501eee5cce9202fba2f3476529e296a7f6d003261d80b52ab0abfa09ddd6/nvidia_cuda_crt-13.2.78-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "size": 133301,
+      "sha256": "2c8615ee30ed466cb6298ecb8ffe9e6ea8b252ca833206152d155750bf831608",
+      "requires_dist": []
+    },
+    {
+      "name": "nvidia-nvvm",
+      "version": "13.2.78",
+      "source": "https://pypi.org/pypi/nvidia-nvvm/13.2.78/json",
+      "release_page": "https://pypi.org/project/nvidia-nvvm/13.2.78/",
+      "wheel": "data/runtime/cuda132-repair/nvidia_nvvm-13.2.78-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/e8/1f/930d63ccc8adcdf27bfc051a24e3e4da2cf6ef987848d6d1d642e29d704b/nvidia_nvvm-13.2.78-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl",
+      "size": 64279462,
+      "sha256": "f5aa433631109bbdec81802c5b5f319bf10bc891fe2f212e4e445845211d6f77",
+      "requires_dist": []
+    }
+  ],
+  "scope": "Downloaded and hash verified only; installation pending."
+}

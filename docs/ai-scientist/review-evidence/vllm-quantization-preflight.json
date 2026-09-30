@@ -1,0 +1,96 @@
+{
+  "checked_at": "2026-09-24T10:49:30.635898+00:00",
+  "vllm_version": "0.30.0",
+  "source_sha256": {
+    "data/runtime/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/layers/quantization/__init__.py": "55f1d9d309d9caee6b0d47a95004dfa380e504c6cca061a6766c92c2654e11e4",
+    "data/runtime/vllm/.venv/lib/python3.12/site-packages/vllm/config/quantization.py": "acffc52f525b39a88efd656f1ed705ce3a1b758298bb0684fac7694776bc10b4",
+    "data/runtime/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/layers/quantization/online/fp8.py": "9a85ec701ae187898af9c65a3ce17ad0c3d5d741e60eb8f8c61ef48b036ac4a6",
+    "data/runtime/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/default_loader.py": "9c9d54b1b650bf5affc924ebb8b8c73711e187ae7486cadd9f737bb1279cc7b8",
+    "data/runtime/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/qwen3_5.py": "3abeac36180df7bd1bd96b1a7c698a8f212d92c063026420cbdd16d1980e90e6"
+  },
+  "installed_quantization_methods": [
+    "awq",
+    "auto_awq",
+    "fp8",
+    "fbgemm_fp8",
+    "fp_quant",
+    "modelopt",
+    "modelopt_fp4",
+    "modelopt_mxfp8",
+    "modelopt_mixed",
+    "auto_gptq",
+    "gptq",
+    "gptq_marlin",
+    "awq_marlin",
+    "humming",
+    "compressed-tensors",
+    "experts_int8",
+    "quark",
+    "moe_wna16",
+    "torchao",
+    "inc",
+    "mxfp4",
+    "gpt_oss_mxfp4",
+    "deepseek_v4_fp8",
+    "online",
+    "fp8_per_tensor",
+    "fp8_per_block",
+    "fp8_per_channel",
+    "int8_per_channel_weight_only",
+    "nvfp4_per_token",
+    "mxfp8"
+  ],
+  "bitsandbytes_is_builtin": false,
+  "fp8_per_tensor_is_builtin": true,
+  "fp8_online_meta_weight_allocation_found": true,
+  "checkpoint_headers": [
+    {
+      "file": "model.safetensors-00001-of-00004.safetensors",
+      "header_bytes": 1776,
+      "header_sha256": "9bcf722bdd0eee137b7f0e225f4bfb50683b9b33c42de0d560498ce92a8c63b0"
+    },
+    {
+      "file": "model.safetensors-00002-of-00004.safetensors",
+      "header_bytes": 6816,
+      "header_sha256": "6fb55b1326b7e6b47a38ce4723552eada6c80d09e58eda1d46f25cb8d3e06658"
+    },
+    {
+      "file": "model.safetensors-00003-of-00004.safetensors",
+      "header_bytes": 8312,
+      "header_sha256": "fd6ddcdceb46ce1b198534560343050523cbf70d15e9435d7716b693d4a67bab"
+    },
+    {
+      "file": "model.safetensors-00004-of-00004.safetensors",
+      "header_bytes": 77528,
+      "header_sha256": "245c737a43e483e0a9e743be9c75a366d56bec2ea238086dda8b5c2bc224571a"
+    }
+  ],
+  "checkpoint_bytes_by_prefix": {
+    "lm_head.weight": 2034237440,
+    "model.language_model": 15873376768,
+    "mtp.layers": 419447808,
+    "mtp.fc": 67108864,
+    "model.visual": 912020960,
+    "mtp.norm": 8192,
+    "mtp.pre_fc_norm_embedding": 8192,
+    "mtp.pre_fc_norm_hidden": 8192
+  },
+  "checkpoint_bytes_by_dtype": {
+    "BF16": 19306201056,
+    "F32": 15360
+  },
+  "language_model_and_lm_head_bf16_bytes": 17907614208,
+  "reading_scope": "AST/text and safetensors headers only; no tensor contents, model construction, CUDA call, server or GPU inference",
+  "implications": [
+    "Use the installed fp8_per_tensor online scheme for the planned FP8 experiment; older BitsAndBytes examples do not describe this installed registry.",
+    "Meta weight allocation is a source observation, not proof of actual startup peak memory or kernel compatibility.",
+    "Language model plus lm_head BF16 tensors already exceed 16 GiB; unquantized all-GPU loading cannot fit this host.",
+    "Actual sm89 kernel support, 32k context with two sequences, throughput, prefix caching, S1/S2 tools and bounded GPU handoff remain unverified."
+  ],
+  "primary_sources": [
+    "https://docs.vllm.ai/en/latest/features/quantization/online/",
+    "https://recipes.vllm.ai/Qwen/Qwen3.5-9B"
+  ],
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_vllm_quantization.py",
+  "script_sha256": "f99c6a68ec624b015ac0059c4bc458905254b7b69b05d1285800708cc1415195"
+}

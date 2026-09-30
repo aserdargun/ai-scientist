@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-25T05:46:36.959131+00:00",
+  "scope": "Private fresh API principal and current local provider configuration for existing four synthetic EVT inputs; real read-only Planner loader validates profiles. No run, proposals, models, Docker jobs or scientific acceptance.",
+  "config_directory": "data/runtime/local-qwen-review/config-06efabcea3184e288e80b52ebfe04b11",
+  "owner_id": "local-qwen-019-06efabcea3184e288e80b52ebfe04b11",
+  "provider_config_sha256": "3c65cd5585625f5a56fb63a0b0506d87d730f24485f9057a980fe4b9efa717a0",
+  "harness_sha256": "8c627a8d7efbd4c91294cbac543d99f26e92f7d6727a86f55f4f7597cb4bd8f3",
+  "image": "sha256:709275c8063e9496fd6f742a292a204cf1be1484fd784544fafed8104c2cbb2c",
+  "config_sha256": {
+    "suites.json": "58c7ddb38e1889b4a065c0bcfa559428fb29d2b70985908439d1ed32939f0c86",
+    "principals.json": "874b4425ecb296d8b3be8085e76ccd9c1a65f2a2efcb5eb1df2349b13bf8009b"
+  },
+  "suite_manifest_sha256": "c0c1e4d87fd26cb2a63b5da416e33ca4c415d15f8a5e8be7aa885d4fac2445da",
+  "tasks": 4,
+  "checks": {
+    "private_config": true,
+    "current_registered_provider": true,
+    "six_proposals": true,
+    "four_valid_synthetic_tasks": true,
+    "separate_local_identity": true,
+    "manifest_digest": true
+  },
+  "all_passed": true
+}

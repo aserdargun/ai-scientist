@@ -1,0 +1,14 @@
+{
+  "schema": "release052-main-gate-binding.v1",
+  "session": 49170,
+  "launch_chunk": "3295d4",
+  "final_chunk": "62b5c7",
+  "exit_code": 0,
+  "elapsed_seconds": 73.4555050669951,
+  "source_unchanged": true,
+  "mapped_source_files": 286,
+  "tests": "========= 907 passed, 7 skipped, 100 deselected, 33 warnings in 15.59s =========",
+  "gate_sha256": "abfac0e8b87d10fb4ab1e1aa825f3ca5c87faf62754fb35e64c0975deb70aa4e",
+  "gate_record": "release052-gate-225ac66bf379.json",
+  "commands_record": "release052-gate-225ac66bf379-commands.json"
+}

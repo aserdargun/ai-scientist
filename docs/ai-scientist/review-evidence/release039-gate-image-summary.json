@@ -1,0 +1,84 @@
+{
+  "schema": "release039-gate-image-summary.v1",
+  "date": "2026-09-30",
+  "harness_version": "0.39.0",
+  "main_release_promoted": false,
+  "main_version_at_review": "0.38.0",
+  "actual_gate_exit_code": 0,
+  "actual_command_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "pytest": {
+    "passed": 1163,
+    "skipped": 7,
+    "deselected": 120
+  },
+  "gate_source_unchanged": true,
+  "gate_inventory_files": 359,
+  "runtime_files": 301,
+  "tracked_head_test_document_files": 58,
+  "gate_driver_sha256": "13520eb870b6f0a435257f2517aadd5c37b4ef55847a1b96f71f4fcaaf9220c9",
+  "gate_freeze_sha256": "1ac00dae439b6483bcdfc8a846cc4d8ae0a58813562381e1e5734b3a94ad3179",
+  "actual_image_exit_code": 0,
+  "image": "sha256:db696e98a3d615b3151bc17614beaff35819e7fbc1a193f5ecd5141d90c7cf50",
+  "image_runtime_seconds": 6.144,
+  "image_parity_all_passed": true,
+  "image_user": "10001:10001",
+  "image_runtime_files_equal_final_gate": true,
+  "test_only_document_additions_required_no_image_rebuild": true,
+  "evidence_sha256": {
+    "gate-1cd63ae25281.json": "7a0256f2c913de546fcc29b2214dfdfe8a413224933f2b84d40c7f238d10e64e",
+    "gate-1cd63ae25281-launch.json": "dc73091b0be5e1e1c06a09d065fc555450d22de28c59f4f1c1cb9fef408bf422",
+    "image-633495f5fb2e.json": "f2641142b1b1e32be9d30466f3884fe9ed6b993836375070a7da8f5c011f6fca",
+    "image-633495f5fb2e-launch.json": "e339be297a93ad06d710a18deab707159328714bba8fc5cd2c551518d0f173d0",
+    "image-633495f5fb2e-parity.json": "ec4f2bf1aa40b49d1d3540bf79741cf811fd4cb9a3eb851545136222affe5123",
+    "gate-15d30914ba90.json": "f1dd53e783b255314fa6f02f728e44b8bdaf925f924faa4cba349cb527b0dfc8",
+    "gate-bc34843826f0.json": "ca09288e376eb0155c81b5f87677f2ea3cce588ddf656797e5f303fc74c7075d"
+  },
+  "failed_gate_history": [
+    {
+      "receipt": "gate-15d30914ba90.json",
+      "exit_code": 1,
+      "command_exit_codes": [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      "cause": "four absent test document fixtures at collection",
+      "preserved": true
+    },
+    {
+      "receipt": "gate-bc34843826f0.json",
+      "exit_code": 1,
+      "command_exit_codes": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "pytest": {
+        "failed": 26,
+        "passed": 1137,
+        "skipped": 7,
+        "deselected": 120
+      },
+      "cause": "two remaining absent HEAD test documents",
+      "preserved": true
+    }
+  ],
+  "M0_10_complete": false,
+  "scope": "Private candidate CPU quality gate and isolated image verification; no new research, holdout, GPU/model, AOS coexistence or main deployment acceptance."
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "local-qwen-wire-outcome.v1",
+  "checked_at": "2026-09-25T03:24:41.268228+00:00",
+  "scope": "Read-only interrupted actual-run status; no proposal, S2 or coexistence acceptance. External consumer is not attributed to AOS. Incomplete baseline ledger is retained for fenced recovery.",
+  "run_id": "75642033-6e46-4a73-82a9-9e1ecb6066d3",
+  "wire_path": "docs/ai-scientist/review-evidence/local-qwen-018-wire-review.json",
+  "wire_sha256": "c0a926e1953043b3ed4487216fb02b6cb74c5e53df22843e78d63df21b5079c1",
+  "actual_tool_session": 31486,
+  "actual_tool_exit_code": 1,
+  "run_state": {
+    "state": "stop_requested",
+    "stop_requested": true,
+    "report_sha256": null
+  },
+  "experiments": [
+    {
+      "experiment_id": "exp_2b122d3d53d45d23a247b922fdd67404",
+      "kind": "baseline",
+      "status": "scored"
+    },
+    {
+      "experiment_id": "exp_7bca30b528b6557c9121948a58bca001",
+      "kind": "baseline",
+      "status": "primary_running"
+    }
+  ],
+  "scorer_result_count": 23,
+  "provider_attempt_checkpoint_count": 0,
+  "observed_model_generation_count": 0,
+  "foreign_observations": [
+    {
+      "elapsed_seconds": 330.4279871250037,
+      "consumers": [
+        {
+          "pid": 2638707,
+          "process_name": "/home/cachyos/.venv/bin/python",
+          "used_mib": 3894.0,
+          "start_ticks": 8116874,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 1000,
+          "comm": "python",
+          "cgroup": "0::/user.slice/user-1000.slice/session-19.scope",
+          "identity_readable": true,
+          "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "existing_display_exemption": false
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "sources_match_failed_execution": true,
+    "foreign_consumer_caused_stop": true,
+    "stop_requested_persisted": true,
+    "no_fabricated_report": true,
+    "no_actual_model_started": true,
+    "no_registered_model_proposals": true,
+    "owned_cleanup_completed": true
+  },
+  "remaining_recovery": "Incomplete baseline experiment remains primary_running; durable research finalization/recovery remains open."
+}

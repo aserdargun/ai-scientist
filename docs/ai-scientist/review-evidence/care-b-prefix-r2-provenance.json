@@ -1,0 +1,36 @@
+{
+  "archive_rescanned": false,
+  "frozen_artifacts": {
+    "driver": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030/docs/ai-scientist/review-evidence/care-b-prefix-materialization-v1-frozen.py",
+      "sha256": "7b206f064db76fe685a675494fe47f14af1e99b52c815133fc8eb66d79e1cd9d"
+    },
+    "scorer_adapter": {
+      "path": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030/docs/ai-scientist/review-evidence/care-b-prefix-scorer-adapter-v1-frozen.py",
+      "sha256": "a0d75a607914a258fb22dad1dd5f7fbb1785cfe28d4d79fc7a86088755e87863"
+    }
+  },
+  "method": "Recovered v1 artifacts by reversing only the R2 driver reporting block and adapter documentation edits in separate copies; SHA-256 exactly matches the original recorded values.",
+  "notes": [
+    "Recovered driver digest is byte-exact with the v1 digest bound by the original real materialization report.",
+    "Recovered adapter digest is byte-exact with the first handoff digest.",
+    "No runtime loader source changed; R2 left original reports untouched."
+  ],
+  "prior_real_receipts_unchanged": {
+    "initial_handoff": {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-handoff.json",
+      "sha256": "5b3850da787dcc547eb16cfbf71731bcdf0532e8a283df1f9436c07bda2c36d4"
+    },
+    "materialization_report": {
+      "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-materialization.json",
+      "sha256": "ba560ab371b2cfcb874e359b7bacbe7da2fc4bfd551955efc798817410b99c9d"
+    }
+  },
+  "r2_files_unchanged_by_recovery": {
+    "r2_adapter": "274fb02e2ea3efd7516a87ab3dfb1d6212a622340869b39466836a03200bf97d",
+    "r2_driver": "d0f2f1f7fea381703438a473ddfa491a8462c5881296c6e41c0c8134734b530d",
+    "r2_report": "d5e6fd5f00cf986abd687adf2061b53675c24e0e29e3586c6cadffc3502e6392",
+    "r2_tests": "31fc053d72e4b47bd2e10e6d02e9f0421925bdc1d4cc9d27c47f3945c3719202"
+  },
+  "schema": "care-b-prefix-v1-provenance-recovery.v1"
+}

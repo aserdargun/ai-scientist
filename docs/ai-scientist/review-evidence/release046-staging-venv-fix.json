@@ -1,0 +1,8 @@
+{
+  "schema": "release046-staging-environment.v1",
+  "reason": "Quality gate lifecycle fixture requires the reviewed source .venv; git source staging omitted this existing environment link.",
+  "path": "data/runtime/parallel-m0/release-integration-046/.venv",
+  "target": "/home/cachyos/ai-scientist/.venv",
+  "dependencies_installed": false,
+  "runtime_source_changed": false
+}

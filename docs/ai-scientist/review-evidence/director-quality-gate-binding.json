@@ -1,0 +1,77 @@
+{
+  "quality_gate_sha256": "12e2344c80881f0fb7622646659a1d128c2de78729ca2bab73ec4ae250a5928e",
+  "created_at": "2026-09-24T18:01:06.647015+00:00",
+  "harness_sha256": "e90a583c5e02bbcfb32b9816ca78bbf136bc5b38f97734c0e0e10e58bb410a5e",
+  "image": "sha256:c230ebd5baf524422ce6caa6d1327c83e1cba02d880edfb7cb00a9b7cd487612",
+  "overall_exit_code": 0,
+  "commands": [
+    {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pylint",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bandit",
+        "-q",
+        "-r",
+        "harness",
+        "lab"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "pytest",
+        "-m",
+        "not gpu and not live"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mypy",
+        "--strict",
+        "harness",
+        "lab/referee",
+        "lab/llm",
+        "lab/sandbox",
+        "lab/api",
+        "lab/db",
+        "lab/director",
+        "lab/scorer",
+        "lab/cli.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "build",
+        "--wheel",
+        "--out-dir",
+        "/tmp/swapp-ai-scientist-wheel-87c8vkp1"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python3",
+        "-c",
+        "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

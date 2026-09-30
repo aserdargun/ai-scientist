@@ -1,0 +1,42 @@
+{
+  "schema": "release052-local-launcher-proof.v1",
+  "runtime_frozen_files_verified": 272,
+  "active_invocations_preserved": {
+    "swapp-ai-scientist-api.service": {
+      "ActiveState": "active",
+      "MainPID": "1711742"
+    },
+    "swapp-ai-scientist-director-drain.service": {
+      "ActiveState": "active",
+      "MainPID": "1711745"
+    },
+    "swapp-ai-scientist-console.service": {
+      "ActiveState": "active",
+      "MainPID": "1711754"
+    }
+  },
+  "expected_preexisting_pids": {
+    "api": 1711742,
+    "director-drain": 1711745,
+    "console": 1711754
+  },
+  "launcher_execution": {
+    "command": [
+      "bash",
+      "ops/start-lab.sh"
+    ],
+    "chunk": "5e71b8",
+    "exit_code": 0
+  },
+  "focused_tests": {
+    "passed": 18,
+    "exit_code": 0,
+    "chunk": "34d202"
+  },
+  "cold_boot_tested": false,
+  "new_sources": {
+    "ops/start-lab.sh": "6cceac58e825ea9cba6684cd7ce0ba9bb776e34ce57c87136b89addb0d621f95",
+    "ops/start_lab.py": "549a29e76a975118b97628d0f9eaafe4d25fd16b3fc1a59bd331ba91b0804320",
+    "tests/test_start_lab_helper.py": "2644a0671b9a941ed59845cfe0d4b064f0da36137b587fff1a212f828ae97c78"
+  }
+}

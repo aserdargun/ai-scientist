@@ -1,0 +1,135 @@
+{
+  "checked_at": "2026-09-24T10:52:38.403871+00:00",
+  "cases": [
+    {
+      "mode": "timeout",
+      "command": [
+        "systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-lab-worker-failure-47f34a7e38f84212a09d4f1fbcbece86",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=16",
+        "--property=RuntimeMaxSec=2",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=OOMPolicy=stop",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=CUDA_VISIBLE_DEVICES=",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_host_worker_failure.py",
+        "child",
+        "/home/cachyos/ai-scientist/data/runtime/worker-failure-review-warcmg9i/timeout.json",
+        "timeout"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 2.0674542509987077,
+      "stdout": "fixture-ready\n",
+      "stderr": "",
+      "sentinel_alive": true,
+      "identities": {
+        "parent": {
+          "pid": 807188,
+          "state": "R",
+          "start_ticks": "2177862"
+        },
+        "descendant": {
+          "pid": 807189,
+          "state": "R",
+          "start_ticks": "2177864"
+        },
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-lab-worker-failure-47f34a7e38f84212a09d4f1fbcbece86.service"
+      },
+      "survivors": [],
+      "cgroup_removed": true,
+      "service_journal": {
+        "command": [
+          "journalctl",
+          "--user",
+          "--unit=swapp-lab-worker-failure-47f34a7e38f84212a09d4f1fbcbece86.service",
+          "--no-pager",
+          "--output=cat",
+          "-n",
+          "12"
+        ],
+        "exit_code": 0,
+        "stdout": "Started [systemd-run] /home/cachyos/ai-scientist/.venv/bin/python /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_host_worker_failure.py child /home/cachyos/ai-scientist/data/runtime/worker-failure-review-warcmg9i/timeout.json timeout.\nswapp-lab-worker-failure-47f34a7e38f84212a09d4f1fbcbece86.service: Service reached runtime time limit. Stopping.\nswapp-lab-worker-failure-47f34a7e38f84212a09d4f1fbcbece86.service: Failed with result 'timeout'.\n",
+        "stderr": ""
+      },
+      "failure_reason_verified": true,
+      "passed": true
+    },
+    {
+      "mode": "oom",
+      "command": [
+        "systemd-run",
+        "--user",
+        "--wait",
+        "--collect",
+        "--quiet",
+        "--pipe",
+        "--unit=swapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=16",
+        "--property=RuntimeMaxSec=2",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=OOMPolicy=stop",
+        "--property=NoNewPrivileges=yes",
+        "--setenv=CUDA_VISIBLE_DEVICES=",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_host_worker_failure.py",
+        "child",
+        "/home/cachyos/ai-scientist/data/runtime/worker-failure-review-warcmg9i/oom.json",
+        "oom"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.2962849620016641,
+      "stdout": "fixture-ready\n",
+      "stderr": "",
+      "sentinel_alive": true,
+      "identities": {
+        "parent": {
+          "pid": 807199,
+          "state": "R",
+          "start_ticks": "2178072"
+        },
+        "descendant": {
+          "pid": 807200,
+          "state": "R",
+          "start_ticks": "2178074"
+        },
+        "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad.service"
+      },
+      "survivors": [],
+      "cgroup_removed": true,
+      "service_journal": {
+        "command": [
+          "journalctl",
+          "--user",
+          "--unit=swapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad.service",
+          "--no-pager",
+          "--output=cat",
+          "-n",
+          "12"
+        ],
+        "exit_code": 0,
+        "stdout": "Started [systemd-run] /home/cachyos/ai-scientist/.venv/bin/python /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_host_worker_failure.py child /home/cachyos/ai-scientist/data/runtime/worker-failure-review-warcmg9i/oom.json oom.\nswapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad.service: The kernel OOM killer killed some processes in this unit.\nswapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad.service: Main process exited, code=killed, status=9/KILL\nswapp-lab-worker-failure-e2e2bd9dbdc64a5aa1e81a97e1287dad.service: Failed with result 'oom-kill'.\n",
+        "stderr": ""
+      },
+      "failure_reason_verified": true,
+      "passed": true
+    }
+  ],
+  "scope": "Intentional failure of two probe-owned 64 MiB CPU workers only; independent CPU sentinel preserved. No GPU, AOS, application DB, model or live service mutation. These are isolation fixtures, not Scorer/model throughput measurements.",
+  "script_sha256": "84793ff1ff89ac211f975b54ef57227344209d9a12097bd9f4dce5a3344bcee1",
+  "all_passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_host_worker_failure.py"
+}

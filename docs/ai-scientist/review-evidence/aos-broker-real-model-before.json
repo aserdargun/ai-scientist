@@ -1,0 +1,1152 @@
+{
+  "bindings": [
+    {
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service",
+      "created_boottime": 86820.983659347,
+      "deployment_digest": "81172921bdf3a0e2a1be9a45eaad8c035d6ebee7a0e52c40f0dbc71164e737bf",
+      "fencing_token": 1,
+      "invocation_id": "dde1e2537360446ca748300364bf5fec",
+      "launch_state": "drained",
+      "main_pid": 2689487,
+      "main_start_ticks": 8682099,
+      "nonce": "a120417f3b429efb0496d3d0aa606532bc86336e0cdd2f875c1d2c7cde7d19ae",
+      "observed_gpu_pids_json": "[]",
+      "owner": "aos",
+      "profile_id": "aos.decider.turn.v1",
+      "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+      "request_sha256": "e30d5caede7408476f338a6dd5342c3cc76bb0333d1150b4893740b1629aa295",
+      "total_seconds": 240,
+      "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service",
+      "workdir": "/run/user/1000/swapp-aos-turns/cf473af2ea5147a48529255ea7760708"
+    },
+    {
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service",
+      "created_boottime": 86832.782464139,
+      "deployment_digest": "ad66723f4779bf2fa74db02038084b4199aae69693b8a6a38baccdc98e87d2ae",
+      "fencing_token": 2,
+      "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+      "launch_state": "drained",
+      "main_pid": 2689993,
+      "main_start_ticks": 8683279,
+      "nonce": "201155eb7e549d510cbaff4f5f3510424b94ba57e1e08ca9ce3c8dda2ce5c07b",
+      "observed_gpu_pids_json": "[]",
+      "owner": "aos",
+      "profile_id": "aos.bonsai.recovery.v1",
+      "request_id": "3363dcf9a187440f93e21839be0ab85f",
+      "request_sha256": "311c00cad60556b3c24c0c779290891641a9343b682b337f50b336097289a3a2",
+      "total_seconds": 240,
+      "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service",
+      "workdir": "/run/user/1000/swapp-aos-turns/f8ddd6ab79f9445f957f6743f43d7b65"
+    }
+  ],
+  "checks": {
+    "frozen_source_stable": true,
+    "no_compute_gpu_remaining": true,
+    "owned_process_cleanup": true,
+    "profiles_prepared": true,
+    "source_stable": true,
+    "two_real_typed_model_results": false,
+    "two_results_completed": false,
+    "two_turns_drained": true
+  },
+  "cleanup": [
+    {
+      "state": {
+        "ActiveState": "inactive",
+        "ControlGroup": "",
+        "Description": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "MainPID": "0"
+      },
+      "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+    },
+    {
+      "state": {
+        "ActiveState": "inactive",
+        "ControlGroup": "",
+        "Description": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "MainPID": "0"
+      },
+      "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+    },
+    {
+      "state": {
+        "ActiveState": "inactive",
+        "ControlGroup": "",
+        "Description": "swapp-aos-gpu-model-review-8178ff3247c8474fb288aa486f677107.service",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "MainPID": "0"
+      },
+      "unit": "swapp-aos-gpu-model-review-8178ff3247c8474fb288aa486f677107.service"
+    },
+    {
+      "state": {
+        "ActiveState": "inactive",
+        "ControlGroup": "",
+        "Description": "swapp-lab-gpu-broker.service",
+        "InvocationID": "",
+        "LoadState": "not-found",
+        "MainPID": "0"
+      },
+      "unit": "swapp-lab-gpu-broker.service"
+    }
+  ],
+  "directory": "data/runtime/gpu-model-review-8178ff3247c8474fb288aa486f677107",
+  "elapsed_seconds": 17.049213621008676,
+  "executed_models": true,
+  "final_gpu_mib": 62,
+  "frozen_sha256": {
+    "lab_gpu_broker.py": "3b34739ede0af5d14f4a3f57bfd254b20729885b431dbab71b1031060def33d9",
+    "lab_gpu_executor.py": "64dc222b9490cc5bd42ac01d2e077691f0f6169c294ac5d2a0711960c26bd76d",
+    "lab_gpu_service.py": "0bdcbead5530f0df0c8c040126a24ec06d7ddc024a35aa3220c6d36aceffbc24",
+    "peer.py": "03ecab74f340926358879df0a2973f171cc1f590ea24f5aa43b74e46fb75d2e1"
+  },
+  "overall_exit_code": 1,
+  "peer_result": {
+    "cases": [
+      {
+        "answer": {
+          "probabilities": {
+            "ask": 0.0021207844838500023,
+            "write": 0.9978792667388916
+          },
+          "selected_option": "write"
+        },
+        "elapsed_seconds": 6.754258809000021,
+        "kind": "decider",
+        "metrics": {
+          "broker_activation_load_ms": 1370.5844720097957,
+          "inference_ms": 545.4390610102564,
+          "input_tokens": 88,
+          "latency_ms": 545.4403240000829,
+          "load_ms": 0.0,
+          "peak_vram_bytes": 3811927040,
+          "prepared_cpu": false,
+          "reused": false,
+          "runtime_generation": {
+            "control_group": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service",
+            "invocation_id": "dde1e2537360446ca748300364bf5fec",
+            "main_pid": 2689487,
+            "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+          },
+          "usage": {
+            "broker_activation_load_ms": 1370.5844720097957,
+            "inference_ms": 545.4390610102564,
+            "input_tokens": 88,
+            "latency_ms": 545.4403240000829,
+            "load_ms": 0.0,
+            "peak_vram_bytes": 3811927040,
+            "prepared_cpu": false,
+            "reused": false
+          }
+        },
+        "passed": true
+      },
+      {
+        "elapsed_seconds": 9.596251695998944,
+        "error": "AOSFault: Shared GPU broker closed an incomplete reply",
+        "kind": "bonsai",
+        "passed": false,
+        "traceback": "Traceback (most recent call last):\n  File \"/home/cachyos/ai-scientist/data/runtime/gpu-model-review-8178ff3247c8474fb288aa486f677107/peer.py\", line 53, in main\n    answer=await bonsai.plan('Recover the authorized hello.txt creation task using only the allowed observe, create, verify sequence.',evidence)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/supervisor.py\", line 125, in plan\n    receipt = await self.gpu_turn_client.infer(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/gpu_turn.py\", line 249, in infer\n    return await asyncio.to_thread(self._infer, profile_id, deployment_digest, payload)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/threads.py\", line 25, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/gpu_turn.py\", line 218, in _infer\n    raise AOSFault(ErrorCode.MODEL_FAILURE, \"Shared GPU broker closed an incomplete reply\")\naos.contracts.AOSFault: Shared GPU broker closed an incomplete reply\n"
+      }
+    ],
+    "scope": "real local models, synthetic task input; no tool execution"
+  },
+  "prepare_exit_code": 0,
+  "prepare_stderr": "",
+  "prepare_stdout": "",
+  "queue": [
+    {
+      "activation_seconds": 180,
+      "inference_seconds": 60,
+      "owner": "aos",
+      "owner_boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "owner_invocation_id": "cff25fa494494fb78f9106e7f3703557",
+      "owner_pid": 2689466,
+      "owner_start_ticks": 8682075,
+      "owner_unit": "swapp-aos-gpu-model-review-8178ff3247c8474fb288aa486f677107.service",
+      "payload_sha256": "6dc537e7bdc01978337da0fdb44159af7147527ecc1892f6ac13fc3f19d258b1",
+      "queue_deadline": 87720.953800148,
+      "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+      "sequence": 1,
+      "state": "done",
+      "submitted_at": 86820.953800148,
+      "total_seconds": 240
+    },
+    {
+      "activation_seconds": 180,
+      "inference_seconds": 60,
+      "owner": "aos",
+      "owner_boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "owner_invocation_id": "cff25fa494494fb78f9106e7f3703557",
+      "owner_pid": 2689466,
+      "owner_start_ticks": 8682075,
+      "owner_unit": "swapp-aos-gpu-model-review-8178ff3247c8474fb288aa486f677107.service",
+      "payload_sha256": "9b588e568a016137a12397346d31c2f3a42944706dfab822b59e3b33fde05eb1",
+      "queue_deadline": 87732.751818105,
+      "request_id": "3363dcf9a187440f93e21839be0ab85f",
+      "sequence": 2,
+      "state": "done",
+      "submitted_at": 86832.751818105,
+      "total_seconds": 240
+    }
+  ],
+  "results": [
+    {
+      "created_boottime": 86820.953369306,
+      "deployment_digest": "81172921bdf3a0e2a1be9a45eaad8c035d6ebee7a0e52c40f0dbc71164e737bf",
+      "failure_code": null,
+      "generation_json": "{\"control_group\":\"/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service\",\"invocation_id\":\"dde1e2537360446ca748300364bf5fec\",\"main_pid\":2689487,\"unit\":\"swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service\"}",
+      "profile_config_sha256": "78b58b523c3442dfc7a9f453243eba317672bfc483fe8e3de6148391e581a1bb",
+      "profile_id": "aos.decider.turn.v1",
+      "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+      "request_sha256": "6dc537e7bdc01978337da0fdb44159af7147527ecc1892f6ac13fc3f19d258b1",
+      "response_json": "{\"deployment_digest\":\"81172921bdf3a0e2a1be9a45eaad8c035d6ebee7a0e52c40f0dbc71164e737bf\",\"metrics\":{\"broker_activation_load_ms\":1370.5844720097957,\"inference_ms\":545.4390610102564,\"input_tokens\":88,\"latency_ms\":545.4403240000829,\"load_ms\":0.0,\"peak_vram_bytes\":3811927040,\"prepared_cpu\":false,\"reused\":false},\"prediction\":{\"probabilities\":{\"ask\":0.0021207844838500023,\"write\":0.9978792667388916},\"selected_option\":\"write\"}}",
+      "state": "completed",
+      "updated_boottime": 86827.682902696,
+      "usage_json": "{\"broker_activation_load_ms\":1370.5844720097957,\"inference_ms\":545.4390610102564,\"input_tokens\":88,\"latency_ms\":545.4403240000829,\"load_ms\":0.0,\"peak_vram_bytes\":3811927040,\"prepared_cpu\":false,\"reused\":false}"
+    },
+    {
+      "created_boottime": 86832.751453476,
+      "deployment_digest": "ad66723f4779bf2fa74db02038084b4199aae69693b8a6a38baccdc98e87d2ae",
+      "failure_code": "BrokerExecutionError",
+      "generation_json": null,
+      "profile_config_sha256": "6c5ad8fae8f96e55ca1b6dfccc3376b65c0767710ef05f625574ddf43712f9c6",
+      "profile_id": "aos.bonsai.recovery.v1",
+      "request_id": "3363dcf9a187440f93e21839be0ab85f",
+      "request_sha256": "9b588e568a016137a12397346d31c2f3a42944706dfab822b59e3b33fde05eb1",
+      "response_json": null,
+      "state": "failed",
+      "updated_boottime": 86837.284386846,
+      "usage_json": null
+    }
+  ],
+  "samples": [
+    {
+      "elapsed_seconds": 0.3009168599965051,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": []
+    },
+    {
+      "elapsed_seconds": 0.8372403550019953,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 1.3712516939995112,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 1.9070588379981928,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 2.443373125002836,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 2.980006868005148,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 3.51618419100123,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 4.051938196003903,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 4.588413143006619,
+      "foreign_pids": [],
+      "gpu_mib": 65,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 5.12509268100257,
+      "foreign_pids": [],
+      "gpu_mib": 65,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 5.668311588000506,
+      "foreign_pids": [],
+      "gpu_mib": 3906,
+      "gpu_pids": {
+        "1294": 12,
+        "2689487": 3656
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 6.207700212005875,
+      "foreign_pids": [],
+      "gpu_mib": 4002,
+      "gpu_pids": {
+        "1294": 12,
+        "2689487": 3930
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 6.744493992009666,
+      "foreign_pids": [],
+      "gpu_mib": 4038,
+      "gpu_pids": {
+        "1294": 12,
+        "2689487": 3968
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "bound",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 7.278119784008595,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 7.811226749006892,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 8.344082505005645,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 8.877824894007063,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 9.411288973002229,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 9.945650074005243,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 10.479520510998555,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 11.014099437001278,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 11.547888030996546,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 12.082737111006281,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 12.622336036001798,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 13.162533626004006,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 13.706463367008837,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 14.245890311998664,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 14.787670701000025,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 15.328009603996179,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 15.87133619200904,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 16.418396463006502,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "bound",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 16.95623854700534,
+      "foreign_pids": [],
+      "gpu_mib": 62,
+      "gpu_pids": {
+        "1294": 12
+      },
+      "turns": [
+        {
+          "invocation_id": "dde1e2537360446ca748300364bf5fec",
+          "launch_state": "drained",
+          "profile_id": "aos.decider.turn.v1",
+          "request_id": "3d5b125a03ea4ebcab5ce3fee757ffbc",
+          "unit": "swapp-aos-gpu-turn-2e5d503741ba4740bd95abac0171a6ab.service"
+        },
+        {
+          "invocation_id": "f22507b2b68448fa8c2c782129f9a526",
+          "launch_state": "drained",
+          "profile_id": "aos.bonsai.recovery.v1",
+          "request_id": "3363dcf9a187440f93e21839be0ab85f",
+          "unit": "swapp-aos-gpu-turn-42b109acca334945974403342bb82638.service"
+        }
+      ]
+    }
+  ],
+  "schema": "aos-real-broker-model-review.v1",
+  "scope": "Opt-in real AOS model calls through isolated UDS broker and owned units.\n\nThis checks actual Decider and Bonsai recovery calls with synthetic task input.\nIt does not run Lab research, a desktop session, or a fair-concurrency acceptance.\n",
+  "service_logs": {
+    "swapp-aos-gpu-model-review-8178ff3247c8474fb288aa486f677107.service.stderr": "",
+    "swapp-lab-gpu-broker.service.stderr": ""
+  },
+  "source_sha256": {
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/computer/bridge.py": "2e2f92c0e7dbe2ed3b064adaca8ad2997e490139a3c5a57e43c1fc95147be748",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/computer/entrypoint.py": "e1af500627bd1dffce6ffc4165fa798c7d7105545fa72948c8e8bcdcd334d665",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/computer/note.py": "5cdcc1674fcc77534d958d8579ce7cc3ae3d5c8b0f0508d266367e37d2dd14cb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/computer/tools.py": "852fb34859485f63a5fe8db4ce923212cd212c6a43fccc51ba09d3230d108224",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/compare_browser_transports.py": "5e8ec57839343161d29a4f25f71f23ca0f9812103054cd6daf23fca14ad2e989",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/compare_decider_laya.py": "eac66a7b68bb12cd3f2f0040080a06a5819a12aa7e9428e6ac9a454ac89df172",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/package_native.py": "1248bd85f2e23313378547fba780b44745c14b45741975783035150a1ddc9a52",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_bonsai.py": "ffcc05fbb064eeca0e778879151b6d3b8d37032d1118870e3335e5b57e1c3103",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_browser.py": "0c1d931f8d44ec3c79d30474b405a02aacf64854b353308751ba84fffcd0df66",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_decider.py": "036561bfacb2f6efc1344ee8784b5bea2d1c9ac33265733456f52b057e22464d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_desktop.py": "cf6035725a8158f61d6df0552d152c935ebb2e4509b6f936dc3253cdd43a14f7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_desktop_mcp.py": "227877d13582635490714c8b3827a2fb9eda4ac52a8427154aba1d2cad0e36ac",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/prepare_laya_candidate.py": "44bac972d73e20194190981363b5ab6ac315d1c301239f2ba4c5e44202df90a7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/probe_bonsai.py": "3fe9ff826839185c40afff5f6733edf4459030cff0da8e2213909dffad724788",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/serve_desktop.py": "83ce3fda98e29924c74e5c749bbf69f8719841b8db8a3d1f97d4e9ee5de6a632",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/update_manifest.py": "969bcc3309b5b82c8e3e335623fb3e5cfe9a349766459132dac57fa062286a89",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/scripts/validate_package.py": "e487b1820dd428184a6976e08b3df42129eb1bc6fabdb384e2f0f89158066a27",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/bonsai/broker_worker.py": "56026e19b4a271c3c5ed74494f5ddf39a6eee08c38a6603c2597a96e89748960",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/broker_worker.py": "9ab96e60c1f3fd29b800f173c224721536df5f60558c92b7fa3eadabd4efc2fa",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/calibration_smoke.py": "fa13daf86999a3d349926fb6fc2f18c486d1a214b0d0d5636923a3bd235057fa",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/dataset_adapter_replay.py": "3fd50b477cc828bdb8d2370587b080a89d679cb63381e16cd92952c172170f4d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/dataset_gradient_probe.py": "c2bc30864a69145060fade6a087a743da43720ea9402cced910ece52e16d80a9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/dataset_loss_probe.py": "d5cf0d2fc9baa1d222d747ad4563d390d2c8e04031e30144b874fdbf1eddd87e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/loss_probe.py": "e2a1a8a43b04234f3ec89a4b5311aa89216710c679ea61a7024f50dfa0e3efce",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/row_candidate.py": "c80b518a28d767c55158384c795f36030be3252fbdba23ce0e5f28ed6fd1dca2",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/row_replay.py": "b5ba2105fc1b6de5aba66819d62aa8663b5b27031726af57d13008559a73da0c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/tokenizer_probe.py": "d5d1f6af56760827742aad2c0f8e04c678e34c9aeab406476cc74460b989ee4f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/decider/worker.py": "ef805b585de52db9d6dd80d2d6cf8bdc414a08a45cc595a639856e78c18171dd",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/services/laya/worker.py": "788d834b1719b69fa8fe36e45af48f277f20768a1c0c8bde2682661da3392778",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/__init__.py": "98f9aad27c52f173020b9da11594752f8a864d5073e5cb045b6454427ad2f3a6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/benchmark.py": "77d665164f9210e2f9f66d657958fa3d5c76383c4a2cf785fe923768ea32ea54",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/benchmark_worker.py": "90add06cbacf30b9b747abb5c16bc64d73c6d0b60d2c8da6b2c56fc25f086ec5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/bounded_process.py": "4564d5b2aa97c164874cc42b077fdf778e33733f2439ef4e90af74e7494154a4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/browser.py": "879de7164989ff3d9f528402d054b73c48f18b0a6ee0a7ac90da9443444e888d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/browser_operator.py": "2e40b8d2b21d8cffa2cee40dfddfd149207c6826735ae08ecbc3ac84fe409527",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/browser_worker.py": "5e83557dd245a8b4b08702b6ec12a588a167a46ebf9733419c4393c7bd9381f5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/cli.py": "5b3b5bbb8fd734a541a7c0caf780f55050f5dd0a23dc991bc71f27ab3caae289",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/computer.py": "7a8f31717be19d505a6dddc3d7e3989ce1c7d7cad8b519fad5939095e5f515da",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/contracts.py": "c9979759e29a4985ec38e57614e5cbe49392dea98a93b7c5e23848484912944e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset.py": "4f41625a548f5919cc9c0ca0a0d430ab7cdfd7e01d6b08f4f16a5f381f7940b6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_adapter_candidate.py": "e2007a3c04d3af1a677af6f86822e1c325ba569dde5c541ad88270dd989f4838",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_audit.py": "4ac95f2e8ea81a5351b10136fbce406b572762f1898393bf07bf9f8cf1e82042",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_bound_loss.py": "ca665a71633f60f49e996e3d4a46aad655bde818ebc179d434e76a771f46c3f8",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_gradient_probe.py": "cb483832f70b0c63b9aba548220663ddf4852a074958fa30991de090b55b83df",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_loss.py": "6d9c8859ba5acac7bb79ddcc77d3e51dc0f11dc80596a9ee297f010c5b6ebbc1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_preflight.py": "920332d7917ca495b5911d77610512e30181548f962f7fadc2c1cc44872f89e6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_preview.py": "76c3b7201a1884cd61dfaac127f5f594cc19154c065ac9763f32b07f6cdd1a97",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_readiness.py": "ff9c71b3182b0b211be399963ee4ea17a47791b3f59a6b84a6f06b051ac53005",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_review_journal.py": "d6bc4cec81d340acc5c06d9bed83f51707c966452f7f778ee90dab959f9b3e1a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_review_service.py": "fb41ca2e78e391f83246f7e26c025ceed2bdcef612249467d00f771d3cb28070",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_reviewer.py": "4054f2bd01ad43a885a8e28244fe2032a86cbbe399c749ab8975b7e38a86aa5e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_reviews.py": "6e741015d4f653000b8fbce227439a82d8b7b4eb5a1f28425852c91ffd7df736",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/dataset_tokenizer.py": "119fd0acfc314942a61151711214890a2bcc1f7d96f84e06aa03ff9d86eacc64",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/decider_calibration_smoke.py": "07b702270831af48d55a03710309c8e445b60a2e36ab727e04fc6af1a59aa9f6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/decider_row_candidate.py": "8b590a4372f9f169085cb60ddf88d07473bf6c805bfe7e229f1808a92928f046",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/decider_row_replay.py": "89f753175f107fdc58c826161b8224b457871a511896938c1acd3de68dfc2062",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/decision.py": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop.py": "1dd413368cf6dd6bf03f5d35af4857c87393427ee187c519c0f3d0f606c5fcda",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_browser.py": "fdbe95890d9e30037b15519b7efdc4a694f5dfa4b7bb22eec4a648baa645914e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_browser_worker.py": "cab57f586fcab751fb2e6d2260a343df2d69c2d436647930759766ae4ea34d10",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_console.py": "ed2144a431c6394802dbcffa9c9d779c78c9cc7009fb5b9800014b7ede3e2f88",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_control.py": "2bb1df27f8b5abcd4b3836ff3acbf474cca0b74abcd434eeecc098d0ba2af26f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_form_mcp.py": "60e2363fed2f394f3b6546232fa1c1ee393fe3e46631c82d6d9917a8f2fb4945",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_form_mcp_worker.py": "dd37b6b8aeb2277f8774e16760e6889050269ae4ebd9d516e82c708513a4b911",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_mcp.py": "7167a24ca0b4b81b40f10b31352489c7581ef380c4ba53ec63f8b93078980911",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_mcp_bundle.py": "ba401f1187bcb1054de6b2a4861806734caa069e248b32ac959288eccad4d527",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_mcp_worker.py": "90cf07dcf54bc8bb2e542077cf551ca222b53fabedfe7eebf291247f420f59b1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_readonly_mcp.py": "fb3ef4ae8f7ac1bb7a25a1bcd7ce37d18ca0a27f6488684a99a33c4a64edf7e5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_readonly_mcp_worker.py": "e131f10818730e44fd2700571a48a111da93c02b7f9c029a3875c9ed8e96914f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_remote_mcp.py": "0cb6ba03d644b422d6d6d597bb3429997d3ce6ce9af4484beff7cc9f11585ec0",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_remote_mcp_worker.py": "a564d1f046681925f88ac3be00e966eb46a5877464b12454cb706370a1c21d4c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_static_bundle_mcp.py": "18979ca31bda9c7842a84a88aa47bc0e117dbc29e3cf39d54406805f2cce9923",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_static_bundle_mcp_worker.py": "e3be9fd544db7b51de42dfbfd203d497f86e37de11b40ad127cbf26d75de3305",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_tasks.py": "d9b1544789160d77f485462ef43b8a538a29eeda75d6ec221e1b4136a316f70f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_vision.py": "66d3800f55b5e9eae027d37c85a8d0e7d6434717e55c30a31e415b2f31c81aca",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/desktop_vision_worker.py": "4e34d4d684fe8eeb3d7d639cface9187ae0dbbe3bc092feb20d00b81d8606afb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/export.py": "572b160808ad8a62e4ba18cb3a10718d6affe1025c1a10205bd267209020013e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/goal_plan.py": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/gpu_turn.py": "aca4c0186dc31131d0446b9c02471ba4d49856e7b0c78fb39d130f31da327af4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/inspection.py": "a158afa32f2616e253f83b5ea3742e3792ff25aed62e77864719f2f24b44c7c9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/lab_external.py": "6b02e7bb38fe6e51b8e0ba0080cd547b3689a8f84e83fce01cc45052795541d1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/laya_candidate.py": "0e91de0835c0848d6a076a3577b6aa619c41ef66c10a2f85b2a59091e383bcd0",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/learning_candidate.py": "84e910d68b3afcb20139432dd82e378ccb5c74104d113ff3cc6aade7b8a7d630",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/learning_event_outbox.py": "0da78732d48ccfa7d7ffe9e2c74d445ed13ab9d5e9ab884d47f4ce5d62d1c2b3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/learning_event_stream.py": "67c34121d665714f125e7c992d2d0d1394bec33f377fc4218ef9d248ec360287",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/learning_events.py": "f1ab5679f228c21ccb3058407a134e0b7189e8c4a77a0f92ce981b34c5e628c1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/learning_events_cli.py": "7cc346665ca0c95d8b5c5704d3ec2dd3c017993fcb6cc59800fa434cfca71810",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/lifecycle.py": "5534a4e918021f366264183fc5f38006aca3ffab7a8a17ece68c15344a7bd410",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/local_app.py": "538b03219778044ad01354691a661c57f2f9ccf0c363198e229e24eee4d0d1e5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/local_navigation_admission.py": "745f3c967daa51392e2f620728f3816cfc084401a72ac7355f17e86b27121f10",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/local_navigation_operator.py": "7ba621794766a165afd4669640cef75f16af192e695a32f8e03dbb7eb61340e9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/local_preflight.py": "4e1dded20245a865e81e2a1fdbb13a4397730125a684e7b58dc0884e69981657",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/operator.py": "e189f423a746bc3ff8b81ccd3e15fcea289906a95c8ad0c6a2bded14ec5dc5d8",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery.py": "017148ee479f83abf83f3a76e218c7766bd3d3c705fc0ca82a513d496d4fbdc9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_backup.py": "a38b21d3979a8fc0bd71ef0dad3f5fc3a87090cff0998c9009d01350ea55c4eb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_checkpoint.py": "bc716a4837eccc5517d402c8f522ddd2d537195b438834bde62555c81b6e6428",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_effect.py": "08b4fcf6d4aed5b24d94a3a2aefd54802a4b0a86eb03942966862904efcc2557",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_finalize.py": "87bf90a28b05f0a92ba1391a7223d4593e9e5befa9faef97cd00d69c5197a5a3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_lifecycle.py": "3438baae7822a498ff35e2d951abfefca00a6fb2c9c4220d82eab50d7c10cf9e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_reconcile.py": "82b1b2e5a196c07ef92a6e6c4940a148ed135aec2ee8b8471050ce6fc4750e37",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_resume.py": "08cd21a16d533d919d2ed4374a4dc541925835ac1c3db63e86cdc37244bf7925",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_runtime.py": "18f869395f184411ba137bd95e61a8a69e8190c941a862202691970926b3a595",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_session.py": "7cd56002c96b123fa9a6689e544a0b97540908bdd204a27528ef44435935ae61",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/recovery_verify.py": "d5d4dc41c35d26791cfe7b0fa707b878656f58f93a7b179e4487355c231ead36",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/registries.py": "022ea158d23b9e601dec83e155ed81abeb8ee3ba5a226431aec7b4a8ba439b74",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_entry_operator.py": "978a746279da496e02b6850596094120766db2bdc6f9d626bb35a35ed367e925",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_form_learning_source.py": "9f555bd99465884b3b04f6e91eb7920b3d478468d98b62b75e7fabe4f3202001",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_form_learning_stream.py": "8a6ea60da3d583286899f5486e54ffc8e149ef2bfe31f3c6ab3a48b87d9949b8",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_form_operator.py": "9941e70468144b4d6297ada886beb9bb2199bec4e04549bd5e630cd11b44a6f3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_form_repeat.py": "22a34557ef23124892036e3423c9fde4a77211438a5105882e63203a33b4887c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_learning_consent.py": "55dbcc879bbb12bf30483b1501cf8916e1cfb9d3702767fcb390c1c08252d011",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_learning_lifecycle.py": "a3fec90765caadd1b3282bcb972a9bf91ffc23ae34a1f333831ea0ccd60013ae",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_learning_retention.py": "f6faa66093a07601e7d5cd800cd1604703cb057c14fcf41a851a21cbad82173a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_learning_source.py": "820a0403c38c3c646338aeb9bf63ceb3ff16346643e8e89d477a79e2bae377b1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_learning_stream.py": "ca65399ac724d14ece287c73b269ea510261b69a666e39463ba3598109c2162e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_navigation_graph.py": "0e51b2f4eaf94341d228d7a26644d5f9fd8e2cceedd5c50630cb5f35056c88f7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_page_draft_seed.py": "7fc8cb26ad8212ce83113c6a415f2b2f01912b1eeb0a9de5a8c1b8a70dd9f0ff",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_change.py": "f1b1b0961fb0333b47f8c13b4cdea7f39cd614f125ce186da275d6a2e749c2f5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_knowledge.py": "1d7c203f0ec28ee434a2c534ee7e43d38be6ef02bd6fe14de6174bb03462f367",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_knowledge_review.py": "bb0b52cc4d8096c65c0152687d4728d1b0337b7408fc14306dc626193fbeb9a3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_page_draft.py": "e8f63ac51f55e8e7bf52ceb0dc432955b4027ec4c8d02009acecf33c04146212",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_source.py": "c469198056addf5e5794ed91dff02316d24db1730b5780859bc62a970185468c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_readonly_data_stream.py": "6e1b5ae003cc980213d91c37a58fbf0118c8a16c649d61d478a3535115fa2233",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_route_change.py": "5e071a8600d653c9cfd9a954f7f23cd2656b57dad4a5a7eee7b60802f4a1c90d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_route_evidence.py": "dff7ca9a4e5a06b0db625c1e3a48c805e752f8e79e51ef0e7081d54aeb4a8e0e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_route_knowledge.py": "bd0c45667d0d22894eeab2c27b5fb9c78314c3263d440d94c4679aeabd0a3b8a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_route_knowledge_review.py": "201beb45ad75e164877a73f50187a1e1bc19445324497b5b8b1debc2b7a26fa8",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_routes_operator.py": "56ae94eb1f028d7a48efd0792acf65b3faeb86cad3c4aa760c199d8966ce7c83",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_site_skill_provenance.py": "90bceee64b2bd9f4536fdebfdeeb670918896bd908c94f49a393343fd450aa49",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_static_assets_operator.py": "4045368ab3376fcf404ea2f7ef4e9694807671ec1a0a2a3b38289f9fbae46bd6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_static_learning_source.py": "4fd61fc0ed1f4dba5238c6752eb2cd8e38a4f9444cdefd99c2ab0047fdff0fbf",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/remote_static_learning_stream.py": "65c67e4a272fbbe44dc80e5be666a39834917d55256b16e5b505c84380f5ee39",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/reusable_decider.py": "770984dff5219beada7a0d96b2ca0e4db83f9ce58120a3e3d63c7e0fc1d19196",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/session_binding.py": "74d950a697a8852b44a49e05098111c0b6d0fe3efe7400e6f1df64b5d1b56fb3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_knowledge.py": "a9ff00ff51cf2212b7dd873751e3c38be244b096f6ea1c446a9806528f64e97f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_change.py": "ddce9abcb2b1aa99a6c129ab0d271a9bc45e2c640e21995c61dd251466e2a9fd",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_comparison.py": "7a896d5accc82a1f714affc544dd095cca38e17fc10369608242432093afe0f3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_evidence.py": "dae7a1137dd4afc16ffe2eb6d800d77d59ecf38753209bb568473a32d89bfe56",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_evidence_cli.py": "8c896c111d213a374e508a33a296c16cb81c7ed55433189d153a2d8411df5f81",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_retrieval.py": "543d3428e31f760f3ef6ab892ed34bfeee0cae2d63955d7837bfffc95ecc6292",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_page_retrieval_bound.py": "0f13779cc41e7fe9c31ec9872ed44ce7d07ed6801f1bac2e4b9f8840907c5b5e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill.py": "2515c2e297c1c010432b53701f3d09e3fcca9478697eeff10243e72cfb3713e3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_case_binding.py": "079333a735a8854759450c59e48f0b1f91e528d85e596252db0b50726a843ce3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_cli.py": "60b6cf295e584d13d8c512a2d82f5af6516e1faf8ed55de937cc3f256e842ced",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_form_execution.py": "37bc6c75063d58766bf9dc86eeabcbcea0df99b26509d79c78b7babdeb56b0d6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_provenance.py": "8059c1d48c6786ca4b53ac13df3e30737278aaa9e99e8f770d2600e051419113",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_rehearsal.py": "99eeabf31e6c01730c9145a844ff2bcbaba219bb0874f2b2d30ae57b368476e3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_validation.py": "a00cdc3c9fbe8130936c00d1e67f8eadac3427a306125eaaba4452e691ab95ea",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/site_skill_validation_cli.py": "8459e825c4f188fad22d8183504531fe624a7222a3de069a90c00bbdc079ef58",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/staging_skill_candidate.py": "1f32202c1defb7d334af204c91193299f88dabdb653e9f8d7945bd8426a83361",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/staging_workflow_operator.py": "30cd38523a89c91532d90695a916ad6436fd732e4adeb2d4e70896ae6e350671",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/storage.py": "c557c07535b2967dd2ea2aa3fadbba8483632ec3b1a353111c90d4e92263b92d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/supervisor.py": "6e0b6ad015a9ca3f4b771871b0d4547730a5e3ab6492d4a2655e4cea4aa502ab",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/task_intent.py": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/task_plan.py": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/task_progress.py": "03d6181a599f1f88abecd78f901e84136c62717acf2daa1c92d9d67f8f1216ba",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/task_sequence.py": "90b417ec5c19261fa44f854201dac9488fbacb77d50bc2186b9b866047fa1906",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/vision.py": "2c318c513f5c5d095d07debfd7599d0bc03edb0eda4f00398d5a81e67c84ae04",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/vision_operator.py": "2ac66968df3c66a7337d60f6f6f2c9140960280ba1b5308491b2bc8cd5f46e57",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/vision_skill_candidate.py": "71951da2638b23afd38f3ea654be7912f76a83306626dd14c86aa3866df79de6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/vision_worker.py": "5ebbfef23c7a0334d19f8f136a5d45fcbcffe505894a710867581bdd1ad339db",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_application.py": "adb64dfbdfb4fe39f34f3653752955dbf9d7c67055771d09a24f4e73eff8a1f9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_application_binding.py": "ad97f74b23037032edfe419cb6c8d0513a0ccc73048b05426fa9e708c2bcc5da",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_form_draft.py": "601fff4da9d29d70137f7c4f2d096c00a8a7eb10935b3ca61d92707983bd8d8b",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_https_form_state_probe.py": "e92eb8ae85e7b815e1c423115ebe5844aac2df3bad9fcb26aa3a2a37b84b609a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_https_form_transport.py": "817c5339755ef5673a51ca591b6d3d1485221451d6be06ab9aeccce288d2ccf3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_https_preflight.py": "18259d8952b79aa96bc0b31e10a854e7b8b7e6319c5988a80b467275265ab176",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_https_relay.py": "9f5db75d5320d88eedf016fcf599437e6e920dbbca569a165f12b8e13150b40f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_readonly_data.py": "a93de51775467217f2fce4ded31785b2d847ea2f2622af95c3cf4cea5c750265",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_request_scope.py": "caad642871cc0a6cf9225a27868f7401cf6cac696faf1a01c81bcdbb43cb5293",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_static_asset_relay.py": "6fc03ce3200fe7bd6f4f0947cee903ab6a26b9721c63aa382d872454cd1e46c6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_static_assets.py": "3dae5c2afbe03a78fc7454a375607d07dd589ee1501fc79787f2362f16b2e330",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/web_task_draft.py": "bf9ccda8ab450a5677ea030712031d23afa917688776c0feeac493ccb3d601d3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/workspace_identity.py": "21897128ce9b38536a19d8b27b11902886cb05adae9a7dbbcb04198530bd2061",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/src/aos/write_receipts.py": "3d311440732896c0e604beade3b507b80fe3beba6075b9fc5cc6e2823e6a750e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/browser_sandbox_checks.py": "f8cbfe9810adfbd8f927a893e6c104cce88621a972dd57d5f55405e930190e2d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/desktop_apps_checks.py": "8a6938c1e11ed44a7c5f7cbe8bb29e93a5478f748099356efa60f69b735ea32a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/native_ui_checks.py": "310194fd7f886ee942b0c2677e13b9179be33fea47ac5dc3c79775bd0291314c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_auto_approval_real.py": "5dc349119115ed2c0c35d7a45134e321f5a018273ca99af8d79accbf3adf14c6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_auto_approval_ui.py": "535e112167918d098ac4949323ebdee38ad20708dab86546927a33d556b5ba4e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_benchmark.py": "cd6a06e106592fb0f2bf8c5c98d4a4fb0b3e1296653bd005abeba6b4dfcb19a3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_bounded_process.py": "ba9d2691798264b12653d4301d079f2a30773550bbc1eb2cf1296cde0e3e6f51",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_browser.py": "c4af01b851c44ebdcc2721a774230fe70c844662cfbfd3218766481a825961df",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_browser_transport_benchmark.py": "adba589d09d2a691a06322a26e183664fed505dc93f2721a42557ee832561e24",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_compound_execution.py": "43c0cd872f0a9f8467ff67eb7a166f99191c71ed274bb3033a9e9e3d3d877990",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset.py": "8898d26d474d2fa1dca6f2af760642f0d081b3446e88c6c273a8ed14f3f56461",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_adapter_candidate.py": "d713230b72abe46d96f5d399aa6e9b29345ab064480a5a7cbcb6f3caca8a0d34",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_audit.py": "84dde2915938e1666902821b293fd6623a856b7ca9428ece13388a1f9ac59948",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_bound_loss.py": "0cecb6fb5d67b729458e83c419f759fb00024b4e07e92924e89229706a3fbb06",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_gradient_probe.py": "c78013fa1e716047747821a1959cfb498feebad93ce4c9caea482d7f4d98ede2",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_loss.py": "75095141d64bde722c1cf85485c4bb9e5f59b1c5bb498ac7bd4e067fa504b3ed",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_preflight.py": "676bb7ec751c318401191281410a7cb8ac4f026731c5c1b9447d05fd4718e582",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_preview.py": "b704d67545b568c87bbe870060cf533f488b808b4df77a9be8191d1114ed3a27",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_readiness.py": "ea524e7849c9267e7f412a69f52a42fb5e8aaa526f36b235341c4c524c10272c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_review_service.py": "8914d938b96983870860714b4f715ec0de00765d78e3659082054fa556074f75",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_reviewer.py": "56757a67ea6563c7c1eacc8ade63fe0fc14d3467597f7833639d92295a17c2f7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_reviews.py": "2241a8f593223503dbf047b9d1b04ab188f59ce53dcc29a63449daa6e3659161",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_dataset_tokenizer.py": "7367339c5beb1271f8a6390f977af41af5ff3adb2741d40cbd71699bf6554669",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider.py": "bcc075e61eb6291f45dbe1e393e116040c574c1eeec9d0d45ab6caf4fa63c085",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider_calibration_smoke.py": "c4d5e0c9a9550636fdc4b905cc399450f6137cb3085697532ffc978bde4b321c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider_prewarm.py": "57a01445e7b50188475f727205ed3e91d0bbc3d035cbd8635990f32b87ce0e1e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider_row_candidate.py": "74f4ce3b6c13ace5131330411e160a2762edcd275e51d3161b30f9dcaa0a55b2",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider_row_replay.py": "28be8b15b07a873afb413a4f7f67d9ca68d6568b5948bfd04ed6f3d7af8d06e6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_decider_worker.py": "e5087a57b426dc46212d99339dbd3766f51597f164040f0a875053bde1c15352",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop.py": "854602d25e89be2d646a62812ed25a7bff1120470f1b645c5ecb68f59fd8a6e4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_browser.py": "62434bc114f28c75a62bf37b4237598985603eb340c2d8426a1b5f93d84954e2",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_console.py": "0dcc8f7664f1b03a7e191e06088c49199e819f76631f0349ae84a5d7c012cc6c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_mcp.py": "ff65cb163f5d9733fe6af919937283753d54ad8bcc5e97f26aa2a0fedfd7af6d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_mcp_request_guard.py": "2d44fce4b603153eb047584d0634393651ca7973c9cac0ea0d94ff2aaa22b790",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_mcp_ui.py": "cd76be37a7a51e22b59b5870152472c7b3666fb50bb68ba2d063d2488b75c7d1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_pointer.py": "3ea1c827322a057604f1e2b14891090aef475311007d4207426cc6afdf91e7b7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_pointer_ui.py": "62c4313d023a8c69039e541a2da8ca7d686f9fe59d8df05f0d32606a20d78c2d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_task_ui.py": "e6f9ff447b72affaa7ad760b12a50d8939671a9c51827b4624d1e01701a0ce28",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_tasks.py": "82c0ac5f0d951bdb420f83868de1b7630acaf504a4d0cfee1a77e40083fb7afb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_desktop_vision.py": "4abfd6ffef097b1f95c9f97b4aa6ed0236aa0d54fd51300cb4e4be39b0ecd45e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_development_ui.py": "edad4014a51d635483f7347e47621d1d53eb6ee951cfb545374f5881d2d720bc",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_first_use_ui.py": "29d4c1b6d048184d4c2ff62ba97447d160f76ab699f729d945429624407e72d2",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_goal_plan.py": "0ea02ba0e6d6b82778abfc9a693d78c13b068bc490aafde2d0d21b0199e21ca9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_i18n_ui.py": "99839699b5354dccd62f85312a2ab58833d4310690478c65d4742f29423d49e6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_inspection.py": "58e0546789ccf7738fd9d450c8bc76499e3182867fd02b5aebcf44503d6af722",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_lab_external_jobs.py": "612d49d18a7ad59dbb3264206bd305df26c170d89615e11a59532406ca033bb6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_laya_candidate.py": "794ca88d76cff0ee940c7e3323f1d282d411654b44ee9a13f14e8c41f9be79b7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_learning_candidate.py": "f97f6fe04bf39ace4deaa556547e35f6b896016323f6f0355179a790a62b48ac",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_learning_event_outbox.py": "276dd44a9798d3932ba7de41040ee47cb52702e9253381705a581edee9d0b26e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_learning_event_stream.py": "d2d698158fa71329b96739fdb914ed2c8cc475949405f8034f9144b9900b1680",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_learning_events.py": "a743c2ce23ae4a15b3b112dbaae10fb360723b67d9bb2cce08948b00a384f227",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_lifecycle.py": "1292cf7cc9904ba1e80c6f96453edfc23abda42210781e00bba5e1bfededd5ab",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_local_app.py": "33a589c8de5996c71031e1481dd4d8e2a45ed9e0aba0df7bba5746f0bf79c501",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_local_navigation.py": "69aed99b86af9c8533fad9fdfb1cc750004e7ab9e62ed54a790fa851a3a5ad78",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_local_navigation_admission.py": "9915b5db73952a04dda91f16aa97c4b72abc035e1d2477624214e04c995f69da",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_local_preflight.py": "49944a9278d32e9ac390ac2af276f9b773a70d48239f40264bc34795f752033d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_local_staging_admission.py": "86b59484c69571aecf432fe1354515666345d56cbce221fa912c25de89ea7dcb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_native_package.py": "2bf1cd182403320fb8a451e096b33734cb711034a5541a3bda1dbf1b0c38ffe4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_native_ui.py": "c61d3ca167da2f58d1e3373069d80a1799dd2aad2309fce2218c570e9351a952",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_parallel_ui.py": "764ee7c8e3172113389ce98601a0618792e3314702ba168953377d6d9f39be3c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery.py": "b92c26d9693507a4e366efcc0419a804cb771a0b48174f424e5ac59ac33215cf",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_backup.py": "380973d2246815a73e1fbf26a9dea361bbd615914cbd55447c9d610d341bc8fd",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_checkpoint.py": "998cc1832e25f5e86356aeefedd2713e4b7924fb68aa4248865f9ad1ccfa0cef",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_effect.py": "fdc6047291bab8d6a896848ce48837b22be37f2060d64a7cf27d1dc6c4265607",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_finalize.py": "e5715ac22c2718ae6e63da400069100bc68a8adeb263254b95b68b43a85dc5a7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_inventory.py": "b46c92f04ba91922184264789a69c86ae19fa4be98e016509295160338175f72",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_reconcile.py": "8a30afde85861c4ac65b1feb59176865e9bae51ff17d7bb5d23898f9eedb12de",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_resume.py": "8947d797663abb71be8e7e74d9a5dbe2446af4b4f83b7584c7bfb02f96e1c3c4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_runtime.py": "5a772249169ca8a635bf6df70a8ee28e45f066be9b70d8a40b63b84152661c09",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_session.py": "410c4d3260088138a2dc8722f0cfff8f26b30123b03378650bbc87287ea90891",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_recovery_verify.py": "e76c6df4d65142d31fd8fc15334380f2cb0f38c60e7eec6e3b47b05295c48e4b",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_form_learning_source.py": "d7f0da9c0f97043d59cdd2e3a359e9ae0faa5e95176ec3947fc4b2e3384a9608",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_form_learning_stream.py": "e63d62369ed035c97fa5505f5192ec728abc646716d9a015e5f8222cb5b033b1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_form_permit.py": "ff86e03bd2a43cba6cce5ee68d77d08cd1bf92359d5dd404cd6e4bc7de9d567a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_form_repeat.py": "93b2a2b64e2073ab6ec594c7f9b378e3b12a395fef190a81aa7ac31d63386646",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_learning_consent.py": "8e64f0b181105a897624f83d7ae795ddc312c3e467036836478184219aec0498",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_learning_lifecycle.py": "8fce2224b344ed883a9ebc148ee3b1dd7c5f936976357e7204627ab4eb4af81b",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_learning_retention.py": "ce8e052f25666d901a4221bd83fec156daea835768023e5fe4cb4048e2abcc1f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_learning_source.py": "b34e8fb71ec9199910c5169e756ef93bcea53bbf37d152f39095fa87c805b656",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_learning_stream.py": "0d5170222ac74df04ed73497b6457fa522b0d6648b1f7d67b02d2f3756aa0f65",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_change.py": "c083ce14e9eec38bbd73d26dd272d2384475c3eac8d6babd7ef00074d6e12566",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_knowledge.py": "7bfddcda14ffa59180d44af79e74705cbb907b0d164bad4416e3aeeeae4c10e7",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_knowledge_review.py": "ee9ef4a6dda0eaf8d88dab813a47f0a580174b6ee47a962383e60acaedf0fefc",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_page_draft.py": "785a23cf8b538adddee4596441652444adf0169f4b999591313655a75259a380",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_source.py": "b6e4b85f1cebb3612bb72241a08e1d440c8ded713e2ce7bcc7d2d3425a359435",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_readonly_data_stream.py": "8f1e1b8faa1fdd1811dcc671611a96a94d717a0fe8de19d9700890576e082780",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_site_skill_provenance.py": "4d5b6b1dc0dc729545b28b5c631455237e3e095cc55266a08ae647f34cf60d36",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_static_learning_source.py": "98f72ef10f5f0198e6bf522467171cefdece526948b3ea38b67efaf4d215db0f",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_remote_static_learning_stream.py": "78da9ea976f5ac0cb287742564d531f158e382562c7d8b9531af55fcabd2396e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_reusable_decider.py": "eb15f2fc0ccf6dc59341211ea8313a0cf596a702f4a26f05d8b23e5419562b65",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_runtime.py": "65ff373f20e529a20bd2c0f81a8ba732ea2c7c48abe3c13fc2d5d04e5b30c313",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_scheduled_browser.py": "3fc725626ccf2fde4409d656925116a48d255125ff8af45490d0e742b866a87e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_knowledge.py": "f3fe01acad2c19994dbc83536c824f5b951dc4cf905df7a2b23b5c2aa8503b73",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_page_change.py": "bb92d8cb7722368d7de3f97abbf73114662cb4819fc1fc4da38f0345a5e7bec4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_page_comparison.py": "44928dd836be97d1e0abd6aee477a6babcff0fd22fc7b5532e2bced6879d1ea9",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_page_evidence_cli.py": "bb74165d0989abc7d5b1046cb40c8e98a7c18d0f8ad3548fcadc6396d15224d0",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_page_retrieval.py": "a9d7ab6443069dd048b5b03c9e57375f9ddf4b78e950d68fe14fb8da2f614301",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_page_retrieval_bound.py": "8b9c5f0b9328d13749445b5fa3a489b3ab97c73aac6e3c0d1b2acd48b7ba4eb3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill.py": "b29ad5331ed8722c9c909ba1eda6ad16c9439122c50a4f2a6d024fb2d04e5c7c",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_case_binding.py": "ec61077f23a13c2a6ab338885b9d30ab7bf25d219ee58bb21440733ca997a411",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_cli.py": "20f9fe3e4524f40c4b31e196621058ec77e6c509640bb66b1bcee3b7783eaf02",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_form_execution.py": "fcef4df788742480ea41e90f424c67f559599e65422a54cd3b3d905da0b0eff6",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_provenance.py": "80c0119328ecdf9dd4292734c27eed0da09d546025637483f48e34996ecd54ab",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_rehearsal.py": "5d3e26266ae516286ff3964ac48a8665f71e2a1708a6f1e327c9429cc5770838",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_validation.py": "81cf84b90926ec068dc7286a3e8b3b4793cda504c2020378929011a488a3f579",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_site_skill_validation_cli.py": "46c699211da38029b4862ecb643ee93060181a106370cfc977c09174739f725d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_staging_skill_candidate.py": "ec30146daebf81afc900dfa60f91db305e5629177c3ae088958839529267b75a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_staging_workflow.py": "eb40cc8f29d1c25f929683d5bde6459840eec847a565cdec2b4c7d626f058065",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_staging_workflow_ui.py": "de9530fcd363ca31a739b4dd3b766089b1f372a0ec173a23a12f8b10f8705b00",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_synthetic_learning_hook.py": "ec8bee9b62bfafcf9936260053daa48b12bb5f3b4824f3df57eae4b6fc4c9d9d",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_synthetic_learning_ui.py": "d16509ead9cfed54d9afb773de75a7e5c91b02fe5d671613c7f23f85d3e61760",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_auto_approval.py": "6b6bda6f4691406729950ee55a66ca1d747ec79df3ee29b92da7c13c11e816e4",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_intent.py": "8c247a3bc4e0b71697ed1809b7a77d975df64e064ce39300dbd9aa0f2f925204",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_plan.py": "0a7d4ce5327be4f63347679219a6348ecd5e8f2b94676c835f03a24c22c91cf1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_progress.py": "61aea70f1a58cfe50dccb0eb1af66db4fb3327eeba670df522bd2ca7fe60407a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_progress_ui.py": "aa097aa93c57992ec7ce5d34a47c0b85e170b1d154e57fcd1cfb50f704e0e704",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_task_sequence.py": "c3ced370a2f036f3b6afa9c807e5b6cc6f74f05b716a216549a635f6ca523478",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_ui_language_contract.py": "9016baaef8367eece53bbf90c8812c2b9b969b00ac619282a19854ed00c034f0",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_ui_polling.py": "90d649267d28414aa9b9b5ae1115365d11520c596ac0a7265b79cebc039363fb",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_visible_scheduler.py": "56303b09014fb2266487d88d211120d382452976c3be18b72cdb10ce0715a20b",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_visible_task_ui.py": "67ec09d1956176c59cc1c5b8045a8565dd37be2c40c8381cc225de2fbc7be444",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_vision.py": "87f47eccd9d99f00d2754cf1096fcf910503fd52572fe0196b53e5106a25c5c3",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_vision_skill_candidate.py": "111f224b181bd83b38364231787612c0e7a429e8bd9690de93bc0501ccccd493",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_application.py": "54736d83dc5ff7d4cab7ead4431f76314cf584b0aac32c460cee4031c91b545a",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_application_binding.py": "beab76eaa9d11f067d9d4cce582f773a9dc1020b7def8ee15b114bdee494cb39",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_application_console.py": "67800323b64ee3cf0cf1413aae520baad836ad4ec01bf41d650bf286d48ea7ba",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_application_draft_ui.py": "0f995c52c760fbca35d297d709ebeecd6455b7ef39bf25b48ca9e96afb11925e",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_https_preflight.py": "aeebbb10426a84331077f35b943f9a9e4e114b4efa9f7c9c25c9163ec4bfdfe5",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_https_relay.py": "b1d7f602b47ff479ff996f73cd556233c77dcdb17a60244f9130b43ecda87ab1",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_request_scope.py": "18eec03e95ceaf2e97383e17018308836088aae7aa29353c3360787e399560db",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/test_web_task_draft.py": "630c2fbb4d8f9f1b6480752c8a5e320036a842ca5a0d7c56283519eb034e4b92",
+    "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/rebase-f16d3ced7e6d430eb9b2e11913dac720/merged/tests/vision_sandbox_checks.py": "355e558d168ae1ea4d9680ac869c89a5587d0fb6587679d431157289802237f7",
+    "/home/cachyos/ai-scientist/lab/llm/gpu_scheduler.py": "de7305f448adfceffcc9a3934652f04ffcc9b5407d5509f179a97304416ad320",
+    "/home/cachyos/ai-scientist/lab/llm/native_runtime.py": "80c3a77adfe60e0dd2c7bced32dc1b2de86c7c1de5b1e03ee26934634299af44",
+    "/home/cachyos/ai-scientist/lab/llm/netns_exec.py": "9a645a37b8db841fe550df3d6cc9d0f168a9f32792fd004ac3f5a84e9c5be5b1"
+  }
+}

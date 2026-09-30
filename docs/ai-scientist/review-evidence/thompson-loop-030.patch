@@ -1,0 +1,1286 @@
+diff --git a/lab/director/loop.py b/lab/director/loop.py
+index 0d6c162..de7b1a9 100644
+--- a/lab/director/loop.py
++++ b/lab/director/loop.py
+@@ -39,17 +39,46 @@ from lab.director.runner import (
+ from lab.director.runner import (
+     run_one_proposal as _run_proposal,
+ )
++from lab.director.strategy import (
++    StrategyOutcome,
++    StrategySelection,
++    StrategyState,
++    initial_strategy_state,
++    parse_strategy_state_json,
++    resolve_strategy_selection,
++    select_strategy_move,
++    strategy_state_json,
++    strategy_state_sha256,
++    verify_strategy_state_sha256,
++)
+ from lab.director.suite import SuiteTask
+ from lab.llm.router import route_system
+ from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE, LocalDockerRunner
+ 
+ 
++def _strategy_seed_for_run(run_id: UUID) -> int:
++    """Pin the Thompson RNG seed to this immutable run identity."""
++    digest = hashlib.sha256(b"swapp-director-thompson-seed-v1:" + run_id.bytes).digest()
++    return int.from_bytes(digest[:8], byteorder="big", signed=False)
++
++
++def _strategy_checkpoint_fields(strategy: StrategyState) -> dict[str, object]:
++    """Serialize strategy state canonically and bind its policy and seed."""
++    return {
++        "schema": "director-loop-state.v2",
++        "strategy_seed": strategy.seed,
++        "strategy_policy_version": strategy.policy_version,
++        "strategy_state_json": strategy_state_json(strategy).decode("utf-8"),
++        "strategy_state_sha256": strategy_state_sha256(strategy),
++    }
++
++
+ class DirectorLoopState(BaseModel):
+     """Complete, hash-bound loop state stored after every terminal proposal."""
+ 
+     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+ 
+-    schema_version: Literal["director-loop-state.v1"] = Field(
++    schema_version: Literal["director-loop-state.v1", "director-loop-state.v2"] = Field(
+         alias="schema", serialization_alias="schema"
+     )
+     run_id: UUID
+@@ -86,6 +115,10 @@ class DirectorLoopState(BaseModel):
+     holdout_last_status: Literal["not_run", "passed", "reverted", "quota_exhausted", "failed"] = (
+         "not_run"
+     )
++    strategy_seed: StrictInt | None = None
++    strategy_policy_version: Literal["beta-thompson-coverage-v1"] | None = None
++    strategy_state_json: Annotated[StrictStr, Field(max_length=65_536)] | None = None
++    strategy_state_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
+ 
+     def verify_consistency(self) -> DirectorLoopState:
+         if self.next_ordinal != self.completed_proposals + 1:
+@@ -103,8 +136,37 @@ class DirectorLoopState(BaseModel):
+         )
+         if not all(math.isfinite(value) for value in values):
+             raise ValueError("Director loop state contains non-finite measured values")
++        strategy_fields = (
++            self.strategy_seed,
++            self.strategy_policy_version,
++            self.strategy_state_json,
++            self.strategy_state_sha256,
++        )
++        if self.schema_version == "director-loop-state.v1":
++            if any(value is not None for value in strategy_fields):
++                raise ValueError("legacy Director state cannot carry partial strategy fields")
++        else:
++            if any(value is None for value in strategy_fields):
++                raise ValueError("Director state v2 requires a complete pinned strategy")
++            strategy = self.load_strategy_state()
++            if (
++                strategy.seed != self.strategy_seed
++                or strategy.policy_version != self.strategy_policy_version
++                or self.strategy_seed != _strategy_seed_for_run(self.run_id)
++                or strategy.completed_experiments != self.completed_proposals
++                or strategy.selection_count
++                != self.completed_proposals + int(strategy.pending is not None)
++                or (strategy.pending is not None and strategy.pending.ordinal != self.next_ordinal)
++            ):
++                raise ValueError("Director strategy counters differ from the loop checkpoint")
+         return self
+ 
++    def load_strategy_state(self) -> StrategyState:
++        if self.strategy_state_json is None or self.strategy_state_sha256 is None:
++            raise ValueError("Director checkpoint has no Thompson strategy state")
++        strategy = parse_strategy_state_json(self.strategy_state_json)
++        return verify_strategy_state_sha256(strategy, self.strategy_state_sha256)
++
+ 
+ class HoldoutApprovedSnapshot(BaseModel):
+     """Exact champion state last approved by the private holdout gate."""
+@@ -265,10 +327,28 @@ class DirectorLoop:
+             if ordinal_reconciled is not None:
+                 reconciled_payload = ordinal_reconciled.get("payload")
+                 abandonment_key = f"proposal-abandoned:{state.next_ordinal}"
++                reason_code = (
++                    reconciled_payload.get("reason_code")
++                    if isinstance(reconciled_payload, dict)
++                    else None
++                )
+                 if (
+                     isinstance(reconciled_payload, dict)
+-                    and reconciled_payload.get("reason_code")
+-                    in {"tool_parse", "model_request", "budget_exhausted", "provider_error"}
++                    and reason_code in {"model_request", "budget_exhausted", "provider_error"}
++                    and self.lease.read_checkpoint(
++                        key=abandonment_key, artifact_root=self.artifact_root
++                    )
++                    is None
++                ):
++                    state, state_checkpoint = self._preserve_pending_strategy_after_failure(
++                        state, ordinal=state.next_ordinal
++                    )
++                    raise RuntimeError(
++                        "provider infrastructure failed with a durable pending strategy intent"
++                    )
++                if (
++                    isinstance(reconciled_payload, dict)
++                    and reason_code == "tool_parse"
+                     and self.lease.read_checkpoint(
+                         key=abandonment_key, artifact_root=self.artifact_root
+                     )
+@@ -315,8 +395,7 @@ class DirectorLoop:
+                     not isinstance(payload, dict)
+                     or payload.get("run_id") != str(self.run_id)
+                     or payload.get("ordinal") != state.next_ordinal
+-                    or payload.get("reason")
+-                    not in {"tool_parse", "model_request", "budget_exhausted", "provider_error"}
++                    or payload.get("reason") != "tool_parse"
+                     or not isinstance(payload.get("is_explore"), bool)
+                 ):
+                     raise RuntimeError("durable abandoned episode identity is invalid")
+@@ -353,35 +432,10 @@ class DirectorLoop:
+                 # execute an EXPLORE episode until the trusted AST family
+                 # classifier and S2 family directive are implemented.
+                 return self._result(state, state_checkpoint, "explore_family_unverified")
+-            local_provider = getattr(self.provider, "provider_id", None) == "local-qwen.v1"
+-            move_intent: MoveType | None = None
+-            if local_provider:
+-                moves: tuple[MoveType, ...] = (
+-                    "hparam",
+-                    "simplify",
+-                    "features",
+-                    "preprocess",
+-                    "detector",
+-                    "alarm_policy",
+-                    "regime",
+-                    "fusion",
+-                    "skill_reuse",
+-                )
+-                move_intent = moves[(ordinal - 1) % len(moves)]
+-                system = route_system(
+-                    "experiment",
+-                    move_intent,
+-                    explore=is_explore,
+-                    discard_streak=state.discard_streak,
+-                )
+-                self._persist_proposal_intent(
+-                    state,
+-                    ordinal=ordinal,
+-                    system=system,
+-                    move_type=move_intent,
+-                )
+-            else:
+-                system = "S2" if is_explore else "S1"
++            state, state_checkpoint, selection, system = self._prepare_strategy_intent(
++                state, ordinal=ordinal, is_explore=is_explore
++            )
++            move_intent = selection.move_type
+             cards = self._task_cards(state, calibration)
+             context = AgentContext(
+                 phase="explore" if is_explore else "proposal",
+@@ -402,6 +456,14 @@ class DirectorLoop:
+                 )
+             except ProviderOutputError as error:
+                 self.lease.require_run_active()
++                if error.reason_code != "tool_parse":
++                    state, state_checkpoint = self._preserve_pending_strategy_after_failure(
++                        state, ordinal=ordinal
++                    )
++                    raise RuntimeError(
++                        f"provider infrastructure failed ({error.reason_code}); "
++                        "durable Thompson intent remains unresolved"
++                    ) from error
+                 from lab.director.artifacts import store_director_artifact
+ 
+                 response_blob = None
+@@ -447,6 +509,14 @@ class DirectorLoop:
+                 )
+                 state_checkpoint = self._persist_state(state)
+                 continue
++            except Exception as error:
++                # The provider or proposal adapter did not produce a durable
++                # candidate outcome. Preserve the pending move and consumed
++                # budget so recovery cannot award a posterior update or resample.
++                self._preserve_pending_strategy_after_failure(state, ordinal=ordinal)
++                raise RuntimeError(
++                    "proposal infrastructure failed with unresolved Thompson intent"
++                ) from error
+             receipt = self._read_terminal_document(proposal.experiment_id)
+             updated = self._advance_state(state, proposal, receipt, calibration, is_explore)
+             promoted = (
+@@ -1594,9 +1664,18 @@ class DirectorLoop:
+     ) -> DirectorLoopState:
+         if ordinal != state.next_ordinal:
+             raise RuntimeError("abandoned proposal does not match the next durable ordinal")
++        strategy = state.load_strategy_state()
++        if (
++            strategy.pending is None
++            or strategy.pending.ordinal != ordinal
++            or strategy.pending.move_type != move_type
++        ):
++            raise RuntimeError("abandoned proposal differs from its durable Thompson intent")
++        resolved_strategy = resolve_strategy_selection(strategy, ordinal, "ABANDONED")
+         feedback = f"experiment={ordinal}; verdict=ABANDONED; reason={reason}"
+         payload = {
+             **state.model_dump(mode="json", by_alias=True),
++            **_strategy_checkpoint_fields(resolved_strategy),
+             "completed_proposals": state.completed_proposals + 1,
+             "next_ordinal": state.next_ordinal + 1,
+             "consecutive_non_keep": state.consecutive_non_keep + 1,
+@@ -1664,6 +1743,10 @@ class DirectorLoop:
+                 json.dumps(checkpoint["payload"], separators=(",", ":")), strict=True
+             )
+             state.verify_consistency()
++            if state.schema_version != "director-loop-state.v2":
++                raise RuntimeError(
++                    "cannot resume legacy Director state without preregistered Thompson history"
++                )
+             if state.holdout_approved_snapshot is None:
+                 raise RuntimeError("resumed Director state has no approved holdout snapshot")
+             if (
+@@ -1677,7 +1760,13 @@ class DirectorLoop:
+                 or state.proposal_limit != self.proposal_limit
+             ):
+                 raise RuntimeError("Director loop execution identity changed on resume")
+-            self._restore_budget(state.budget)
++            state_receipt = checkpoint.get("receipt")
++            state_sequence = (
++                state_receipt.get("sequence") if isinstance(state_receipt, dict) else None
++            )
++            if isinstance(state_sequence, bool) or not isinstance(state_sequence, int):
++                raise RuntimeError("Director state receipt has no durable sequence")
++            self._restore_budget(state.budget, after_sequence=state_sequence)
+             return state, checkpoint["receipt"]
+         state = self._initial_state(calibration)
+         receipt = self._persist_state(state)
+@@ -1700,9 +1789,10 @@ class DirectorLoop:
+ 
+         source = baseline_candidate_source("robust_z")
+         blob = store_director_artifact(source, artifact_root=self.artifact_root)
++        strategy = initial_strategy_state(_strategy_seed_for_run(self.run_id))
+         return DirectorLoopState.model_validate(
+             {
+-                "schema": "director-loop-state.v1",
++                **_strategy_checkpoint_fields(strategy),
+                 "run_id": self.run_id,
+                 "suite_manifest_sha256": self.suite_manifest_sha256,
+                 "suite_id": calibration.suite_id,
+@@ -1750,6 +1840,7 @@ class DirectorLoop:
+     def _persist_state(
+         self, state: DirectorLoopState, *, checkpoint_tag: str | None = None
+     ) -> dict[str, object]:
++        state.verify_consistency()
+         key = self._state_checkpoint_key(state, checkpoint_tag=checkpoint_tag)
+         payload = state.model_dump(mode="json", by_alias=True)
+         existing = self.lease.read_checkpoint(key=key, artifact_root=self.artifact_root)
+@@ -1772,6 +1863,62 @@ class DirectorLoop:
+         )
+         return receipt
+ 
++    def _preserve_pending_strategy_after_failure(
++        self, state: DirectorLoopState, *, ordinal: int
++    ) -> tuple[DirectorLoopState, dict[str, object]]:
++        """Persist budget consumption without resolving or replacing provider intent."""
++        strategy = state.load_strategy_state()
++        if strategy.pending is None or strategy.pending.ordinal != ordinal:
++            raise RuntimeError("provider failure has no matching pending Thompson intent")
++        unchanged_strategy = strategy_state_json(strategy)
++        checkpoint_tag = f"provider-failure-{ordinal}"
++        checkpoint_key = self._state_checkpoint_key(state, checkpoint_tag=checkpoint_tag)
++        existing = self.lease.read_checkpoint(key=checkpoint_key, artifact_root=self.artifact_root)
++        if existing is not None:
++            payload = existing.get("payload")
++            receipt = existing.get("receipt")
++            if not isinstance(payload, dict) or not isinstance(receipt, dict):
++                raise RuntimeError("provider failure checkpoint is malformed")
++            restored = DirectorLoopState.model_validate_json(
++                json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
++                strict=True,
++            ).verify_consistency()
++            if (
++                strategy_state_json(restored.load_strategy_state()) != unchanged_strategy
++                or restored.next_ordinal != ordinal
++                or receipt.get("key") != checkpoint_key
++                or receipt.get("phase") != "director_loop_state"
++            ):
++                raise RuntimeError("provider failure checkpoint conflicts with pending intent")
++            return restored, receipt
++        updated = state.model_copy(
++            update={"budget": _budget_to_json(self.budget.snapshot())}
++        ).verify_consistency()
++        if strategy_state_json(updated.load_strategy_state()) != unchanged_strategy:
++            raise RuntimeError("provider failure changed the pending Thompson state")
++        receipt = self._persist_state(updated, checkpoint_tag=checkpoint_tag)
++        return updated, receipt
++
++    def _with_strategy_state(
++        self,
++        state: DirectorLoopState,
++        strategy: StrategyState,
++        **updates: object,
++    ) -> DirectorLoopState:
++        payload = state.model_dump(mode="json", by_alias=True)
++        payload.update(updates)
++        payload.update(_strategy_checkpoint_fields(strategy))
++        return DirectorLoopState.model_validate_json(
++            json.dumps(
++                payload,
++                ensure_ascii=False,
++                sort_keys=True,
++                separators=(",", ":"),
++                allow_nan=False,
++            ),
++            strict=True,
++        ).verify_consistency()
++
+     def _pending_run_end_terminal_result(
+         self,
+         state: DirectorLoopState,
+@@ -2417,6 +2564,7 @@ class DirectorLoop:
+         ordinal: int,
+         system: Literal["S1", "S2"],
+         move_type: str,
++        is_explore: bool,
+     ) -> None:
+         """Freeze the selected move and system before invoking the model."""
+         configuration_sha256 = getattr(self.provider, "configuration_sha256", None)
+@@ -2426,6 +2574,10 @@ class DirectorLoop:
+             "ordinal": ordinal,
+             "move_type": move_type,
+             "system": system,
++            "is_explore": is_explore,
++            "strategy_seed": state.strategy_seed,
++            "strategy_policy_version": state.strategy_policy_version,
++            "strategy_state_sha256": state.strategy_state_sha256,
+             "parent_experiment_id": state.champion_experiment_id,
+             "parent_tree_sha256": state.champion_tree_sha256,
+             "provider_config_sha256": configuration_sha256,
+@@ -2445,6 +2597,82 @@ class DirectorLoop:
+             payload=expected,
+             artifact_root=self.artifact_root,
+         )
++        persisted = self.lease.read_checkpoint(key=key, artifact_root=self.artifact_root)
++        if persisted is None or persisted.get("payload") != expected:
++            raise RuntimeError("proposal intent did not survive durable checkpoint reload")
++
++    def _prepare_strategy_intent(
++        self,
++        state: DirectorLoopState,
++        *,
++        ordinal: int,
++        is_explore: bool,
++    ) -> tuple[
++        DirectorLoopState,
++        dict[str, object],
++        StrategySelection,
++        Literal["S1", "S2"],
++    ]:
++        """Persist and verify one immutable Thompson move before provider use."""
++        if state.schema_version != "director-loop-state.v2":
++            raise RuntimeError("Thompson strategy is unavailable in a legacy loop checkpoint")
++        if ordinal != state.next_ordinal:
++            raise RuntimeError("Thompson intent ordinal differs from the loop ordinal")
++        strategy = state.load_strategy_state()
++        selected_state, selection = select_strategy_move(strategy, ordinal)
++        pending_state = self._with_strategy_state(state, selected_state)
++        tag = f"strategy-intent-{ordinal}"
++        receipt = self._persist_state(pending_state, checkpoint_tag=tag)
++        key = self._state_checkpoint_key(pending_state, checkpoint_tag=tag)
++        persisted = self.lease.read_checkpoint(key=key, artifact_root=self.artifact_root)
++        expected_state = pending_state.model_dump(mode="json", by_alias=True)
++        if persisted is None or persisted.get("payload") != expected_state:
++            raise RuntimeError("Thompson intent failed durable checkpoint reload")
++        payload = persisted.get("payload")
++        if not isinstance(payload, dict):
++            raise RuntimeError("reloaded Thompson checkpoint payload is malformed")
++        reloaded_state = DirectorLoopState.model_validate_json(
++            json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
++            strict=True,
++        ).verify_consistency()
++        reloaded_strategy = reloaded_state.load_strategy_state()
++        if (
++            reloaded_strategy.pending is None
++            or reloaded_strategy.pending.model_dump(mode="json")
++            != selection.model_dump(mode="json")
++            or reloaded_state.strategy_seed != strategy.seed
++            or reloaded_state.strategy_policy_version != strategy.policy_version
++        ):
++            raise RuntimeError("reloaded Thompson intent differs from selected strategy move")
++        system = route_system(
++            "experiment",
++            selection.move_type,
++            explore=is_explore,
++            discard_streak=reloaded_state.discard_streak,
++        )
++        self._persist_proposal_intent(
++            reloaded_state,
++            ordinal=ordinal,
++            system=system,
++            move_type=selection.move_type,
++            is_explore=is_explore,
++        )
++        intent = self.lease.read_checkpoint(
++            key=f"proposal-intent:{ordinal}", artifact_root=self.artifact_root
++        )
++        intent_payload = intent.get("payload") if intent is not None else None
++        if (
++            not isinstance(intent_payload, dict)
++            or intent_payload.get("strategy_state_sha256") != reloaded_state.strategy_state_sha256
++            or intent_payload.get("strategy_seed") != strategy.seed
++            or intent_payload.get("strategy_policy_version") != strategy.policy_version
++            or intent_payload.get("move_type") != selection.move_type
++            or intent_payload.get("system") != system
++            or intent_payload.get("is_explore") is not is_explore
++        ):
++            raise RuntimeError("provider intent does not bind the durable Thompson selection")
++        self.lease.require_run_active()
++        return reloaded_state, receipt, selection, system
+ 
+     def _next_checkpoint_sequence(self) -> int:
+         with self.director_engine.connect() as connection:
+@@ -2457,16 +2685,19 @@ class DirectorLoop:
+             ).scalar_one()
+         return 0 if value is None else int(value) + 1
+ 
+-    def _restore_budget(self, payload: dict[str, object]) -> None:
++    def _restore_budget(self, payload: dict[str, object], *, after_sequence: int) -> None:
+         restored = _budget_from_json(payload)
+-        self.budget.restore(self._latest_budget_checkpoint(restored))
++        self.budget.restore(self._latest_budget_checkpoint(restored, after_sequence=after_sequence))
+ 
+-    def _latest_budget_checkpoint(self, baseline: BudgetSnapshot) -> BudgetSnapshot:
++    def _latest_budget_checkpoint(
++        self, baseline: BudgetSnapshot, *, after_sequence: int = -1
++    ) -> BudgetSnapshot:
+         with self.director_engine.connect() as connection:
+             events = (
+                 connection.execute(
+                     text(
+-                        "SELECT event_json->>'key' AS key FROM lab.run_events "
++                        "SELECT event_json->>'key' AS key, "
++                        "(event_json->>'sequence')::integer AS sequence FROM lab.run_events "
+                         "WHERE run_id=:run AND event_type='director.checkpoint' "
+                         "ORDER BY (event_json->>'sequence')::integer DESC LIMIT 256"
+                     ),
+@@ -2487,7 +2718,15 @@ class DirectorLoop:
+         }
+         for event in events:
+             key = event["key"]
+-            if not isinstance(key, str):
++            sequence = event.get("sequence")
++            if not isinstance(key, str) or (
++                after_sequence >= 0
++                and (
++                    isinstance(sequence, bool)
++                    or not isinstance(sequence, int)
++                    or sequence <= after_sequence
++                )
++            ):
+                 continue
+             checkpoint = self.lease.read_checkpoint(key=key, artifact_root=self.artifact_root)
+             if checkpoint is None:
+@@ -2766,7 +3005,38 @@ class DirectorLoop:
+     ) -> DirectorLoopState:
+         if document.experiment_number != state.next_ordinal:
+             raise RuntimeError("terminal proposal ordinal differs from the durable loop state")
++        strategy = state.load_strategy_state()
++        if (
++            strategy.pending is None
++            or strategy.pending.ordinal != state.next_ordinal
++            or strategy.pending.move_type != proposal.proposal.move_type
++        ):
++            raise RuntimeError("terminal proposal differs from its preregistered move intent")
+         verdict = document.decision.verdict if document.decision is not None else "REJECT"
++        if document.status == "abandoned":
++            strategy_outcome: StrategyOutcome = "ABANDONED"
++        elif verdict in {"KEEP", "KEEP_SIMPLER", "DISCARD"}:
++            strategy_outcome = cast(StrategyOutcome, verdict)
++        elif document.status == "crashed":
++            strategy_outcome = "CANDIDATE_FAILURE"
++        elif verdict == "REJECT":
++            strategy_outcome = (
++                "POLICY_REJECT"
++                if document.decision is not None
++                and document.decision.reason
++                in {
++                    "hardcoding_reject",
++                    "determinism_reject",
++                    "causality_reject",
++                    "position_bias_reject",
++                }
++                else "CANDIDATE_REJECT"
++            )
++        else:
++            raise RuntimeError("terminal proposal has no resolvable Thompson outcome")
++        resolved_strategy = resolve_strategy_selection(
++            strategy, state.next_ordinal, strategy_outcome
++        )
+         promoted = verdict in {"KEEP", "KEEP_SIMPLER"} and document.status == "scored"
+         dev_metrics = json.dumps(
+             [item.model_dump(mode="json") for item in document.per_task], sort_keys=True
+@@ -2843,46 +3113,53 @@ class DirectorLoop:
+         discard_streak = state.discard_streak + 1 if verdict == "DISCARD" else 0
+         explore_count = state.explore_proposals + (1 if is_explore else 0)
+         explore_family = proposal.proposal.move_type if is_explore else state.explore_family
+-        return DirectorLoopState.model_validate(
+-            {
+-                "schema": "director-loop-state.v1",
+-                "run_id": self.run_id,
+-                "suite_manifest_sha256": state.suite_manifest_sha256,
+-                "suite_id": state.suite_id,
+-                "suite_version": state.suite_version,
+-                "calibration_sha256": state.calibration_sha256,
+-                "harness_sha256": state.harness_sha256,
+-                "image_sha256": state.image_sha256,
+-                "proposal_limit": state.proposal_limit,
+-                "completed_proposals": state.completed_proposals + 1,
+-                "next_ordinal": state.next_ordinal + 1,
+-                "champion_experiment_id": champ_id,
+-                "champion_source_sha256": source_blob,
+-                "champion_tree_sha256": tree,
+-                "champion_source_blob_sha256": blob,
+-                "champion_seed0_by_task": seed0,
+-                "champion_seed1_by_task": seed1,
+-                "champion_suite_seed_scores": weighted,
+-                "champion_noise_sd": float(noise),
+-                "best_suite": best,
+-                "consecutive_non_keep": non_keep,
+-                "explore_proposals": explore_count,
+-                "explore_family": explore_family,
+-                "consecutive_candidate_crashes": crashes,
+-                "discard_streak": discard_streak,
+-                "previous_move_type": proposal.proposal.move_type,
+-                "recent_feedback": recent,
+-                "budget": _budget_to_json(self.budget.snapshot()),
+-                "holdout_approved_snapshot": (
+-                    state.holdout_approved_snapshot.model_dump(mode="json")
+-                    if state.holdout_approved_snapshot is not None
+-                    else None
+-                ),
+-                "holdout_applied_keep_count": state.holdout_applied_keep_count,
+-                "holdout_quota_exhausted": state.holdout_quota_exhausted,
+-                "holdout_checks_passed": state.holdout_checks_passed,
+-                "holdout_last_status": state.holdout_last_status,
+-            },
++        next_payload: dict[str, object] = {
++            **_strategy_checkpoint_fields(resolved_strategy),
++            "run_id": str(self.run_id),
++            "suite_manifest_sha256": state.suite_manifest_sha256,
++            "suite_id": state.suite_id,
++            "suite_version": state.suite_version,
++            "calibration_sha256": state.calibration_sha256,
++            "harness_sha256": state.harness_sha256,
++            "image_sha256": state.image_sha256,
++            "proposal_limit": state.proposal_limit,
++            "completed_proposals": state.completed_proposals + 1,
++            "next_ordinal": state.next_ordinal + 1,
++            "champion_experiment_id": champ_id,
++            "champion_source_sha256": source_blob,
++            "champion_tree_sha256": tree,
++            "champion_source_blob_sha256": blob,
++            "champion_seed0_by_task": seed0,
++            "champion_seed1_by_task": seed1,
++            "champion_suite_seed_scores": weighted,
++            "champion_noise_sd": float(noise),
++            "best_suite": best,
++            "consecutive_non_keep": non_keep,
++            "explore_proposals": explore_count,
++            "explore_family": explore_family,
++            "consecutive_candidate_crashes": crashes,
++            "discard_streak": discard_streak,
++            "previous_move_type": proposal.proposal.move_type,
++            "recent_feedback": recent,
++            "budget": _budget_to_json(self.budget.snapshot()),
++            "holdout_approved_snapshot": (
++                state.holdout_approved_snapshot.model_dump(mode="json")
++                if state.holdout_approved_snapshot is not None
++                else None
++            ),
++            "holdout_applied_keep_count": state.holdout_applied_keep_count,
++            "holdout_quota_exhausted": state.holdout_quota_exhausted,
++            "holdout_checks_passed": state.holdout_checks_passed,
++            "holdout_last_status": state.holdout_last_status,
++        }
++        return DirectorLoopState.model_validate_json(
++            json.dumps(
++                next_payload,
++                ensure_ascii=False,
++                sort_keys=True,
++                separators=(",", ":"),
++                allow_nan=False,
++            ),
+             strict=True,
+         ).verify_consistency()
+ 
+diff --git a/lab/reporting.py b/lab/reporting.py
+index 0a58861..cf864fb 100644
+--- a/lab/reporting.py
++++ b/lab/reporting.py
+@@ -307,34 +307,33 @@ def _holdout_report_status(
+     payload = read_director_artifact(digest, artifact_root=artifact_root)
+     if hashlib.sha256(payload).hexdigest() != digest:
+         raise ValueError("Director state checkpoint failed its content hash")
++    from lab.director.loop import DirectorLoopState
++
+     try:
+-        state = json.loads(payload)
+-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+-        raise ValueError("Director state checkpoint is not valid JSON") from exc
+-    if (
+-        not isinstance(state, dict)
+-        or state.get("schema") != "director-loop-state.v1"
+-        or state.get("run_id") != str(run_id)
+-        or not isinstance(state.get("champion_experiment_id"), str)
+-    ):
++        state = DirectorLoopState.model_validate_json(payload, strict=True).verify_consistency()
++    except (UnicodeDecodeError, ValidationError, ValueError) as exc:
++        raise ValueError("Director state checkpoint has an invalid loop-state contract") from exc
++    if state.run_id != run_id or not state.champion_experiment_id:
+         raise ValueError("Director state checkpoint has an invalid run identity")
+-    snapshot = state.get("holdout_approved_snapshot")
+-    approved = snapshot.get("experiment_id") if isinstance(snapshot, dict) else None
++    snapshot = state.holdout_approved_snapshot
++    approved = snapshot.experiment_id if snapshot is not None else None
+     if not isinstance(approved, str) or not approved:
+         raise ValueError("Director state has no durable holdout-approved champion")
+-    status = state.get("holdout_last_status")
++    status = state.holdout_last_status
+     if status not in {"not_run", "passed", "reverted", "quota_exhausted", "failed"}:
+         raise ValueError("Director state has an invalid holdout status")
+     manual_review = (
+         status in {"not_run", "quota_exhausted", "failed"}
+-        or approved != state["champion_experiment_id"]
++        or approved != state.champion_experiment_id
+     )
+     return {
+-        "development_champion_id": state["champion_experiment_id"],
++        "development_champion_id": state.champion_experiment_id,
+         "approved_champion_id": approved,
+         "status": status,
+         "manual_review_required": "yes" if manual_review else "no",
+     }
++
++
+ def render_run_report(
+     run_id: UUID,
+     experiments: tuple[_LedgerExperiment, ...],
+diff --git a/tests/test_director_strategy.py b/tests/test_director_strategy.py
+index 0650e09..6fe876e 100644
+--- a/tests/test_director_strategy.py
++++ b/tests/test_director_strategy.py
+@@ -178,6 +178,14 @@ def test_candidate_and_policy_failures_are_negative_but_infrastructure_is_not()
+     assert state.posterior[next_intent.move_type].beta >= 1.97
+ 
+ 
++def test_keep_simpler_is_a_positive_posterior_reward() -> None:
++    state = initial_strategy_state(54)
++    state, intent = select_strategy_move(state, 1)
++    state = resolve_strategy_selection(state, 1, "KEEP_SIMPLER")
++    assert state.posterior[intent.move_type] == BetaPosterior(alpha=2.0, beta=1.0)
++    assert state.completed_experiments == 1
++
++
+ def test_canonical_parser_rejects_duplicates_noncanonical_and_tampered_state() -> None:
+     state = initial_strategy_state(7)
+     canonical = strategy_state_json(state)
+diff --git a/tests/test_director_loop_strategy.py b/tests/test_director_loop_strategy.py
+new file mode 100644
+index 0000000..b7c7749
+--- /dev/null
++++ b/tests/test_director_loop_strategy.py
+@@ -0,0 +1,593 @@
++"""Focused tests for loop-level durable Thompson intent handling."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any, cast
++from uuid import UUID
++
++import pytest
++
++from lab.director.budget import BudgetSnapshot, RunBudget
++from lab.director.contracts import CandidateProposal, ExperimentDecision, ExperimentDocument
++from lab.director.fake_llm import AgentContext, FakeLLM, ProposalTurn
++from lab.director.loop import (
++    DirectorLoop,
++    DirectorLoopState,
++    HoldoutApprovedSnapshot,
++    _budget_to_json,
++    _strategy_checkpoint_fields,
++    _strategy_seed_for_run,
++)
++from lab.director.runner import RegisteredProposal, register_proposal_before_execution
++from lab.director.strategy import (
++    initial_strategy_state,
++    resolve_strategy_selection,
++    select_strategy_move,
++    strategy_state_json,
++)
++from lab.reporting import _holdout_report_status
++
++
++class MemoryLease:
++    def __init__(self) -> None:
++        self.checkpoints: dict[str, dict[str, object]] = {}
++        self.append_count = 0
++        self.active_checks = 0
++
++    def read_checkpoint(self, *, key: str, artifact_root: object) -> dict[str, object] | None:
++        del artifact_root
++        return self.checkpoints.get(key)
++
++    def append_checkpoint(
++        self,
++        *,
++        sequence: int,
++        key: str,
++        phase: str,
++        payload: dict[str, object],
++        artifact_root: object,
++    ) -> dict[str, object]:
++        del sequence, artifact_root
++        if key in self.checkpoints:
++            raise AssertionError(f"duplicate checkpoint append: {key}")
++        self.append_count += 1
++        receipt: dict[str, object] = {
++            "key": key,
++            "phase": phase,
++            "payload_sha256": "a" * 64,
++        }
++        self.checkpoints[key] = {"payload": payload, "receipt": receipt}
++        return receipt
++
++    def require_run_active(self) -> None:
++        self.active_checks += 1
++
++
++class MemoryBudgetEvents:
++    def __init__(self, events: list[dict[str, object]]) -> None:
++        self.events = events
++
++    def mappings(self) -> MemoryBudgetEvents:
++        return self
++
++    def all(self) -> list[dict[str, object]]:
++        return self.events
++
++
++class MemoryBudgetConnection:
++    def __init__(self, events: list[dict[str, object]]) -> None:
++        self.events = events
++
++    def __enter__(self) -> MemoryBudgetConnection:
++        return self
++
++    def __exit__(self, *args: object) -> None:
++        del args
++
++    def execute(self, *args: object) -> MemoryBudgetEvents:
++        del args
++        return MemoryBudgetEvents(self.events)
++
++
++class MemoryBudgetEngine:
++    def __init__(self, events: list[dict[str, object]]) -> None:
++        self.events = events
++
++    def connect(self) -> MemoryBudgetConnection:
++        return MemoryBudgetConnection(self.events)
++
++
++class MemoryReceiptConnection:
++    def __init__(self, receipt: dict[str, object]) -> None:
++        self.receipt = receipt
++
++    def __enter__(self) -> MemoryReceiptConnection:
++        return self
++
++    def __exit__(self, *args: object) -> None:
++        del args
++
++    def execute(self, *args: object) -> MemoryReceiptConnection:
++        del args
++        return self
++
++    def scalar_one_or_none(self) -> dict[str, object]:
++        return self.receipt
++
++
++class MemoryReportEngine:
++    def __init__(self, receipt: dict[str, object]) -> None:
++        self.receipt = receipt
++
++    def connect(self) -> MemoryReceiptConnection:
++        return MemoryReceiptConnection(self.receipt)
++
++
++class MemoryTerminalResult:
++    def __init__(self, value: dict[str, object] | None) -> None:
++        self.value = value
++
++    def mappings(self) -> MemoryTerminalResult:
++        return self
++
++    def one_or_none(self) -> dict[str, object] | None:
++        return self.value
++
++
++class MemoryTerminalConnection:
++    def __init__(self, value: dict[str, object] | None) -> None:
++        self.value = value
++
++    def __enter__(self) -> MemoryTerminalConnection:
++        return self
++
++    def __exit__(self, *args: object) -> None:
++        del args
++
++    def execute(self, *args: object, **kwargs: object) -> MemoryTerminalResult:
++        del args, kwargs
++        return MemoryTerminalResult(self.value)
++
++
++class MemoryTerminalEngine:
++    def __init__(self, value: dict[str, object] | None) -> None:
++        self.value = value
++
++    def connect(self) -> MemoryTerminalConnection:
++        return MemoryTerminalConnection(self.value)
++
++
++def _state() -> DirectorLoopState:
++    run_id = UUID("00112233-4455-6677-8899-aabbccddeeff")
++    baseline_id = f"exp_{'0' * 32}"
++    strategy = initial_strategy_state(_strategy_seed_for_run(run_id))
++    return DirectorLoopState.model_validate(
++        {
++            **_strategy_checkpoint_fields(strategy),
++            "run_id": run_id,
++            "suite_manifest_sha256": "a" * 64,
++            "suite_id": "synthetic.v1",
++            "suite_version": 1,
++            "calibration_sha256": "b" * 64,
++            "harness_sha256": "c" * 64,
++            "image_sha256": "d" * 64,
++            "proposal_limit": 35,
++            "completed_proposals": 0,
++            "next_ordinal": 1,
++            "champion_experiment_id": baseline_id,
++            "champion_source_sha256": "e" * 64,
++            "champion_tree_sha256": "f" * 40,
++            "champion_source_blob_sha256": "1" * 64,
++            "champion_seed0_by_task": {"task": 0.1},
++            "champion_seed1_by_task": {"task": 0.1},
++            "champion_suite_seed_scores": (0.1, 0.1, 0.1),
++            "champion_noise_sd": 0.01,
++            "best_suite": 0.1,
++            "consecutive_non_keep": 0,
++            "explore_proposals": 0,
++            "explore_family": None,
++            "consecutive_candidate_crashes": 0,
++            "discard_streak": 0,
++            "previous_move_type": None,
++            "recent_feedback": (),
++            "budget": {},
++            "holdout_approved_snapshot": {
++                "experiment_id": baseline_id,
++                "source_sha256": "e" * 64,
++                "tree_sha256": "f" * 40,
++                "source_blob_sha256": "1" * 64,
++                "seed0_by_task": {"task": 0.1},
++                "seed1_by_task": {"task": 0.1},
++                "suite_seed_scores": (0.1, 0.1, 0.1),
++                "noise_sd": 0.01,
++                "best_suite": 0.1,
++                "periodic_keep_watermark": 0,
++            },
++        },
++        strict=True,
++    ).verify_consistency()
++
++
++def _loop(
++    state: DirectorLoopState, lease: MemoryLease, *, provider_id: str = "fake-json"
++) -> DirectorLoop:
++    loop = cast(Any, object.__new__(DirectorLoop))
++    loop.run_id = state.run_id
++    loop.lease = lease
++    loop.artifact_root = object()
++    loop.provider = SimpleNamespace(provider_id=provider_id)
++    loop._next_checkpoint_sequence = lambda: lease.append_count + 1
++    return cast(DirectorLoop, loop)
++
++
++@pytest.mark.parametrize("provider_id", ("fake-json", "local-qwen.v1"))
++def test_intent_is_durable_before_provider_and_retry_does_not_resample(
++    provider_id: str,
++) -> None:
++    state = _state()
++    lease = MemoryLease()
++    loop = _loop(state, lease, provider_id=provider_id)
++
++    pending, receipt, selection, system = loop._prepare_strategy_intent(
++        state, ordinal=1, is_explore=False
++    )
++    state_json = strategy_state_json(pending.load_strategy_state())
++    assert selection.move_type == "hparam"
++    assert selection.reason == "initial_coverage"
++    assert system == "S1"
++    assert receipt["phase"] == "director_loop_state"
++    intent_checkpoint = lease.checkpoints["proposal-intent:1"]
++    intent_payload = cast(dict[str, object], intent_checkpoint["payload"])
++    assert intent_payload["move_type"] == "hparam"
++    assert lease.active_checks == 2
++
++    repeated, _, retry_selection, retry_system = loop._prepare_strategy_intent(
++        pending, ordinal=1, is_explore=False
++    )
++    assert strategy_state_json(repeated.load_strategy_state()) == state_json
++    assert retry_selection == selection
++    assert retry_system == system
++    assert lease.append_count == 2
++
++
++def test_first_nine_move_routing_and_fifth_discard_escalation() -> None:
++    state = _state()
++    lease = MemoryLease()
++    loop = _loop(state, lease)
++    expected_moves = (
++        "hparam",
++        "preprocess",
++        "features",
++        "regime",
++        "detector",
++        "fusion",
++        "alarm_policy",
++        "simplify",
++        "skill_reuse",
++    )
++    expected_systems = ("S1", "S1", "S2", "S2", "S2", "S2", "S1", "S1", "S1")
++    current = state
++    for ordinal, (move, routed) in enumerate(
++        zip(expected_moves, expected_systems, strict=True), start=1
++    ):
++        current, _, selection, system = loop._prepare_strategy_intent(
++            current, ordinal=ordinal, is_explore=False
++        )
++        assert selection.move_type == move
++        assert system == routed
++        completed = resolve_strategy_selection(current.load_strategy_state(), ordinal, "KEEP")
++        current = loop._with_strategy_state(
++            current,
++            completed,
++            completed_proposals=ordinal,
++            next_ordinal=ordinal + 1,
++            discard_streak=0,
++        )
++    current = current.model_copy(update={"discard_streak": 5}).verify_consistency()
++    forced_state, _, forced_selection, forced_system = loop._prepare_strategy_intent(
++        current, ordinal=10, is_explore=False
++    )
++    assert forced_selection.ordinal == 10
++    assert forced_system == "S2"
++    assert forced_state.load_strategy_state().pending == forced_selection
++
++
++def test_holdout_rollback_preserves_strategy_checkpoint_and_pending_intent() -> None:
++    state = _state()
++    strategy = state.load_strategy_state()
++
++    pending, _ = select_strategy_move(strategy, 1)
++    state = DirectorLoop._with_strategy_state(object.__new__(DirectorLoop), state, pending)
++    snapshot = HoldoutApprovedSnapshot.from_state(state, keep_count=0)
++    restored = snapshot.restore(state, keep_count=0)
++    assert restored.strategy_state_json == state.strategy_state_json
++    assert restored.strategy_state_sha256 == state.strategy_state_sha256
++    assert restored.load_strategy_state().pending == pending.pending
++
++
++def test_run_seed_is_stable_and_scoped_to_run_identity() -> None:
++    run_id = UUID("00112233-4455-6677-8899-aabbccddeeff")
++    other_id = UUID("10112233-4455-6677-8899-aabbccddeeff")
++    assert _strategy_seed_for_run(run_id) == _strategy_seed_for_run(run_id)
++    assert _strategy_seed_for_run(run_id) != _strategy_seed_for_run(other_id)
++
++
++def test_terminal_receipt_recovery_applies_loop_verdict_once() -> None:
++    state = _state()
++    lease = MemoryLease()
++    loop = _loop(state, lease)
++    loop.budget = RunBudget(proposal_limit=35, wall_limit=100, token_limit=1000)
++    pending, _, selection, system = loop._prepare_strategy_intent(
++        state, ordinal=1, is_explore=False
++    )
++    proposal_contract = CandidateProposal(
++        hypothesis="bounded test candidate",
++        move_type=selection.move_type,
++        candidate_source="class Candidate: pass\n",
++        predicted_delta=0.0,
++    )
++    candidate_digest = hashlib.sha256(proposal_contract.candidate_source.encode()).hexdigest()
++    proposal = RegisteredProposal(
++        experiment_id=f"exp_{'2' * 32}",
++        experiment_number=1,
++        proposal=proposal_contract,
++        candidate_sha256=candidate_digest,
++        candidate_blob_sha256=candidate_digest,
++        inputs_sha256="3" * 64,
++        messages_blob_sha256="4" * 64,
++        calibration_sha256=state.calibration_sha256,
++        parent_experiment_id=state.champion_experiment_id,
++        parent_tree_sha256=state.champion_tree_sha256,
++        harness_sha256=state.harness_sha256,
++        image_sha256=state.image_sha256,
++        suite_id=state.suite_id,
++        suite_version=state.suite_version,
++        system=system,
++        input_tokens=0,
++        output_tokens=0,
++    )
++    terminal_receipt = ExperimentDocument(
++        schema="experiment.v1",
++        experiment_id=proposal.experiment_id,
++        run_id=state.run_id,
++        ordinal=1,
++        kind="proposal",
++        experiment_number=1,
++        baseline_name=None,
++        calibration_sha256=state.calibration_sha256,
++        agent_version="test",
++        parent_experiment_id=state.champion_experiment_id,
++        candidate_sha256=proposal.candidate_sha256,
++        candidate_blob_sha256=proposal.candidate_blob_sha256,
++        move_type=selection.move_type,
++        system=system,
++        hypothesis=proposal_contract.hypothesis,
++        predicted_delta=0.0,
++        inputs_sha256=proposal.inputs_sha256,
++        parent_tree=state.champion_tree_sha256,
++        child_tree=None,
++        harness_sha256=state.harness_sha256,
++        image_sha256=state.image_sha256,
++        suite_id=state.suite_id,
++        suite_version=state.suite_version,
++        per_task=(),
++        suite_score=None,
++        guards={},
++        decision=ExperimentDecision(
++            verdict="DISCARD", delta=0.0, ci_low=0.0, noise_sd=0.0, reason="no_improvement"
++        ),
++        status="rejected",
++        fit_seconds=None,
++        score_seconds=None,
++        llm_input_tokens=0,
++        llm_output_tokens=0,
++        wall_seconds=0.0,
++    )
++
++    uninterrupted = loop._advance_state(pending, proposal, terminal_receipt, cast(Any, None), False)
++    lease.checkpoints["proposal:1"] = {
++        "payload": {
++            "run_id": str(state.run_id),
++            "experiment_number": 1,
++            "experiment_id": proposal.experiment_id,
++            "candidate_sha256": candidate_digest,
++            "candidate_blob_sha256": candidate_digest,
++            "proposal": proposal_contract.model_dump(mode="json"),
++            "inputs_sha256": proposal.inputs_sha256,
++            "messages_blob_sha256": proposal.messages_blob_sha256,
++            "calibration_sha256": proposal.calibration_sha256,
++            "parent_experiment_id": proposal.parent_experiment_id,
++            "parent_tree_sha256": proposal.parent_tree_sha256,
++            "harness_sha256": proposal.harness_sha256,
++            "image_sha256": proposal.image_sha256,
++            "suite_id": proposal.suite_id,
++            "suite_version": proposal.suite_version,
++            "system": proposal.system,
++            "input_tokens": proposal.input_tokens,
++            "output_tokens": proposal.output_tokens,
++            "sequence": 1,
++        }
++    }
++    cast(Any, loop).director_engine = MemoryTerminalEngine(
++        {"experiment_id": proposal.experiment_id, "status": "rejected"}
++    )
++    cast(Any, loop)._read_terminal_document = lambda _experiment_id: terminal_receipt
++    # Simulate process loss after the terminal record exists but before state application.
++    reloaded = DirectorLoopState.model_validate_json(
++        json.dumps(lease.checkpoints["director-state:0:strategy-intent-1"]["payload"]),
++        strict=True,
++    ).verify_consistency()
++    recovered_result = loop._recover_committed_terminal(
++        reloaded, {"payload_sha256": "a" * 64}, cast(Any, None)
++    )
++    assert recovered_result is not None
++    recovered, _, promoted = recovered_result
++    assert not promoted
++    recovered_payload = recovered.model_dump(mode="json", by_alias=True)
++    uninterrupted_payload = uninterrupted.model_dump(mode="json", by_alias=True)
++    recovered_payload.pop("budget")
++    uninterrupted_payload.pop("budget")
++    assert recovered_payload == uninterrupted_payload
++    assert recovered.completed_proposals == 1
++    assert recovered.load_strategy_state().completed_experiments == 1
++    assert recovered.load_strategy_state().pending is None
++    assert recovered.load_strategy_state().posterior[selection.move_type].beta > 1.0
++    with pytest.raises(RuntimeError, match="terminal proposal ordinal differs"):
++        loop._advance_state(recovered, proposal, terminal_receipt, cast(Any, None), False)
++
++
++def test_provider_failure_checkpoint_keeps_pending_strategy_and_spent_budget() -> None:
++    state = _state()
++    lease = MemoryLease()
++    loop = _loop(state, lease)
++    loop.budget = RunBudget(
++        proposal_limit=35,
++        wall_limit=100,
++        token_limit=1000,
++        snapshot=BudgetSnapshot(wall_seconds=7.0, model_tokens=321),
++    )
++    pending, _, selection, _ = loop._prepare_strategy_intent(state, ordinal=1, is_explore=False)
++    before = strategy_state_json(pending.load_strategy_state())
++    failed, _ = loop._preserve_pending_strategy_after_failure(pending, ordinal=1)
++    persisted = lease.checkpoints["director-state:0:provider-failure-1"]
++    reloaded = DirectorLoopState.model_validate_json(
++        json.dumps(persisted["payload"]), strict=True
++    ).verify_consistency()
++    assert strategy_state_json(failed.load_strategy_state()) == before
++    assert strategy_state_json(reloaded.load_strategy_state()) == before
++    assert reloaded.next_ordinal == 1
++    assert reloaded.budget["wall_seconds"] == 7.0
++    assert reloaded.budget["model_tokens"] == 321
++    restored_strategy = reloaded.load_strategy_state()
++    assert restored_strategy.pending is not None
++    assert restored_strategy.pending.move_type == selection.move_type
++    first_append_count = lease.append_count
++    loop.budget = RunBudget(
++        proposal_limit=35,
++        wall_limit=100,
++        token_limit=1000,
++        snapshot=BudgetSnapshot(wall_seconds=11.0, model_tokens=500),
++    )
++    replayed, _ = loop._preserve_pending_strategy_after_failure(failed, ordinal=1)
++    assert replayed == failed
++    assert lease.append_count == first_append_count
++
++
++def test_budget_restore_ignores_receipts_older_than_failure_loop_state() -> None:
++    state = _state()
++    lease = MemoryLease()
++    loop = _loop(state, lease)
++    base = RunBudget(
++        proposal_limit=35,
++        wall_limit=100,
++        token_limit=1000,
++        snapshot=BudgetSnapshot(wall_seconds=5.0, model_tokens=10),
++    )
++    older_budget = RunBudget(
++        proposal_limit=35,
++        wall_limit=100,
++        token_limit=1000,
++        snapshot=BudgetSnapshot(wall_seconds=2.0, model_tokens=5),
++    )
++    newer_budget = RunBudget(
++        proposal_limit=35,
++        wall_limit=100,
++        token_limit=1000,
++        snapshot=BudgetSnapshot(wall_seconds=8.0, model_tokens=40),
++    )
++    lease.checkpoints["older-budget"] = {
++        "payload": {"budget": _budget_to_json(older_budget.snapshot())},
++        "receipt": {"phase": "proposal_budget_reconciled"},
++    }
++    lease.checkpoints["newer-budget"] = {
++        "payload": {"budget": _budget_to_json(newer_budget.snapshot())},
++        "receipt": {"phase": "proposal_budget_reconciled"},
++    }
++    cast(Any, loop).director_engine = MemoryBudgetEngine(
++        [
++            {"key": "newer-budget", "sequence": 12},
++            {"key": "older-budget", "sequence": 9},
++        ]
++    )
++    loop.budget = base
++    loop._restore_budget(_budget_to_json(base.snapshot()), after_sequence=10)
++    restored = loop.budget.snapshot()
++    assert restored.wall_seconds == 8.0
++    assert restored.model_tokens == 40
++
++
++def test_runner_rejects_provider_move_change_before_any_proposal_checkpoint() -> None:
++    run_id = UUID("00112233-4455-6677-8899-aabbccddeeff")
++    provider_turn = ProposalTurn(
++        proposal=CandidateProposal(
++            hypothesis="changed move",
++            move_type="features",
++            candidate_source="class Candidate: pass\n",
++            predicted_delta=0.0,
++        ),
++        messages=("proposal",),
++        input_tokens=1,
++        output_tokens=1,
++    )
++    provider = FakeLLM((provider_turn,))
++    lease = MemoryLease()
++    context = AgentContext(
++        phase="proposal",
++        experiment_number=1,
++        system="S1",
++        move_type="hparam",
++        task_cards=("metadata only",),
++        champion_source="class Champion: pass\n",
++        recent_feedback=(),
++    )
++    with pytest.raises(ValueError, match="changed the preselected move intent"):
++        register_proposal_before_execution(
++            cast(Any, None),
++            run_id=run_id,
++            ordinal=1,
++            parent_experiment_id=f"exp_{'0' * 32}",
++            parent_tree_sha256="f" * 40,
++            suite_id="synthetic.v1",
++            suite_version=1,
++            calibration_sha256="b" * 64,
++            harness_sha256="c" * 64,
++            image_sha256="d" * 64,
++            system="S1",
++            context=context,
++            provider=provider,
++            lease=cast(Any, lease),
++            artifact_root=cast(Any, None),
++        )
++    assert "proposal:1" not in lease.checkpoints
++
++
++@pytest.mark.parametrize("schema_version", ("director-loop-state.v1", "director-loop-state.v2"))
++def test_report_reads_historical_and_thompson_loop_state(
++    schema_version: str, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    state_payload = _state().model_dump(mode="json", by_alias=True)
++    if schema_version == "director-loop-state.v1":
++        state_payload["schema"] = schema_version
++        for key in (
++            "strategy_seed",
++            "strategy_policy_version",
++            "strategy_state_json",
++            "strategy_state_sha256",
++        ):
++            state_payload.pop(key)
++    payload = json.dumps(
++        state_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
++    ).encode()
++    digest = hashlib.sha256(payload).hexdigest()
++    engine = MemoryReportEngine({"phase": "director_loop_state", "payload_sha256": digest})
++    monkeypatch.setattr("lab.reporting.read_director_artifact", lambda *_a, **_k: payload)
++    status = _holdout_report_status(
++        cast(Any, engine), UUID(state_payload["run_id"]), artifact_root=Path("/private/test")
++    )
++    assert status is not None
++    assert status["development_champion_id"] == state_payload["champion_experiment_id"]
++    assert status["approved_champion_id"] == state_payload["champion_experiment_id"]

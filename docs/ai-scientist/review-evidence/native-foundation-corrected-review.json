@@ -1,0 +1,68 @@
+{
+  "schema": "native-foundation-review.v1",
+  "scope": "Real systemd CPU property inspection plus actual SQLite/scheduler with fixture principal, unit and GPU observations; no model or GPU.",
+  "frozen_source_path": "data/runtime/native-foundation-review/3c36c3fb0c3f4869945d69c1c7c0959a/native_runtime.py",
+  "source_sha256": "d6cc44287179ef0943384601f830e0d3996d164c548ecf4b0408fa67fbfaa397",
+  "script_sha256": "4c0dde013d50e03044f17ca45bae6428d9de4a5ec13dacf410ec61df0a89195a",
+  "checks": {
+    "aggregate_slice_inspection": true,
+    "real_active_unit_numeric_limits": true,
+    "real_collected_unit_inspection": true,
+    "fresh_runtime_database_initialization": true,
+    "created_launch_can_bind_identity": true,
+    "scheduler_release_with_runtime_verifier": true
+  },
+  "observations": {
+    "aggregate_slice_inspection": {
+      "result": "{'LoadState': 'loaded', 'ControlGroup': '/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice'}",
+      "seconds": 0.004198930997517891
+    },
+    "real_active_unit_numeric_limits": {
+      "result": "UnitSnapshot(load_state='loaded', active_state='active', invocation_id='f71be5d8b17a464fbaedfdd67606c2ba', control_group='/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-lab-gpu-turn-3c36c3fb0c3f4869945d69c1c7c0959a.service', main_pid=2226635, description='[systemd-run] /home/cachyos/ai-scientist/.venv/bin/python -c \"import time; time.sleep(2)\"', environment='', memory_max=134217728, memory_swap_max=0, cpu_quota_usec=250000, tasks_max=8, runtime_max_usec=5000000)",
+      "seconds": 0.004994522001652513
+    },
+    "real_collected_unit_inspection": {
+      "result": "UnitSnapshot(load_state='not-found', active_state='inactive', invocation_id='', control_group='', main_pid=0, description='swapp-lab-gpu-turn-3c36c3fb0c3f4869945d69c1c7c0959a.service', environment='', memory_max=0, memory_swap_max=0, cpu_quota_usec=0, tasks_max=0, runtime_max_usec=0)",
+      "seconds": 0.004335776000516489
+    },
+    "fresh_runtime_database_initialization": {
+      "result": "<__main__.main.<locals>.IsolateSqlRuntime object at 0x7f71129bee10>",
+      "seconds": 0.039056023000739515
+    },
+    "created_launch_can_bind_identity": {
+      "result": "binding succeeded",
+      "seconds": 0.03782393799338024
+    },
+    "scheduler_release_with_runtime_verifier": {
+      "result": "verified absent unit released without SQLite writer conflict",
+      "seconds": 0.03805520899913972
+    }
+  },
+  "real_unit_properties": {
+    "RuntimeMaxUSec": "5s",
+    "MainPID": "2226635",
+    "CPUQuotaPerSecUSec": "250ms"
+  },
+  "real_unit_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-lab-gpu-turn-3c36c3fb0c3f4869945d69c1c7c0959a.service",
+    "--service-type=exec",
+    "--property=MemoryMax=128M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=5",
+    "--property=TimeoutStopSec=1",
+    "--property=KillMode=control-group",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-c",
+    "import time; time.sleep(2)"
+  ],
+  "cpu_unit_process_exit_code": 0,
+  "passed": true
+}

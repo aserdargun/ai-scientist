@@ -1,0 +1,12 @@
+{
+  "schema": "terminal037-pg-execution-binding.v1",
+  "round": 3,
+  "session": 52011,
+  "launch_chunk": "ff6915",
+  "final_chunk": "01f5d5",
+  "receipt": "terminal-finalize-037-integration-pg-c570de28212e.json",
+  "freeze": "20723c34090b7a530ed2b11b2d76f501e0a54d455156362ca1f524863ecf778d",
+  "command": "/home/cachyos/ai-scientist/.venv/bin/python - <<'PY'\nimport hashlib,json,os\nfrom pathlib import Path\nroot=Path('/home/cachyos/ai-scientist')\nsource=root/'data/runtime/parallel-m0/terminal-finalize-037-integration'\nmanifest=root/'data/runtime/parallel-m0/terminal-finalize-037-checks/terminal037-integration-freeze.json'\nassert hashlib.sha256(manifest.read_bytes()).hexdigest()=='20723c34090b7a530ed2b11b2d76f501e0a54d455156362ca1f524863ecf778d'\nfreeze=json.loads(manifest.read_bytes())\nfor name,digest in freeze['source_sha256'].items():\n    assert hashlib.sha256((source/name).read_bytes()).hexdigest()==digest,name\nrunner=root/'data/runtime/parallel-m0/terminal-finalize-037-checks/run_terminal037_pg.py'\nassert hashlib.sha256(runner.read_bytes()).hexdigest()=='a3e3a3c24e9a91f9c47d0aa751c8513d25cff5a6dedcdca8f42d7b5f9d273502'\nargv=['flock',str(root/'data/runtime/parallel-m0/cpu-check.lock'),'systemd-run','--user','--wait','--pipe','--collect','--unit=swapp-review-terminal037-pg-r3.service','--slice=swapp-gpu.slice','--property=MemoryMax=1G','--property=MemorySwapMax=0','--property=CPUQuota=50%','--property=TasksMax=64','--property=RuntimeMaxSec=300','--property=TimeoutStopSec=30','--property=KillMode=control-group','--working-directory='+str(root),'--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=CUDA_VISIBLE_DEVICES=','--setenv=TMPDIR=/home/cachyos/.m0r10',str(root/'.venv/bin/python'),str(runner),'--execute-reviewed-pg']\nos.execvp(argv[0],argv)\nPY",
+  "actual_process_exit_code": 1,
+  "claim": "First terminal finalization test passed. Second rejected an invalid fixture cgroup; no acceptance closure."
+}

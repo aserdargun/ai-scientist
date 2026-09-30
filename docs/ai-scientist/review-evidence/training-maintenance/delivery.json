@@ -1,0 +1,83 @@
+{
+  "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "branch": "feat/luna-m0-training-doctor",
+  "open_acceptance": [
+    "No QLoRA/model/GPU run was performed by this branch; root coordination required.",
+    "No post-training local S1 smoke was executed; it remains required in coordinated M0.14 acceptance."
+  ],
+  "patch": {
+    "bytes": 114448,
+    "path": "docs/ai-scientist/review-evidence/training-maintenance/training-maintenance.patch",
+    "sha256": "cf8a399fe8f90684d8c481743eb703394813f9dc77aa2b646a6e11055e1565a7",
+    "verification": "clean git archive of base commit; git apply --check exit 0; git apply exit 0; nine file SHA-256 values match worktree",
+    "verification_receipt_sha256": "189424826101ea07cc272a7c864385e22955a731d9ca8f2527a3115fc4322770"
+  },
+  "preserved_earlier_failures": {
+    "final_run_supersedes": true,
+    "path": "docs/ai-scientist/review-evidence/training-maintenance/development-failures.log",
+    "sha256": "cf4e56e5672d39bf04025a4c070c52da3ef682404aa3573f920c336fe508f404"
+  },
+  "quality_checks": {
+    "command": "systemd-run --user --wait --pipe --collect --unit=training-maintenance-check-proof-1790335898.service --property=WorkingDirectory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/training-doctor --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=240 /bin/sh docs/ai-scientist/review-evidence/run-training-maintenance-checks.sh",
+    "driver_sha256": "0bd39bd6c041f01af13df1a44cc14cf5e5a41f43fae1941818e4f28c11967aae",
+    "exit_code": 0,
+    "inner_exit_codes": {
+      "bandit": 0,
+      "mypy_strict": 0,
+      "pylint": 0,
+      "pytest": 0,
+      "ruff": 0
+    },
+    "log_sha256": "3a3619ae8c222c12ed4ac5a3b2a3d10606551e365a3942736de01bee660dc921",
+    "mypy": "6 source files, no issues",
+    "pylint": "9.96/10; nonfatal C0302/R1702/R0912/R0801 warnings preserved in log",
+    "swap_bytes": 0,
+    "systemd_peak_memory_bytes": 104752742,
+    "systemd_runtime_seconds": 5.547,
+    "tests": "18 passed"
+  },
+  "schema": "training-maintenance-delivery.v1",
+  "source_file_count": 9,
+  "source_sha256": {
+    "docs/ai-scientist/adr/0014-bounded-training-maintenance.md": "4af739fd708e8b71a4174cd89bd5491fc486584c433582ae9caba36e89fc77ed",
+    "lab/cli.py": "5b3a548cb61f1ee3a33332f98e4b131eb6e53712ca75f671edd6fbee0d92dcc0",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "32cfe2884cf51a5d8c13fcbbef1b0bcba169d61b4de7bafd5961047803bf0ea7",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "3777cf8f243c74245665712598811b194230b391aaf0e42967de7c4d065fa156",
+    "scripts/quality_gate.py": "6607db19aa4364115aa0b4c6f11d2238ac381b9478124657b306ce4804564806",
+    "tests/test_training_maintenance.py": "08b5960e1e20e600f34e02b26c648074c39a470634088610a4375cea3944da52"
+  },
+  "status": "cpu_reviewed_gpu_acceptance_pending",
+  "training_environment": {
+    "command_exit_code": 0,
+    "metadata_log_sha256": "263aff2fd28698cc3e87ba72e538802779e8fc2a1cb0f2a8af946cc46719787a",
+    "operation": "isolated importlib.metadata version query only; no torch/Unsloth/model import",
+    "requirements_lock_sha256": "cdf0390c761fa7170f62453cc03fabfba82a02b432f7f8090b3d1d3d118e8e0b",
+    "versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "peft": "0.21.0",
+      "torch": "2.12.1+cu130",
+      "transformers": "5.5.0",
+      "trl": "0.24.0",
+      "unsloth": "2026.9.11"
+    }
+  },
+  "transient_unit_probe": {
+    "cgroup_removed": true,
+    "command": "systemd-run --user --wait --pipe --collect --unit=training-maintenance-lifecycle-proof-1790335891.service --property=WorkingDirectory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/training-doctor --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=90 /usr/bin/python3 docs/ai-scientist/review-evidence/training-maintenance-lifecycle-probe.py --receipt docs/ai-scientist/review-evidence/training-maintenance/lifecycle-result.json",
+    "driver_sha256": "66635a74b69d61c0fb2f9483cf3196c4804dc1f986e5240fbe0f7addd8e50e18",
+    "exact_stop_exit_code": 0,
+    "exit_code": 0,
+    "log_sha256": "fd8f872526125fbf6d78c30f83aed0b45728063d3cf2634ed1a7a5e8d739f895",
+    "result_sha256": "1b9a62469cbacc5657329f1e56732452302f910459f9ba0b7f02575e05fe8d92",
+    "result_written_while_generation_loaded": true,
+    "swap_bytes": 0,
+    "systemd_peak_memory_bytes": 12058624,
+    "systemd_runtime_seconds": 0.17,
+    "unit_not_found_after_stop": true,
+    "uses_gpu_or_model": false
+  }
+}

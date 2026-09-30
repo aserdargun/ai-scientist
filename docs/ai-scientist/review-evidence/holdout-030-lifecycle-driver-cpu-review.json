@@ -1,0 +1,75 @@
+{
+  "schema": "holdout-030-lifecycle-driver-cpu-review.v1",
+  "source_worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030",
+  "base_commit": "7ba1a1b",
+  "scope": "CPU-only cleanup/preflight contracts, generated source compilation, and Ruff; no database, Docker, worker, API service, model, GPU, or AOS execution",
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "544ebe7feb2a7597dcb3152452d60b1e00cac48a7386c391903bbe4a97586fad",
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py": "af348e618845d2a71b6cc5de87fec32d91c5b43051a49e5011c7969a66aee1ad",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "8c46521d5e760f952180680498b8344e50ee88d75c8d6ec2f066eae37b9217d6",
+    "tests/test_holdout030_lifecycle_review_preflight.py": "e11b8cefbbb88c4d51e584fa33800e54cd8a6a42c55a0a08e0b3891ff06af48e",
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.md": "7522821140487f6d159becbab1cd85d96ccf7606dad8a6243994a6c0ccf562f9",
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.md": "2d701a3c21c46fb5f39779c3faa72ee870653361baadafefb51dc6b00de396e2"
+  },
+  "resource_scope": {
+    "lock": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "memory_max_bytes": 1073741824,
+    "memory_swap_max_bytes": 0,
+    "cpu_quota": "50%",
+    "tasks_max": 64
+  },
+  "ruff": {
+    "unit": "holdout-lifecycle-safety-ruff-final3-20260927.scope",
+    "invocation_id": "2ef149a7ab0a46d493b16af08ca73c0a",
+    "exit_code": 0,
+    "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock systemd-run --user --scope --unit=holdout-lifecycle-safety-ruff-final3-20260927 --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=90 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030 /home/cachyos/ai-scientist/.venv/bin/ruff check docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py tests/test_holdout030_lifecycle_fixture_safety.py tests/test_holdout030_lifecycle_review_preflight.py",
+    "stdout": "Running as unit: holdout-lifecycle-safety-ruff-final3-20260927.scope; invocation ID: 2ef149a7ab0a46d493b16af08ca73c0a\nAll checks passed!\n"
+  },
+  "focused_test": {
+    "session_id": 88933,
+    "unit": "holdout-lifecycle-safety-tests-final3-20260927.scope",
+    "invocation_id": "df9b59dee2ba407a94f1c7ad28358d41",
+    "exit_code": 0,
+    "command": "flock -n /home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock systemd-run --user --scope --unit=holdout-lifecycle-safety-tests-final3-20260927 --property=MemoryMax=1G --property=MemorySwapMax=0 --property=CPUQuota=50% --property=TasksMax=64 --property=RuntimeMaxSec=120 --working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/lifecycle-030 /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q --tb=short tests/test_holdout030_lifecycle_fixture_safety.py tests/test_holdout030_lifecycle_review_preflight.py",
+    "stdout": "Running as unit: holdout-lifecycle-safety-tests-final3-20260927.scope; invocation ID: df9b59dee2ba407a94f1c7ad28358d41\n............                                                             [100%]\n=============================== warnings summary ===============================\n../../../../.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 1 warning in 2.40s\n"
+  },
+  "test_coverage": [
+    "Docker cleanup commands use the aggregate cleanup window",
+    "Docker inspect failure is not treated as absence unless a successful exact absence query returns no container",
+    "generated cleanup scripts compile and tolerate missing run/job rows only while retaining exact unit/cgroup absence checks",
+    "fixture plugin clamps each Scorer launch and holdout worker to the remaining aggregate deadline",
+    "owned pytest process-group termination targets only its fresh session group",
+    "prior stop-driver receipt, alias, PostgreSQL NAT identity, and replacement-preservation preconditions"
+  ],
+  "remaining_review_limitations": [
+    "No lifecycle fixture, DB, Docker container, Scorer worker, API service, model, GPU, or AOS process was executed.",
+    "Baseline ledger records are synthetic; candidate lifecycle does not establish model-quality acceptance.",
+    "FastAPI TestClient proves the authenticated in-process route, not deployed HTTP interaction.",
+    "Drain-before-terminal-SQL-CAS ordering remains unproven by this review driver."
+  ],
+  "static_compile": {
+    "exit_code": 0,
+    "via": "focused pytest safety test",
+    "description": "Imported launcher; compiled generated pytest plugin, setup-worker cleanup script, and run-stop cleanup script. All were generated only under pytest tmp_path; no process or service launched."
+  },
+  "failed_attempts": [
+    {
+      "unit": "holdout-lifecycle-safety-tests-20260927.scope",
+      "invocation_id": "315104fda3014c778a0fbbaba0d20c10",
+      "exit_code": 1,
+      "reason": "one mock used a Docker inspect label string with the key name; corrected mock to match Docker template output; final tests pass"
+    },
+    {
+      "unit": "holdout-lifecycle-safety-ruff-20260927.scope",
+      "invocation_id": "20990099ef874ea184181ac78322fd54",
+      "exit_code": 1,
+      "reason": "Ruff identified line-length/import issues; fixed before final passing lint"
+    },
+    {
+      "unit": "holdout-lifecycle-safety-ruff-final-20260927.scope",
+      "invocation_id": "0a39f526a0024ff489ae053e6689eb7d",
+      "exit_code": 1,
+      "reason": "command referenced a misspelled test filename; corrected path in final passing lint"
+    }
+  ]
+}

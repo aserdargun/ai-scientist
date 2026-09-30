@@ -1,0 +1,27 @@
+{
+  "schema": "guard-preflight-fixed-review.v1",
+  "checked_at": "2026-09-24T11:51:48.745191+00:00",
+  "scope": "Independent post-fix checks for four historical WIP flaws; no candidate execution, GPU, private dataset, or AOS changes.",
+  "historical_evidence": "guard-preflight-before.json",
+  "source_sha256": {
+    "lab/sandbox/evaluation.py": "e915e64206d09e7797148b3909bfdec4f305d5d7902967b86b3102b559d94076"
+  },
+  "observations": {
+    "relative_error": 1.0,
+    "negative_sequence_code": "hardcoding_numeric_sequence",
+    "timestamp_code": "hardcoding_timestamp"
+  },
+  "checks": {
+    "arrow_has_no_metadata_or_restored_private_attrs": true,
+    "source_dataframe_is_unmodified": true,
+    "sensor_values_unchanged": true,
+    "doubled_small_scores_reject_at_relative_tolerance": true,
+    "negative_64_literal_sequence_rejects": true,
+    "utc_equivalent_interior_timestamp_rejects": true,
+    "unused_categorical_values_do_not_cross_boundary": true,
+    "source_unchanged": true
+  },
+  "passed": true,
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_guard_preflight_fixed.py",
+  "script_sha256": "bdf479a76bd0c1236f8f3ff4dcac2370ce35f68355d191c45e6b5bbf772847e5"
+}

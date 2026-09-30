@@ -1,0 +1,60 @@
+{
+  "schema": "aos042-package-r4-summary.v1",
+  "checked_date": "2026-09-30",
+  "live_aos_modified": false,
+  "normal_aos_gpu_bootstrap_executed": false,
+  "r3_measured_source_preserved": true,
+  "source_baseline": "frozen merged AOS source; prior 31-file integration unchanged",
+  "patch": {
+    "path": "aos042-wire-stop-package-r4.patch",
+    "sha256": "18e96e7669112dcafe1f09625f92bda23378641781c243e89ab3be46f5a7caf5",
+    "changed_files": [
+      "src/aos/lab_external.py",
+      "MANIFEST.sha256"
+    ],
+    "manifest_change": "exactly one lab_external.py hash line; original member ordering preserved",
+    "lab_external_sha256": "c08b86a2561e51c462e2ebd80b213586da6fdfffc926ae6e26805eed109fd04c",
+    "manifest_sha256": "94c644493cc4649d8c1bade3677ddd226525304f57e4a37ffac5437404afda74"
+  },
+  "apply_check": {
+    "actual_exit_code": 0,
+    "terminal_chunk": "7be528"
+  },
+  "apply": {
+    "actual_exit_code": 0,
+    "terminal_chunk": "bd8057"
+  },
+  "byte_equivalence": {
+    "source_member_count": 1095,
+    "equal": true,
+    "difference_paths": [],
+    "includes_manifest_itself": true,
+    "canonical_source_map_private_evidence_sha256": "3e769ab071e82f34b0e86c4dfbcbfe187167db71cc9381b68e6619c023d691c3"
+  },
+  "package_validation": {
+    "command": [
+      "python",
+      "scripts/validate_package.py"
+    ],
+    "actual_exit_code": 0,
+    "session_id": 36491,
+    "launch_chunk": "204cb8",
+    "terminal_chunk": "d638bc",
+    "checks": 4360,
+    "stdout_sha256": "8c7017ae3cbf76f3d739be22c3f8556ea8b7cd2d7c6abc971d6abf1f053fe472",
+    "unit": "lab-aos042-package-r4-1790747040",
+    "memory_max_bytes": 2147483648,
+    "cpu_quota_percent": 100,
+    "tasks_max": 128,
+    "swap_max_bytes": 0,
+    "shared_cpu_lock": true,
+    "model_runtime_training_tests": false
+  },
+  "documentation": "../63-aos-opt-in-start.md",
+  "limitations": [
+    "No live AOS patch installation",
+    "Normal Decider/shared-GPU bootstrap documented but not executed",
+    "Prior real CPU lifecycle subset and fixture tests do not close full M0.AOS.2/.3 terminal/drain or GPU coexistence acceptance",
+    "No repeat of the focused26 tests; their retained outer exit metadata limitation remains in the CPU summary"
+  ]
+}

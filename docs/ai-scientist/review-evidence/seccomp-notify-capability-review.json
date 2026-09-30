@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-09-24T11:31:34.536845+00:00",
+  "image": "sha256:3f9df3002bccd1cb74aa5f6060da74dbdecc4c65fc0c8f712ecf67f0590754df",
+  "scope": "Rootless seccomp capability only: harmless raw getpid syscall is reported to a separate parent process and denied. Existing network-none/cap-drop-all/no-new-privileges/UID10001 sandbox. No host syscall policy, AOS service, network connection, GPU or dataset changes. Does not prove production tamper-proof audit or exhaustive syscall coverage.",
+  "source_urls": [
+    "https://www.man7.org/linux/man-pages/man2/seccomp_unotify.2.html",
+    "https://docs.python.org/3.12/library/sys.html#sys.addaudithook"
+  ],
+  "candidate_source_sha256": "e9146598b00048abb40ca8f348f2d9e209f7132d6b0f13a354578a3abea06859",
+  "observation": {
+    "architecture": "0xc000003e",
+    "available": true,
+    "child_observed": {
+      "errno": 1,
+      "raw_getpid_result": -1
+    },
+    "child_wait_status": 0,
+    "notification_pid_matches_child": true,
+    "original_syscall_denied": true,
+    "syscall_number": 39
+  },
+  "container": "swapp-lab-fit-52b22ebecfe8421cbfbb2422141af7d2",
+  "container_exit_code": 0,
+  "elapsed_seconds": 0.3794991079994361,
+  "script_sha256": "737827805e4acd8910952c090c74cd4346419ae0a95e930712636aaef3a72d18",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_seccomp_notify_capability.py"
+}

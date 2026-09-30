@@ -1,0 +1,23 @@
+{
+  "schema": "aos-lab-coexistence-driver-provenance.v1",
+  "status": "superseded_for_review",
+  "frozen_driver": {
+    "path": "docs/ai-scientist/review-evidence/review_aos_lab_coexistence.py",
+    "sha256": "7bac8e7b9ddc5a7a5b5101a3dc67a9876dd27640f4c5f0bdb563dfa7a502fe91"
+  },
+  "frozen_receipt": {
+    "path": "docs/ai-scientist/review-evidence/aos-lab-coexistence-driver-review.json",
+    "sha256": "4142c3d49114cc5f3f8d5600ff2a9716cdc235e54c422a2dc916df10327f563f"
+  },
+  "history": [
+    {
+      "superseded_sha256": "99e433b98831ae191491e1d11d83f80f70bf588d1a215e480a6ca37848c5b812",
+      "reason": "Driver was reformatted and Ruff fixes were applied before the root review requested v2; original bytes are unavailable and this historical digest is not asserted as validated source."
+    },
+    {
+      "superseded_receipt_sha256": "823629ca32952ab2c1fd118200de6e629bb0283269bfddfbc4542f373df112a8",
+      "reason": "Receipt was updated to bind the Ruff-clean frozen driver and durable help/patch-check outputs; historical bytes are not claimed."
+    }
+  ],
+  "scope": "v1 was preparation only and claimed no AOS/Lab execution, preflight, model call, or GPU call. Root review identified clock, ownership cleanup, foreign consumer, broker/database parity, and overlap-ticket blockers. v2 is separate."
+}

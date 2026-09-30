@@ -1,0 +1,1323 @@
+{
+  "schema": "native-real-qwen-doctor-review.v1",
+  "profile": "s1",
+  "request_id": "b2ce2213cb244330ae35350c7556ed47",
+  "sources_before": {
+    "lab/llm/native_runtime.py": "69c2ddf97dfc9314f3a7d69edc7bb58fc474a7481f650c01a8b8fe6605308893",
+    "lab/llm/netns_exec.py": "39543ec25005a5d4d951ab9eb4e68ae21ce609b450a2a35f18baf8ebfbae6e38",
+    "lab/llm/gpu_scheduler.py": "2fd153be9ebf430f2c094e37bd2ad4fe0f684c6f50680cd6929ce9ed79b732c0",
+    "harness/fingerprint.py": "6b5e2bd3456d5c8120b50d8c8f27107077f80cc6fe69841e2b8e94c43a1fa5c6",
+    "harness/VERSION": "aa037454b5e8320521a32b278a3f4aff05fc79009ab5503f5d4a1b9a33b38c47"
+  },
+  "review_script_sha256": "ed70c6b441bb6108a50a013e6d6b879fac1b6e147ed7a5f887be0a2ac167c5ea",
+  "private_directory": "data/runtime/gpu/native-review-b2ce2213cb244330ae35350c7556ed47",
+  "samples": [
+    {
+      "observed_at": "2026-09-24T23:19:09.901273+00:00",
+      "monotonic_seconds": 66570.111469464,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23370870784,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 14.06
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 0.06808846299827565,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "inactive",
+        "InvocationID": "",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": ""
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:10.949005+00:00",
+      "monotonic_seconds": 66571.159201738,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23293763584,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.83
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 1.1158221889927518,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:11.993549+00:00",
+      "monotonic_seconds": 66572.203743579,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23395135488,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.79
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 2.160358789988095,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:13.038769+00:00",
+      "monotonic_seconds": 66573.248965808,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23301259264,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.72
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 3.205586869997205,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:14.081389+00:00",
+      "monotonic_seconds": 66574.291583596,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23294627840,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.68
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 4.248201591995894,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:15.123276+00:00",
+      "monotonic_seconds": 66575.333471294,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23351316480,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.68
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 5.290090121998219,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:16.162965+00:00",
+      "monotonic_seconds": 66576.373159426,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23316885504,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.6
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 6.329776139988098,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:17.197162+00:00",
+      "monotonic_seconds": 66577.407357522,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23297949696,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.65
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 7.363975287997164,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:18.234398+00:00",
+      "monotonic_seconds": 66578.444594689,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23288791040,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.75
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 8.401211492993752,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:19.273762+00:00",
+      "monotonic_seconds": 66579.483956603,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23237931008,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.72
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 9.44057305699971,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:20.310954+00:00",
+      "monotonic_seconds": 66580.521152413,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23271133184,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.64
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 10.47778075899987,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:21.350305+00:00",
+      "monotonic_seconds": 66581.560500823,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23279947776,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.59
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 11.51711845799582,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:22.387433+00:00",
+      "monotonic_seconds": 66582.597627063,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23289454592,
+      "swap_used_bytes": 2322997248,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.62
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 12.554241972989985,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:23.430582+00:00",
+      "monotonic_seconds": 66583.640777073,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23247839232,
+      "swap_used_bytes": 2322989056,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566967296,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.62
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 13.597392273994046,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:24.466406+00:00",
+      "monotonic_seconds": 66584.676600757,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23298707456,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.67
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 14.63321817299584,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:25.500137+00:00",
+      "monotonic_seconds": 66585.710332065,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23288246272,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.56
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 15.666946033990826,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:26.538399+00:00",
+      "monotonic_seconds": 66586.748594402,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23285420032,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.53
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 16.70521490299143,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:27.573967+00:00",
+      "monotonic_seconds": 66587.784161718,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23278694400,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.56
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 17.740775776997907,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:28.608589+00:00",
+      "monotonic_seconds": 66588.8187863,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23278268416,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.6
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 18.775404936997802,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:29.647657+00:00",
+      "monotonic_seconds": 66589.857852183,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23316643840,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.58
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 19.814471120989765,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:30.681877+00:00",
+      "monotonic_seconds": 66590.892072401,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23235596288,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.45
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 20.84868999698665,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:31.719349+00:00",
+      "monotonic_seconds": 66591.929544987,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23263830016,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.44
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 21.886165177988005,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:32.758098+00:00",
+      "monotonic_seconds": 66592.968292949,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23293513728,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.49
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 22.924909652996575,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    },
+    {
+      "observed_at": "2026-09-24T23:19:33.793257+00:00",
+      "monotonic_seconds": 66594.003452416,
+      "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+      "memory_total_bytes": 32757370880,
+      "memory_available_bytes": 23238705152,
+      "swap_used_bytes": 2322968576,
+      "swap_counts_as_capacity": false,
+      "disk_available_bytes": 82566316032,
+      "logical_cpus_in_affinity": 12,
+      "physical_cores_in_affinity": 6,
+      "gpu": {
+        "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_mib": 16376.0,
+        "used_mib": 62.0,
+        "utilization_percent": 0.0,
+        "temperature_c": 43.0,
+        "power_w": 13.5
+      },
+      "gpu_consumers": [
+        {
+          "pid": 1294,
+          "process_name": "/usr/bin/kwin_wayland",
+          "used_mib": 12.0,
+          "start_ticks": 1284,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 959,
+          "comm": "kwin_wayland",
+          "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+          "identity_readable": true,
+          "executable": null,
+          "existing_display_exemption": true
+        }
+      ],
+      "elapsed_seconds": 23.96006874999148,
+      "supervisor": {
+        "Description": "SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "InvocationID": "38e94abed0ee4947a12987d841322f27",
+        "MainPID": "2268717",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-gpu.slice/swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service"
+      },
+      "model": null
+    }
+  ],
+  "scope": "One fixed real local Qwen prompt; no AOS model, research run, training or full capacity acceptance.",
+  "cleanup": [],
+  "checks": {
+    "production_doctor_exit_zero": false,
+    "real_output_recorded": false,
+    "arithmetic_answer_42": false,
+    "sources_unchanged": true,
+    "model_unit_terminal": true,
+    "supervisor_unit_terminal": true,
+    "model_cgroup_empty": true,
+    "no_remaining_non_display_gpu_consumer": true,
+    "no_observer_abort": true
+  },
+  "command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service",
+    "--slice=swapp-gpu.slice",
+    "--description=SWAPP isolated Qwen review b2ce2213cb244330ae35350c7556ed47",
+    "--property=MemoryMax=1G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=50%",
+    "--property=TasksMax=16",
+    "--property=RuntimeMaxSec=720",
+    "--property=KillMode=control-group",
+    "--property=TimeoutStopSec=10",
+    "--property=NoNewPrivileges=yes",
+    "--property=UMask=0077",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--setenv=SWAPP_LAB_GPU_UNIT=swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service",
+    "--setenv=SWAPP_AOS_GPU_UNIT=swapp-aos-gpu-review-b2ce2213cb244330ae35350c7556ed47.service",
+    "--setenv=SWAPP_GPU_RUNTIME_DB=/home/cachyos/ai-scientist/data/runtime/gpu/native-review-b2ce2213cb244330ae35350c7556ed47/arbiter.sqlite3",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "lab.llm.native_runtime",
+    "--request-id",
+    "b2ce2213cb244330ae35350c7556ed47",
+    "--profile",
+    "s1"
+  ],
+  "preflight": {
+    "observed_at": "2026-09-24T23:19:09.866271+00:00",
+    "monotonic_seconds": 66570.076466342,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 23368273920,
+    "swap_used_bytes": 2322997248,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82566967296,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 62.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 43.0,
+      "power_w": 14.06
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      }
+    ]
+  },
+  "supervisor_exit_code": 1,
+  "model_final": {
+    "Description": "swapp-lab-gpu-turn-aa7404289166409eb8beed203e8281a6.service",
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "ControlGroup": ""
+  },
+  "model_cgroup_empty": true,
+  "supervisor_final": {
+    "Description": "swapp-lab-gpu-review-b2ce2213cb244330ae35350c7556ed47.service",
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "ControlGroup": ""
+  },
+  "postflight": {
+    "observed_at": "2026-09-24T23:19:34.836258+00:00",
+    "monotonic_seconds": 66595.046452648,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "memory_total_bytes": 32757370880,
+    "memory_available_bytes": 23336615936,
+    "swap_used_bytes": 2322964480,
+    "swap_counts_as_capacity": false,
+    "disk_available_bytes": 82566316032,
+    "logical_cpus_in_affinity": 12,
+    "physical_cores_in_affinity": 6,
+    "gpu": {
+      "uuid": "GPU-e1375303-4ed1-15d8-8445-0d4cfbce50b8",
+      "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "total_mib": 16376.0,
+      "used_mib": 62.0,
+      "utilization_percent": 0.0,
+      "temperature_c": 43.0,
+      "power_w": 13.57
+    },
+    "gpu_consumers": [
+      {
+        "pid": 1294,
+        "process_name": "/usr/bin/kwin_wayland",
+        "used_mib": 12.0,
+        "start_ticks": 1284,
+        "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+        "uid": 959,
+        "comm": "kwin_wayland",
+        "cgroup": "0::/user.slice/user-959.slice/user@959.service/session.slice/plasma-login-kwin_wayland.service",
+        "identity_readable": true,
+        "executable": null,
+        "existing_display_exemption": true
+      }
+    ]
+  },
+  "sources_after": {
+    "lab/llm/native_runtime.py": "69c2ddf97dfc9314f3a7d69edc7bb58fc474a7481f650c01a8b8fe6605308893",
+    "lab/llm/netns_exec.py": "39543ec25005a5d4d951ab9eb4e68ae21ce609b450a2a35f18baf8ebfbae6e38",
+    "lab/llm/gpu_scheduler.py": "2fd153be9ebf430f2c094e37bd2ad4fe0f684c6f50680cd6929ce9ed79b732c0",
+    "harness/fingerprint.py": "6b5e2bd3456d5c8120b50d8c8f27107077f80cc6fe69841e2b8e94c43a1fa5c6",
+    "harness/VERSION": "aa037454b5e8320521a32b278a3f4aff05fc79009ab5503f5d4a1b9a33b38c47"
+  },
+  "observed_peaks": {
+    "gpu_used_mib": 62.0,
+    "gpu_temperature_c": 43.0,
+    "model_cgroup_memory_peak_bytes": 0,
+    "minimum_host_available_bytes": 23235596288
+  },
+  "elapsed_seconds": 25.00332791300025,
+  "passed": false
+}

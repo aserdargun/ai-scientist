@@ -1,0 +1,44 @@
+{
+  "schema": "operating-modes042-execution.v1",
+  "actual_exit_code": 0,
+  "tool_session_id": 89544,
+  "initial_chunk": "1b22fb",
+  "final_chunk": "02cf95",
+  "service_runtime_seconds": 9.341,
+  "memory_peak_reported": "155.4M",
+  "swap_peak_bytes": 0,
+  "total_cases": 90,
+  "training_rows_per_case": 192,
+  "evaluation_rows_per_case": 96,
+  "summary_sha256": "95e72b9142665755dc7e52a3e585fe9a659eab40023306e86dd7da708815d222",
+  "summary": "operating-modes042-matrix.json",
+  "private_artifact_folder": "data/runtime/parallel-m0/operating-modes-proof-042/matrix-8d61ce27d3be",
+  "runner": "data/runtime/parallel-m0/operating-modes-proof-042/run_matrix.py",
+  "runner_sha256": "e8eb94d39c2712dfc159d149382abcfe5c6429128577384f3792e4ea54ac8882",
+  "aggregate": {
+    "lsh": {
+      "healthy_false_alarm_fraction": 0.028935185185185185,
+      "process_point_recall": 0.9201388888888888
+    },
+    "optics": {
+      "healthy_false_alarm_fraction": 0.027777777777777776,
+      "process_point_recall": 0.6163194444444444
+    },
+    "som": {
+      "healthy_false_alarm_fraction": 0.03009259259259259,
+      "process_point_recall": 0.9392361111111112
+    }
+  },
+  "first_attempt": {
+    "chunk": "b1a87b",
+    "exit_code": 1,
+    "cases_executed": 0,
+    "reason": "proof runner expected files manifest field; corrected to actual source_sha256 before retry; product source unchanged"
+  },
+  "limitations": [
+    "Direct numerical synthetic evaluation, not Scorer/Director/API/browser acceptance.",
+    "No local LLM, GPU, real database, real plant data, or AOS coexistence exercised.",
+    "Performance metrics are measured results, not universal success assertions.",
+    "Each case uses 192 training and 96 evaluation rows at 1-second cadence."
+  ]
+}

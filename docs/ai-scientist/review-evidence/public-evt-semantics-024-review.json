@@ -1,0 +1,72 @@
+{
+  "schema": "actual-public-evt-semantics.v1",
+  "passed": true,
+  "scope": "Read-only temporal digest/axis/mask validation; no scoring or model.",
+  "private_database": "swapp_lab_m0_public_suite_3ddaa2d8",
+  "outcomes": [
+    {
+      "dataset_id": "TSB-AD-M-GECCO",
+      "validated": true,
+      "sample_count": 123301,
+      "masked_count": 1045
+    },
+    {
+      "dataset_id": "TSB-AD-M-Genesis",
+      "validated": true,
+      "cadence": "unknown",
+      "scope": "No temporal record; sample-index-only EVT profile."
+    },
+    {
+      "dataset_id": "SMD",
+      "validated": true,
+      "sample_count": 12000,
+      "masked_count": 0
+    },
+    {
+      "dataset_id": "SKAB",
+      "validated": true,
+      "sample_count": 470,
+      "masked_count": 20
+    },
+    {
+      "dataset_id": "TSB-AD-M-CATSv2",
+      "validated": true,
+      "sample_count": 83332,
+      "masked_count": 0
+    }
+  ],
+  "helper_sha256": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+  "manifest_sha256": "4aeeb8c015ebb7f3ef68a76d38b158a7d286f0b9a46b6fa19a8682c3a4a8ca1f",
+  "registration_receipt_sha256": "2da0a393854adea71af08298d539260a2e5ddf1c0b1ba9259dde2ac2837c69f5",
+  "actual_exit_code": 0,
+  "command_limits": {
+    "memory_max_bytes": 2147483648,
+    "swap_max_bytes": 0,
+    "cpu_quota_percent": 100,
+    "tasks_max": 128,
+    "runtime_max_seconds": 90,
+    "shared_cpu_lock": true
+  },
+  "command": [
+    "flock",
+    "data/runtime/parallel-m0/cpu-check.lock",
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-review-public-evt-semantics-024.service",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=90",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--setenv=PYTHONPATH=/home/cachyos/ai-scientist",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "docs/ai-scientist/review-evidence/review_public_evt_semantics.py"
+  ]
+}

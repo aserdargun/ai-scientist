@@ -1,0 +1,14 @@
+{
+  "schema": "recovery-canonical-defaults-integration.v1",
+  "scope": "Preserve historical canonical JSON bytes before applying newer model defaults; no database writes.",
+  "files": {
+    "lab/director/recovery.py": {
+      "before_sha256": "f4ff16b1c15650d742b4e18cf74e97a5ff5e60a5156440dcaff804f362d08c12",
+      "after_sha256": "c431af6950631d66d9379b83c7e81dff67bba56e6da527bd9b6d63ed04c3319e"
+    },
+    "tests/test_director_recovery_identity.py": {
+      "before_sha256": "3b092c3729463b1a00c3e3c5ed3872de0b9e48e513c1a7e1c9695471f361c656",
+      "after_sha256": "baba66362b2b585219e77d1964d3cfbc24e6e037141af7fb039f3843bf1fad61"
+    }
+  }
+}

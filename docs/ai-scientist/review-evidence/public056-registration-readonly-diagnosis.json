@@ -1,0 +1,12 @@
+{
+  "schema": "private056-registration-readonly-diagnosis.v1",
+  "probe": "EXPLAIN only (no execution) in READ ONLY transaction",
+  "sqlstate": "42501",
+  "exception_type": "ProgrammingError",
+  "message": "permission denied for table holdout_suite_versions",
+  "root_cause": "register_holdout_suite SELECT FOR UPDATE requires UPDATE privilege absent from immutable holdout version table; Scorer has SELECT/INSERT only",
+  "source_file": "lab/scorer/holdout.py",
+  "source_query_line": 467,
+  "existing_measurements_unchanged": true,
+  "new_dispatch": false
+}

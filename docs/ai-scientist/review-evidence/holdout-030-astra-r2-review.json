@@ -1,0 +1,62 @@
+{
+  "schema": "holdout-030-astra-r2-review.v1",
+  "reviewer": {
+    "model": "GPT-6 Astra",
+    "reasoning_effort": "high"
+  },
+  "scope": "Independent source review; not full M0.10 acceptance.",
+  "recovery": {
+    "frozen_sources": {
+      "lab/api/app.py": "aa4475d0bb04a91d7ef4ab8a1d701bf3c7587656e52dfb026d88df5ab0fe571b",
+      "lab/scorer/holdout.py": "faebe61389316443295a903342a7a52577ec6644ec105accaaa2a05eb9c9be04",
+      "lab/scorer/holdout_supervisor.py": "84e99abf17169b1f4ab6a99b7565b6703883772f0ad79f113dd6b5a012a63c42",
+      "lab/scorer/holdout_recovery.py": "ac2d11f60372a3db6581adc2b644f7e33eedeecc29196db9eea5d659111f57b1",
+      "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65"
+    },
+    "root_hashes_match": true,
+    "source_result": "Prior cleanup, collected-unit, unclaimed recovery, and API stop wiring defects resolved; no remaining source blocker found in this slice.",
+    "worker_reported_owned_slice_tests": 47,
+    "worker_reported_owned_slice_exit_code": 0,
+    "worker_reported_combined_tests": {
+      "passed": 85,
+      "failed": 1,
+      "failed_name": "test_holdout_reservation_rpc_time_is_charged_to_worker_deadline",
+      "exit_code": 1,
+      "scope": "Primary-owned timer fixture; R3 must resolve and rerun, not claim this combined run passed."
+    },
+    "actual_pg_evidence": "docs/ai-scientist/review-evidence/holdout-030-migration-smoke-7f1659ef7191.json",
+    "actual_pg_session": 67594,
+    "actual_pg_exit_code": 0,
+    "actual_pg_checks": 48,
+    "open": [
+      "Positive SQL fence/CAS/quota/race paths.",
+      "Actual systemd/Docker claim, death, drain and stop phases.",
+      "Integration with pending primary R3."
+    ]
+  },
+  "primary_r2": {
+    "loop_sha256": "46e4bf6ce10b71634fb0131c271a6a2da4f3b692987cfda00b97046b7031ab49",
+    "migration_0019_sha256": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "fixed_in_reviewed_source": [
+      "Strict UUID JSON checkpoint parsing.",
+      "Combined legal periodic/run-end budget state key.",
+      "Exact-limit periodic reconciliation.",
+      "Immutable application budget replay.",
+      "max(measured,elapsed) plus full unknown reservation budget charging."
+    ],
+    "blocking": [
+      "Admission-failure replay compares attempted candidate to already-rolled-back champion; bind candidate to immutable prior state/intent.",
+      "Crash after local intent checkpoint before SQL intent registration leaves no row for the 0020 fence.",
+      "Fresh zero wall-budget CLI terminal path needs durable unavailable/manual-review rollback without new query/time/quota."
+    ],
+    "next_revision": "0021_run_end_unavailable and R3 Director typed checkpoint/fence/reducer; source not yet approved."
+  },
+  "verification_order": [
+    "Tiny real-PG positive wrapper path including periodic to run-end.",
+    "Crash boundaries including candidate different from last approved and zero remaining wall budget.",
+    "Role and fence/quota/CAS/stop concurrency on final migrations.",
+    "All 15 Farm B private registration, role reload and baseline scoring.",
+    "Full 10 KEEP, run-end, rollback and canary with real sandbox scoring.",
+    "GPU/local model/AOS only after pending coordination."
+  ]
+}

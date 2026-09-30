@@ -1,0 +1,111 @@
+{
+  "commands": [
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "focused unit tests",
+      "result": "10 passed in 1.77s; unit peak 76.9M; swap 0B",
+      "unit": "swapp-care-farm-b-final-tests2.service"
+    },
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "Ruff",
+      "result": "All checks passed; unit peak 11.8M; swap 0B",
+      "unit": "swapp-care-farm-b-final-ruff3.service"
+    },
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 180,
+        "TasksMax": 64
+      },
+      "purpose": "mypy loader and Scorer adapter",
+      "result": "Success: no issues found in 2 source files; unit peak 261.9M; swap 0B",
+      "unit": "swapp-care-farm-b-final-mypy2.service"
+    },
+    {
+      "exit_code": 0,
+      "limits": {
+        "CPUQuota": "50%",
+        "MemoryMax": "1G",
+        "MemorySwapMax": "0",
+        "RuntimeMaxSec": 600,
+        "TasksMax": 64
+      },
+      "purpose": "real pinned Farm B full materialization and Arrow sizing",
+      "result": "15 tasks; 72,128 prediction + 15,120 reference rows; 5,179,824 serialized Arrow bytes; runtime 36.210s; CPU 18.107s; process peak RSS 210,200 KiB; swap 0B",
+      "unit": "swapp-care-farm-b-prefix-final.service"
+    }
+  ],
+  "limitations": [
+    "This proves real source materialization and serialization bounds, not DB registration, holdout scoring, or benchmark equivalence.",
+    "The frozen policy uses the approved fixed seven-day reference prefix; no label-driven task/window selection.",
+    "Farm C payloads, GPU/model execution, DB writes, Docker, and service operations were not used.",
+    "Farm B status 0/2 interpretation follows the cited Farm B source policy; it is not inherited from Farm A."
+  ],
+  "real_materialization_report": {
+    "archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+    "driver_sha256": "7b206f064db76fe685a675494fe47f14af1e99b52c815133fc8eb66d79e1cd9d",
+    "loader_sha256": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "path": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-materialization.json",
+    "process_peak_rss_kib": 210200,
+    "result": {
+      "aggregate_arrow_bytes": 5179824,
+      "aggregate_below_limit": true,
+      "aggregate_limit_bytes": 2147483648,
+      "all_15_tasks_present": true,
+      "all_pdm_tasks_have_positive_and_healthy_exposure": true,
+      "all_prediction_rows_mask_preserved": true,
+      "all_tasks_below_per_blob_limit": true,
+      "database_writes": false,
+      "evaluation_rows_total": 87248,
+      "expected_evaluation_rows": 87248,
+      "farm_c_payloads_opened": false,
+      "fit_rows_maximum": 1536,
+      "fit_rows_minimum": 1111,
+      "gpu_or_model_started": false,
+      "nrm_count": 9,
+      "pdm_count": 6,
+      "per_blob_max_bytes": 33554432,
+      "per_blob_observed_max_bytes": 727640,
+      "prediction_rows_retained": 72128,
+      "reference_rows_added": 15120,
+      "task_count": 15,
+      "window_bounds": [
+        10,
+        100
+      ],
+      "window_maximum": 100,
+      "window_minimum": 38
+    },
+    "scorer_adapter_sha256": "a0d75a607914a258fb22dad1dd5f7fbb1785cfe28d4d79fc7a86088755e87863",
+    "sha256": "ba560ab371b2cfcb874e359b7bacbe7da2fc4bfd551955efc798817410b99c9d"
+  },
+  "schema": "care-b-prefix-handoff.v1",
+  "scope": "Farm B private Scorer loader only; no main runtime/DB/schema/CLI edits",
+  "source_hashes": {
+    "docs/ai-scientist/review-evidence/care-b-prefix-diagnostic.py": "1fb50efdd5929ad12140f3c7283c3b77c99e2782d52acc31bd88bcac84aefab1",
+    "docs/ai-scientist/review-evidence/care-b-prefix-materialization.py": "7b206f064db76fe685a675494fe47f14af1e99b52c815133fc8eb66d79e1cd9d",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "lab/scorer/care_holdout.py": "a0d75a607914a258fb22dad1dd5f7fbb1785cfe28d4d79fc7a86088755e87863",
+    "tests/test_care_holdout.py": "c737dabcb902847e102bc9c95fb5be21ba72773835cd3095f67511867b10beee"
+  },
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030",
+  "worktree_base": "1d8b07dc009e55470ec7c2c2c9333267eb5347c0"
+}

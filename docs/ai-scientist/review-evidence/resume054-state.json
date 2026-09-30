@@ -1,0 +1,104 @@
+{
+  "run_id": "c8709872-93db-449a-8aab-13aa0c8c44a2",
+  "restart_id": "45a0ccc6-4dce-4649-95d3-545393cac388",
+  "admission": {
+    "run_id": "c8709872-93db-449a-8aab-13aa0c8c44a2",
+    "state": "queued",
+    "reused": false
+  },
+  "request": {
+    "idempotency_key": "resume054-3daa285f54d6456fbeed6bb5b3989df2",
+    "snapshot_sha256": "3d51ac1fc162901b479e94c47d908ab473ff517180935eab0ab6cba57887e359",
+    "configurations": [
+      {
+        "method": "lsh",
+        "seed": 0
+      },
+      {
+        "method": "lsh",
+        "seed": 1
+      },
+      {
+        "method": "lsh",
+        "seed": 2
+      },
+      {
+        "method": "lsh",
+        "seed": 3
+      },
+      {
+        "method": "lsh",
+        "seed": 4
+      },
+      {
+        "method": "lsh",
+        "seed": 5
+      },
+      {
+        "method": "lsh",
+        "seed": 6
+      },
+      {
+        "method": "lsh",
+        "seed": 7
+      },
+      {
+        "method": "lsh",
+        "seed": 8
+      },
+      {
+        "method": "lsh",
+        "seed": 9
+      },
+      {
+        "method": "lsh",
+        "seed": 10
+      },
+      {
+        "method": "lsh",
+        "seed": 11
+      },
+      {
+        "method": "lsh",
+        "seed": 12
+      },
+      {
+        "method": "lsh",
+        "seed": 13
+      },
+      {
+        "method": "lsh",
+        "seed": 14
+      },
+      {
+        "method": "lsh",
+        "seed": 15
+      },
+      {
+        "method": "lsh",
+        "seed": 16
+      },
+      {
+        "method": "lsh",
+        "seed": 17
+      },
+      {
+        "method": "lsh",
+        "seed": 18
+      },
+      {
+        "method": "lsh",
+        "seed": 19
+      }
+    ],
+    "wall_seconds": 3600
+  },
+  "drain_before": {
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "InvocationID": "a5b619803e97435e888b8dd97e775195",
+    "MainPID": "1790282",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service",
+    "WorkingDirectory": "/home/cachyos/ai-scientist"
+  }
+}

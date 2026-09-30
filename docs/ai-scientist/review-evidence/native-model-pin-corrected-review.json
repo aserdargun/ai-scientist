@@ -1,0 +1,40 @@
+{
+  "schema": "native-model-pin-review.v1",
+  "scope": "Actual ModelPin full hash verification on downloaded files with known cache metadata handling, in bounded CPU unit; frozen production source with three canonical path globals restored after relocation. No model load/CUDA.",
+  "source_sha256": "d6cc44287179ef0943384601f830e0d3996d164c548ecf4b0408fa67fbfaa397",
+  "source_path": "data/runtime/native-pin-review/aea4f9069b4f40dd8fb91875c25658ac/native_runtime.py",
+  "worker_sha256": "528628e86ff43d08c3486c3a8b151c8b0a4b3b53750e5d92b4702d4072e46fe9",
+  "command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-review-native-pin-23275e6d13be4e07aa8f2199fca3b92c.service",
+    "--service-type=exec",
+    "--property=MemoryMax=256M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=16",
+    "--property=RuntimeMaxSec=120",
+    "--property=TimeoutStopSec=2",
+    "--property=KillMode=control-group",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/data/runtime/native-pin-review/aea4f9069b4f40dd8fb91875c25658ac/worker.py",
+    "/home/cachyos/ai-scientist",
+    "/home/cachyos/ai-scientist/data/runtime/native-pin-review/aea4f9069b4f40dd8fb91875c25658ac/native_runtime.py"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"verified\": true, \"file_count\": 16, \"total_bytes\": 19329393661, \"revision\": \"c202236235762e1c871ad0ccb60c8ee5ba337b9a\", \"manifest_file_list_sha256\": \"70fcdd0b7bc5be5ae08a83e876df27fe829c48162103b440dc101149ce267213\", \"verification_seconds\": 13.023831172999053}\n",
+  "stderr": "",
+  "unit_final": {
+    "ActiveState": "inactive",
+    "MainPID": "0"
+  },
+  "checks": {
+    "verifier_exit_zero": true,
+    "unit_terminal": true
+  },
+  "passed": true
+}

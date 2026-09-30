@@ -1,0 +1,12 @@
+{
+  "schema": "suite-limit-fingerprint-integration.v1",
+  "before": {
+    "harness/fingerprint.py": "9e429fe01f2ce6fb0398f36c5d6914e99b50e61680b180c6f430d8d5d0fa4ace",
+    "tests/test_fingerprint.py": "e97f5f27e70233d86b7335782243b8b32516ede67b501bcbcff5c65fe98f67f1"
+  },
+  "after": {
+    "harness/fingerprint.py": "2339af108060a0573d7fd60b0758b20aeec6431f91435d81419c6f7c4b663a38",
+    "tests/test_fingerprint.py": "79fb321b4932b86682df95a66878426bcc6e0fb7a0a083454f66cd5bd0feb8e2"
+  },
+  "reason": "Bind newly added shared manifest limit into trusted harness fingerprint."
+}

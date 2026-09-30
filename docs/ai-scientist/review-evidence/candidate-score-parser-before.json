@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-09-24T12:42:03.219986+00:00",
+  "cases": [
+    {
+      "case": "positive_exponent_overflow",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,1e999]}",
+      "should_accept": false,
+      "accepted": true,
+      "all_scores_finite": false,
+      "index_count": 2,
+      "score_count": 2,
+      "passed": false
+    },
+    {
+      "case": "negative_exponent_overflow",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,-1e999]}",
+      "should_accept": false,
+      "accepted": true,
+      "all_scores_finite": false,
+      "index_count": 2,
+      "score_count": 2,
+      "passed": false
+    },
+    {
+      "case": "unequal_parallel_arrays",
+      "payload": "{\"schema\": \"candidate-scores.v1\", \"sample_indices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"scores\": [0.0, 1.0]}",
+      "should_accept": false,
+      "accepted": true,
+      "all_scores_finite": true,
+      "index_count": 16,
+      "score_count": 2,
+      "passed": false
+    },
+    {
+      "case": "valid_finite_control",
+      "payload": "{\"schema\":\"candidate-scores.v1\",\"sample_indices\":[0,1],\"scores\":[0.0,1.0]}",
+      "should_accept": true,
+      "accepted": true,
+      "all_scores_finite": true,
+      "index_count": 2,
+      "score_count": 2,
+      "passed": true
+    }
+  ],
+  "scope": "Production numeric artifact parser only; verifies malformed numeric output is typed as candidate error before VUS/worker infrastructure handling. No DB, worker, sandbox or model acceptance.",
+  "source_sha256": {
+    "lab/scorer/service.py": "4f5de9abb856261837c4b55cee3820eebe0e2946015c7170a8bb9a2be89b8f7b"
+  },
+  "source_unchanged": true,
+  "script_sha256": "2b208fbc98d1479f907bec19e451190191cdd99bc00e0175bf2c33a82f02e44f",
+  "baseline_commit": "602aecd",
+  "all_passed": false,
+  "violation_reproduced": true
+}

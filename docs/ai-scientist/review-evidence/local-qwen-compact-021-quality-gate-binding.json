@@ -1,0 +1,74 @@
+{
+  "schema": "local-qwen-compact-021-quality-binding.v1",
+  "checked_at_utc": "2026-09-25T07:28:40.077224+00:00",
+  "scope": "Compact local schema/prompt, exact image bytes and seven-command quality gate. Real S2 probe was interrupted by an external GPU consumer; no proposal inference acceptance.",
+  "base_commit": "2fc2cab",
+  "harness_version": "0.21.0",
+  "harness_sha256": "5c08ed4c66a88c0c407ebba8acf0b32c74c5bdc80669e822a69752e90fa82464",
+  "harness_file_count": 62,
+  "sandbox_image": "sha256:6f927103a7b33b9f3f6bc9de1a682575ecc8481e03ca28cdddf29956389bd09d",
+  "actual_sessions": {
+    "image": {
+      "id": 76562,
+      "exit_code": 0
+    },
+    "quality": {
+      "id": 50789,
+      "exit_code": 0
+    },
+    "single_s2": {
+      "id": 20177,
+      "exit_code": 1
+    }
+  },
+  "artifacts": {
+    "local-qwen-compact-021-quality-command.json": "dceb950d16cc07659b4bd1cf6466fe404215665ce4f2ae65d2eaaa4c8ee609e3",
+    "local-qwen-compact-021-image-review.json": "f459c6f4ed24be7fe2b110fde959b9f9427b44065bba6b2cf6c6b56de56e64b7",
+    "local-qwen-compact-021-s2-review.json": "b3633f046bd1e3a2136b56f61b693fd37d8abcf7ff8e4c0d81221ed299024d57"
+  },
+  "quality_archive": "docs/ai-scientist/evidence/quality-gate-local-qwen-compact-021.json",
+  "quality_archive_sha256": "49b8edefcd082467616282fdd87929179b766d1ebba2038eaf651c1201b97845",
+  "checks": {
+    "quality_actual_exit_zero": true,
+    "all_seven_quality_commands_exit_zero": true,
+    "quality_source_stable_and_current": true,
+    "image_build_parity_passed": true,
+    "image_sources_current": true,
+    "image_lock_matches": true,
+    "probe_sources_current": true,
+    "interrupted_probe_preserved": true,
+    "external_gpu_consumer_observed": true,
+    "owned_model_units_drained": true,
+    "postflight_no_compute_gpu": true
+  },
+  "passed": true,
+  "s2_accepted": false,
+  "probe_elapsed_seconds": 125.4890525709925,
+  "probe_passed_checks": 11,
+  "probe_total_checks": 24,
+  "first_external_consumer": {
+    "observed_elapsed_seconds": 114.82976754099946,
+    "pid": 2904729,
+    "process_name": "/home/cachyos/.venv/bin/python",
+    "used_mib": 1180.0,
+    "start_ticks": 9578221,
+    "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+    "uid": 1000,
+    "comm": "python",
+    "cgroup": "0::/user.slice/user-1000.slice/session-26.scope",
+    "identity_readable": true,
+    "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+    "existing_display_exemption": false
+  },
+  "ticket_final": {
+    "state": "active"
+  },
+  "final_gpu_mib": 62.0,
+  "limitations": [
+    "No final peer/model proposal result; external consumer is not attributed to AOS.",
+    "Private probe ticket remains active; no manual state repair.",
+    "Full six-proposal local research and real AOS research/Desktop acceptance remain open.",
+    "Parallel recovery/public/report/replay code is not integrated.",
+    "Main database temporary migration chain needs reconciled integration; read-only backup and restore rehearsal recorded separately."
+  ]
+}

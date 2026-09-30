@@ -1,0 +1,18 @@
+{
+  "schema": "aos-control-fence-root-verification.v1",
+  "parent_receipt_sha256": "ccac21a9a28430814ef291530781a61892b98442a1e471743f44a05f82361132",
+  "followup_receipt_sha256": "927a8a18f1621e6b621faad742927c11c824573f23e01937232fc314fc19efad",
+  "patch_applications": [
+    {
+      "patch": "aos-lab-optin-lifecycle.patch",
+      "exit_code": 0
+    },
+    {
+      "patch": "aos-lab-optin-control-fence.patch",
+      "exit_code": 0
+    }
+  ],
+  "final_source_parity_count": 3,
+  "live_aos_modified": false,
+  "scope": "Two frozen patches applied to private source-only temp repository; no runtime or model."
+}

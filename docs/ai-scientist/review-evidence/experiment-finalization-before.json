@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-09-24T15:38:26.880168+00:00",
+  "scope": "Real PostgreSQL roles and production plan/finalizer services, one owned synthetic Planner crash outcome. No candidate execution, metric, model or public data. Negative counterexample, not an acceptance pass.",
+  "source_sha256": {
+    "lab/scorer/service.py": "e1881f2133041f6cee0397208ecf51b54fbb3d88e55703ce4ca93b545b9bacf4",
+    "lab/director/task_plan.py": "d7befe94f40bbd5ae15ea3debdc7af2475946647da295cef112b2d0ec53c02fa",
+    "lab/db/schema.py": "db33772e73131a54a8ef5115bdfda24abb74c6a336cb33940a25129e5d844463",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d"
+  },
+  "database_revision": "0011_experiment_ledger",
+  "sealed_task_count": 1,
+  "terminal_commit_after_seal_rejected": true,
+  "terminal_commit_sqlstate": "P0001",
+  "final_state": {
+    "run": "completed",
+    "experiment": "proposed",
+    "experiment_record_count": 0,
+    "trajectory_record_count": 0
+  },
+  "report_was_published": true,
+  "premature_completion_reproduced": true,
+  "owned_rows_removed": true,
+  "source_unchanged": true,
+  "counterexample_verified": true,
+  "script_sha256": "d08a26f462683983b0d63e236a5138304e7b339ab2e071dee9534ffea3aa742b",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_experiment_finalization_before.py"
+}

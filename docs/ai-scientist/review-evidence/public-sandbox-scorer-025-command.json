@@ -1,0 +1,30 @@
+{
+  "schema": "public-scorer-launch.v2",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-review-public-scorer-025.service",
+    "--slice=swapp-gpu.slice",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=1950",
+    "--working-directory=/home/cachyos/ai-scientist/data/runtime/parallel-m0/public-execution-025",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/public-execution-025",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_public_sandbox_scorer_v3.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 394.5614967330039,
+  "log_path": "data/runtime/parallel-m0/integration-025/public-scorer-v3.log",
+  "log_sha256": "126ad318e9d7ad010ba0359573933fe11e7144845086146a7bed3e7a0566cfbf",
+  "scope": "Real27 publictasks, robust_z seed0, actualDocker/guards/separateScorer; noLLM/calibration/Referee/AOS."
+}

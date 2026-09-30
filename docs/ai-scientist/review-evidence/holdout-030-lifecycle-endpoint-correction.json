@@ -1,0 +1,18 @@
+{
+  "schema": "lifecycle-endpoint-correction.v1",
+  "created_at": "2026-09-27T00:42:44.768717+00:00",
+  "files": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "61aaaecf27c3d2a6d68f30499fdcee37e09bb91651c080e4f343da15081311c1",
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-review.py": "ddd46e704703dee6d8eb3b36d48b6336629bf752bc0f54864d15ff2c13e1f821",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "cf7c7cc2bb8685bd78fb8cded0d7b779a1382ccb3467df75c5218ebabb2c83f3",
+    "tests/test_holdout030_lifecycle_review_preflight.py": "6b2d3542b42a5eb180bbf5d8e76106d5b1582aa374ca5264a71e6b36af9d4d6d"
+  },
+  "change": "SQL host(inet_server_addr()) canonicalizes address shape; phase-only diagnostics do not imply container ownership.",
+  "source_reference": "https://www.postgresql.org/docs/16/functions-net.html",
+  "worker_combined_cpu_tests": 17,
+  "worker_pytest_exit": 0,
+  "worker_ruff_exit": 0,
+  "test_count_includes": "Lifecycle tests and separate PG runner safety tests",
+  "actual_followup": "holdout-030-lifecycle-r8-child-failure.json",
+  "runtime_changed": false
+}

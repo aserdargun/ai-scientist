@@ -1,0 +1,45 @@
+{
+  "schema": "aos-lifecycle-root-source-verification.v1",
+  "source_receipt_sha256": "ccac21a9a28430814ef291530781a61892b98442a1e471743f44a05f82361132",
+  "patch_sha256": "c57a95d361353c87a89fb56a05eaf7f155cd62907e3b7afd449f07e5dbc00f42",
+  "files": {
+    "MANIFEST.sha256": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "README.md": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "docs/DETACHED_LAB_RUNTIME.md": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "docs/STATUS.md": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "scripts/serve_desktop.py": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "src/aos/desktop_console.py": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "src/aos/lab_external.py": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "tests/test_lab_external_jobs.py": {
+      "head_matches": true,
+      "base_matches": true
+    },
+    "tests/test_task_sequence.py": {
+      "head_matches": true,
+      "base_matches": true
+    }
+  },
+  "git_apply_check_exit_code": 0,
+  "live_aos_modified": false
+}

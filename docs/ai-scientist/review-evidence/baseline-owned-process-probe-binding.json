@@ -1,0 +1,67 @@
+{
+  "acceptance_counts": {
+    "open": 4,
+    "partial": 8,
+    "passed": 10
+  },
+  "actual_exit_code": 0,
+  "actual_session": null,
+  "cases_passed": 4,
+  "completion_chunk": "eadab6",
+  "created_at": "2026-09-27T03:43:10.757992+00:00",
+  "execution_note": "Command completed in initial tool call; no running session ID was allocated.",
+  "failed_attempt": {
+    "actual_exit_code": 1,
+    "actual_session": 62232,
+    "cleanup_followup_chunk": "31abf8",
+    "completion_chunk": "969668"
+  },
+  "main_quality_gate": {
+    "actual_exit_code": 0,
+    "actual_session": 37834,
+    "commands_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "completion_chunk": "c1421f",
+    "path": "docs/ai-scientist/review-evidence/baseline-owned-process-main-quality-gate.json",
+    "pytest_summary": "========= 539 passed, 7 skipped, 23 deselected, 17 warnings in 13.72s ==========",
+    "scope": "Current MAIN0.32 runtime quality gate. Does not include private integration-033 or ownership changes.",
+    "sha256": "c74cf69debb9c2d0683e7f71e3e9b56420535501ee627eb292f560780e08ba23"
+  },
+  "main_runtime": "0.32.0",
+  "quality_gate_revalidation": {
+    "actual_gate_exit_code": 0,
+    "actual_gate_session": 69013,
+    "command_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "gate_sha256": "53f2152553aff9096dda5664c0bef5ec0ca4269cd5d37e8bb2a0d59490c8f27d",
+    "new_full_gate_run": true,
+    "new_gate_session": 37834,
+    "source_count": 184,
+    "source_unchanged": true
+  },
+  "reviewer": "GPT-6 Astra / high",
+  "schema": "baseline-owned-process-probe-binding.v1",
+  "scope": "Synthetic CPU sleeper observer instrumentation only. No database, actual baseline/Director workload, API, Docker, model, GPU, AOS, restart or M0 acceptance.",
+  "source_sha256": {
+    "baseline-owned-process-probe-8cda049a3409.json": "9f3986de67b3bb85a8bfd3f0bdf19d1671ac78cd3d847040e0ef38428432c901",
+    "baseline-owned-process-probe-9b0406f5f2a7.json": "ff1feed5762b77ebbe0622a2f6c2edbe6af6bbaf8082da9cb7cb7565ccbd4fbb",
+    "baseline-owned-process-probe-r1-cleanup.json": "e5a239e5119c18e896117125e8639d927a8cc46e72e48b2d359fcd0b15da09a9",
+    "baseline-ownership-sql-proof-design-033.md": "489654769f6469e2d3041967c59f8ed3053899547251daf9665c2ae4188612ca",
+    "baseline-proof-owned-process-033.py": "898fe09abbfd4a55d38e727a9259250eabd923fb22081de3def3d2bd62e054ae",
+    "baseline-proof-owned-process-probe-033.py": "0091ba667c0a957a95c256fa60fa266a865fdada6a4316966862ddb315f3a09d"
+  }
+}

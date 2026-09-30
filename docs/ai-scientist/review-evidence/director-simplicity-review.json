@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-09-24T17:46:52.235459+00:00",
+  "scope": "Four source-only simplification regression checks. No timing alternative, full Director, real model or AOS acceptance.",
+  "source_sha256": {
+    "lab/director/runner.py": "79fdfe66f213019cb177323a4fd3ee7ed98cf4f044058307ef8e57b9638d7c35",
+    "tests/test_director_simplicity_review.py": "5c0a0c59ce86abad29c2af45ef8433388e44050a88a5680dd77da04fedd543dd"
+  },
+  "source_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "tests/test_director_simplicity_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_director_simplicity_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "....                                                                     [100%]\n4 passed in 0.78s\n",
+      "stderr": ""
+    }
+  ],
+  "all_passed": true
+}

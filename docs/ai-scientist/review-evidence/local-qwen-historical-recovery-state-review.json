@@ -1,0 +1,67 @@
+{
+  "checked_at": "2026-09-25T05:51:09.488737+00:00",
+  "scope": "Read-only snapshot of two owned historical failed real-model test runs. No state rewrite, dispatch, model or cleanup. This identifies pending durable recovery only.",
+  "runs": [
+    {
+      "run_id": "b54c9282-ca69-4deb-9e28-ef50e36bf21c",
+      "state": "running",
+      "stop_requested": false,
+      "task_plan_count": null,
+      "task_plan_sha256": null,
+      "report_sha256": null,
+      "updated_at": "2026-09-25 02:00:45.581069+00:00",
+      "experiments": [
+        {
+          "kind": "baseline",
+          "status": "scored",
+          "count": 3
+        },
+        {
+          "kind": "proposal",
+          "status": "scored",
+          "count": 2
+        }
+      ],
+      "score_jobs": [
+        {
+          "state": "completed",
+          "count": 44
+        }
+      ],
+      "score_count": 44
+    },
+    {
+      "run_id": "75642033-6e46-4a73-82a9-9e1ecb6066d3",
+      "state": "stop_requested",
+      "stop_requested": true,
+      "task_plan_count": null,
+      "task_plan_sha256": null,
+      "report_sha256": null,
+      "updated_at": "2026-09-25 03:23:02.220099+00:00",
+      "experiments": [
+        {
+          "kind": "baseline",
+          "status": "primary_running",
+          "count": 1
+        },
+        {
+          "kind": "baseline",
+          "status": "scored",
+          "count": 1
+        }
+      ],
+      "score_jobs": [
+        {
+          "state": "completed",
+          "count": 23
+        }
+      ],
+      "score_count": 23
+    }
+  ],
+  "source_sha256": {
+    "lab/cli.py": "17ed79597360605d91b4e12545cecee5ab45b62f0eac423383456ccafcd2da42",
+    "lab/director/runner.py": "0da114055c82af8bccca840ef24f2bb42d8b6ff8cd8f58319bcb3e25b8a4215a",
+    "lab/scorer/service.py": "18403ed5d60ef19edd4278ff63475278e9fa15b2ad1ea7dec49b86be383649a9"
+  }
+}

@@ -1,0 +1,192 @@
+usage: serve_desktop.py [-h] [--port PORT] [--workspace WORKSPACE]
+                        [--database DATABASE]
+                        [--desktop-manifest DESKTOP_MANIFEST]
+                        [--trajectory-database TRAJECTORY_DATABASE]
+                        [--web-profiles-root WEB_PROFILES_ROOT]
+                        [--web-task-root WEB_TASK_ROOT]
+                        [--web-form-plan-root WEB_FORM_PLAN_ROOT]
+                        [--web-form-value-root WEB_FORM_VALUE_ROOT]
+                        [--web-form-state-root WEB_FORM_STATE_ROOT]
+                        [--web-route-root WEB_ROUTE_ROOT]
+                        [--web-static-root WEB_STATIC_ROOT]
+                        [--web-readonly-data-root WEB_READONLY_DATA_ROOT]
+                        [--engine {disabled,decider,fixture}]
+                        [--reuse-decider] [--prewarm-decider]
+                        [--prewarm-idle-seconds PREWARM_IDLE_SECONDS]
+                        [--shared-gpu-turns]
+                        [--lab-external-api-url LAB_EXTERNAL_API_URL]
+                        [--lab-external-token-file LAB_EXTERNAL_TOKEN_FILE]
+                        [--lab-external-suite LAB_EXTERNAL_SUITE]
+                        [--decider-manifest DECIDER_MANIFEST]
+                        [--model-python MODEL_PYTHON] [--browser-tasks]
+                        [--desktop-browser]
+                        [--desktop-mcp-manifest DESKTOP_MCP_MANIFEST]
+                        [--desktop-navigation-mcp-manifest DESKTOP_NAVIGATION_MCP_MANIFEST]
+                        [--desktop-staging-mcp-manifest DESKTOP_STAGING_MCP_MANIFEST]
+                        [--staging-fixture-port STAGING_FIXTURE_PORT]
+                        [--remote-entry-mcp-manifest REMOTE_ENTRY_MCP_MANIFEST]
+                        [--remote-entry-profile-sha256 REMOTE_ENTRY_PROFILE_SHA256]
+                        [--remote-entry-task-file REMOTE_ENTRY_TASK_FILE]
+                        [--remote-entry-task-sha256 REMOTE_ENTRY_TASK_SHA256]
+                        [--remote-routes-plan-file REMOTE_ROUTES_PLAN_FILE]
+                        [--remote-routes-plan-sha256 REMOTE_ROUTES_PLAN_SHA256]
+                        [--remote-static-assets-plan-file REMOTE_STATIC_ASSETS_PLAN_FILE]
+                        [--remote-static-assets-plan-sha256 REMOTE_STATIC_ASSETS_PLAN_SHA256]
+                        [--remote-route-review-source-database REMOTE_ROUTE_REVIEW_SOURCE_DATABASE]
+                        [--remote-route-review-site-store REMOTE_ROUTE_REVIEW_SITE_STORE]
+                        [--remote-route-review-store REMOTE_ROUTE_REVIEW_STORE]
+                        [--remote-route-review-sha256 REMOTE_ROUTE_REVIEW_SHA256]
+                        [--remote-json-review-source-database REMOTE_JSON_REVIEW_SOURCE_DATABASE]
+                        [--remote-json-review-site-store REMOTE_JSON_REVIEW_SITE_STORE]
+                        [--remote-json-review-store REMOTE_JSON_REVIEW_STORE]
+                        [--remote-json-review-sha256 REMOTE_JSON_REVIEW_SHA256]
+                        [--remote-form-plan-file REMOTE_FORM_PLAN_FILE]
+                        [--remote-form-plan-sha256 REMOTE_FORM_PLAN_SHA256]
+                        [--remote-form-field-name REMOTE_FORM_FIELD_NAME]
+                        [--remote-form-value-file REMOTE_FORM_VALUE_FILE]
+                        [--remote-form-fields-file REMOTE_FORM_FIELDS_FILE]
+                        [--remote-form-fields-sha256 REMOTE_FORM_FIELDS_SHA256]
+                        [--remote-form-public-plan-sha256 REMOTE_FORM_PUBLIC_PLAN_SHA256]
+                        [--remote-form-state-plan-file REMOTE_FORM_STATE_PLAN_FILE]
+                        [--remote-form-state-plan-sha256 REMOTE_FORM_STATE_PLAN_SHA256]
+                        [--remote-form-public-state-plan-sha256 REMOTE_FORM_PUBLIC_STATE_PLAN_SHA256]
+                        [--remote-form-cookie-file REMOTE_FORM_COOKIE_FILE]
+                        [--remote-form-cookie-sha256 REMOTE_FORM_COOKIE_SHA256]
+                        [--desktop-vision]
+                        [--browser-manifest BROWSER_MANIFEST]
+                        [--vision-engine {disabled,bonsai,fixture}]
+                        [--synthetic-learning-stream-dir SYNTHETIC_LEARNING_STREAM_DIR]
+                        [--bonsai-manifest BONSAI_MANIFEST]
+
+Authenticated loopback-only AOS desktop console
+
+options:
+  -h, --help            show this help message and exit
+  --port PORT
+  --workspace WORKSPACE
+  --database DATABASE
+  --desktop-manifest DESKTOP_MANIFEST
+                        Explicit private pin for the isolated desktop runtime
+  --trajectory-database TRAJECTORY_DATABASE
+  --web-profiles-root WEB_PROFILES_ROOT
+  --web-task-root WEB_TASK_ROOT
+  --web-form-plan-root WEB_FORM_PLAN_ROOT
+  --web-form-value-root WEB_FORM_VALUE_ROOT
+  --web-form-state-root WEB_FORM_STATE_ROOT
+  --web-route-root WEB_ROUTE_ROOT
+  --web-static-root WEB_STATIC_ROOT
+  --web-readonly-data-root WEB_READONLY_DATA_ROOT
+  --engine {disabled,decider,fixture}
+  --reuse-decider       Reuse pinned Decider within one task; release before
+                        the next task
+  --prewarm-decider     Prepare one expiring CPU-only Decider while idle;
+                        requires --reuse-decider
+  --prewarm-idle-seconds PREWARM_IDLE_SECONDS
+                        Bounded CPU-only idle preparation lifetime; requires
+                        --prewarm-decider
+  --shared-gpu-turns    Opt in to Lab-broker-owned, fixed-profile GPU turns;
+                        requires the trusted local broker service
+  --lab-external-api-url LAB_EXTERNAL_API_URL
+                        Opt in to detached Lab jobs through a bounded loopback
+                        API
+  --lab-external-token-file LAB_EXTERNAL_TOKEN_FILE
+                        Owner-only bearer token file for the detached Lab API
+  --lab-external-suite LAB_EXTERNAL_SUITE
+                        Explicitly allow one exact Lab suite; repeat to add an
+                        allowlisted suite
+  --decider-manifest DECIDER_MANIFEST
+  --model-python MODEL_PYTHON
+  --browser-tasks
+  --desktop-browser     Run the fixed browser form visibly in the owned
+                        desktop
+  --desktop-mcp-manifest DESKTOP_MCP_MANIFEST
+                        Use prepared Playwright MCP for the visible fixed
+                        form; requires --desktop-browser
+  --desktop-navigation-mcp-manifest DESKTOP_NAVIGATION_MCP_MANIFEST
+                        Use prepared Playwright MCP only for fixed local
+                        navigation; preserve the form transport
+  --desktop-staging-mcp-manifest DESKTOP_STAGING_MCP_MANIFEST
+                        Opt in to the fixed synthetic local staging workflow;
+                        never enables real-site access
+  --staging-fixture-port STAGING_FIXTURE_PORT
+                        Pin the local staging HTTP proxy port for an isolated
+                        test; requires staging MCP
+  --remote-entry-mcp-manifest REMOTE_ENTRY_MCP_MANIFEST
+                        Opt in to one confirmed read-only remote HTTPS entry
+                        on the owned MCP desktop
+  --remote-entry-profile-sha256 REMOTE_ENTRY_PROFILE_SHA256
+                        Exact registered remote profile hash for the one-entry
+                        task
+  --remote-entry-task-file REMOTE_ENTRY_TASK_FILE
+                        Private canonical web task contract for the one-entry
+                        task
+  --remote-entry-task-sha256 REMOTE_ENTRY_TASK_SHA256
+                        Optional exact SHA-256 confirmation of the private
+                        remote task file
+  --remote-routes-plan-file REMOTE_ROUTES_PLAN_FILE
+                        Private canonical ordered HTTPS route plan for
+                        separate per-route approvals
+  --remote-routes-plan-sha256 REMOTE_ROUTES_PLAN_SHA256
+                        Exact SHA-256 confirmation of the private route plan
+  --remote-static-assets-plan-file REMOTE_STATIC_ASSETS_PLAN_FILE
+                        Private canonical exact HTTPS JS/CSS bundle plan
+  --remote-static-assets-plan-sha256 REMOTE_STATIC_ASSETS_PLAN_SHA256
+                        Exact SHA-256 confirmation of the private static asset
+                        plan
+  --remote-route-review-source-database REMOTE_ROUTE_REVIEW_SOURCE_DATABASE
+                        Owner-only historical route trajectory database under
+                        data
+  --remote-route-review-site-store REMOTE_ROUTE_REVIEW_SITE_STORE
+                        Owner-only reviewed page draft store under data
+  --remote-route-review-store REMOTE_ROUTE_REVIEW_STORE
+                        Owner-only route review store under data
+  --remote-route-review-sha256 REMOTE_ROUTE_REVIEW_SHA256
+                        Exact metadata review record to consult only after
+                        fresh route readback
+  --remote-json-review-source-database REMOTE_JSON_REVIEW_SOURCE_DATABASE
+                        Owner-only historical JSON-bundle trajectory database
+                        under data
+  --remote-json-review-site-store REMOTE_JSON_REVIEW_SITE_STORE
+                        Owner-only JSON page draft store under data
+  --remote-json-review-store REMOTE_JSON_REVIEW_STORE
+                        Owner-only JSON metadata review store under data
+  --remote-json-review-sha256 REMOTE_JSON_REVIEW_SHA256
+                        Exact JSON metadata review record to recheck after
+                        browser readback
+  --remote-form-plan-file REMOTE_FORM_PLAN_FILE
+                        Private canonical public HTTPS form plan
+  --remote-form-plan-sha256 REMOTE_FORM_PLAN_SHA256
+                        Exact SHA-256 confirmation of the private form plan
+  --remote-form-field-name REMOTE_FORM_FIELD_NAME
+                        Exact public HTTPS form field name
+  --remote-form-value-file REMOTE_FORM_VALUE_FILE
+                        Private owner-only UTF-8 form value; never put the
+                        value on argv
+  --remote-form-fields-file REMOTE_FORM_FIELDS_FILE
+                        Private canonical ordered HTTPS form fields; never put
+                        values on argv
+  --remote-form-fields-sha256 REMOTE_FORM_FIELDS_SHA256
+                        Exact SHA-256 confirmation of the private ordered
+                        fields file
+  --remote-form-public-plan-sha256 REMOTE_FORM_PUBLIC_PLAN_SHA256
+                        Separate exact public target plan grant
+  --remote-form-state-plan-file REMOTE_FORM_STATE_PLAN_FILE
+                        Private canonical state readback plan for the exact
+                        HTTPS form
+  --remote-form-state-plan-sha256 REMOTE_FORM_STATE_PLAN_SHA256
+                        Exact SHA-256 confirmation of the private state plan
+  --remote-form-public-state-plan-sha256 REMOTE_FORM_PUBLIC_STATE_PLAN_SHA256
+                        Separate exact public state readback grant
+  --remote-form-cookie-file REMOTE_FORM_COOKIE_FILE
+                        Private owner-only static Cookie request value for the
+                        exact public form
+  --remote-form-cookie-sha256 REMOTE_FORM_COOKIE_SHA256
+                        Exact SHA-256 confirmation of the private Cookie value
+  --desktop-vision      Run the fixed vision canvas visibly in the owned
+                        desktop
+  --browser-manifest BROWSER_MANIFEST
+  --vision-engine {disabled,bonsai,fixture}
+  --synthetic-learning-stream-dir SYNTHETIC_LEARNING_STREAM_DIR
+                        Permit per-task opt-in synthetic metadata only in this
+                        private outbox
+  --bonsai-manifest BONSAI_MANIFEST

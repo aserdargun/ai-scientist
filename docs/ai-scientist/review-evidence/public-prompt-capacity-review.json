@@ -1,0 +1,13 @@
+{
+  "schema": "public-prompt-capacity-review.v1",
+  "scope": "Actual offline pinned tokenizer and production task-card method, 27 public tasks, optimistic zero-valued unmeasured score placeholders. No GPU/model or scoring.",
+  "task_count": 27,
+  "suite_manifest_sha256": "7a7ba9fad34c36227d125c9a93c45c0aeb940841e8dd35cbba408e4cfe3ecbef",
+  "prompt_sha256": "7c6adcad07fcdc417c78063ab28bc314608686022d91e7f58aa4087699ea3710",
+  "prompt_tokens": [
+    4259
+  ],
+  "current_profile_context_tokens": 2048,
+  "fits_current_profile": false,
+  "driver_sha256": "93a6f6800d190371be79056abc93b28795f767f098e8fabef55be8b2ad663fca"
+}

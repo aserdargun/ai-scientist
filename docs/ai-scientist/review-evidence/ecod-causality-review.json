@@ -1,0 +1,128 @@
+{
+  "checked_at": "2026-09-24T14:57:04.527070+00:00",
+  "upstream": {
+    "commit": "109bdfd14d337875c707ce33c50d168dc84d756c",
+    "files": {
+      "ecod.py": {
+        "url": "https://raw.githubusercontent.com/yzhao062/pyod/109bdfd14d337875c707ce33c50d168dc84d756c/pyod/models/ecod.py",
+        "sha256": "fc84ebe8607b93625da201d38c9e566006297209a307e110e9b93cc8070f86cf",
+        "bytes": 10755
+      },
+      "stat_models.py": {
+        "url": "https://raw.githubusercontent.com/yzhao062/pyod/109bdfd14d337875c707ce33c50d168dc84d756c/pyod/utils/stat_models.py",
+        "sha256": "b9f3cd49d3559dc710b2d7668b430f2a484923675a3b033bd5ff3ac35bd313be",
+        "bytes": 7630
+      },
+      "LICENSE": {
+        "url": "https://raw.githubusercontent.com/yzhao062/pyod/109bdfd14d337875c707ce33c50d168dc84d756c/LICENSE",
+        "sha256": "2aad003d1faca304e013f82e5088e8cb1c364470d4755e1e2175922a9872bf56",
+        "bytes": 1313
+      }
+    }
+  },
+  "scope": "Pinned upstream ECOD decision_function plus its actual ECDF helper, compiled in isolation after source inspection; n_jobs=1. This is a baseline architecture counterexample, not production adapter or full PyOD package acceptance.",
+  "fixture": {
+    "train": [
+      [
+        -5.0
+      ],
+      [
+        -4.0
+      ],
+      [
+        -3.0
+      ],
+      [
+        -2.0
+      ],
+      [
+        -1.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        2.0
+      ],
+      [
+        3.0
+      ],
+      [
+        4.0
+      ],
+      [
+        5.0
+      ]
+    ],
+    "eval_original": [
+      [
+        -0.5
+      ],
+      [
+        0.5
+      ],
+      [
+        1.5
+      ],
+      [
+        2.0
+      ],
+      [
+        3.0
+      ],
+      [
+        4.0
+      ],
+      [
+        5.0
+      ]
+    ],
+    "eval_changed_suffix": [
+      [
+        -0.5
+      ],
+      [
+        0.5
+      ],
+      [
+        1.5
+      ],
+      [
+        -50.0
+      ],
+      [
+        -40.0
+      ],
+      [
+        -30.0
+      ],
+      [
+        -20.0
+      ]
+    ],
+    "unchanged_prefix_rows": 3
+  },
+  "original_prefix_scores": [
+    1.0986122886681096,
+    0.8109302162163288,
+    0.6931471805599453
+  ],
+  "changed_prefix_scores": [
+    0.6931471805599453,
+    0.9444616088408515,
+    1.2809338454620642
+  ],
+  "max_prefix_difference": 0.587786664902119,
+  "relative_prefix_difference": 0.5350264792820728,
+  "unchanged_prefix_confirmed": true,
+  "causality_counterexample_reproduced": true,
+  "source_sha256": {
+    "ecod.py": "fc84ebe8607b93625da201d38c9e566006297209a307e110e9b93cc8070f86cf",
+    "stat_models.py": "b9f3cd49d3559dc710b2d7668b430f2a484923675a3b033bd5ff3ac35bd313be",
+    "LICENSE": "2aad003d1faca304e013f82e5088e8cb1c364470d4755e1e2175922a9872bf56"
+  },
+  "script_sha256": "2df05939db8db18924e0dda962de4a4e985fc3c4f09410ac7e6c5d715f51980e"
+}

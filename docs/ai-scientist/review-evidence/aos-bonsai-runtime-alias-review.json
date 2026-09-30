@@ -1,0 +1,121 @@
+{
+  "scope": "Read-only runtime symlink diagnosis. Target bytes are not rehashed by this metadata check; failed adapter validator is separate evidence.",
+  "manifest_sha256": "3773305ac067780330124b658081835e88895dec3c7068dfa12e771d7a4351b1",
+  "aliases": [
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-base.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-base.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-base.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-base.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-cpu.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-cpu.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-cpu.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-cpu.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-cuda.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-cuda.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-cuda.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-cuda.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-rpc.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-rpc.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml-rpc.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml-rpc.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libggml.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libggml.so.0.21.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libllama-common.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libllama-common.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libllama-common.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libllama-common.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libllama.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libllama.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libllama.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libllama.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libmtmd.so",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libmtmd.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    },
+    {
+      "relative": "llama-prism-b10709-9a9394a/libmtmd.so.0",
+      "resolved_relative": "llama-prism-b10709-9a9394a/libmtmd.so.0.2.0",
+      "contained": true,
+      "target_manifested": true,
+      "expected_digest_equals_target": true
+    }
+  ],
+  "checks": {
+    "sixteen_contained_pinned_aliases": true
+  }
+}

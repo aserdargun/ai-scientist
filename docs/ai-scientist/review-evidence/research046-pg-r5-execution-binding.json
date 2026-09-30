@@ -1,0 +1,21 @@
+{
+  "schema": "research046-pg-execution-binding.v1",
+  "attempt": "r5",
+  "session_id": 88012,
+  "launch_chunk": "197d23",
+  "final_chunk": "296b6c",
+  "process_exit_code": 0,
+  "service_runtime_seconds": 89.34,
+  "memory_peak_mb": 199,
+  "swap_bytes": 0,
+  "evidence": "research-integration-046-pg-9b5ee8a1e12f.json",
+  "evidence_sha256": "1ceb8436b791aa8dfadbcdbd3da6a8d61adc536fd67a641ab23df77157c88be9",
+  "migration_head": "0030_director_resume",
+  "test_passed_count": 33,
+  "tests_executed": 33,
+  "source_matches_snapshot": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "source_freeze_sha256": "4a4da234728c3532315f57fc2a627ed07639161c97e0a17ba9ea0949ba4bdb87",
+  "scope": "Real isolated PostgreSQL roles on synthetic ledger fixtures, including actual six-argument abandoned-work helper RPC before/after takeover. No actual OS Director restart, model, AOS or main DB mutation."
+}

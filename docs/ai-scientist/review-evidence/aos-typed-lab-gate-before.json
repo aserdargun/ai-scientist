@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-09-24T21:13:20.365846+00:00",
+  "scope": "Lab full quality gate invoked under an owned bounded systemd unit; environment setup failure, not a successful gate.",
+  "exit_code": 1,
+  "failure_stage": "uv build --wheel",
+  "error_type": "FileNotFoundError",
+  "missing_executable": "uv",
+  "cause": "Review unit PATH omitted /home/cachyos/.local/bin, where the installed uv executable resides.",
+  "observed_pytest": "176 passed, 11 deselected",
+  "observed_mypy": "63 source files passed",
+  "quality_gate_record_written": false,
+  "resolution": "Rerun the unchanged full gate with the actual uv directory on PATH."
+}

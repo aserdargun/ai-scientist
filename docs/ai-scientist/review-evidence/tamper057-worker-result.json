@@ -1,0 +1,38 @@
+{
+  "run_id": "47013410-a351-49e0-9ecc-5288ea7abf19",
+  "baseline_actual_scores": 9,
+  "rejections": [
+    {
+      "path": "harness/VERSION",
+      "reason": "harness_hash_mismatch",
+      "verdict": "REJECT",
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "lab/scorer/service.py",
+      "reason": "harness_hash_mismatch",
+      "verdict": "REJECT",
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "ops/sandbox-image.lock",
+      "reason": "harness_hash_mismatch",
+      "verdict": "REJECT",
+      "no_new_scores_or_jobs": true
+    },
+    {
+      "path": "docker/sandbox/requirements.txt",
+      "reason": "harness_hash_mismatch",
+      "verdict": "REJECT",
+      "no_new_scores_or_jobs": true
+    }
+  ],
+  "strict_pairs": 7,
+  "harness_restored": true,
+  "owner": {
+    "run_id": "47013410-a351-49e0-9ecc-5288ea7abf19",
+    "generation": 1,
+    "invocation_id": "7484fc576c2d4966942fe7a1e0f3bf75",
+    "execution_sha256": "1f0c996eb1872a36824af76acba5041ac0ab4cbc3e91120bc751d7868bc7c7f2"
+  }
+}

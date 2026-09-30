@@ -1,0 +1,56 @@
+{
+  "schema": "resume054-current-installation.v1",
+  "observed_at": "2026-09-29T19:32:53.211394+00:00",
+  "restore_execution": {
+    "session": 21249,
+    "launch_chunk": "d5a73e",
+    "final_chunk": "700659",
+    "exit_code": 0
+  },
+  "units": {
+    "api": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "InvocationID": "72f855ceb8b94df2b3f88218532b6f8c",
+      "MainPID": "43926",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-api.service",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    },
+    "console": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "InvocationID": "b6cf1c8f600946748985ff92662828a4",
+      "MainPID": "43977",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-console.service",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    },
+    "director-drain": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "InvocationID": "8b45431770224aa3b3e7e233d56ffa8a",
+      "MainPID": "43974",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service",
+      "WorkingDirectory": "/home/cachyos/ai-scientist"
+    }
+  },
+  "active_run_jobs": [],
+  "old_dispatch_units": [
+    {
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "InvocationID": "",
+      "MainPID": "0",
+      "ControlGroup": "",
+      "WorkingDirectory": ""
+    }
+  ],
+  "historical_restore_not_current_evidence": true,
+  "old_resume_unit": {
+    "LoadState": "not-found",
+    "ActiveState": "inactive",
+    "InvocationID": "",
+    "MainPID": "0",
+    "ControlGroup": "",
+    "WorkingDirectory": ""
+  }
+}

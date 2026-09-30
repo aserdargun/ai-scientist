@@ -1,0 +1,35 @@
+{
+  "schema": "local-qwen-025-outcome.v1",
+  "session_id": 54140,
+  "actual_exit_code": 1,
+  "scope": "Actual S2 proposal probe interrupted; no proposal/model acceptance.",
+  "record_sha256": "6c4e3884b082815bd131ffab5cd877c0eaa71c62f25f57c1ec6df18fe4fe1559",
+  "elapsed_seconds": 100.7467941089999,
+  "foreign_samples": [
+    {
+      "elapsed_seconds": 90.68799073300033,
+      "consumers": [
+        {
+          "pid": 3196279,
+          "process_name": "/home/cachyos/aos/models/bonsai-runtime-prism-b10709-9a9394a/llama-prism-b10709-9a9394a/llama-server",
+          "used_mib": 210.0,
+          "start_ticks": 10558976,
+          "boot_id": "4d7ebeb7-1745-4ea0-9200-6e80c47df90e",
+          "uid": 1000,
+          "comm": "llama-server",
+          "cgroup": "0::/user.slice/user-1000.slice/session-28.scope",
+          "identity_readable": true,
+          "executable": "/home/cachyos/aos/models/bonsai-runtime-prism-b10709-9a9394a/llama-prism-b10709-9a9394a/llama-server",
+          "existing_display_exemption": false
+        }
+      ]
+    }
+  ],
+  "final_gpu_mib": 62.0,
+  "source_unchanged": true,
+  "runtime_unchanged": true,
+  "owned_models_drained": true,
+  "foreign_process_stopped": false,
+  "ticket_state": "active retained in private review DB; no fabricated completion",
+  "gpu_repetition": "Pending live AOS coordination; independent CPU work continues."
+}

@@ -1,0 +1,69 @@
+Running as unit: training-maintenance-check-proof-1790335898.service
+All checks passed!
+..................                                                       [100%]
+18 passed in 0.04s
+Success: no issues found in 6 source files
+************* Module lab.training.worker
+lab/training/worker.py:1:0: C0302: Too many lines in module (1033/1000) (too-many-lines)
+lab/training/worker.py:224:8: R1702: Too many nested blocks (6/5) (too-many-nested-blocks)
+************* Module lab.training.runtime_paths
+lab/training/runtime_paths.py:39:0: R0912: Too many branches (14/12) (too-many-branches)
+lab/training/runtime_paths.py:1:0: R0801: Similar lines in 2 files
+==lab.training.qlora_step_worker:[65:71]
+==lab.training.worker:[412:418]
+                "unit",
+                "pid",
+                "start_ticks",
+                "boot_id",
+                "invocation_id",
+                "cgroup", (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
+
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: systemd is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: run is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: binary is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: argv is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: pinned is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: executable is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: metadata is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: script is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: deterministic is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: synthetic is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: input is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: systemd is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: Python is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: executables is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: only is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: fixed is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: systemctl is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: binary is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: and is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: strict is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: unit is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: allowlist is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: exact is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: generation is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: just is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: revalidated is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: exact is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: generation is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: was is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: just is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: revalidated is not a test name or id, ignoring
+COMMAND_EXIT_CODES ruff=0 pytest=0 mypy=0 pylint=0 bandit=0
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 5.547s
+             CPU time consumed: 2.830s
+                   Memory peak: 99.9M (swap: 0B)
+OUTER_EXIT_CODE=0

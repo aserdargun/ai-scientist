@@ -1,0 +1,64 @@
+{
+  "base_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "correction": "The earlier field named healthy_unmasked counted all unmasked rows, including anomaly-positive event rows. This record replaces that ambiguous count with total unmasked, negative/healthy unmasked, and positive event support.",
+  "implementation": {
+    "feature_policy": "care_named_physical_averages_train_status_only.v3",
+    "new_public_data_sha256": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "new_public_suite_sha256": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "old_public_data_sha256": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021",
+    "old_public_suite_sha256": "8c1a037dae49022949ea0a02b004179389f2349fbc7ccd4b4484a64a99f2a992",
+    "public_suite_id": "public-ad-v1",
+    "public_suite_version": 3,
+    "review_driver_sha256": "3049163305b574035bf64204b098c22473894101ca93e0f4f18db6849aa3ffea",
+    "split_policy": "care_Adev_train_healthy_embargo_1day_prediction_status_eval_ignored.v3",
+    "task_session_suffix": "farm-A-status-eval-ignored.v3",
+    "test_public_data_sha256": "de78279f0df5234fad77419f3e18825c5f168c9a0e6a9fb7563c593bcb3099b4"
+  },
+  "limitations": [
+    "This verifies source materialization and Scorer-only exposure semantics, not public Scorer execution or holdout acceptance.",
+    "The status policy correction is specific to CARE Farm A. It must not be generalized to Farms B/C.",
+    "All 22 CARE Farm A events remain present; no candidate scores informed eligibility."
+  ],
+  "schema": "care-farm-a-status-policy-review.v2",
+  "scope": "Read-only source interpretation followed by all-22 CARE Farm A materialization. No task was removed, relabeled, window-selected, or scored.",
+  "source": {
+    "archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+    "dataset_record_url": "https://zenodo.org/records/15846963",
+    "dataset_version": "v6",
+    "interpretation": "Zenodo v6 says Farm A status_type_id derives from the EDP failure logbook and is for filtering training data. Farm A evaluation therefore ignores status codes; source-grid gaps and missing selected features remain masked. Training still filters to statuses 0 and 2.",
+    "local_readme_member": "CARE_To_Compare/README.txt",
+    "local_readme_sha256": "0bc9fa689cb28a6fa1439d15047f7f6b77beca53614a304bc86494f8dd6b9456",
+    "official_note_excerpt_under_25_words": "In wind farm A status_type_id labels can be ignored while evaluating prediction time frames of error events with metrics like the CARE-score.",
+    "related_author_faq_interpretation": "The author-maintained FAQ says evaluation-time status exclusion applies to Farms B/C, not Farm A.",
+    "related_author_faq_url": "https://aefdi.github.io/EnergyFaultDetector/care2compare_faq.html",
+    "source_manifest_sha256": "55433394759fee3782eb51c8350446561268acd837f2d44624d07a8b1505ec20"
+  },
+  "supersedes_evidence": "care-farm-a-status-policy-v3-review.json",
+  "validation": {
+    "all_22_materialization": {
+      "actual_exit_code": 0,
+      "all_nrm_have_healthy_exposure": true,
+      "all_pdm_have_healthy_exposure": true,
+      "all_pdm_have_unmasked_event_support": true,
+      "all_tasks_have_no_positive_masked_points": true,
+      "command": "systemd-run --user --pipe --wait --collect; Python driver --repository-root /home/cachyos/ai-scientist",
+      "cpu_seconds": 9.324,
+      "driver": "docs/ai-scientist/review-evidence/review_care_farm_a_status_v3.py",
+      "memory_peak": "410.9M",
+      "nrm_count": 10,
+      "output_file": "docs/ai-scientist/review-evidence/care-farm-a-status-policy-v3-materialization-output-corrected.json",
+      "output_sha256": "3a0a9a31910a40d8738cd7bbd8988a01ccdac604e2a9497054cc63de752e89b8",
+      "pdm_count": 12,
+      "runtime_seconds": 9.411,
+      "swap_peak": "0B",
+      "systemd_unit": "swapp-care-mask-v3-receipt-1790330614.service",
+      "task_count": 22
+    },
+    "diff_check_exit_code": 0,
+    "ruff_command": "ruff check harness/public_data.py lab/director/public_suite.py tests/test_public_data.py",
+    "ruff_exit_code": 0,
+    "synthetic_tests_command": "pytest tests/test_public_data.py tests/test_suite_manifest.py",
+    "synthetic_tests_exit_code": 0,
+    "synthetic_tests_passed": 10
+  }
+}

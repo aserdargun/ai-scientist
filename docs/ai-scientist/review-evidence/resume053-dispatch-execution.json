@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "lab.cli",
+    "director",
+    "dispatch-one",
+    "--run-id",
+    "fac65252-e14d-4014-9744-333b88083963"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 136.2080190370034
+}

@@ -1,0 +1,9 @@
+Running as unit: swapp-luna-strict-mount-negative-7c8341a90c944e3a9bb096f28fd81d13.service
+namespace_root_uid 65534 mode 0o555
+expected_validation_result GPU runtime path has an unsafe directory component
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 33ms
+             CPU time consumed: 21ms
+                   Memory peak: 5.9M (swap: 0B)
+probe_command_exit_code=0 (0 means expected fail-closed rejection observed)

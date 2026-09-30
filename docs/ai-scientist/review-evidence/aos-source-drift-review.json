@@ -1,0 +1,80 @@
+{
+  "checked_at": "2026-09-24T09:49:18.984526+00:00",
+  "purpose": "Read-only drift review before preparing opt-in integration patches; these hashes are not locks.",
+  "files": [
+    {
+      "path": "src/aos/contracts.py",
+      "baseline_sha256": "16df5713c5ed5461eaee460543c2c6f7a34e4c939afa7ef28f133197984ac2af",
+      "current_sha256": "16df5713c5ed5461eaee460543c2c6f7a34e4c939afa7ef28f133197984ac2af",
+      "changed": false
+    },
+    {
+      "path": "src/aos/computer.py",
+      "baseline_sha256": "08bad86d03ff08bb4a4981738a2121e06b9df78cc668eb99972d439d041817bc",
+      "current_sha256": "08bad86d03ff08bb4a4981738a2121e06b9df78cc668eb99972d439d041817bc",
+      "changed": false
+    },
+    {
+      "path": "src/aos/desktop_tasks.py",
+      "baseline_sha256": "6a834c78751fc5280e190dc6809ed4c51835d1bf7cee3546a3b7c4bbf6f6f3cd",
+      "current_sha256": "bc9d45cb02dee8b82fc35d8cbca5ac823f48e65398fc90ae6f57a9d491e5a517",
+      "changed": true
+    },
+    {
+      "path": "src/aos/decision.py",
+      "baseline_sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "current_sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "changed": false
+    },
+    {
+      "path": "src/aos/reusable_decider.py",
+      "baseline_sha256": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+      "current_sha256": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+      "changed": false
+    },
+    {
+      "path": "src/aos/supervisor.py",
+      "baseline_sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "current_sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "changed": false
+    },
+    {
+      "path": "src/aos/vision.py",
+      "baseline_sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "current_sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "changed": false
+    },
+    {
+      "path": "services/decider/worker.py",
+      "baseline_sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "current_sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "changed": false
+    },
+    {
+      "path": "src/aos/task_intent.py",
+      "baseline_sha256": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+      "current_sha256": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+      "changed": false
+    },
+    {
+      "path": "src/aos/goal_plan.py",
+      "baseline_sha256": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+      "current_sha256": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+      "changed": false
+    },
+    {
+      "path": "src/aos/task_plan.py",
+      "baseline_sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "current_sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "changed": false
+    },
+    {
+      "path": "src/aos/desktop_console.py",
+      "baseline_sha256": "fba9416cd6d5d54faac0b625e1c56749b32dc12aa269b8a63e2899d5df6728f1",
+      "current_sha256": "b3450e139ee69a845bec9b18f38e866f79b57a60a430cfe107d174edfaaae65f",
+      "changed": true
+    }
+  ],
+  "changed_count": 2,
+  "integration_source_modified_by_this_check": false
+}

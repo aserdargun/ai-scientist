@@ -1,0 +1,12 @@
+{
+  "schema": "principal-verify-main-integration.v1",
+  "patch_sha256": "bfe902e70040195cba1730affef9683fc1a3a9766b737c7f7a6c6d8a7ff6acd7",
+  "source_sha256": {
+    "lab/llm/gpu_scheduler.py": "f2c5e55016b37f5ba34c50e59a8ec3bb49e6146dce5ae39d9733f2721e335b2a",
+    "tests/test_gpu_scheduler.py": "cd1b419341d18659961fb84c29e74406a3ec1031dc5dc694b8467214925b5de5"
+  },
+  "receipt_sha256": "8159eee9bec4575b87ed4a154a2d8c240691560debbd3800b7ce4e5e6d61a83e",
+  "source_parity": "2/2",
+  "evidence_hashes_verified": 3,
+  "runtime_scope": "real canonical systemd resolve and verify, no model or DB"
+}

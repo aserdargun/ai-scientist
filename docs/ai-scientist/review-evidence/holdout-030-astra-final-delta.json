@@ -1,0 +1,20 @@
+{
+  "schema": "holdout-030-astra-final-delta.v1",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_approval": "No blocker found in narrow final gate changes and test extension.",
+  "changes": [
+    "Explicit RuntimeError keeps required reservation guard active under optimized Python.",
+    "Secondary failure publication error adds only constant privacy-safe diagnostic note and reraises original error.",
+    "Final live test repeats full loop.run after durable marker and verifies unchanged result, state/marker receipts, checkpoint count and reservation/quota/result counters."
+  ],
+  "source_sha256": {
+    "lab/director/loop.py": "7601ba7b569ccff67f2df58372cb168b775a40fae9c3a614f805d543f35d841f",
+    "lab/scorer/holdout.py": "af4aab88f73a556fb949d9a9107509e0eefa260bee0542b8d5678ee50eb85cd9",
+    "tests/test_postgres_holdout030_journal.py": "80ea2cbb76e5e1809f9bd54e9368585558bbbc1c29577995ab688840848fec9a"
+  },
+  "actual_final_pg_evidence": "holdout-030-recovery-sql-22b411132ba7.json",
+  "scope": "Actual SQL and injected exception-boundary replay; no OS death or full scientific holdout acceptance."
+}

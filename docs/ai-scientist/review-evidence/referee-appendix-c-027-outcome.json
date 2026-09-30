@@ -1,0 +1,17 @@
+{
+  "schema": "referee-reference-command-outcome.v1",
+  "actual_exit_code": 0,
+  "tool_chunk_id": "8f13c4",
+  "elapsed_seconds": 0.134872161,
+  "unit": "swapp-referee-appendix-027-v2.service",
+  "memory_max_bytes": 536870912,
+  "memory_swap_max": 0,
+  "cpu_quota_percent": 50,
+  "tasks_max": 32,
+  "runtime_max_seconds": 60,
+  "result_sha256": "041da97f87ae56b20ee819c5f73e4d65fa74144ace296216a22612ec4d4a10f4",
+  "harness_sha256": "0c96264015cf32f8be9f7d4ef1de0572987203e97b1d044f69e9af9af780cb71",
+  "passed_cases": 6,
+  "maximum_finite_absolute_difference_from_original": 3.469446951953614e-18,
+  "scope": "Exact Appendix C [2] deterministic fixtures. Six required verdict assertions and the printed four-decimal finite outputs match; guard REJECT uses the reviewed strict-JSON null replacement. Replay bit parity is a separate production-run check. No generalization or public/model acceptance."
+}

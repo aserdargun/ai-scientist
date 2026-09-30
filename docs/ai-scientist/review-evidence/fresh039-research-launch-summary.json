@@ -1,0 +1,41 @@
+{
+  "schema": "fresh039-research-launch-safe-summary.v1",
+  "date": "2026-09-30",
+  "status": "launched_running",
+  "actual_session": 2280,
+  "active_observation_chunk": "642cfe",
+  "completed": false,
+  "terminal_exit_code": null,
+  "provider": "fake-json",
+  "real_model_acceptance": false,
+  "runtime_version": "0.39.0",
+  "source_driver_sha256": "6878f8f046255db0fd2b690b776d665b64f5be9292f206f09b05d749d781fff9",
+  "research_admission_sha256": "00854324e0cc607bc7e23678b764bb5be4a2377206b67c5faa96769d7a5ed5f1",
+  "launch": {
+    "durable_stdout_stderr": true,
+    "log_permissions": "0600",
+    "pipe_transport": false,
+    "parent_memory_max_bytes": 2147483648,
+    "parent_swap_max_bytes": 0,
+    "parent_cpu_quota_percent": 100,
+    "parent_tasks_max": 128,
+    "outer_runtime_max_seconds": 15150,
+    "inner_phase_seconds": 15120,
+    "child_timeout_seconds": 15060,
+    "immutable_run_wall_limit_seconds": 14400,
+    "host_available_ram_gib_before_launch": 19.8,
+    "host_free_disk_gib_before_launch": 64.9,
+    "minimum_host_available_ram_gib": 12,
+    "minimum_host_free_disk_gib": 20
+  },
+  "shared_cpu_lock_held_for_research": true,
+  "planned_baseline_cells": 243,
+  "successful_baseline_cells": "not reported by this launch summary",
+  "prior_calibration_outer120_register1_diagnostic_and_setup_failures_retained": true,
+  "M0_10_complete": false,
+  "limits": [
+    "Running status is not successful research or a completed243 baseline proof.",
+    "No real model/GPU, private holdout results, AOS coexistence or scientific acceptance claimed.",
+    "No authentication data, private rows, score values, raw logs or process identity included."
+  ]
+}

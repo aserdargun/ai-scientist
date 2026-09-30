@@ -1,0 +1,19 @@
+{
+  "schema": "holdout-lifecycle-live-evidence-review.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "receipt_sha256": "27ef8715fb1cc61b8513d9277db88bc0e7fee18f9e0bf1e6d880a116104d5b7c",
+  "execution_binding_sha256": "ae0c03cccc941af309a45c52a9fd6fe7c99ca2c3c065d0b8a06265753b43949a",
+  "verdict": "claims_match_actual_evidence",
+  "scope": [
+    "real live worker and candidate container stopped",
+    "authenticated in-process API route uses production recovery service",
+    "bitless terminal failure with unchanged quota and ledger counts"
+  ],
+  "not_proven": [
+    "scientific holdout score",
+    "deployed HTTP service",
+    "independent drain-before-terminal-CAS ordering"
+  ],
+  "next_probe": "DisposableDB-only nonblocking BEFORE UPDATE assertion requires independently observed full-generation drain proof committed in separate schema; nontransactional sequence must show exactly one attempted transition. Absent proof is inconclusive unless independent evidence shows still-live owned resources.",
+  "review_execution": false
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "swapp-review-evidence.v1",
+  "task": "care-calibration-bound-uuid-canonical-wire-followup",
+  "reviewer": "GPT-6 Astra / high",
+  "review_date": "2026-09-27",
+  "execution": false,
+  "decision": "approve_source_for_repeated_isolated_sql_proof_and_integration_gates",
+  "prior_review": "care-calibration-031-lifecycle-r4-source-review.json",
+  "failed_runtime_evidence": "care-calibration-031-pg-688920dc86c4.json",
+  "failure": "Actual isolated PostgreSQL run migrated through 0023 and reached 135-cell finalization, then failed because dataclass asdict retained a UUID in the canonical freeze document. Exit 1; owned container and credentials removed; source and snapshot parity retained.",
+  "source_hashes_start_and_end": {
+    "lab/scorer/care_calibration.py": "3af4d19467be4125b058f05316947bd1de836ef90c838d8f77eac77d4a9f453b",
+    "tests/test_care_baseline_calibration.py": "a5ade83a09517c24b522f59795ec8c91ed2ee199dbd3ece7b2b3ca86e28b5305",
+    "tests/test_postgres_care_calibration.py": "33cebb03e4784ec4f1009e46365c7ca3c7dc9cd379f950c67563cee9a023b790"
+  },
+  "fix_review": {
+    "source": "lab/scorer/care_calibration.py:226",
+    "resolution": "CareBaselineCellReceipt.canonical explicitly converts UUID claim_id to its canonical string, preserves None for historical unbound pure receipts, and rejects other types. It leaves numeric generation and invocation text intact. No generic default=str or permissive coercion was introduced.",
+    "hash_boundary": "Freeze uses receipt.canonical; finalize_care_calibration reconstructs the database UUID and other typed receipt fields before invoking that same freeze path. The conversion therefore covers the actual failing DB readback path.",
+    "regression_source": "tests/test_care_baseline_calibration.py:175",
+    "regression": "All 135 receipts have bound UUIDs. Test freezes, serializes canonical receipt bytes, restores UUIDs from JSON, refreezes and checks byte/hash parity. It also checks that changing claim ID, generation or worker invocation changes the freeze hash. Cell identity is used to match sorted receipts.",
+    "blocking_findings": []
+  },
+  "verification": {
+    "worker_reported": "18 pure tests and static checks exit 0; intermediate test row-order failure was retained in the work record.",
+    "reviewer_execution": false,
+    "actual_postgresql_rerun": "pending",
+    "other_source_hashes": "Unchanged from sealed R4 review, including 0023, supervisor, worker and final SQL fixture."
+  },
+  "integration_review": {
+    "main_commit": "59ac3b059f0013ad2fb947cbc8820d891e244257",
+    "private_base": "7ba1a1b3d296b52c2287cabd19c08ca2767680c8",
+    "overlap_check": "git diff between those commits is empty for lab/cli.py, lab/db/schema.py, lab/scorer/care_holdout.py and lab/scorer/holdout.py.",
+    "decision": "Explicit frozen-file copy is feasible without overwriting Thompson source changes.",
+    "manifest": [
+      "lab/cli.py",
+      "lab/db/schema.py",
+      "lab/scorer/care_holdout.py",
+      "lab/scorer/holdout.py",
+      "lab/db/migrations/versions/0022_care_baseline_calibration.py",
+      "lab/db/migrations/versions/0023_care_calibration_execution.py",
+      "lab/scorer/care_calibration.py",
+      "lab/scorer/care_calibration_supervisor.py",
+      "lab/scorer/care_calibration_worker.py",
+      "tests/test_care_baseline_calibration.py",
+      "tests/test_postgres_care_calibration.py"
+    ],
+    "conditions": "Verify all destination hashes against the final frozen source manifest, preserve 0022->0021 and 0023->0022 lineage, exclude private notes/runtime/.venv, then run integrated full gate and required image parity. Baseline and restart workers merge their later shared-file changes through root."
+  },
+  "acceptance_limit": "This approves source and regression design. The repeated isolated SQL proof, real calibration/worker lifecycle evidence, Director restart/reconcile and all other open M0/AOS gates remain pending."
+}

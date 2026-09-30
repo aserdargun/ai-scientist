@@ -1,0 +1,26 @@
+{
+  "schema": "tsb_ad_oracle.v1",
+  "created_date": "2026-09-24",
+  "python": "3.12.13",
+  "python_executable": "/home/cachyos/.cache/uv/builds-v0/.tmpBwu5RZ/bin/python",
+  "packages": {
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "scikit-learn": "1.5.2",
+    "joblib": "1.6.0",
+    "threadpoolctl": "3.7.0"
+  },
+  "wheel_url": "https://files.pythonhosted.org/packages/2c/96/c82d82c21802035a09af7e0b933c69ff5613295dd6a3489d9256120cd02a/TSB_AD-1.5-py3-none-any.whl",
+  "wheel_sha256": "4db218b330e8daf845447a714e5367d934d41b67bba4d2310dc41225d962127f",
+  "source_member": "TSB_AD/evaluation/basic_metrics.py",
+  "source_sha256": "1fcddedf5ada1d5221f39ee568c7fddb9e7181bd7e1c19636c2cbecf40c97707",
+  "source_modified": false,
+  "application_imported": false,
+  "generator_sha256": "1f542a4fe00b6aa9c5291b2a3e0222806572f23e463500edebf7258ed8d1b306",
+  "inputs_sha256": "d24cec2291711ac7758c6429a1875eb03a790f3b6f2f4b127f0702c635fcf1b5",
+  "fixture_count": 32,
+  "elapsed_s": 7.2007964520016685,
+  "purpose": "Independent numpy<2 expected VUS values; no application metric used",
+  "command": "OPENBLAS_NUM_THREADS=2 uv run --no-project --python 3.12 --with numpy==1.26.4 --with scipy==1.13.1 --with scikit-learn==1.5.2 docs/ai-scientist/review-evidence/build_tsb_oracle.py",
+  "golden_sha256": "81c559a3449f83b3078fe93ec0b307cf460a2fd848c090c075153eba6791ad44"
+}

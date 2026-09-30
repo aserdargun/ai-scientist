@@ -1,0 +1,83 @@
+{
+  "schema": "public050-terminal-browser-execution.v1",
+  "command": [
+    "flock",
+    "/home/cachyos/ai-scientist/data/runtime/parallel-m0/cpu-check.lock",
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--unit=swapp-public050-browser-terminal",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--property=MemoryMax=512M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=50%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=90",
+    "--setenv=TMPDIR=/home/cachyos/.m0r10",
+    "--setenv=PYTHONPATH=/home/cachyos/.cache/uv/archive-v0/erDyh8-eeLPFRvqx:/home/cachyos/.cache/uv/archive-v0/zb1H4ZkTphJnPKiN",
+    "--setenv=PLAYWRIGHT_BROWSERS_PATH=/home/cachyos/ai-scientist/data/runtime/console-browser",
+    "--setenv=CUDA_VISIBLE_DEVICES=",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/tmp/ai-scientist-public050-browser/check_public050.py",
+    "--terminal"
+  ],
+  "session_id": 83177,
+  "launch_chunk": "eb82e5",
+  "final_chunk": "776afd",
+  "exit_code": 0,
+  "checks_passed": 4,
+  "result": {
+    "schema": "public050-browser-proof.v1",
+    "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+    "checks": {
+      "public_baseline_suite_listed": true,
+      "existing_run_watch_verified": true,
+      "actual_status_visible": true,
+      "terminal_report_download_verified": true
+    },
+    "errors": [],
+    "blocked_requests": [],
+    "terminal_check": "passed",
+    "scope": "Existing run only; console watch allowed; no admission/stop/DB/service action.",
+    "watch_status": 200,
+    "observed_run": {
+      "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+      "origin": "local",
+      "state": "completed",
+      "created_at": "2026-09-27T09:39:30.980346+00:00",
+      "updated_at": "2026-09-27T09:50:43.502682+00:00",
+      "stop_requested": false,
+      "report_sha256": "8cb2abd94ec92fad9079b69cb06bba44adb2a91867fd5699223c47afa15fd6ab"
+    },
+    "purpose_visible": false,
+    "purpose_received": null,
+    "progress_scope": "UI exposes state and timestamps, not independent score count.",
+    "report_summary": {
+      "status": "completed",
+      "score_count": 36,
+      "task_count": 4,
+      "task_plan_count": 36,
+      "calibration_complete": true,
+      "budget_verified": true,
+      "model_usage": {
+        "calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0
+      }
+    },
+    "report_sha256": "8cb2abd94ec92fad9079b69cb06bba44adb2a91867fd5699223c47afa15fd6ab"
+  },
+  "artifacts": {
+    "check_public050.py": "0dd65d05dab701cbd57f175f6ba216b95e18be65128dc5ca42bbc0dbd522b062",
+    "terminal-result.json": "7ceaae66637dc7f02d19da4c94926afd0fe560a29705237b92d48be53ad6aaab",
+    "terminal-suite.png": "cc699efea15b9480efdc326e1ca210f0eb8e41ff95ad964bfa264f9071145588",
+    "terminal-status.png": "c016d27285ca6adc38e9af454367b06bf024606bdad036ae4cbdb24ee1ef2f35",
+    "terminal-status-dom.txt": "f22c17782b4cc7a3fec703b87e437e2c07e11ea3c1d77f11db2fa79913d86c05",
+    "terminal-report.png": "26500c55146946ae8a8254ecdd5c853f4deb80602338265c26b79bd0062f1c76",
+    "report-download.json": "6a6ebfd58edcaec3d5ecdd4a30173adaa55b20ff6ad755aacbb4a5a599bace41",
+    "progress-evidence.json": "475ce79468aa2e74f910797b3eca55c9cefcb01cff73587158b0badfacafaf51"
+  }
+}

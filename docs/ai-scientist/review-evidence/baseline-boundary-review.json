@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-24T16:44:45.471575+00:00",
+  "harness_sha256": "01d2f06369cc4ed63b5611d066be1acc82046d9c960fc5419b04ee70730f77c4",
+  "image": "sha256:7b4a99a985704ab66ff8dd39cf13db257690d20eb8f67a38d58586807be988fc",
+  "checks": {
+    "normal_constant_rejected": true,
+    "candidate_env_override_still_rejected": true,
+    "altered_baseline_bytes_rejected": true,
+    "exact_reference_constant_allowed": true
+  },
+  "scope": "Four adversarial/positive Docker guard fixtures for the baseline constant-score exception. Not scientific experiment measurements or Scorer/Director/model/AOS acceptance.",
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "356c8d95cd909d6577c797cafb02f14b033d0f921017c6f89865ea0691694d75",
+  "command": "OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 .venv/bin/python docs/ai-scientist/review-evidence/review_baseline_boundary.py"
+}

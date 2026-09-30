@@ -1,0 +1,38 @@
+{
+  "schema": "integrated-recovery-readonly.v1",
+  "scope": "Read-only production CLI against historical main DB rows; no apply/finalize/backfill/model calls.",
+  "records": [
+    {
+      "run_id": "b54c9282-ca69-4deb-9e28-ef50e36bf21c",
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "director",
+        "recovery",
+        "inspect",
+        "--run-id",
+        "b54c9282-ca69-4deb-9e28-ef50e36bf21c"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"active_score_job_states\": [], \"can_finalize\": false, \"experiment_count\": 5, \"incomplete_experiment_ids\": [], \"invalid_pair_ids\": [\"exp_8bf7e76dd7d3596986277800b054e3ea\", \"exp_110af113c7d85ecdb98e26d4b678dc69\", \"exp_13ec50e375d654c2a94b8656a518255f\", \"exp_0b68a8c890665a54bfd58e2909b34c93\", \"exp_1cce559cbbaa57dca23d73cb151419d8\"], \"missing_pair_ids\": [], \"owner\": null, \"owner_proven_dead\": null, \"payload_sha256\": \"3e5728ef043886f7c3f1f2aa7ede30c964979314a2d865043838218e8dc0d4ee\", \"recovery_blockers\": [\"owner_proof_missing\", \"experiment_trajectory_pair_invalid\"], \"recovery_id\": \"497f7fea-033f-568f-ad2b-d5d951e2e0e0\", \"report_sha256\": null, \"report_valid\": false, \"run_id\": \"b54c9282-ca69-4deb-9e28-ef50e36bf21c\", \"run_state\": \"running\", \"score_completion_count\": null, \"score_task_count\": 44, \"terminal_experiments\": 5}\n",
+      "stderr": ""
+    },
+    {
+      "run_id": "75642033-6e46-4a73-82a9-9e1ecb6066d3",
+      "command": [
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "-m",
+        "lab.cli",
+        "director",
+        "recovery",
+        "inspect",
+        "--run-id",
+        "75642033-6e46-4a73-82a9-9e1ecb6066d3"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"active_score_job_states\": [], \"can_finalize\": false, \"experiment_count\": 2, \"incomplete_experiment_ids\": [\"exp_7bca30b528b6557c9121948a58bca001\"], \"invalid_pair_ids\": [\"exp_2b122d3d53d45d23a247b922fdd67404\"], \"missing_pair_ids\": [\"exp_7bca30b528b6557c9121948a58bca001\"], \"owner\": null, \"owner_proven_dead\": null, \"payload_sha256\": \"e312d06617413529dbab8ae07b9241788652b4078740f6febb1301cefc469058\", \"recovery_blockers\": [\"owner_proof_missing\", \"experiments_nonterminal\", \"experiment_trajectory_pair_missing\", \"experiment_trajectory_pair_invalid\"], \"recovery_id\": \"1653c05d-4807-5368-97d7-df61a5c1f098\", \"report_sha256\": null, \"report_valid\": false, \"run_id\": \"75642033-6e46-4a73-82a9-9e1ecb6066d3\", \"run_state\": \"stop_requested\", \"score_completion_count\": null, \"score_task_count\": 24, \"terminal_experiments\": 1}\n",
+      "stderr": ""
+    }
+  ]
+}

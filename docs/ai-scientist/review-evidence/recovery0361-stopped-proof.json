@@ -1,0 +1,22 @@
+{
+  "run_id": "404d9a45-f1fb-4f91-a842-0edcd44bc1b9",
+  "status": "stopped",
+  "report_sha256": "c44bdfa29a379721f097c9a8f058c3b7650bd6a4ccbbb941bf307a6a9ade9bf5",
+  "api_database_report_equal": true,
+  "generation": 1,
+  "execution": {
+    "session": 45747,
+    "launch_chunk": "a9b856",
+    "final_chunk": "8072fd",
+    "exit_code": 0,
+    "elapsed_seconds": 4.47760671099968
+  },
+  "prior_failure": "release036-stop-closure-failure.json",
+  "no_new_scoring": true,
+  "score_count": 0,
+  "terminal_outcomes": 3,
+  "typed_abandoned_pair": true,
+  "unknown_fit_score_timing": null,
+  "post_verification_chunk": "751fde",
+  "prior_recovery_result_fields": "CLI result includes pre-finalization inspection fields; independent post-check confirms stopped/valid report."
+}

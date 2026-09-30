@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-09-24T12:29:06.183336+00:00",
+  "source_sha256": {
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/schema.py": "13c2d8dade30fca843b2c2ae8bdf449c5f8e6ff8c2294f69ac0a54189f611bd0",
+    "lab/director/task_plan.py": "fa9ec9ec22f6cb95e8b15836804c54378cda1c94c1b95c3f946bea1cf55fa27f",
+    "lab/scorer/jobs.py": "8c79ce183922392c5ac5c021c5fc6606e584601d88680c47e77b137336db1354",
+    "lab/scorer/service.py": "60d3380d0f7dd77c2e66e5874520be277a29dacfc46e19e8f66f4ac73df1b304"
+  },
+  "migration": "0008_terminal_task_outcomes",
+  "legacy_fixture_cleaned": true,
+  "source_unchanged": true,
+  "script_sha256": "47bf3929308b80128b9710ea48443477db30d33c89f6f9908f597002640d28c5",
+  "checks": {
+    "pre_upgrade_score_completion_backfilled": true,
+    "pre_upgrade_score_bytes_unchanged": true,
+    "pre_upgrade_score_cannot_also_terminate": true
+  },
+  "scope": "Legacy 0007 real score survived upgrade unchanged, shared completion backfilled, opposite terminal write denied, exact owned fixture removed. Remaining first-run probe stopped because of a review-script report-key typo.",
+  "all_passed": true
+}

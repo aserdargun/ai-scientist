@@ -1,0 +1,25 @@
+{
+  "admission_status_code": 202,
+  "request": {
+    "budget": {
+      "experiments": 0,
+      "model_tokens": 0,
+      "wall_seconds": 7200
+    },
+    "idempotency_key": "public050-baseline-481a37fa41223f10eaae8368",
+    "program_version": "public-cpu-baseline.v3",
+    "suite": "public-four-source-evt-v1"
+  },
+  "response": {
+    "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+    "state": "queued",
+    "reused": false
+  },
+  "prior_cli_attempt": {
+    "session": 45788,
+    "launch_chunk": "ac18e3",
+    "final_chunk": "a20def",
+    "exit_code": 1,
+    "reason": "Private principals JSON supplied where CLI expects a plaintext token file; no admission. Correct API uses parsed token only in memory."
+  }
+}

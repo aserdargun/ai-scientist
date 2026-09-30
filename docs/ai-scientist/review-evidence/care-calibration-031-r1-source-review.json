@@ -1,0 +1,67 @@
+{
+  "schema": "care-calibration-source-review.v1",
+  "created_at": "2026-09-27T00:11:18.172223+00:00",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "high"
+  },
+  "source_manifest": {
+    "source": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/calibration-031",
+    "base": "7ba1a1b",
+    "files": {
+      "lab/scorer/care_calibration.py": "71ee3778251a42c7bb21fabff093c921f78665547ced10324142ec522a00e968",
+      "lab/scorer/holdout.py": "a3b826d919cd5969df4a92038cb45a67cdbc0421208f763e1e9d3c59c6ca06ee",
+      "lab/db/schema.py": "de47de9c97a33a9ce49ed1e97716c1a17ee2fbe30251a01b091f3f5eb48dfb8d",
+      "lab/db/migrations/versions/0022_care_baseline_calibration.py": "0c9bbf5ee06554797b4ceaefd6dbea1ffef471840040ce1c2519b05465c867a2",
+      "tests/test_care_baseline_calibration.py": "cf7dc025a2e56d734240904e27367e64f73d390e77eed23c2c8180c5c18e1200",
+      "docs/ai-scientist/review-evidence/care-b-calibration-plan.md": "d6265dd198b6434ddf583b4e5efbb743b556497015a027dec9848b6f9015dd45"
+    },
+    "scope": "incomplete initial calibration slice; no runtime or data execution"
+  },
+  "snapshot": "data/runtime/parallel-m0/delivery/calibration-031-r1-review",
+  "status": "correction_required_before_integration",
+  "findings": [
+    {
+      "id": "raw-semantics",
+      "finding": "Cell scorer replaces raw semantics with normalized validation return mapping; production PDM/NRM metric expects raw keys and raises KeyError."
+    },
+    {
+      "id": "definer-owner-privileges",
+      "finding": "Migration revokes Migrator SELECT/UPDATE privileges needed by SECURITY DEFINER registration triggers owned by Migrator."
+    },
+    {
+      "id": "immutable-job-sealing",
+      "finding": "Task/cell/summary inserts do not seal or serialize under job lock against freeze; extra task and summary can later bind a registry task absent from frozen digest."
+    },
+    {
+      "id": "post-deadline-exact-replay",
+      "finding": "Exact already committed freeze/cell retry attempts INSERT before comparing stored receipt, so BEFORE INSERT deadline check rejects idempotent recovery."
+    },
+    {
+      "id": "complete-pre-dispatch-identity",
+      "finding": "Cell preflight omits installed dataset/split/session/family/window/sampling/FitContext fields, permitting changed context work and a durable cell rejected only in reduction."
+    },
+    {
+      "id": "alarm-policy-ordering",
+      "finding": "Receipt validation omits release <= threshold."
+    }
+  ],
+  "present": [
+    "Scorer privacy separation",
+    "Exact-grid reduction"
+  ],
+  "remaining_explicit_scope": [
+    "Durable claims and generation fencing",
+    "Crash-safe budget reservations/accounting",
+    "Supervisor/worker lifecycle",
+    "135-cell scheduling/resume",
+    "CLI/launcher integration"
+  ],
+  "required_evidence": [
+    "Role-separated PostgreSQL migration and ordinary/measured registration",
+    "Real SQL sealing/concurrency and post-deadline exact replay",
+    "Cell path tests exercising both production PDM and NRM metrics"
+  ],
+  "runtime_or_database_or_model_execution": false,
+  "main_integration": false
+}

@@ -1,0 +1,14 @@
+{
+  "test_kind": "deterministic arbitration metadata only; injected clock and successful drain stub; no GPU",
+  "source_sha256": "0643dc61df4d7c62e03a1936322b0865640d4cef273b3d83db2e98b10b4d157c",
+  "parameters": {
+    "default_aging_seconds": 30,
+    "default_queue_timeout_seconds": 300,
+    "lab_priority": 0,
+    "aos_priority": 10,
+    "aos_arrivals_every_seconds": 10
+  },
+  "lab_acquired_before_deadline": false,
+  "aos_completed_calls": 31,
+  "finding": "With allowed priorities and default timeout, the low-priority ticket expires before aging can win; resubmission with a new key resets its age. This fixture does not establish bounded progress for both clients."
+}

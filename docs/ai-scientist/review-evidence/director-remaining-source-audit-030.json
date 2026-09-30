@@ -1,0 +1,76 @@
+{
+  "schema": "remaining-director-runtime-source-audit.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "main_commit": "d70dffc",
+  "harness_version": "0.30.0",
+  "source_sha256": {
+    "lab/cli.py": "c94afadc2ea210817442f0c3ff3113d117d5b894aacb3fd502c372cebb8fb01b",
+    "lab/director/loop.py": "7601ba7b569ccff67f2df58372cb168b775a40fae9c3a614f805d543f35d841f",
+    "lab/director/strategy.py": "3fb4043aeb81d605c5dc7d72664358998f9be46cbe2ec03885d8b3d0eb3a4f01"
+  },
+  "findings": [
+    {
+      "requirement": "durable Thompson selection and routing",
+      "current": "Pure strategy helper exists; production loop cycles fixed moves only for local-qwen, fake provider bypasses this selection.",
+      "next_worktree": "data/runtime/parallel-m0/thompson-loop-030",
+      "worker": "GPT-6 Luna / high",
+      "acceptance": [
+        "canonical checkpoint/intent before provider",
+        "route and enforce selected move for both providers",
+        "exactly-once terminal outcome resolution across crash/replay",
+        "no RNG/reward change for infrastructure failure",
+        "20-selection coverage",
+        "holdout rollback preserves strategy history and budget"
+      ]
+    },
+    {
+      "requirement": "lab baseline CLI and idempotent baseline execution",
+      "current": "No baseline-only CLI; frozen historical handoff is pure contracts/tests/ADR, not durable lifecycle.",
+      "proposed_design": "Historical ADR0020 calibrated same-run handoff; status explicitly proposed, not an accepted requirement.",
+      "remaining_for_proposed_design": [
+        "atomic calibrated handoff and owner release",
+        "authorized idempotent continuation with fresh owner generation",
+        "generation fence on every Director mutation",
+        "immutable request/suite/runtime/calibration and consumed-budget restoration",
+        "stop/recovery/report/dispatch mappings",
+        "isolated PostgreSQL race/restart proof"
+      ],
+      "scope_decision": "Astra/high source review confirms an admitted standalone baseline operation with immutable baseline intent, its own bounded budget and verified terminal calibration report satisfies the required CLI. Same-run staged handoff remains a proposed optional design. Ordinary research still includes baseline then proposals.",
+      "decision_evidence": "drain-before-cas-probe-030-source-review.json#baseline_scope",
+      "required_implementation": [
+        "Usable CLI admission with immutable baseline-only purpose and idempotency",
+        "Complete trusted baseline grid through production sandbox/Scorer",
+        "Bound run, suite, task set, harness/image and consumed budget to the calibration report",
+        "Typed baseline-only terminal outcome without research or holdout approval claim",
+        "Preserve owner authorization, stop, recovery and resource limits"
+      ]
+    },
+    {
+      "requirement": "EXPLORE detector-family enforcement",
+      "current": "Loop intentionally stops at explore_family_unverified; move_type is not a trusted detector-family identity.",
+      "remaining": [
+        "trusted family provenance/verification",
+        "actual EXPLORE path and replay evidence"
+      ]
+    },
+    {
+      "requirement": "GPU command surface",
+      "current": "lab gpu lease TRAIN --noop already wired.",
+      "remaining": [
+        "actual bounded TRAIN/noop and training hardware acceptance after coordination"
+      ]
+    },
+    {
+      "requirement": "Research Director restart continuity and bounded infrastructure retry",
+      "current": "Component checkpoints exist; dispatcher accepts queued runs only and terminalizes failed infrastructure returns. This does not establish actual restart continuity.",
+      "remaining": [
+        "Authorized same-intent continuation with stale-owner fencing",
+        "Restore consumed budgets and durable pending work",
+        "Real process restart/reconcile proof"
+      ],
+      "scope": "Required independently of the standalone baseline CLI decision"
+    }
+  ],
+  "execution": false,
+  "completion_claim": false
+}

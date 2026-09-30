@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-25T06:05:57.057362+00:00",
+  "scope": "CPU regression of read-only observer /proc exit-race handling using explicit systemd/proc fixtures; no real model, service, drain or acceptance.",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_local_qwen_observer.py": "e4f2d64f4e687efde7cd629006c71b81f8ef6509d9f881a3d41e2357addef4ba"
+  },
+  "checks": {
+    "missing_proc_resamples_terminal": true,
+    "process_gone_resamples_terminal": true,
+    "zombie_resamples_terminal": true,
+    "unsettled_transition_fails_closed": true,
+    "permission_error_not_swallowed": true,
+    "replacement_generation_still_rejected": true
+  },
+  "all_passed": true
+}

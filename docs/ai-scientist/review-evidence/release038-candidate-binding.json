@@ -1,0 +1,81 @@
+{
+  "candidate_version": "0.38.0",
+  "checked_at": "2026-09-29T22:08:41.005529+00:00",
+  "deployment": {
+    "actual_exit_code": 0,
+    "final_chunk": "4937b5",
+    "receipt_private_sha256": "1ef77c0c0f54a73037a9f15974b18ea150a5e4c7f54768cdf55c1a8cfcccea88",
+    "root_session": 22136
+  },
+  "docker_build_scope": "Host Docker daemon is outside verifier cgroup; successful retry reused trusted offline dependency cache.",
+  "evidence_sha256": {
+    "gate-e6e843dab70b-commands.json": "c5639f176610d0a8183142c0b27a0203df79cb83c70f07563e7843cb32450f08",
+    "gate-e6e843dab70b-launch.json": "bc8501bb98732816a94068252840767d88a7470d84fab001279a67b17ff7461e",
+    "gate-e6e843dab70b-source-before.json": "1da39758064e40a5a179607e1984f13d5cc7ea375ad5bf0c533a3ba4e5789825",
+    "gate-e6e843dab70b.json": "4d15152eec1dad679d3edc77f20d94dbce7d3570e2d2e9a34d0804c305358ee5",
+    "image-13e662dbb638-launch.json": "db095914cf6a9c79aac18a45bfc350469e4c6089087ace46503e914dfb78d924",
+    "image-13e662dbb638-parity.json": "d2d34714b4e087846e6dd5b16bc8dec8a8e259a62e8f8b012973a1548791e2bb",
+    "image-13e662dbb638.json": "785bf4c361df920e08b23f6509353cba3cae41593fedb7f36ec83360ef121555"
+  },
+  "gate": {
+    "captured_gate_files": 300,
+    "commands_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "elapsed_seconds": 72.87230871400061,
+    "gate_exit_code": 0,
+    "launcher_exit_code": 0,
+    "root_session": 26831,
+    "source_unchanged": true,
+    "tests": {
+      "deselected": 120,
+      "passed": 1104,
+      "skipped": 7
+    }
+  },
+  "image": {
+    "all_runtime_bytes_match": true,
+    "build_exit_code": 0,
+    "launcher_exit_code": 0,
+    "parity_exit_code": 0,
+    "pin": "sha256:9326a4c7514310b93572d2156a76cb0c6b4c75dcb0e3410a2c7c87fb0f3a32a5",
+    "root_session": 8871,
+    "user": "10001:10001"
+  },
+  "installed_version": "0.38.0",
+  "original_failures_retained": [
+    "gate-cc6355b1ca8c",
+    "image-686f31482218"
+  ],
+  "promoted": true,
+  "runtime_payload_sha256": {
+    "harness/VERSION": "8ca1b0be262e3278f47eb53b592f649318b926a5ce9d6a4ceca65ce4e8be8629",
+    "lab/db/migrations/versions/0032_care_development_binding.py": "e6879f11b4b8605d32d91c94b1b1dbaabf61aaf5e6d2a44eb943b121ca3ed4db",
+    "lab/scorer/care_calibration.py": "0eea9bb08b6c8898df7fc9ac053ed37cefc557fc878d80609bacf1328e8a3d0b",
+    "lab/scorer/holdout.py": "6885b119f8b33c4af82caa79670003957e20b86f4849aed9a363eb6e5703b45e",
+    "lab/scorer/jobs.py": "2a6f4b845b1ca6ed61dbf314dd0a7061d7829699f3840be84cd5cf0fac3c504a",
+    "lab/training/sft_export.py": "4e45ce2fa34d18de33e8a65371f5baaf8fd95ec915045cb32da37855d8ff6ab8",
+    "ops/sandbox-image.lock": "dace100cc745c52900bf6f312bc07faeebf96f0ff28796743b8f27fc6390c19a",
+    "ops/start_lab.py": "f43415eb744206a671919f2eab62ce4fa16ba0e29d96b3cdf1eb7281d3b68203",
+    "tests/test_artifact_read_no_creation.py": "bf2cc920f628414f3d4be4dba4891240c01c5f1374fcd5435d1a403bbdc59247",
+    "tests/test_care_baseline_calibration.py": "253b399783cd85da089ee84c54bfbf911c15112b26f87d74ec087eeaaf6cc9c7",
+    "tests/test_postgres_care_calibration.py": "85e7a79fe04678a817561edf1dd60e7920655c5b6cbe41b571b36c2893cb570a",
+    "tests/test_postgres_registration062.py": "aa79ac1cd3aad157ee0d5b93625ebb9401bf3921d6b396a17b053d648d3c25ad",
+    "tests/test_start_lab_helper.py": "7466cc2058bd44ce6b1695f577ebc54f1bfbf74fdc52be3e0f4e23b271ec0f59",
+    "tests/test_training_export059.py": "883371dbaaa933562ffb70a49742cd8859dde36036033adb6d52292f62920fa5"
+  },
+  "schema": "release038-candidate-execution-binding.v1",
+  "scope": {
+    "actual_llm": false,
+    "aos_coexistence": false,
+    "cpu_static_wheel_gate": true,
+    "live_migration": true,
+    "training": false
+  }
+}

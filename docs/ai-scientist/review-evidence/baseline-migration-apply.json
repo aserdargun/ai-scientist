@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-09-24T16:30:44.676455+00:00",
+  "source_sha256": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+  "source_unchanged": true,
+  "preflight_runs": 0,
+  "preflight_jobs": 0,
+  "exit_code": 0,
+  "revision": "0013_baseline_calibration",
+  "stdout": "",
+  "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\n"
+}

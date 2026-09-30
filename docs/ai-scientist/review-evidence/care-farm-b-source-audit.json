@@ -1,0 +1,2366 @@
+{
+  "feature_descriptions": {
+    "power_58_avg": {
+      "description": "Available power",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "kW"
+    },
+    "power_62_avg": {
+      "description": "Active power",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "kW"
+    },
+    "reactive_power_11_avg": {
+      "description": "Reactive power",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "kvar"
+    },
+    "sensor_0_avg": {
+      "description": "Total negative reactive power",
+      "is_angle": "False",
+      "is_counter": "True",
+      "unit": "kvarh"
+    },
+    "sensor_10_avg": {
+      "description": "Pitch angle",
+      "is_angle": "True",
+      "is_counter": "False",
+      "unit": "\ufffd"
+    },
+    "sensor_12_avg": {
+      "description": "Torque estimated",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "Nm"
+    },
+    "sensor_13_avg": {
+      "description": "RMS voltage L1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "V"
+    },
+    "sensor_14_avg": {
+      "description": "RMS voltage L2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "V"
+    },
+    "sensor_15_avg": {
+      "description": "RMS voltage L3",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "V"
+    },
+    "sensor_16_avg": {
+      "description": "RMS current L1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_17_avg": {
+      "description": "RMS current L2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_18_avg": {
+      "description": "RMS current L3",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_19_avg": {
+      "description": "Generator converter rotational peed",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "rpm"
+    },
+    "sensor_1_avg": {
+      "description": "Total negative active power",
+      "is_angle": "False",
+      "is_counter": "True",
+      "unit": "kWh"
+    },
+    "sensor_20_avg": {
+      "description": "Gearbox rotational speed",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "rpm"
+    },
+    "sensor_21_avg": {
+      "description": "Nacelle direction",
+      "is_angle": "True",
+      "is_counter": "False",
+      "unit": "\ufffd"
+    },
+    "sensor_22_avg": {
+      "description": "Hub temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_23_avg": {
+      "description": "Grid frequency",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "Hz"
+    },
+    "sensor_24_avg": {
+      "description": "Grid voltage",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "V"
+    },
+    "sensor_25_avg": {
+      "description": "Rotor speed",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "rpm"
+    },
+    "sensor_26_avg": {
+      "description": "Apparent power",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "kVA"
+    },
+    "sensor_27_avg": {
+      "description": "Current",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_28_avg": {
+      "description": "Motor current axis 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_29_avg": {
+      "description": "Motor current axis 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_2_avg": {
+      "description": "Total positive reactive power",
+      "is_angle": "False",
+      "is_counter": "True",
+      "unit": "kvarh"
+    },
+    "sensor_30_avg": {
+      "description": "Motor current axis 3",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "A"
+    },
+    "sensor_31_avg": {
+      "description": "Temperature internal consumption transformer",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_32_avg": {
+      "description": "Generator bearing temperature 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_33_avg": {
+      "description": "Generator bearing temperature 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_34_avg": {
+      "description": "Gearbox bearing temperature 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_35_avg": {
+      "description": "Gearbox bearing temperature 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_36_avg": {
+      "description": "Gearbox bearing temperature 3",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_37_avg": {
+      "description": "Gearbox bearing temperature 4",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_38_avg": {
+      "description": "Gearbox oil inlet temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_39_avg": {
+      "description": "Gearbox oil tank temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_3_avg": {
+      "description": "Total positive active power",
+      "is_angle": "False",
+      "is_counter": "True",
+      "unit": "kWh"
+    },
+    "sensor_40_avg": {
+      "description": "Transformator core temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_41_avg": {
+      "description": "Transformer L1 (mid-voltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_42_avg": {
+      "description": "Transformer L1 (undervoltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_43_avg": {
+      "description": "Transformer L2 (mid-voltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_44_avg": {
+      "description": "Transformer L2 (undervoltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_45_avg": {
+      "description": "Transformer L3 (mid-voltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_46_avg": {
+      "description": "Transformer L3 (undervoltage) temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_47_avg": {
+      "description": "Transformer cell temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_48_avg": {
+      "description": "Motor temperature axis 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_49_avg": {
+      "description": "Motor temperature axis 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_4_avg": {
+      "description": "Absolute wind direction",
+      "is_angle": "True",
+      "is_counter": "False",
+      "unit": "\ufffd"
+    },
+    "sensor_50_avg": {
+      "description": "Motor temperature axis 3",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_51_avg": {
+      "description": "Rotor bearing temperature 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_52_avg": {
+      "description": "Rotor bearing temperature 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_53_avg": {
+      "description": "Slip ring temperature Generator",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_54_avg": {
+      "description": "Drive train vibration axis Z",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "mG"
+    },
+    "sensor_55_avg": {
+      "description": "Tower vibration axis X",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "mG"
+    },
+    "sensor_56_avg": {
+      "description": "Tower vibration axis Y",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "mG"
+    },
+    "sensor_57_avg": {
+      "description": "Inverter torque",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "Nm"
+    },
+    "sensor_5_avg": {
+      "description": "Torque delta calculated",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "kNm"
+    },
+    "sensor_6_avg": {
+      "description": "Wind speed anemometer 2 calculated",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "m/s"
+    },
+    "sensor_7_avg": {
+      "description": "Cable load",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "%"
+    },
+    "sensor_8_avg": {
+      "description": "Outside temperature",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "\ufffdC"
+    },
+    "sensor_9_avg": {
+      "description": "Estimated tower natural frequency",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "mHz"
+    },
+    "wind_speed_59_avg": {
+      "description": "Wind speed 1",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "m/s"
+    },
+    "wind_speed_60_avg": {
+      "description": "Wind speed 2",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "m/s"
+    },
+    "wind_speed_61_avg": {
+      "description": "Wind speed",
+      "is_angle": "False",
+      "is_counter": "False",
+      "unit": "m/s"
+    }
+  },
+  "physical_average_shortlist": [
+    "reactive_power_11_avg",
+    "power_58_avg",
+    "wind_speed_59_avg",
+    "wind_speed_60_avg",
+    "wind_speed_61_avg",
+    "power_62_avg"
+  ],
+  "runtime": {
+    "retained_data": "row counters, status/time scalars, six feature zero/blank counters, and per-file SHA digests only",
+    "streaming": "CSV members streamed one at a time directly from zip; no archive extraction and no Farm C payload reads"
+  },
+  "schema": "care-farm-b-source-audit.v1",
+  "scope": "read-only hash-verified Farm B source audit; no Farm C payloads opened; no materialization or Scorer writes",
+  "source": {
+    "archive_bytes": 5503439673,
+    "doi": "10.5281/zenodo.15846963",
+    "event_info_sha256": "e27b4de2fc9f87b7c73ca5bc5a0950cb56cf666a26d9749c52c4aff7c473e681",
+    "expected_archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+    "farm_b_member_count": 15,
+    "feature_description_sha256": "140b0446767c4d2a0399791e0086258596c3a58370b0c4ebfbe1d0f5edc0efed",
+    "measured_archive_sha256": "ca61379e98956d891041ad45c885109bd8a14199fde0688d0184a11c2d4194f1",
+    "record_id": 15846963,
+    "record_url": "https://zenodo.org/records/15846963",
+    "source_manifest_sha256": "55433394759fee3782eb51c8350446561268acd837f2d44624d07a8b1505ec20",
+    "source_structure_review_sha256": "ee08aced5b870517db80a7fd975227fd9bcd061fcdb03f562e9b0fe6bbd96726"
+  },
+  "source_members": [
+    {
+      "compressed_bytes": 26451047,
+      "crc32": "d072cad4",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/19.csv",
+      "sha256": "5a70079af0dcd4a8012235b68552a9d4b37c0680a664c8361f8aa364d69e1972",
+      "uncompressed_bytes": 89680003
+    },
+    {
+      "compressed_bytes": 25630956,
+      "crc32": "37a1cd30",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/2.csv",
+      "sha256": "0d103687d779a4f9714a6dab80aeda526346ea6def85006541a24a6038b947c5",
+      "uncompressed_bytes": 87149492
+    },
+    {
+      "compressed_bytes": 25042319,
+      "crc32": "42fa3ff7",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/21.csv",
+      "sha256": "11d5a6221ea4e2c367a777e08528e0b295d8c51f2aa716d3e99ffff13047e663",
+      "uncompressed_bytes": 85180339
+    },
+    {
+      "compressed_bytes": 24966497,
+      "crc32": "28fd8d29",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/23.csv",
+      "sha256": "daabd43cd9ad3d742aa5e4dfb752f607e22741429accb657a119b3bd759b747d",
+      "uncompressed_bytes": 86384882
+    },
+    {
+      "compressed_bytes": 28833746,
+      "crc32": "8c9ba4db",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/27.csv",
+      "sha256": "1d0778d613a5d7cb2e8d1f31c8d5b68559ca3b355b4724525fc8234878e8d889",
+      "uncompressed_bytes": 98960870
+    },
+    {
+      "compressed_bytes": 25708202,
+      "crc32": "3759a8cb",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/34.csv",
+      "sha256": "2bea7a785a4ec6d170965bb57fb183c39b09c119e6d3a27047e8f35419474120",
+      "uncompressed_bytes": 89434660
+    },
+    {
+      "compressed_bytes": 25136960,
+      "crc32": "188b4863",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/52.csv",
+      "sha256": "29250e477ad7b41626fb041329d88796cbd56ea9a7cc83584f167d708a0f7d1a",
+      "uncompressed_bytes": 87397671
+    },
+    {
+      "compressed_bytes": 27254332,
+      "crc32": "bae2ea80",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/53.csv",
+      "sha256": "9a8fd31ce4efb75323edf1daef46af46b25a7f2a4baf39359112be469291b0c6",
+      "uncompressed_bytes": 93271611
+    },
+    {
+      "compressed_bytes": 27075941,
+      "crc32": "a0595f08",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/7.csv",
+      "sha256": "4a3c90b68f97079efac7f50db51ae066be89d07b616557b01da3911a7e3a1236",
+      "uncompressed_bytes": 92094858
+    },
+    {
+      "compressed_bytes": 26155487,
+      "crc32": "f8c59180",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/74.csv",
+      "sha256": "14c870e25b4eec0dc73f378e556e15197b020a7e131a27a10e0a6eb215276819",
+      "uncompressed_bytes": 88646969
+    },
+    {
+      "compressed_bytes": 29373892,
+      "crc32": "d278318f",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/77.csv",
+      "sha256": "8ef8d082f0ff2f7c8c816aa15ba215e88cd2a2f407c521501ad9baafe56ccbd3",
+      "uncompressed_bytes": 98677572
+    },
+    {
+      "compressed_bytes": 25610512,
+      "crc32": "de776ac2",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/82.csv",
+      "sha256": "3f83609f4cac332834a3f1f08e8951d3fe0234da81ad85dcc02e979e3d6db781",
+      "uncompressed_bytes": 87397445
+    },
+    {
+      "compressed_bytes": 30592958,
+      "crc32": "af770021",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/83.csv",
+      "sha256": "a1df7aafd3792f66f515b245f5e09ea9d77e78ced3e84fede67e50cbf0219092",
+      "uncompressed_bytes": 105007050
+    },
+    {
+      "compressed_bytes": 26367665,
+      "crc32": "5c749b49",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/86.csv",
+      "sha256": "2ae869069d0ca3c3042c0310c2a85e48457aa3f6ae877ef76d08b5ab1dba7ccd",
+      "uncompressed_bytes": 88573954
+    },
+    {
+      "compressed_bytes": 25712847,
+      "crc32": "0cb6d515",
+      "member": "CARE_To_Compare/Wind Farm B/datasets/87.csv",
+      "sha256": "54c13391b96392f301dcf09f958df082a2c58d1b219aeafb82de67bda8674e1a",
+      "uncompressed_bytes": 87964022
+    }
+  ],
+  "source_semantics": {
+    "event_labels": "trusted event_info.csv event_label; 6 anomaly/PDM and 9 normal/NRM across all 15 tasks; no task selection based on label content",
+    "farm_b_missing_values": "paper states missing values were replaced with numeric zero; report records zero/blank counts but zero is not reinterpreted as missing",
+    "feature_summary": "257 columns total, 63 described average sensor features; source note recommends Avg-only for most Farm B analyses because Min/Max/Std are often physically implausible",
+    "labels_and_masks": "event_label and event_info event interval are Scorer-only; status masks and event labels must not enter Director candidate context or public manifest",
+    "status_type_id": "paper v2 and author FAQ identify Farm B/C status IDs as operator SCADA state plus service reports; codes 0 and 2 are normal, 1/3/4/5 abnormal; paper notes B/C status logging may be inconsistent. Do not reuse Farm A retrospective-logbook rule; any evaluation mask must be an explicit Farm-B-only policy using raw row status without forward-filling or inferred correction.",
+    "time": "naive anonymized source timestamps; official paper states 10-minute resolution; exact measured cadence histogram is per task; source clock is not UTC",
+    "training_and_prediction_split": "source train_test column; measured per file below, no row compression/reordering"
+  },
+  "storage_estimates": {
+    "all_63_avg_features_no_train_filter": {
+      "aggregate_suite_limit_bytes": 2147483648,
+      "all_train_and_prediction_raw_float64_matrix_bytes": 432968760,
+      "default_suite_matrix_limit_bytes": 67108864,
+      "max_single_train_or_eval_arrow_raw_values_bytes": 26489736,
+      "single_artifact_limit_bytes": 33554432
+    },
+    "six_source_named_avg_selection": {
+      "aggregate_suite_limit_bytes": 2147483648,
+      "all_train_and_prediction_raw_float64_matrix_bytes": 4399104,
+      "default_suite_matrix_limit_bytes": 67108864,
+      "evaluation": "all source prediction rows retained; no label-driven truncation",
+      "matrix_limit_note": "public SuiteManifest embeds train+evaluation matrices and enforces 64 MiB over the full suite. Scorer holdout uses separate per-blob 32 MiB Arrow artifacts and 2 GiB aggregate quota; B holdout should not be added as public dev matrix data.",
+      "max_single_train_or_eval_arrow_raw_values_bytes": 677424,
+      "selection_basis": "fixed source-described physical signals, chosen without prediction values or event labels; not yet an accepted production feature policy",
+      "single_artifact_limit_bytes": 33554432,
+      "train_assumption": "status IDs 0/2 plus 86400-second embargo before prediction prefix; longest contiguous raw train segment, as a byte-estimation scenario only"
+    }
+  },
+  "task_counts": {
+    "anomaly_pdm": 6,
+    "normal_nrm": 9,
+    "total": 15,
+    "unique_assets": [
+      "0",
+      "11",
+      "12",
+      "13",
+      "14",
+      "2",
+      "5",
+      "6",
+      "7"
+    ]
+  },
+  "tasks": [
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1887480,
+        "total": 28362096,
+        "train": 26474616
+      },
+      "asset_id": "11",
+      "asset_ids_in_rows": [
+        "11"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 3,
+        "600": 56268,
+        "9000": 2
+      },
+      "event_end": "2023-02-23 00:00:00",
+      "event_end_id": 55553,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 55553,
+          "split": "prediction",
+          "timestamp": "2023-02-23 00:00:00"
+        },
+        "start": {
+          "row_index": 52673,
+          "split": "prediction",
+          "timestamp": "2023-02-03 00:00:00"
+        }
+      },
+      "event_id": 19,
+      "event_interval_duration_seconds": 1728000,
+      "event_interval_prediction_rows": 2881,
+      "event_interval_status_counts": {
+        "0": 2855,
+        "1": 19,
+        "5": 7
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-02-03 00:00:00",
+      "event_start_id": 52673,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 47951,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 3745,
+        "longest_contiguous_training_rows": 1436,
+        "selected_six_features_evaluation_raw_bytes": 179760,
+        "selected_six_features_raw_bytes": 68928,
+        "selected_six_features_total_raw_bytes": 248688
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/19.csv",
+      "member_bytes_compressed": 26451047,
+      "member_bytes_uncompressed": 89680003,
+      "member_crc32": "d072cad4",
+      "member_sha256": "5a70079af0dcd4a8012235b68552a9d4b37c0680a664c8361f8aa364d69e1972",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 3744
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-02-02 00:00:00",
+      "prediction_last_time": "2023-02-28 00:00:00",
+      "prediction_rows": 3745,
+      "prediction_span_days_inclusive": 26.006944444444443,
+      "prediction_span_seconds": 2246400,
+      "rows": 56274,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2122,
+          "present": 56274
+        },
+        "power_62_avg": {
+          "literal_zero": 691,
+          "present": 56274
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 5876,
+          "present": 56274
+        },
+        "wind_speed_59_avg": {
+          "present": 56274
+        },
+        "wind_speed_60_avg": {
+          "present": 56274
+        },
+        "wind_speed_61_avg": {
+          "present": 56274
+        }
+      },
+      "source_first_time": "2022-02-02 00:00:00",
+      "source_last_time": "2023-02-28 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 51647,
+          "1": 2886,
+          "4": 139,
+          "5": 1602
+        },
+        "prediction": {
+          "0": 3696,
+          "1": 21,
+          "4": 1,
+          "5": 27
+        },
+        "train": {
+          "0": 47951,
+          "1": 2865,
+          "4": 138,
+          "5": 1575
+        }
+      },
+      "status_transition_count": 485,
+      "train_first_time": "2022-02-02 00:00:00",
+      "train_last_time": "2023-02-01 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52529,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1116360,
+        "total": 27606096,
+        "train": 26489736
+      },
+      "asset_id": "13",
+      "asset_ids_in_rows": [
+        "13"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 54772
+      },
+      "event_end": "2023-08-23 04:20:00",
+      "event_end_id": 54629,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54629,
+          "split": "prediction",
+          "timestamp": "2023-08-23 04:20:00"
+        },
+        "start": {
+          "row_index": 52703,
+          "split": "prediction",
+          "timestamp": "2023-08-09 19:20:00"
+        }
+      },
+      "event_id": 2,
+      "event_interval_duration_seconds": 1155600,
+      "event_interval_prediction_rows": 1927,
+      "event_interval_status_counts": {
+        "0": 1872,
+        "1": 12,
+        "5": 43
+      },
+      "event_label": "normal",
+      "event_start": "2023-08-09 19:20:00",
+      "event_start_id": 52703,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 44885,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 2215,
+        "longest_contiguous_training_rows": 1282,
+        "selected_six_features_evaluation_raw_bytes": 106320,
+        "selected_six_features_raw_bytes": 61536,
+        "selected_six_features_total_raw_bytes": 167856
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/2.csv",
+      "member_bytes_compressed": 25630956,
+      "member_bytes_uncompressed": 87149492,
+      "member_crc32": "37a1cd30",
+      "member_sha256": "0d103687d779a4f9714a6dab80aeda526346ea6def85006541a24a6038b947c5",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 2214
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-08-08 19:20:00",
+      "prediction_last_time": "2023-08-24 04:20:00",
+      "prediction_rows": 2215,
+      "prediction_span_days_inclusive": 15.381944444444445,
+      "prediction_span_seconds": 1328400,
+      "rows": 54774,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2290,
+          "present": 54774
+        },
+        "power_62_avg": {
+          "literal_zero": 405,
+          "present": 54774
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 5762,
+          "present": 54774
+        },
+        "wind_speed_59_avg": {
+          "present": 54774
+        },
+        "wind_speed_60_avg": {
+          "present": 54774
+        },
+        "wind_speed_61_avg": {
+          "present": 54774
+        }
+      },
+      "source_first_time": "2022-08-08 19:20:00",
+      "source_last_time": "2023-08-24 04:20:00",
+      "status_counts": {
+        "all": {
+          "0": 47045,
+          "1": 1886,
+          "4": 147,
+          "5": 5696
+        },
+        "prediction": {
+          "0": 2160,
+          "1": 12,
+          "5": 43
+        },
+        "train": {
+          "0": 44885,
+          "1": 1874,
+          "4": 147,
+          "5": 5653
+        }
+      },
+      "status_transition_count": 392,
+      "train_first_time": "2022-08-08 19:20:00",
+      "train_last_time": "2023-08-08 19:10:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 653688,
+        "total": 26971056,
+        "train": 26317368
+      },
+      "asset_id": "0",
+      "asset_ids_in_rows": [
+        "0"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "11400": 1,
+        "1200": 7,
+        "13800": 1,
+        "15600": 1,
+        "1800": 1,
+        "20400": 1,
+        "22200": 1,
+        "23400": 3,
+        "2400": 2,
+        "29400": 1,
+        "3000": 1,
+        "600": 53491,
+        "9000": 2
+      },
+      "event_end": "2023-10-01 20:10:00",
+      "event_end_id": 53513,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 53513,
+          "split": "prediction",
+          "timestamp": "2023-10-01 20:10:00"
+        },
+        "start": {
+          "row_index": 52217,
+          "split": "prediction",
+          "timestamp": "2023-09-22 20:10:00"
+        }
+      },
+      "event_id": 21,
+      "event_interval_duration_seconds": 777600,
+      "event_interval_prediction_rows": 1297,
+      "event_interval_status_counts": {
+        "0": 1269,
+        "1": 8,
+        "4": 10,
+        "5": 10
+      },
+      "event_label": "normal",
+      "event_start": "2023-09-22 20:10:00",
+      "event_start_id": 52217,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 47997,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 1297,
+        "longest_contiguous_training_rows": 1285,
+        "selected_six_features_evaluation_raw_bytes": 62256,
+        "selected_six_features_raw_bytes": 61680,
+        "selected_six_features_total_raw_bytes": 123936
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/21.csv",
+      "member_bytes_compressed": 25042319,
+      "member_bytes_uncompressed": 85180339,
+      "member_crc32": "42fa3ff7",
+      "member_sha256": "11d5a6221ea4e2c367a777e08528e0b295d8c51f2aa716d3e99ffff13047e663",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 1296
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-09-22 20:10:00",
+      "prediction_last_time": "2023-10-01 20:10:00",
+      "prediction_rows": 1297,
+      "prediction_span_days_inclusive": 9.006944444444445,
+      "prediction_span_seconds": 777600,
+      "rows": 53514,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2390,
+          "present": 53514
+        },
+        "power_62_avg": {
+          "literal_zero": 389,
+          "present": 53514
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6176,
+          "present": 53514
+        },
+        "wind_speed_59_avg": {
+          "present": 53514
+        },
+        "wind_speed_60_avg": {
+          "present": 53514
+        },
+        "wind_speed_61_avg": {
+          "present": 53514
+        }
+      },
+      "source_first_time": "2022-09-22 20:10:00",
+      "source_last_time": "2023-10-01 20:10:00",
+      "status_counts": {
+        "all": {
+          "0": 49266,
+          "1": 1873,
+          "4": 511,
+          "5": 1864
+        },
+        "prediction": {
+          "0": 1269,
+          "1": 8,
+          "4": 10,
+          "5": 10
+        },
+        "train": {
+          "0": 47997,
+          "1": 1865,
+          "4": 501,
+          "5": 1854
+        }
+      },
+      "status_transition_count": 457,
+      "train_first_time": "2022-09-22 20:10:00",
+      "train_last_time": "2023-09-22 20:00:00",
+      "train_prefix": true,
+      "train_rows": 52217,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 999432,
+        "total": 27489168,
+        "train": 26489736
+      },
+      "asset_id": "6",
+      "asset_ids_in_rows": [
+        "6"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 54540
+      },
+      "event_end": "2023-09-27 11:50:00",
+      "event_end_id": 53965,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 53965,
+          "split": "prediction",
+          "timestamp": "2023-09-27 11:50:00"
+        },
+        "start": {
+          "row_index": 52559,
+          "split": "prediction",
+          "timestamp": "2023-09-17 17:30:00"
+        }
+      },
+      "event_id": 23,
+      "event_interval_duration_seconds": 843600,
+      "event_interval_prediction_rows": 1407,
+      "event_interval_status_counts": {
+        "0": 1353,
+        "1": 39,
+        "5": 15
+      },
+      "event_label": "normal",
+      "event_start": "2023-09-17 17:30:00",
+      "event_start_id": 52559,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 46647,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 1983,
+        "longest_contiguous_training_rows": 1120,
+        "selected_six_features_evaluation_raw_bytes": 95184,
+        "selected_six_features_raw_bytes": 53760,
+        "selected_six_features_total_raw_bytes": 148944
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/23.csv",
+      "member_bytes_compressed": 24966497,
+      "member_bytes_uncompressed": 86384882,
+      "member_crc32": "28fd8d29",
+      "member_sha256": "daabd43cd9ad3d742aa5e4dfb752f607e22741429accb657a119b3bd759b747d",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 1982
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-09-17 17:30:00",
+      "prediction_last_time": "2023-10-01 11:50:00",
+      "prediction_rows": 1983,
+      "prediction_span_days_inclusive": 13.770833333333334,
+      "prediction_span_seconds": 1189200,
+      "rows": 54542,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2174,
+          "present": 54542
+        },
+        "power_62_avg": {
+          "literal_zero": 1392,
+          "present": 54542
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 7238,
+          "present": 54542
+        },
+        "wind_speed_59_avg": {
+          "present": 54542
+        },
+        "wind_speed_60_avg": {
+          "present": 54542
+        },
+        "wind_speed_61_avg": {
+          "present": 54542
+        }
+      },
+      "source_first_time": "2022-09-17 17:30:00",
+      "source_last_time": "2023-10-01 11:50:00",
+      "status_counts": {
+        "all": {
+          "0": 48390,
+          "1": 2831,
+          "4": 171,
+          "5": 3150
+        },
+        "prediction": {
+          "0": 1743,
+          "1": 196,
+          "4": 5,
+          "5": 39
+        },
+        "train": {
+          "0": 46647,
+          "1": 2635,
+          "4": 166,
+          "5": 3111
+        }
+      },
+      "status_transition_count": 525,
+      "train_first_time": "2022-09-17 17:30:00",
+      "train_last_time": "2023-09-17 17:20:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 5008248,
+        "total": 31383072,
+        "train": 26374824
+      },
+      "asset_id": "7",
+      "asset_ids_in_rows": [
+        "7"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "137400": 1,
+        "600": 62265
+      },
+      "event_end": "2023-11-01 00:00:00",
+      "event_end_id": 61403,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 61403,
+          "split": "prediction",
+          "timestamp": "2023-11-01 00:00:00"
+        },
+        "start": {
+          "row_index": 52619,
+          "split": "prediction",
+          "timestamp": "2023-09-01 00:00:00"
+        }
+      },
+      "event_id": 27,
+      "event_interval_duration_seconds": 5270400,
+      "event_interval_prediction_rows": 8785,
+      "event_interval_status_counts": {
+        "0": 8404,
+        "1": 209,
+        "4": 24,
+        "5": 148
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-09-01 00:00:00",
+      "event_start_id": 52619,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 47992,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 9937,
+        "longest_contiguous_training_rows": 1267,
+        "selected_six_features_evaluation_raw_bytes": 476976,
+        "selected_six_features_raw_bytes": 60816,
+        "selected_six_features_total_raw_bytes": 537792
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/27.csv",
+      "member_bytes_compressed": 28833746,
+      "member_bytes_uncompressed": 98960870,
+      "member_crc32": "8c9ba4db",
+      "member_sha256": "1d0778d613a5d7cb2e8d1f31c8d5b68559ca3b355b4724525fc8234878e8d889",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 9936
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-08-30 00:00:00",
+      "prediction_last_time": "2023-11-07 00:00:00",
+      "prediction_rows": 9937,
+      "prediction_span_days_inclusive": 69.00694444444444,
+      "prediction_span_seconds": 5961600,
+      "rows": 62268,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2672,
+          "present": 62268
+        },
+        "power_62_avg": {
+          "literal_zero": 355,
+          "present": 62268
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 7506,
+          "present": 62268
+        },
+        "wind_speed_59_avg": {
+          "present": 62268
+        },
+        "wind_speed_60_avg": {
+          "present": 62268
+        },
+        "wind_speed_61_avg": {
+          "present": 62268
+        }
+      },
+      "source_first_time": "2022-08-30 00:00:00",
+      "source_last_time": "2023-11-07 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 56684,
+          "1": 3352,
+          "4": 227,
+          "5": 2005
+        },
+        "prediction": {
+          "0": 8692,
+          "1": 1073,
+          "4": 24,
+          "5": 148
+        },
+        "train": {
+          "0": 47992,
+          "1": 2279,
+          "4": 203,
+          "5": 1857
+        }
+      },
+      "status_transition_count": 463,
+      "train_first_time": "2022-08-30 00:00:00",
+      "train_last_time": "2023-08-29 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52331,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 2032632,
+        "total": 28508256,
+        "train": 26475624
+      },
+      "asset_id": "14",
+      "asset_ids_in_rows": [
+        "14"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 2,
+        "1800": 1,
+        "600": 56558,
+        "7200": 1,
+        "9000": 1
+      },
+      "event_end": "2023-09-15 00:00:00",
+      "event_end_id": 55699,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 55699,
+          "split": "prediction",
+          "timestamp": "2023-09-15 00:00:00"
+        },
+        "start": {
+          "row_index": 52531,
+          "split": "prediction",
+          "timestamp": "2023-08-24 00:00:00"
+        }
+      },
+      "event_id": 34,
+      "event_interval_duration_seconds": 1900800,
+      "event_interval_prediction_rows": 3169,
+      "event_interval_status_counts": {
+        "0": 3046,
+        "1": 40,
+        "4": 18,
+        "5": 65
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-08-24 00:00:00",
+      "event_start_id": 52531,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 43971,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 4033,
+        "longest_contiguous_training_rows": 1111,
+        "selected_six_features_evaluation_raw_bytes": 193584,
+        "selected_six_features_raw_bytes": 53328,
+        "selected_six_features_total_raw_bytes": 246912
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/34.csv",
+      "member_bytes_compressed": 25708202,
+      "member_bytes_uncompressed": 89434660,
+      "member_crc32": "3759a8cb",
+      "member_sha256": "2bea7a785a4ec6d170965bb57fb183c39b09c119e6d3a27047e8f35419474120",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 4032
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-08-24 00:00:00",
+      "prediction_last_time": "2023-09-21 00:00:00",
+      "prediction_rows": 4033,
+      "prediction_span_days_inclusive": 28.006944444444443,
+      "prediction_span_seconds": 2419200,
+      "rows": 56564,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2306,
+          "present": 56564
+        },
+        "power_62_avg": {
+          "literal_zero": 423,
+          "present": 56564
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 8492,
+          "present": 56564
+        },
+        "wind_speed_59_avg": {
+          "present": 56564
+        },
+        "wind_speed_60_avg": {
+          "present": 56564
+        },
+        "wind_speed_61_avg": {
+          "literal_zero": 3,
+          "present": 56564
+        }
+      },
+      "source_first_time": "2022-08-24 00:00:00",
+      "source_last_time": "2023-09-21 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 47860,
+          "1": 6669,
+          "4": 320,
+          "5": 1715
+        },
+        "prediction": {
+          "0": 3889,
+          "1": 61,
+          "4": 18,
+          "5": 65
+        },
+        "train": {
+          "0": 43971,
+          "1": 6608,
+          "4": 302,
+          "5": 1650
+        }
+      },
+      "status_transition_count": 449,
+      "train_first_time": "2022-08-24 00:00:00",
+      "train_last_time": "2023-08-23 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52531,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1379448,
+        "total": 27855072,
+        "train": 26475624
+      },
+      "asset_id": "14",
+      "asset_ids_in_rows": [
+        "14"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 2,
+        "1800": 1,
+        "600": 55262,
+        "7200": 1,
+        "9000": 1
+      },
+      "event_end": "2023-07-28 00:00:00",
+      "event_end_id": 54691,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54691,
+          "split": "prediction",
+          "timestamp": "2023-07-28 00:00:00"
+        },
+        "start": {
+          "row_index": 52675,
+          "split": "prediction",
+          "timestamp": "2023-07-14 00:00:00"
+        }
+      },
+      "event_id": 52,
+      "event_interval_duration_seconds": 1209600,
+      "event_interval_prediction_rows": 2017,
+      "event_interval_status_counts": {
+        "0": 2012,
+        "1": 1,
+        "5": 4
+      },
+      "event_label": "normal",
+      "event_start": "2023-07-14 00:00:00",
+      "event_start_id": 52675,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 43994,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 2737,
+        "longest_contiguous_training_rows": 1298,
+        "selected_six_features_evaluation_raw_bytes": 131376,
+        "selected_six_features_raw_bytes": 62304,
+        "selected_six_features_total_raw_bytes": 193680
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/52.csv",
+      "member_bytes_compressed": 25136960,
+      "member_bytes_uncompressed": 87397671,
+      "member_crc32": "188b4863",
+      "member_sha256": "29250e477ad7b41626fb041329d88796cbd56ea9a7cc83584f167d708a0f7d1a",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 2736
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-07-13 00:00:00",
+      "prediction_last_time": "2023-08-01 00:00:00",
+      "prediction_rows": 2737,
+      "prediction_span_days_inclusive": 19.006944444444443,
+      "prediction_span_seconds": 1641600,
+      "rows": 55268,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2155,
+          "present": 55268
+        },
+        "power_62_avg": {
+          "literal_zero": 385,
+          "present": 55268
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 8255,
+          "present": 55268
+        },
+        "wind_speed_59_avg": {
+          "present": 55268
+        },
+        "wind_speed_60_avg": {
+          "present": 55268
+        },
+        "wind_speed_61_avg": {
+          "literal_zero": 3,
+          "present": 55268
+        }
+      },
+      "source_first_time": "2022-07-13 00:00:00",
+      "source_last_time": "2023-08-01 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 46724,
+          "1": 6659,
+          "4": 262,
+          "5": 1623
+        },
+        "prediction": {
+          "0": 2730,
+          "1": 1,
+          "5": 6
+        },
+        "train": {
+          "0": 43994,
+          "1": 6658,
+          "4": 262,
+          "5": 1617
+        }
+      },
+      "status_transition_count": 425,
+      "train_first_time": "2022-07-13 00:00:00",
+      "train_last_time": "2023-07-12 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52531,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 3048192,
+        "total": 29537928,
+        "train": 26489736
+      },
+      "asset_id": "6",
+      "asset_ids_in_rows": [
+        "6"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 58605
+      },
+      "event_end": "2024-02-06 16:30:00",
+      "event_end_id": 58606,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 58606,
+          "split": "prediction",
+          "timestamp": "2024-02-06 16:30:00"
+        },
+        "start": {
+          "row_index": 52559,
+          "split": "prediction",
+          "timestamp": "2023-12-26 16:40:00"
+        }
+      },
+      "event_id": 53,
+      "event_interval_duration_seconds": 3628200,
+      "event_interval_prediction_rows": 6048,
+      "event_interval_status_counts": {
+        "0": 5711,
+        "1": 315,
+        "5": 22
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-12-26 16:40:00",
+      "event_start_id": 52559,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 47849,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 6048,
+        "longest_contiguous_training_rows": 1120,
+        "selected_six_features_evaluation_raw_bytes": 290304,
+        "selected_six_features_raw_bytes": 53760,
+        "selected_six_features_total_raw_bytes": 344064
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/53.csv",
+      "member_bytes_compressed": 27254332,
+      "member_bytes_uncompressed": 93271611,
+      "member_crc32": "bae2ea80",
+      "member_sha256": "9a8fd31ce4efb75323edf1daef46af46b25a7f2a4baf39359112be469291b0c6",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 6047
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-12-26 16:40:00",
+      "prediction_last_time": "2024-02-06 16:30:00",
+      "prediction_rows": 6048,
+      "prediction_span_days_inclusive": 42.0,
+      "prediction_span_seconds": 3628200,
+      "rows": 58607,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 1952,
+          "present": 58607
+        },
+        "power_62_avg": {
+          "literal_zero": 473,
+          "present": 58607
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6011,
+          "present": 58607
+        },
+        "wind_speed_59_avg": {
+          "present": 58607
+        },
+        "wind_speed_60_avg": {
+          "present": 58607
+        },
+        "wind_speed_61_avg": {
+          "present": 58607
+        }
+      },
+      "source_first_time": "2022-12-26 16:40:00",
+      "source_last_time": "2024-02-06 16:30:00",
+      "status_counts": {
+        "all": {
+          "0": 53560,
+          "1": 2978,
+          "4": 151,
+          "5": 1918
+        },
+        "prediction": {
+          "0": 5711,
+          "1": 315,
+          "5": 22
+        },
+        "train": {
+          "0": 47849,
+          "1": 2663,
+          "4": 151,
+          "5": 1896
+        }
+      },
+      "status_transition_count": 490,
+      "train_first_time": "2022-12-26 16:40:00",
+      "train_last_time": "2023-12-26 16:20:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31534800
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 2685816,
+        "total": 29175552,
+        "train": 26489736
+      },
+      "asset_id": "13",
+      "asset_ids_in_rows": [
+        "13"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 57886
+      },
+      "event_end": "2023-08-01 00:00:00",
+      "event_end_id": 57167,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 57167,
+          "split": "prediction",
+          "timestamp": "2023-08-01 00:00:00"
+        },
+        "start": {
+          "row_index": 52703,
+          "split": "prediction",
+          "timestamp": "2023-07-01 00:00:00"
+        }
+      },
+      "event_id": 7,
+      "event_interval_duration_seconds": 2678400,
+      "event_interval_prediction_rows": 4465,
+      "event_interval_status_counts": {
+        "0": 4210,
+        "1": 64,
+        "4": 52,
+        "5": 139
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-07-01 00:00:00",
+      "event_start_id": 52703,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 49236,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 5329,
+        "longest_contiguous_training_rows": 1282,
+        "selected_six_features_evaluation_raw_bytes": 255792,
+        "selected_six_features_raw_bytes": 61536,
+        "selected_six_features_total_raw_bytes": 317328
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/7.csv",
+      "member_bytes_compressed": 27075941,
+      "member_bytes_uncompressed": 92094858,
+      "member_crc32": "a0595f08",
+      "member_sha256": "4a3c90b68f97079efac7f50db51ae066be89d07b616557b01da3911a7e3a1236",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 5328
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-06-30 00:00:00",
+      "prediction_last_time": "2023-08-06 00:00:00",
+      "prediction_rows": 5329,
+      "prediction_span_days_inclusive": 37.00694444444444,
+      "prediction_span_seconds": 3196800,
+      "rows": 57888,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2493,
+          "present": 57888
+        },
+        "power_62_avg": {
+          "literal_zero": 405,
+          "present": 57888
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6247,
+          "present": 57888
+        },
+        "wind_speed_59_avg": {
+          "present": 57888
+        },
+        "wind_speed_60_avg": {
+          "present": 57888
+        },
+        "wind_speed_61_avg": {
+          "present": 57888
+        }
+      },
+      "source_first_time": "2022-06-30 00:00:00",
+      "source_last_time": "2023-08-06 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 54147,
+          "1": 2087,
+          "4": 219,
+          "5": 1435
+        },
+        "prediction": {
+          "0": 4911,
+          "1": 132,
+          "4": 89,
+          "5": 197
+        },
+        "train": {
+          "0": 49236,
+          "1": 1955,
+          "4": 130,
+          "5": 1238
+        }
+      },
+      "status_transition_count": 491,
+      "train_first_time": "2022-06-30 00:00:00",
+      "train_last_time": "2023-06-29 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1548792,
+        "total": 28023408,
+        "train": 26474616
+      },
+      "asset_id": "11",
+      "asset_ids_in_rows": [
+        "11"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 3,
+        "600": 55596,
+        "9000": 2
+      },
+      "event_end": "2023-01-17 07:00:00",
+      "event_end_id": 54737,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54737,
+          "split": "prediction",
+          "timestamp": "2023-01-17 07:00:00"
+        },
+        "start": {
+          "row_index": 52817,
+          "split": "prediction",
+          "timestamp": "2023-01-03 23:00:00"
+        }
+      },
+      "event_id": 74,
+      "event_interval_duration_seconds": 1152000,
+      "event_interval_prediction_rows": 1921,
+      "event_interval_status_counts": {
+        "0": 1867,
+        "1": 51,
+        "5": 3
+      },
+      "event_label": "normal",
+      "event_start": "2023-01-03 23:00:00",
+      "event_start_id": 52817,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 47844,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 3073,
+        "longest_contiguous_training_rows": 1436,
+        "selected_six_features_evaluation_raw_bytes": 147504,
+        "selected_six_features_raw_bytes": 68928,
+        "selected_six_features_total_raw_bytes": 216432
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/74.csv",
+      "member_bytes_compressed": 26155487,
+      "member_bytes_uncompressed": 88646969,
+      "member_crc32": "f8c59180",
+      "member_sha256": "14c870e25b4eec0dc73f378e556e15197b020a7e131a27a10e0a6eb215276819",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 3072
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-01-01 23:00:00",
+      "prediction_last_time": "2023-01-23 07:00:00",
+      "prediction_rows": 3073,
+      "prediction_span_days_inclusive": 21.340277777777775,
+      "prediction_span_seconds": 1843200,
+      "rows": 55602,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2106,
+          "present": 55602
+        },
+        "power_62_avg": {
+          "literal_zero": 691,
+          "present": 55602
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 5735,
+          "present": 55602
+        },
+        "wind_speed_59_avg": {
+          "present": 55602
+        },
+        "wind_speed_60_avg": {
+          "present": 55602
+        },
+        "wind_speed_61_avg": {
+          "present": 55602
+        }
+      },
+      "source_first_time": "2022-01-01 23:00:00",
+      "source_last_time": "2023-01-23 07:00:00",
+      "status_counts": {
+        "all": {
+          "0": 50863,
+          "1": 2942,
+          "4": 157,
+          "5": 1640
+        },
+        "prediction": {
+          "0": 3019,
+          "1": 51,
+          "5": 3
+        },
+        "train": {
+          "0": 47844,
+          "1": 2891,
+          "4": 157,
+          "5": 1637
+        }
+      },
+      "status_transition_count": 492,
+      "train_first_time": "2022-01-01 23:00:00",
+      "train_last_time": "2023-01-01 22:50:00",
+      "train_prefix": true,
+      "train_rows": 52529,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 4645368,
+        "total": 31135104,
+        "train": 26489736
+      },
+      "asset_id": "12",
+      "asset_ids_in_rows": [
+        "12"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 61774
+      },
+      "event_end": "2023-07-31 00:00:00",
+      "event_end_id": 61631,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 61631,
+          "split": "prediction",
+          "timestamp": "2023-07-31 00:00:00"
+        },
+        "start": {
+          "row_index": 52991,
+          "split": "prediction",
+          "timestamp": "2023-06-01 00:00:00"
+        }
+      },
+      "event_id": 77,
+      "event_interval_duration_seconds": 5184000,
+      "event_interval_prediction_rows": 8641,
+      "event_interval_status_counts": {
+        "0": 7862,
+        "1": 600,
+        "5": 179
+      },
+      "event_label": "anomaly",
+      "event_start": "2023-06-01 00:00:00",
+      "event_start_id": 52991,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 48931,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 9217,
+        "longest_contiguous_training_rows": 1536,
+        "selected_six_features_evaluation_raw_bytes": 442416,
+        "selected_six_features_raw_bytes": 73728,
+        "selected_six_features_total_raw_bytes": 516144
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/77.csv",
+      "member_bytes_compressed": 29373892,
+      "member_bytes_uncompressed": 98677572,
+      "member_crc32": "d278318f",
+      "member_sha256": "8ef8d082f0ff2f7c8c816aa15ba215e88cd2a2f407c521501ad9baafe56ccbd3",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 9216
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-05-29 00:00:00",
+      "prediction_last_time": "2023-08-01 00:00:00",
+      "prediction_rows": 9217,
+      "prediction_span_days_inclusive": 64.00694444444444,
+      "prediction_span_seconds": 5529600,
+      "rows": 61776,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2177,
+          "present": 61776
+        },
+        "power_62_avg": {
+          "literal_zero": 599,
+          "present": 61776
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6266,
+          "present": 61776
+        },
+        "wind_speed_59_avg": {
+          "present": 61776
+        },
+        "wind_speed_60_avg": {
+          "present": 61776
+        },
+        "wind_speed_61_avg": {
+          "present": 61776
+        }
+      },
+      "source_first_time": "2022-05-29 00:00:00",
+      "source_last_time": "2023-08-01 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 57154,
+          "1": 3026,
+          "4": 156,
+          "5": 1440
+        },
+        "prediction": {
+          "0": 8223,
+          "1": 814,
+          "5": 180
+        },
+        "train": {
+          "0": 48931,
+          "1": 2212,
+          "4": 156,
+          "5": 1260
+        }
+      },
+      "status_transition_count": 529,
+      "train_first_time": "2022-05-29 00:00:00",
+      "train_last_time": "2023-05-28 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1234296,
+        "total": 27715968,
+        "train": 26481672
+      },
+      "asset_id": "5",
+      "asset_ids_in_rows": [
+        "5"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 7,
+        "1800": 5,
+        "600": 54979
+      },
+      "event_end": "2023-10-08 23:00:00",
+      "event_end_id": 54703,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54703,
+          "split": "prediction",
+          "timestamp": "2023-10-08 23:00:00"
+        },
+        "start": {
+          "row_index": 52975,
+          "split": "prediction",
+          "timestamp": "2023-09-26 23:00:00"
+        }
+      },
+      "event_id": 82,
+      "event_interval_duration_seconds": 1036800,
+      "event_interval_prediction_rows": 1729,
+      "event_interval_status_counts": {
+        "0": 1672,
+        "1": 55,
+        "5": 2
+      },
+      "event_label": "normal",
+      "event_start": "2023-09-26 23:00:00",
+      "event_start_id": 52975,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 46653,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 2449,
+        "longest_contiguous_training_rows": 1397,
+        "selected_six_features_evaluation_raw_bytes": 117552,
+        "selected_six_features_raw_bytes": 67056,
+        "selected_six_features_total_raw_bytes": 184608
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/82.csv",
+      "member_bytes_compressed": 25610512,
+      "member_bytes_uncompressed": 87397445,
+      "member_crc32": "de776ac2",
+      "member_sha256": "3f83609f4cac332834a3f1f08e8951d3fe0234da81ad85dcc02e979e3d6db781",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 2448
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-09-23 23:00:00",
+      "prediction_last_time": "2023-10-10 23:00:00",
+      "prediction_rows": 2449,
+      "prediction_span_days_inclusive": 17.006944444444443,
+      "prediction_span_seconds": 1468800,
+      "rows": 54992,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2223,
+          "present": 54992
+        },
+        "power_62_avg": {
+          "literal_zero": 382,
+          "present": 54992
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6693,
+          "present": 54992
+        },
+        "wind_speed_59_avg": {
+          "present": 54992
+        },
+        "wind_speed_60_avg": {
+          "present": 54992
+        },
+        "wind_speed_61_avg": {
+          "literal_zero": 6,
+          "present": 54992
+        }
+      },
+      "source_first_time": "2022-09-23 23:00:00",
+      "source_last_time": "2023-10-10 23:00:00",
+      "status_counts": {
+        "all": {
+          "0": 49040,
+          "1": 3555,
+          "4": 308,
+          "5": 2089
+        },
+        "prediction": {
+          "0": 2387,
+          "1": 60,
+          "5": 2
+        },
+        "train": {
+          "0": 46653,
+          "1": 3495,
+          "4": 308,
+          "5": 2087
+        }
+      },
+      "status_transition_count": 550,
+      "train_first_time": "2022-09-23 23:00:00",
+      "train_last_time": "2023-09-23 22:50:00",
+      "train_prefix": true,
+      "train_rows": 52543,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 7112952,
+        "total": 33341616,
+        "train": 26228664
+      },
+      "asset_id": "2",
+      "asset_ids_in_rows": [
+        "2"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "10800": 1,
+        "1200": 11,
+        "1800": 3,
+        "186600": 1,
+        "22200": 1,
+        "2400": 3,
+        "3600": 1,
+        "600": 66130,
+        "69000": 1,
+        "7200": 1
+      },
+      "event_end": "2023-09-30 00:00:00",
+      "event_end_id": 65433,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 65433,
+          "split": "prediction",
+          "timestamp": "2023-09-30 00:00:00"
+        },
+        "start": {
+          "row_index": 52329,
+          "split": "prediction",
+          "timestamp": "2023-07-01 00:00:00"
+        }
+      },
+      "event_id": 83,
+      "event_interval_duration_seconds": 7862400,
+      "event_interval_prediction_rows": 13105,
+      "event_interval_status_counts": {
+        "0": 11995,
+        "1": 479,
+        "4": 89,
+        "5": 542
+      },
+      "event_label": "normal",
+      "event_start": "2023-07-01 00:00:00",
+      "event_start_id": 52329,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 45750,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 14113,
+        "longest_contiguous_training_rows": 1147,
+        "selected_six_features_evaluation_raw_bytes": 677424,
+        "selected_six_features_raw_bytes": 55056,
+        "selected_six_features_total_raw_bytes": 732480
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/83.csv",
+      "member_bytes_compressed": 30592958,
+      "member_bytes_uncompressed": 105007050,
+      "member_crc32": "af770021",
+      "member_sha256": "a1df7aafd3792f66f515b245f5e09ea9d77e78ced3e84fede67e50cbf0219092",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 14112
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-06-29 00:00:00",
+      "prediction_last_time": "2023-10-05 00:00:00",
+      "prediction_rows": 14113,
+      "prediction_span_days_inclusive": 98.00694444444444,
+      "prediction_span_seconds": 8467200,
+      "rows": 66154,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 3035,
+          "present": 66154
+        },
+        "power_62_avg": {
+          "literal_zero": 1078,
+          "present": 66154
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 9430,
+          "present": 66154
+        },
+        "wind_speed_59_avg": {
+          "literal_zero": 10,
+          "present": 66154
+        },
+        "wind_speed_60_avg": {
+          "literal_zero": 10,
+          "present": 66154
+        },
+        "wind_speed_61_avg": {
+          "literal_zero": 10,
+          "present": 66154
+        }
+      },
+      "source_first_time": "2022-06-29 00:00:00",
+      "source_last_time": "2023-10-05 00:00:00",
+      "status_counts": {
+        "all": {
+          "0": 58609,
+          "1": 2234,
+          "4": 468,
+          "5": 4843
+        },
+        "prediction": {
+          "0": 12859,
+          "1": 622,
+          "4": 89,
+          "5": 543
+        },
+        "train": {
+          "0": 45750,
+          "1": 1612,
+          "4": 379,
+          "5": 4300
+        }
+      },
+      "status_transition_count": 785,
+      "train_first_time": "2022-06-29 00:00:00",
+      "train_last_time": "2023-06-28 23:50:00",
+      "train_prefix": true,
+      "train_rows": 52041,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1475208,
+        "total": 27964944,
+        "train": 26489736
+      },
+      "asset_id": "12",
+      "asset_ids_in_rows": [
+        "12"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "600": 55484
+      },
+      "event_end": "2023-05-12 01:10:00",
+      "event_end_id": 54621,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54621,
+          "split": "prediction",
+          "timestamp": "2023-05-12 01:10:00"
+        },
+        "start": {
+          "row_index": 52703,
+          "split": "prediction",
+          "timestamp": "2023-04-28 17:30:00"
+        }
+      },
+      "event_id": 86,
+      "event_interval_duration_seconds": 1150800,
+      "event_interval_prediction_rows": 1919,
+      "event_interval_status_counts": {
+        "0": 1880,
+        "1": 36,
+        "5": 3
+      },
+      "event_label": "normal",
+      "event_start": "2023-04-28 17:30:00",
+      "event_start_id": 52703,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 48844,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 2927,
+        "longest_contiguous_training_rows": 1536,
+        "selected_six_features_evaluation_raw_bytes": 140496,
+        "selected_six_features_raw_bytes": 73728,
+        "selected_six_features_total_raw_bytes": 214224
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/86.csv",
+      "member_bytes_compressed": 26367665,
+      "member_bytes_uncompressed": 88573954,
+      "member_crc32": "5c749b49",
+      "member_sha256": "2ae869069d0ca3c3042c0310c2a85e48457aa3f6ae877ef76d08b5ab1dba7ccd",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 2926
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-04-27 17:30:00",
+      "prediction_last_time": "2023-05-18 01:10:00",
+      "prediction_rows": 2927,
+      "prediction_span_days_inclusive": 20.326388888888886,
+      "prediction_span_seconds": 1755600,
+      "rows": 55486,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2200,
+          "present": 55486
+        },
+        "power_62_avg": {
+          "literal_zero": 622,
+          "present": 55486
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 5652,
+          "present": 55486
+        },
+        "wind_speed_59_avg": {
+          "present": 55486
+        },
+        "wind_speed_60_avg": {
+          "present": 55486
+        },
+        "wind_speed_61_avg": {
+          "present": 55486
+        }
+      },
+      "source_first_time": "2022-04-27 17:30:00",
+      "source_last_time": "2023-05-18 01:10:00",
+      "status_counts": {
+        "all": {
+          "0": 51700,
+          "1": 2013,
+          "4": 197,
+          "5": 1576
+        },
+        "prediction": {
+          "0": 2856,
+          "1": 68,
+          "5": 3
+        },
+        "train": {
+          "0": 48844,
+          "1": 1945,
+          "4": 197,
+          "5": 1573
+        }
+      },
+      "status_transition_count": 464,
+      "train_first_time": "2022-04-27 17:30:00",
+      "train_last_time": "2023-04-27 17:20:00",
+      "train_prefix": true,
+      "train_rows": 52559,
+      "train_span_seconds": 31535400
+    },
+    {
+      "all_63_average_features_raw_bytes_no_filtering": {
+        "prediction": 1524600,
+        "total": 27899424,
+        "train": 26374824
+      },
+      "asset_id": "7",
+      "asset_ids_in_rows": [
+        "7"
+      ],
+      "average_columns": 63,
+      "cadence_seconds_histogram": {
+        "1200": 1,
+        "137400": 1,
+        "600": 55353
+      },
+      "event_end": "2023-09-30 23:00:00",
+      "event_end_id": 54779,
+      "event_endpoint_rows": {
+        "end": {
+          "row_index": 54779,
+          "split": "prediction",
+          "timestamp": "2023-09-30 23:00:00"
+        },
+        "start": {
+          "row_index": 52475,
+          "split": "prediction",
+          "timestamp": "2023-09-14 23:00:00"
+        }
+      },
+      "event_id": 87,
+      "event_interval_duration_seconds": 1382400,
+      "event_interval_prediction_rows": 2305,
+      "event_interval_status_counts": {
+        "0": 2224,
+        "1": 80,
+        "5": 1
+      },
+      "event_label": "normal",
+      "event_start": "2023-09-14 23:00:00",
+      "event_start_id": 52475,
+      "header_columns": 257,
+      "if_status_0_2_training_plus_1day_embargo": {
+        "eligible_status_rows_before_embargo": 46178,
+        "embargo_seconds": 86400,
+        "evaluation_rows_full_prediction": 3025,
+        "longest_contiguous_training_rows": 1267,
+        "selected_six_features_evaluation_raw_bytes": 145200,
+        "selected_six_features_raw_bytes": 60816,
+        "selected_six_features_total_raw_bytes": 206016
+      },
+      "member": "CARE_To_Compare/Wind Farm B/datasets/87.csv",
+      "member_bytes_compressed": 25712847,
+      "member_bytes_uncompressed": 87964022,
+      "member_crc32": "0cb6d515",
+      "member_sha256": "54c13391b96392f301dcf09f958df082a2c58d1b219aeafb82de67bda8674e1a",
+      "nonpositive_timestamp_steps": 0,
+      "prediction_cadence_seconds_histogram": {
+        "600": 3024
+      },
+      "prediction_cadence_steps_off_600s": 0,
+      "prediction_first_time": "2023-09-13 23:00:00",
+      "prediction_last_time": "2023-10-04 23:00:00",
+      "prediction_rows": 3025,
+      "prediction_span_days_inclusive": 21.006944444444443,
+      "prediction_span_seconds": 1814400,
+      "rows": 55356,
+      "selected_feature_raw_value_counts": {
+        "power_58_avg": {
+          "literal_zero": 2509,
+          "present": 55356
+        },
+        "power_62_avg": {
+          "literal_zero": 355,
+          "present": 55356
+        },
+        "reactive_power_11_avg": {
+          "literal_zero": 6469,
+          "present": 55356
+        },
+        "wind_speed_59_avg": {
+          "present": 55356
+        },
+        "wind_speed_60_avg": {
+          "present": 55356
+        },
+        "wind_speed_61_avg": {
+          "present": 55356
+        }
+      },
+      "source_first_time": "2022-09-13 23:00:00",
+      "source_last_time": "2023-10-04 23:00:00",
+      "status_counts": {
+        "all": {
+          "0": 49112,
+          "1": 2368,
+          "4": 203,
+          "5": 3673
+        },
+        "prediction": {
+          "0": 2934,
+          "1": 89,
+          "5": 2
+        },
+        "train": {
+          "0": 46178,
+          "1": 2279,
+          "4": 203,
+          "5": 3671
+        }
+      },
+      "status_transition_count": 413,
+      "train_first_time": "2022-09-13 23:00:00",
+      "train_last_time": "2023-09-13 22:50:00",
+      "train_prefix": true,
+      "train_rows": 52331,
+      "train_span_seconds": 31535400
+    }
+  ]
+}

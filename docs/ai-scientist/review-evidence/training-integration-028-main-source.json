@@ -1,0 +1,33 @@
+{
+  "schema": "training-integration-source.v1",
+  "base_commit": "2fee93f",
+  "base_patch_sha256": "cf8a399fe8f90684d8c481743eb703394813f9dc77aa2b646a6e11055e1565a7",
+  "supplement_patch_sha256": "3d6f0cac3d3c269cf4dc2abf928d06175062635d27bd8a358a2f555cf3227b66",
+  "apply_checks": {
+    "base_on_main": 0,
+    "supplement_on_main": 0,
+    "supplement_file_parity_before_root_edits": "9/9"
+  },
+  "root_deltas": [
+    "Existing 0.27 shared DB CLI helper preserved by patch application.",
+    "Trusted training source directory added to fingerprint and tamper test, VERSION 0.28.0.",
+    "Dispatch passes current TRAINING_LEDGER explicitly; test requires isolated temporary SQLite file.",
+    "ADR clarifies private SQLite fixtures versus absent shared GPU/PostgreSQL database access."
+  ],
+  "source_sha256": {
+    "harness/VERSION": "a80bff70756ff2e0f528e9b6844fcb5fe4baea4c6f257257c4aea3a38ab31222",
+    "harness/fingerprint.py": "289243f47b18cec08dabe1d07df040b1157bee823091c2bf6f447a7b5e181222",
+    "lab/cli.py": "677f6d382a12a5293556d95748df47427fa2d2734452df917a1240618beea5fc",
+    "scripts/quality_gate.py": "6607db19aa4364115aa0b4c6f11d2238ac381b9478124657b306ce4804564806",
+    "tests/test_fingerprint.py": "0b8622aaa6f67a724b3f162c4a521d25830451911509a83ec771c49b0e4e203e",
+    "tests/test_training_maintenance.py": "2f6ae792a7d71709b031a02836ae4ecd1b83e8c79e1127b5c47385f72a792270",
+    "docs/ai-scientist/adr/0014-bounded-training-maintenance.md": "4af739fd708e8b71a4174cd89bd5491fc486584c433582ae9caba36e89fc77ed",
+    "docs/ai-scientist/adr/0015-training-runtime-fencing-corrections.md": "8b0de49c6ba5e4b27cabca19f0c5f5802abc6bd357d1a3862ba9aaea25fe6d0a",
+    "lab/training/__init__.py": "40534af374b0562850da1ca40fe3e4191acfb3c9dfb49b2e9bc6b44b7578ca4c",
+    "lab/training/maintenance.py": "4cb3b417b008b8406c2c34376f581f6c85c502c8885129bc49e68aeb9acd24ce",
+    "lab/training/qlora_step_worker.py": "8f3f91ba6624d0541762acf04c355e0d84f31a12b7ee56e3dc608c773937a3a8",
+    "lab/training/runtime_paths.py": "689d38394cc15b3277d52cd8f21d1b234613e0af07319e4bf6acd1e7cfb6171e",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b"
+  },
+  "gpu_acceptance": "unmeasured; coordination pending"
+}

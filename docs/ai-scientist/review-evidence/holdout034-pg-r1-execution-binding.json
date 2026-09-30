@@ -1,0 +1,40 @@
+{
+  "schema": "holdout034-pg-execution-binding.v1",
+  "attempt": "r1",
+  "scope": "Disposable SQL fixture migration and three fixed test targets; no model/GPU/AOS/worker acceptance",
+  "evidence": "holdout-generation-034-pg-d89bec389309.json",
+  "evidence_sha256": "0c81370598118d94f2b8dbc526b416e15f2837b711361dcd62201ae3f7c906dc",
+  "fixture_id": "d89bec38930940c7b2daefe4fe30ad60",
+  "migration_exit_code": 1,
+  "test_exit_code": null,
+  "cleanup": {
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "source_checks": {
+    "source_now_matches_snapshot": true,
+    "snapshot_unchanged": true,
+    "runner_unchanged": true,
+    "pytest_observer_unchanged": true
+  },
+  "runner_sha256": "4cbe4185193b3ed0fffd4abdd7f33ac5526921e94610b0d24c0f33fcac7dce79",
+  "test_sha256": {
+    "tests/test_postgres_holdout026_closure.py": "ab81a65fb02b38d4dfe1da5fbe268e5c70a9585a06d1496220107b56f6d0f0fb",
+    "tests/test_postgres_holdout034_chain.py": "e6b0bb5aa276b3b8d2e95f09ad5eb399975360f53b057ab4ad4b3f74308bd322",
+    "tests/test_postgres_run_end_unavailable.py": "303bcb546f9710aa4c48e7430cc5407ccb670e3334d75d6e6b376e8023f6108b"
+  },
+  "launch": {
+    "command": "/home/cachyos/ai-scientist/.venv/bin/python - <<'PY'\nimport hashlib,json,os\nfrom pathlib import Path\nroot=Path('/home/cachyos/ai-scientist')\nsource=root/'data/runtime/parallel-m0/holdout-generation-034'\nmanifest=source/'review-evidence/closure034-sol-freeze.json'\nassert hashlib.sha256(manifest.read_bytes()).hexdigest()=='9fa8ef057ae02a8cc40e8cd1c7b0667e9a8e7bc215468a2c2e2765b816456441'\nfreeze=json.loads(manifest.read_bytes())\nfor name,digest in freeze['files'].items():\n    assert hashlib.sha256((source/name).read_bytes()).hexdigest()==digest,name\nassert all(check['exit_code']==0 for check in freeze['checks'].values())\nrunner=root/'data/runtime/parallel-m0/holdout-generation-034-checks/run_holdout034_pg.py'\nassert hashlib.sha256(runner.read_bytes()).hexdigest()=='4cbe4185193b3ed0fffd4abdd7f33ac5526921e94610b0d24c0f33fcac7dce79'\nargv=['flock',str(root/'data/runtime/parallel-m0/cpu-check.lock'),'systemd-run','--user','--wait','--pipe','--collect','--unit=swapp-review-holdout034-pg-r1.service','--slice=swapp-gpu.slice','--property=MemoryMax=1G','--property=MemorySwapMax=0','--property=CPUQuota=50%','--property=TasksMax=64','--property=RuntimeMaxSec=300','--property=TimeoutStopSec=30','--property=KillMode=control-group','--working-directory='+str(root),'--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=CUDA_VISIBLE_DEVICES=','--setenv=TMPDIR=/home/cachyos/.m0r10',str(root/'.venv/bin/python'),str(runner),'--execute-reviewed-pg']\nos.execvp(argv[0],argv)\nPY",
+    "tool_session_id": 30501,
+    "tool_initial_chunk_id": "b5afc9",
+    "tool_completion_chunk_id": "90b540",
+    "actual_exit_code": 1,
+    "service_runtime_seconds": 2.374,
+    "memory_peak_reported": "77.8M",
+    "swap_peak_bytes": 0
+  },
+  "freeze_manifest_sha256": "9fa8ef057ae02a8cc40e8cd1c7b0667e9a8e7bc215468a2c2e2765b816456441",
+  "failure": "0026 migration SQLAlchemy text parsed a literal regex :run_end$ as a bind parameter; psycopg reported query parameter missing: run_end$.",
+  "tests_executed": false,
+  "acceptance_claim": false
+}

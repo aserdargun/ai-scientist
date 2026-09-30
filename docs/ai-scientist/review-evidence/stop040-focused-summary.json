@@ -1,0 +1,39 @@
+{
+  "schema": "stop040-focused-safe-summary.v1",
+  "date": "2026-09-30",
+  "final_evidence_sha256": "a5aed6bbb4a5b07675f3ad598696e12f0d322777726e6557785c42589c8cec7d",
+  "fixture_receipt_sha256": "965ed573c28a9cd43ad9c744195dd9094cd6c7fe76a9aaaa4a6f1a96405450f4",
+  "launcher_receipt_sha256": "63673ed2b372ed6209cbf7af3a1d99629e9c220bc2c8a9ba76fd2388b3b52dd9",
+  "actual_exit_code": 0,
+  "passed": 124,
+  "pytest_seconds": 1.51,
+  "service_runtime_seconds": 1.989,
+  "memory_peak_reported": "163.5M",
+  "swap_bytes": 0,
+  "runtime_inventory_count": 301,
+  "source_unchanged": true,
+  "main_and_private039_unchanged": true,
+  "payload_sha256": {
+    "lab/db/migrations/versions/0034_multi_baseline_stop.py": "5d3aa692a8f2e9d36257f4e78b0821bfbb6adb14cd6824830566cc511afd6b6a",
+    "lab/director/stop_closure.py": "5d0532d938e83cf5ed167307ab35e88ff57fafc74aaff916c35f4abbbbb77bc1",
+    "lab/scorer/stop_recovery.py": "e92db87c71caa8ebbe314123e4cc6a331b1d47455c3645d25ad2d0cd15db9f08",
+    "tests/test_multi_baseline_stop040.py": "63c1a3cc969f14b4ef98adb427517a19e93c91c889993f53c2cd387dbb1677e4"
+  },
+  "source_manifest_sha256": "df36cbbede7af03bd543d39ad6cefe2318fb9956c25d00f97640d520cf4c2fe4",
+  "review_diff_sha256": "ca7f25df194b81e4fbd33304564df6ebacd9dd2b74772a04320fbfde8536b741",
+  "preserved_r1": {
+    "diagnosis": "fixture suite regularfile incorrectly placed withinCASartifactstore; correctedonlyfixturepath",
+    "exit_code": 1,
+    "failed": 3,
+    "passed": 121,
+    "receipt_sha256": "84b4d70b0e0ba013087a8170fe0b584e0850e590f0fd77eeedb8a9ad8a274886"
+  },
+  "r1_to_r2_production_hashes_unchanged": true,
+  "r1_to_r2_fix": "Test suite regular file moved outside CAS artifact store; fixture path correction only.",
+  "actual_postgresql_proof": false,
+  "actual_process_death_proof": false,
+  "release040_gate_or_image_proven": false,
+  "main_release040_promoted": false,
+  "M0_10_complete": false,
+  "scope": "CPU fixtures for proposed multi-baseline stop recovery; database and process death mocked. No actual 0034 PostgreSQL catalog/ACL/rollback or mixed measured baseline terminal closure acceptance."
+}

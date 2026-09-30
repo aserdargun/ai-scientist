@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-09-24T20:41:03.251220+00:00",
+  "scope": "Pure real AOS typed Action/State/SafetyPolicy call in isolated source-typed; no filesystem action, database, HTTP, model or live AOS execution.",
+  "source_sha256": {
+    "src/aos/contracts.py": "c8efef6e84bb278011763a07f205d93ae7086ba0aec1336d83c907910239d064",
+    "src/aos/computer.py": "e17a95fd70899cf9333658ad2f62d3179364ca4aad0b8b8cbe5a50609594a26a"
+  },
+  "tool": "filesystem.read",
+  "task_kind": "lab_research",
+  "wrong_tool_rejected": true,
+  "source_unchanged": true
+}

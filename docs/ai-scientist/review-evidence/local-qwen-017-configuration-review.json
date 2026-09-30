@@ -1,0 +1,18 @@
+{
+  "schema": "local-qwen-review-configuration.v1",
+  "config_directory": "data/runtime/local-qwen-review/config-e0f796735910442397f02856c776f34d",
+  "suite_manifest_sha256": "c0c1e4d87fd26cb2a63b5da416e33ca4c415d15f8a5e8be7aa885d4fac2445da",
+  "provider_config_sha256": "244d66f805becd0654bd9d2de88d849a7c181b292c7b7f672343d114e6d52624",
+  "provider_registry_entry_sha256": "f99e397f8df073ccd00160b4177de69b02c5dbff25e34a160c08fea6fa89e969",
+  "config_files_sha256": {
+    "suites.json": "f3839e166bb1d31098bf7d0e0ab010b231b12d33d16d8dd519b51e2db25955f0",
+    "principals.json": "caf81c53d99bbd518aa8b81baa4df1ab2cce1e7941ca4e1bc07b1e61f5b40d9d"
+  },
+  "checks": {
+    "private_config_directory": true,
+    "private_config_files": true,
+    "real_provider_selected": true,
+    "six_proposals": true
+  },
+  "execution_started": false
+}

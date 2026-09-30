@@ -1,0 +1,49 @@
+diff --git a/lab/director/runner.py b/lab/director/runner.py
+index da4b71d..ec7484c 100644
+--- a/lab/director/runner.py
++++ b/lab/director/runner.py
+@@ -1172,11 +1172,40 @@ def _read_measurement(
+         )
+     ):
+         raise RuntimeError("resumed primary score differs from its preregistered identity")
+-    metrics = (float(row["vus_pr"]), float(row["vus_roc"]))
++    family = task.family
++    recorded_family = row.get("task_family")
++    if recorded_family is None:
++        # Checkpoints written before family-aware scoring remain readable only for EVT.
++        if family != "EVT" or "task_family" in row:
++            raise RuntimeError("resumed measurement task family differs from its trusted task")
++    elif recorded_family != family:
++        raise RuntimeError("resumed measurement task family differs from its trusted task")
++
++    try:
++        if family == "EVT":
++            metrics = (float(row["vus_pr"]), float(row["vus_roc"]))
++            family_metrics = metrics
++        elif family in {"PDM", "NRM"}:
++            family_metrics = (
++                float(row["task_score"]),
++                float(row["fa_per_day"]),
++                float(row["duty_fraction"]),
++            )
++            if family == "NRM":
++                family_metrics += (float(row["position_bias"]),)
++        else:
++            raise RuntimeError("resumed measurement has an unsupported trusted task family")
++        fit_seconds = float(row["fit_seconds"])
++        score_seconds = float(row["score_seconds"])
++    except (KeyError, TypeError, ValueError, OverflowError) as exc:
++        raise RuntimeError("resumed measurement lacks complete family score provenance") from exc
++
+     if (
+-        not all(math.isfinite(value) for value in metrics)
+-        or float(row.get("fit_seconds", -1.0)) < 0
+-        or float(row.get("score_seconds", -1.0)) < 0
++        not all(math.isfinite(value) for value in family_metrics)
++        or fit_seconds < 0
++        or score_seconds < 0
++        or (family in {"PDM", "NRM"} and (family_metrics[1] < 0 or not 0 <= family_metrics[2] <= 1))
++        or (family == "NRM" and not 0 <= family_metrics[3] <= 1)
+         or not isinstance(row.get("guards"), dict)
+         or not row.get("candidate_output_sha256")
+     ):

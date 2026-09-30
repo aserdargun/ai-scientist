@@ -1,0 +1,6 @@
+{
+  "path": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/stop-closure-051/.venv",
+  "target": "/home/cachyos/ai-scientist/.venv",
+  "action": "existing isolated environment symlink, no installation",
+  "reason": "gate smoke invokes project .venv; staged source copy omitted untracked environment"
+}

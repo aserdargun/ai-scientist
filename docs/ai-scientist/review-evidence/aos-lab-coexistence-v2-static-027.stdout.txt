@@ -1,0 +1,4 @@
+All checks passed!
+AST parse: passed
+CLI help: passed
+systemd_run_exit=0

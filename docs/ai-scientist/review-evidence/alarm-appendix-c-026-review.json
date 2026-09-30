@@ -1,0 +1,66 @@
+{
+  "schema": "alarm-appendix-c-parity.v1",
+  "source_commit": "55f85a0d45cad11164069cda85e7be2d317696bf",
+  "harness_sha256": "3c51b8fe2db27c950da7a979e5d7757f4aa8d8b49e8c5c8608fe3069d43ff176",
+  "spec_sha256": "0c14e2647e01eda5a5556269656e60a224de42e1a6dccab6e1a90ecbfe1cb691",
+  "script_sha256": "2f49f751fadfbc108c3acdf8659cf661837dba1b98c4235efec199b4f2182676",
+  "pdm_observed": [
+    [
+      0.7555555555555555,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.44,
+      1.0
+    ],
+    [
+      0.0,
+      1.44,
+      0.08
+    ]
+  ],
+  "pdm_expected": [
+    [
+      0.7555555555555555,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.44,
+      1.0
+    ],
+    [
+      0.0,
+      1.44,
+      0.08
+    ]
+  ],
+  "nrm_observed": [
+    0.9048374180359595,
+    0.1,
+    0.0020833333333333333
+  ],
+  "nrm_expected": [
+    0.9048374180359595,
+    0.1,
+    0.0020833333333333333
+  ],
+  "nrm_always_on": [
+    0.0,
+    0.1,
+    1.0
+  ],
+  "checks": {
+    "dwell_and_release_exact": true,
+    "pdm_all_three_rows_float_hex_equal": true,
+    "nrm_reference_float_hex_equal": true,
+    "always_on_pdm_zero_not_rejected": true,
+    "always_on_nrm_zero_not_rejected": true,
+    "harness_unchanged": true
+  },
+  "passed": true,
+  "scope": "Production CPU functions, exact Appendix C [3] fixture. Not a Docker/Scorer, dataset or model measurement."
+}

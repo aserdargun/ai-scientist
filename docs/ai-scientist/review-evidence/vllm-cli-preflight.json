@@ -1,0 +1,74 @@
+{
+  "checked_at": "2026-09-24T09:49:10.402034+00:00",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--quiet",
+    "--property=RuntimeMaxSec=60",
+    "--property=MemoryMax=2G",
+    "--property=CPUQuota=100%",
+    "--property=Nice=10",
+    "--property=IOWeight=10",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "/usr/bin/env",
+    "CUDA_VISIBLE_DEVICES=",
+    "VLLM_NO_USAGE_STATS=1",
+    "HF_HUB_OFFLINE=1",
+    "HF_HUB_DISABLE_TELEMETRY=1",
+    "/home/cachyos/ai-scientist/data/runtime/vllm/.venv/bin/vllm",
+    "serve",
+    "--help=all"
+  ],
+  "exit_code": 0,
+  "stderr": "",
+  "stdout_path": "data/runtime/setup/vllm-serve-help-all.txt",
+  "stdout_sha256": "3073d6bc0444950e8c8d1af2f1a36cc3b0793b48e53f72b605724d0c9a30baed",
+  "selected_help_sections": {
+    "--quantization": [
+      "  --quantization QUANTIZATION, -q QUANTIZATION\n                        Method used to quantize the weights. If `None`, we\n                        first check the `quantization_config` attribute in the\n                        model config file. If that is `None`, we assume the\n                        model weights are not quantized and use `dtype` to\n                        determine the data type of the weights. (default:\n                        None)\n  --quantization-config QUANTIZATION_CONFIG\n                        User-facing quantization configuration. Carries per-\n                        layer-kind specs (linear, moe) and ignore patterns;"
+    ],
+    "--max-model-len": [
+      "  --max-model-len MAX_MODEL_LEN\n                        Model context length (prompt and output). If\n                        unspecified, will be automatically derived from the\n                        model config.\n                        When passing via `--max-model-len`, supports\n                        k/m/g/K/M/G in human-readable format. Examples:\n                        - 1k -> 1000\n                        - 1K -> 1024\n                        - 25.6k -> 25,600\n                        - -1 or 'auto' -> Automatically choose the maximum"
+    ],
+    "--reasoning-parser": [
+      "  --reasoning-parser REASONING_PARSER\n                        Select the reasoning parser depending on the model\n                        that you're using. This is used to parse the reasoning\n                        content into OpenAI API format. (default: )\n  --reasoning-parser-plugin REASONING_PARSER_PLUGIN\n                        Path to a dynamically reasoning parser plugin that can\n                        be dynamically loaded and registered. (default: )\n\nParallelConfig:\n  Configuration for the distributed execution."
+    ],
+    "--tool-call-parser": [
+      "  --tool-call-parser {apertus,cohere_command3,cohere_command4,deepseek_v3,deepseek_v31,deepseek_v32,deepseek_v4,deepseek_v41,dots,ernie45,functiongemma,gemma4,gigachat3,glm45,glm47,granite,granite-20b-fc,granite4,hermes,hunyuan_a13b,hy_v3,hy_v4,inkling,internlm,jamba,k2_horizon,kimi_k2,kimi_k3,lfm2,ling3,llama3_json,llama4_json,llama4_pythonic,longcat,mimo,minicpm5,minimax_m2,minimax_m3,mistral,muse_glimmer,olmo3,openai,phi4_mini_json,poolside_v1,pythonic,qwen3_coder,qwen3_xml,seed_oss,step3,step3p5,xlam} or name registered in --tool-parser-plugin\n  --tool-parser-plugin TOOL_PARSER_PLUGIN\n  --tool-server TOOL_SERVER\n  --trust-request-chat-template, --no-trust-request-chat-template\n  --uds UDS             Unix domain socket path. If set, host and port\n                        arguments are ignored. (default: None)\n  --uvicorn-log-level {critical,debug,error,info,trace,warning}\n                        Log level for uvicorn. (default: info)\n\nModelConfig:"
+    ],
+    "--enable-auto-tool-choice": [
+      "  --enable-auto-tool-choice, --no-enable-auto-tool-choice\n  --enable-flash-late-interaction, --no-enable-flash-late-interaction\n                        If set, run pooling score MaxSim on GPU in the API\n                        server process. Can significantly improve late-\n                        interaction scoring performance. (default: True)\n  --enable-force-include-usage, --no-enable-force-include-usage\n  --enable-log-deltas, --no-enable-log-deltas\n  --enable-log-outputs, --no-enable-log-outputs\n  --enable-offline-docs, --no-enable-offline-docs\n                        Enable offline FastAPI documentation for air-gapped"
+    ],
+    "--enable-sleep-mode": [
+      "  --enable-sleep-mode, --no-enable-sleep-mode\n                        Enable sleep mode for the engine (only cuda and hip\n                        platforms are supported). (default: False)\n  --enable-trace-replay, --no-enable-trace-replay\n                        Whether to allow requests to set\n                        `SamplingParams.trace_decode_token_ids`, which forces\n                        decoding to follow a predetermined token sequence\n                        while still computing real logprobs. Reserved for\n                        debugging and RL workflows: enabling it reserves a\n                        per-request trace buffer, so it is off by default."
+    ],
+    "--gpu-memory-utilization": [
+      "  --gpu-memory-utilization GPU_MEMORY_UTILIZATION\n                        The fraction of GPU memory to be used for the model\n                        executor, which can range from 0 to 1. For example, a\n                        value of 0.5 would imply 50% GPU memory utilization.\n                        If unspecified, will use the default value of 0.92.\n                        This is a per-instance limit, and only applies to the\n                        current vLLM instance. It does not matter if you have\n                        another vLLM instance running on the same GPU. For\n                        example, if you have two vLLM instances running on the\n                        same GPU, you can set the GPU memory utilization to"
+    ],
+    "--limit-mm-per-prompt": [
+      "  --limit-mm-per-prompt LIMIT_MM_PER_PROMPT\n                        The maximum number of input items and options allowed\n                        per prompt for each modality.\n                        Defaults to 999 for each modality.\n                        Legacy format (count only): {\"image\": 16, \"video\": 2}\n                        Configurable format (with options): {\"video\":\n                        {\"count\": 1, \"num_frames\": 32, \"width\": 512, \"height\":\n                        512}, \"image\": {\"count\": 5, \"width\": 512, \"height\":\n                        512}}\n                        Mixed format (combining both): {\"image\": 16, \"video\":"
+    ],
+    "--language-model-only": [
+      "  --language-model-only, --no-language-model-only\n                        If True, disables all multimodal inputs by setting all\n                        modality limits to 0. Equivalent to setting `--limit-\n                        mm-per-prompt` to 0 for every modality. (default:\n                        False)\n  --limit-mm-per-prompt LIMIT_MM_PER_PROMPT\n                        The maximum number of input items and options allowed\n                        per prompt for each modality.\n                        Defaults to 999 for each modality.\n                        Legacy format (count only): {\"image\": 16, \"video\": 2}"
+    ],
+    "--max-num-seqs": [
+      "  --max-num-seqs MAX_NUM_SEQS\n                        Maximum number of sequences to be processed in a\n                        single iteration.\n                        The default value here is mainly for convenience when\n                        testing. In real usage, this should be set in\n                        `EngineArgs.create_engine_config`. (default: None)\n  --prefill-schedule-interval PREFILL_SCHEDULE_INTERVAL\n                        For data-parallel deployments, only admit new prefill\n                        requests once every N engine steps, aligned across DP\n                        ranks, to better balance per-step forward-pass times."
+    ],
+    "--enforce-eager": [
+      "  --enforce-eager, --no-enforce-eager\n                        Whether to always use eager-mode PyTorch. If True, we\n                        will disable CUDA graph and always execute the model\n                        in eager mode. If False, we will use CUDA graph and\n                        eager execution in hybrid for maximal performance and\n                        flexibility.\n                        NOTE: This disables both `torch.compile` and CUDA\n                        graphs, and is equivalent to setting `-cc.mode=none\n                        -cc.cudagraph_mode=none`. (default: False)\n  --generation-config GENERATION_CONFIG"
+    ],
+    "--host": [
+      "  --host HOST           Host name. (default: None)\n  --log-config-file LOG_CONFIG_FILE\n  --log-error-stack, --no-log-error-stack\n  --lora-modules LORA_MODULES [LORA_MODULES ...]\n  --max-log-len MAX_LOG_LEN\n  --middleware MIDDLEWARE\n                        Additional ASGI middleware to apply to the app. We\n                        accept multiple\n                        --middleware arguments. The value should be an import\n                        path. If a function is provided, vLLM will add it to"
+    ],
+    "--port": [
+      "  --port PORT           Port number. (default: 8000)\n  --response-role RESPONSE_ROLE\n  --return-tokens-as-token-ids, --no-return-tokens-as-token-ids\n  --root-path ROOT_PATH\n                        FastAPI root_path when app is behind a path based\n                        routing proxy. (default: None)\n  --sse-keep-alive-interval SSE_KEEP_ALIVE_INTERVAL\n  --ssl-ca-certs SSL_CA_CERTS\n                        The CA certificates file. (default: None)\n  --ssl-cert-reqs SSL_CERT_REQS"
+    ],
+    "--api-key": [
+      "  --api-key API_KEY [API_KEY ...]\n                        If provided, the server will require one of these keys\n                        to be presented in the header.\n                        Warning: this only authenticates endpoints under the\n                        `/v1`, `/v2`, and `/inference` path prefixes. Other\n                        endpoints on the same server, including `/invocations`\n                        (which exposes the same inference capabilities as\n                        `/v1`), remain unauthenticated. Do not rely on `--api-\n                        key` alone to secure vLLM; see https://docs.vllm.ai/en\n                        /latest/usage/security.html#api-key-authentication-"
+    ]
+  },
+  "gpu_model_or_server_started": false
+}

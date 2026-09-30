@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-09-24T09:30:19.141496+00:00",
+  "host": "127.0.0.1",
+  "port": 55432,
+  "server_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+  "database": "swapp_lab",
+  "role": "swapp_lab_admin",
+  "temporary_transaction_sum": 1,
+  "transaction_rolled_back": true,
+  "wrong_password_rejected": true,
+  "psycopg_version": "3.3.6",
+  "container": "/swapp-lab-postgres-m0",
+  "image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "limits": {
+    "memory": 536870912,
+    "memory_swap": 536870912,
+    "nano_cpus": 1000000000,
+    "pids_limit": 128,
+    "read_only_rootfs": true,
+    "port_bindings": {
+      "5432/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "55432"
+        }
+      ]
+    },
+    "log_config": {
+      "Type": "json-file",
+      "Config": {
+        "max-file": "2",
+        "max-size": "5m"
+      }
+    }
+  },
+  "limitations": [
+    "Bootstrap admin probe only; scorer/director restricted-role and migration checks remain open.",
+    "No experiment data was written."
+  ]
+}

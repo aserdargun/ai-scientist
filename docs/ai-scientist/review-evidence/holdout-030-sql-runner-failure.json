@@ -1,0 +1,20 @@
+{
+  "schema": "holdout-030-sql-runner-failure.v1",
+  "actual_exec_session": 4735,
+  "actual_exec_exit_code": 1,
+  "outer_unit": "swapp-holdout-030-sql-recovery-20260927-a681e.service",
+  "snapshot": "data/runtime/holdout-030-pg-smoke/ef693cdb55594e9098bc1a8af72146c1/source",
+  "frozen_driver": "data/runtime/holdout-030-pg-smoke/ef693cdb55594e9098bc1a8af72146c1/review_driver.py",
+  "frozen_driver_sha256": "57bf87bcd584b2ca1d02e31427f281b41976dac53bac79ef59ed5958ccaf77df",
+  "failure": "Review driver reused the selected-test variable as a copied-file Path. Final JSON serialization failed with TypeError: Object of type PosixPath is not JSON serializable. No successful test or migration acceptance is claimed from this attempt.",
+  "migration_and_test_outcome": "Unavailable; the in-memory record could not be serialized. Rerun with corrected runner is necessary.",
+  "post_failure_owned_container_query_exit_code": 0,
+  "post_failure_owned_containers": [],
+  "credentials_removed_verified": true,
+  "resource_report": {
+    "runtime_seconds": 2.559,
+    "cpu_seconds": 0.644,
+    "peak": "74.5M",
+    "swap": 0
+  }
+}

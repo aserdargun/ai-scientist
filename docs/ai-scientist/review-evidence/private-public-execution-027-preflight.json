@@ -1,0 +1,14 @@
+{
+  "schema": "private-public-runtime-preflight.v1",
+  "source_commit": "390a6c25e94e5da339457dd17e88749ed07c7795",
+  "harness_sha256": "0c96264015cf32f8be9f7d4ef1de0572987203e97b1d044f69e9af9af780cb71",
+  "image": "sha256:ed0e5d4620ea1d8099590dfe2bd8d4ba3118dcd576ed914468b17ef169363a34",
+  "module_roots_match_private_worktree": true,
+  "manifest_hash_verified_by_production_registry": true,
+  "provider_profile": "research",
+  "provider_config_sha256": "7d0c59a9cf9f050b6ca6a3373cfcf4a330449e3f6aced923af8a73f10caad4a1",
+  "registry_entry_sha256": "33f66c4135b6175ad0de1087c572aafeb53c6b5368ca2a0a476a88798952ff07",
+  "principal_file_and_token_match": true,
+  "passed": true,
+  "services_or_models_started": false
+}

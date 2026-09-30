@@ -1,0 +1,68 @@
+{
+  "schema": "local-qwen-tokenizer-review.v1",
+  "checked_at": "2026-09-25T01:27:09.507213+00:00",
+  "scope": "CPU-only real pinned tokenizer/template over explicitly synthetic metadata and feedback. No model weights, GPU, AOS or research proposal execution.",
+  "source_sha256": {
+    "lab/director/local_llm.py": "62f35c21578615f5556168349119d980add07ae5b960a750e40ce5e78d085e88",
+    "lab/director/fake_llm.py": "af830d235cc4a9586872286394b324c08be92b981bcd662b7bb1ec463d6c26b1",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "docs/ai-scientist/review-evidence/review_local_qwen_tokenizer.py": "30950e74bda452fca1ba193da86271458276cf688c5376df1cd3b5086b85aa09"
+  },
+  "tokenizer_file_sha256": {
+    "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "config.json": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+    "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+  },
+  "checks": {
+    "actual_tokenizer_exited_zero": true,
+    "all_accepted_prompts_fit_declared_context": false,
+    "source_unchanged": true
+  },
+  "unit": "swapp-review-qwen-tokenizer-96a703be05f649789d2f37eb7a06674d.service",
+  "process_exit_code": 0,
+  "stderr": "",
+  "input_sha256": "59cd626751d6f2058882c4dd65fd9e948207bf39c5d61b5d8a755d754740d965",
+  "tokenization": {
+    "tokenizer_class": "Qwen2Tokenizer",
+    "cases": [
+      {
+        "case": "S1_initial",
+        "prompt_tokens": 793,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "c4feca986a2576358f8dc63f9e06904936b76f02ea704d1e73ef373c1773bd8f"
+      },
+      {
+        "case": "S1_feedback",
+        "prompt_tokens": 2564,
+        "context_limit": 2048,
+        "within_limit": false,
+        "token_ids_sha256": "8de8b84b6f5144071370bf9fbf557cf03daa0e86248d80f19cad84b356ec4253"
+      },
+      {
+        "case": "S2_initial",
+        "prompt_tokens": 790,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "b9069d7315cae0f4fef307512d8630cc55c130c6cbb97a7eafb3e23aff540a37"
+      },
+      {
+        "case": "S2_feedback",
+        "prompt_tokens": 2561,
+        "context_limit": 2048,
+        "within_limit": false,
+        "token_ids_sha256": "903b8c909fab49e2a92b808f1721ea8d876f39234d8b1840aeffe5cc18b6a064"
+      }
+    ]
+  },
+  "source_after_sha256": {
+    "lab/director/local_llm.py": "62f35c21578615f5556168349119d980add07ae5b960a750e40ce5e78d085e88",
+    "lab/director/fake_llm.py": "af830d235cc4a9586872286394b324c08be92b981bcd662b7bb1ec463d6c26b1",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "docs/ai-scientist/review-evidence/review_local_qwen_tokenizer.py": "30950e74bda452fca1ba193da86271458276cf688c5376df1cd3b5086b85aa09"
+  },
+  "overall_exit_code": 1
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "public050-browser-proof.v1",
+  "run_id": "53424e63-903a-4e48-83a7-7b89eaad0cca",
+  "checks": {},
+  "errors": [],
+  "blocked_requests": [],
+  "terminal_check": "pending",
+  "scope": "Existing run only; console watch allowed; no admission/stop/DB/service action.",
+  "failure": {
+    "type": "TimeoutError",
+    "message": "Locator.select_option: Timeout 12000ms exceeded.\nCall log:\n  - waiting for get_by_role(\"dialog\").get_by_label(\"Suite\", exact=True)\n"
+  }
+}

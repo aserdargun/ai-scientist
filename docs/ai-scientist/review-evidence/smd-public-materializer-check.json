@@ -1,0 +1,38 @@
+{
+  "candidate_inputs_contain_labels": false,
+  "command_limits": {
+    "blas_threads": 1,
+    "cpu_quota": "100%",
+    "memory_max": "2G",
+    "memory_swap_max": "0",
+    "runtime_max_seconds": 240,
+    "tasks_max": 128
+  },
+  "entities": [
+    "machine-1-1"
+  ],
+  "exit_code": 0,
+  "independent_family": "SMD:server-telemetry:EVT (machines do not duplicate family mass)",
+  "interpretation_label_files_opened": false,
+  "official_test_rows": 12000,
+  "official_train_rows": 12000,
+  "positive_test_machine_count": 1,
+  "positive_test_rows_total": 2148,
+  "resource_maxrss_bytes": 289112064,
+  "sample_period_seconds": [
+    60
+  ],
+  "schema": "public-materializer-check.v1",
+  "source": "SMD official machine train/test, test-label roles only",
+  "source_license": "MIT",
+  "source_manifest_sha256": "09f3a257b3e1e9d1e5803ebc9592835da68c741cd28677faba29c54eda620694",
+  "source_revision": "7fb0e0acf89ea49908896bcc9f9e80fcfff6baf4",
+  "source_task_count": 1,
+  "split_policy": "official per-machine train/test; no cross-machine concatenation",
+  "task_families": {
+    "EVT": 1
+  },
+  "task_weight_pre_cap_total": 0.5,
+  "time_axis": "relative test sample index \u00d7 60s; absolute origin unknown",
+  "usage_profile": "noncommercial_research"
+}

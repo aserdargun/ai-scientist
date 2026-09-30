@@ -1,0 +1,5 @@
+{
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "Ba\u015flat\u0131lamad\u0131: Docker'a veya mevcut Lab veritaban\u0131na eri\u015filemiyor. Docker kapal\u0131ysa `sudo systemctl start docker` \u00e7al\u0131\u015ft\u0131r\u0131p tekrar deneyin.\n"
+}

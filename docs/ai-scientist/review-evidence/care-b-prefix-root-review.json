@@ -1,0 +1,74 @@
+{
+  "schema": "care-b-prefix-root-review.v1",
+  "handoff_sha256": "5b3850da787dcc547eb16cfbf71731bcdf0532e8a283df1f9436c07bda2c36d4",
+  "materialization_sha256": "ba560ab371b2cfcb874e359b7bacbe7da2fc4bfd551955efc798817410b99c9d",
+  "source_hashes_reviewed_by_astra": {
+    "docs/ai-scientist/review-evidence/care-b-prefix-diagnostic.py": "1fb50efdd5929ad12140f3c7283c3b77c99e2782d52acc31bd88bcac84aefab1",
+    "docs/ai-scientist/review-evidence/care-b-prefix-materialization.py": "7b206f064db76fe685a675494fe47f14af1e99b52c815133fc8eb66d79e1cd9d",
+    "harness/care_holdout.py": "95826cf384ed87938cd90e73c21dec71a5ffec25e89cf05486f7096899eaff73",
+    "lab/scorer/care_holdout.py": "a0d75a607914a258fb22dad1dd5f7fbb1785cfe28d4d79fc7a86088755e87863",
+    "tests/test_care_holdout.py": "c737dabcb902847e102bc9c95fb5be21ba72773835cd3095f67511867b10beee"
+  },
+  "root_hash_and_journal_verification": {
+    "actual_exec_chunk": "9dbf10",
+    "actual_exec_exit_code": 0,
+    "result": "Frozen Farm B source and materialization hashes matched before R2 follow-up edits."
+  },
+  "astra_review": {
+    "model": "GPT-6 Astra",
+    "reasoning_effort": "high",
+    "result": "No source blocker for materializer integration; full holdout acceptance remains open.",
+    "task_53": {
+      "prediction_grid_rows": 6048,
+      "prediction_unmasked_positive_rows": 5711,
+      "reference_observed_rows": 1007,
+      "reference_missing_grid_rows": 1,
+      "reference_total_masked_rows": 5,
+      "reference_healthy_unmasked_rows": 1003
+    },
+    "limitations": [
+      "The driver all_prediction_rows_mask_preserved boolean only checks prediction_grid_rows > 0; it does not independently compare source masks.",
+      "Original adapter test exercises binding validation, not build_care_farm_b_registration_records.",
+      "Profile/label/semantics installation needs the privileged trusted installation flow; Scorer read-only grants are not installation rights.",
+      "No actual DB registration, runtime reload, baseline/holdout scoring, 10 KEEP, canary or shared-host full-run acceptance.",
+      "Labels/masks/times/context JSON serialization sizes are not included in the Arrow measurement."
+    ]
+  },
+  "journal_observations": [
+    {
+      "unit": "swapp-care-farm-b-final-tests2.service",
+      "journal_read_exit_code": 0,
+      "journal": "2026-09-27T01:05:41+03:00 cachyos systemd[1044]: Started [systemd-run] /usr/bin/env PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030:/home/cachyos/ai-scientist /home/cachyos/ai-scientist/.venv/bin/python -m pytest -q tests/test_care_holdout.py.\n2026-09-27T01:05:44+03:00 cachyos systemd[1044]: swapp-care-farm-b-final-tests2.service: Consumed 1.058s CPU time over 2.096s wall clock time, 76.9M memory peak.\n",
+      "exit_code_source": "Worker actual tool result recorded in care-b-prefix-handoff.json; journal corroborates command/runtime, not independently the full child output."
+    },
+    {
+      "unit": "swapp-care-farm-b-final-ruff3.service",
+      "journal_read_exit_code": 0,
+      "journal": "2026-09-27T01:06:51+03:00 cachyos systemd[1044]: Started [systemd-run] /usr/bin/env PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030:/home/cachyos/ai-scientist /home/cachyos/ai-scientist/.venv/bin/ruff check harness/care_holdout.py lab/scorer/care_holdout.py tests/test_care_holdout.py docs/ai-scientist/review-evidence/care-b-prefix-materialization.py docs/ai-scientist/review-evidence/care-b-prefix-diagnostic.py.\n",
+      "exit_code_source": "Worker actual tool result recorded in care-b-prefix-handoff.json; journal corroborates command/runtime, not independently the full child output."
+    },
+    {
+      "unit": "swapp-care-farm-b-final-mypy2.service",
+      "journal_read_exit_code": 0,
+      "journal": "2026-09-27T01:05:34+03:00 cachyos systemd[1044]: Started [systemd-run] /usr/bin/env MYPYPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030 PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030:/home/cachyos/ai-scientist /home/cachyos/ai-scientist/.venv/bin/mypy harness/care_holdout.py lab/scorer/care_holdout.py.\n2026-09-27T01:05:35+03:00 cachyos systemd[1044]: swapp-care-farm-b-final-mypy2.service: Consumed 471ms CPU time over 861ms wall clock time, 261.9M memory peak.\n",
+      "exit_code_source": "Worker actual tool result recorded in care-b-prefix-handoff.json; journal corroborates command/runtime, not independently the full child output."
+    },
+    {
+      "unit": "swapp-care-farm-b-prefix-final.service",
+      "journal_read_exit_code": 0,
+      "journal": "2026-09-27T01:05:53+03:00 cachyos systemd[1044]: Started [systemd-run] /usr/bin/env PYTHONPATH=/home/cachyos/ai-scientist/data/runtime/parallel-m0/holdout-030 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/cachyos/ai-scientist/.venv/bin/python docs/ai-scientist/review-evidence/care-b-prefix-materialization.py --archive /home/cachyos/ai-scientist/data/public/care/15846963/CARE_To_Compare.zip --output /home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/care-b-prefix-materialization.json.\n2026-09-27T01:06:29+03:00 cachyos systemd[1044]: swapp-care-farm-b-prefix-final.service: Consumed 18.107s CPU time over 36.210s wall clock time, 1G memory peak.\n",
+      "exit_code_source": "Worker actual tool result recorded in care-b-prefix-handoff.json; journal corroborates command/runtime, not independently the full child output."
+    }
+  ],
+  "followup": "Luna/high R2 is restricted to adapter role wording, prefix value/status invariance and registration-builder fixtures; no repeated archive scan is required when the measured loader remains unchanged.",
+  "r2_followup": {
+    "receipt": "docs/ai-scientist/review-evidence/care-b-prefix-r2-report.json",
+    "receipt_sha256": "d5e6fd5f00cf986abd687adf2061b53675c24e0e29e3586c6cadffc3502e6392",
+    "all_frozen_r2_source_hashes_match": true,
+    "materializer_hash_unchanged": true,
+    "worker_reported_tests": 13,
+    "worker_reported_ruff_exit_code": 0,
+    "worker_reported_mypy_exit_code": 0,
+    "scope": "New adapter-builder/prefix invariance/driver-report fixtures plus role wording; no new real-data scan or DB registration."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "captured_at": "2026-09-24",
+  "purpose": "Read-only baseline for coordinating with parallel AOS work. Re-read immediately before any patch; hashes are not locks.",
+  "files": {
+    "src/aos/contracts.py": {
+      "sha256": "16df5713c5ed5461eaee460543c2c6f7a34e4c939afa7ef28f133197984ac2af",
+      "bytes": 7831
+    },
+    "src/aos/computer.py": {
+      "sha256": "08bad86d03ff08bb4a4981738a2121e06b9df78cc668eb99972d439d041817bc",
+      "bytes": 30415
+    },
+    "src/aos/desktop_tasks.py": {
+      "sha256": "6a834c78751fc5280e190dc6809ed4c51835d1bf7cee3546a3b7c4bbf6f6f3cd",
+      "bytes": 96041
+    },
+    "src/aos/decision.py": {
+      "sha256": "d75fc12abcd179c5581966c8e676575b4703f21fa6139439b1f12e12b9f37578",
+      "bytes": 3892
+    },
+    "src/aos/reusable_decider.py": {
+      "sha256": "e6177507abfb3faaa02d048dc46b83d1a0762ec948b213d298e7158f2e548326",
+      "bytes": 9277
+    },
+    "src/aos/supervisor.py": {
+      "sha256": "e6537ff33feecf80149442d4fa7013343bc1a0069da030aa817377a6c80f2592",
+      "bytes": 11602
+    },
+    "src/aos/vision.py": {
+      "sha256": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+      "bytes": 9296
+    },
+    "services/decider/worker.py": {
+      "sha256": "a7ae3ea30b5d88f29b9174afafb8dbf664a6e464fde6456df3e672d8ca352adc",
+      "bytes": 10963
+    },
+    "src/aos/task_intent.py": {
+      "sha256": "59259b99a495e3c217470039b731716d8853433824aabe2e7a1b7e37734f28dc",
+      "bytes": 3382
+    },
+    "src/aos/goal_plan.py": {
+      "sha256": "5490ac46d3e1975eed7788b11db6e93ad020159c762c12d2f96b263cba1796a5",
+      "bytes": 7199
+    },
+    "src/aos/task_plan.py": {
+      "sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "bytes": 7187
+    },
+    "src/aos/desktop_console.py": {
+      "sha256": "fba9416cd6d5d54faac0b625e1c56749b32dc12aa269b8a63e2899d5df6728f1",
+      "bytes": 50128
+    }
+  }
+}

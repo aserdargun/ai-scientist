@@ -1,0 +1,138 @@
+{
+  "acceptance_scope": {
+    "does_not_claim_real_model_quality_or_successful_holdout_score": true,
+    "drain_before_terminal_sql_cas": "not independently proven by final state; requires separate journal/timestamp instrumentation",
+    "quota_and_score_counts_unchanged": true,
+    "real_worker_process_and_container_stopped": true,
+    "terminal_bitless_failure": true
+  },
+  "after": {
+    "approvals": 0,
+    "error_code": "worker_recovered",
+    "experiments": 1,
+    "holdout_results": 0,
+    "origin": "local",
+    "owner_id": "fixture:holdout-abandoned-ordinal",
+    "reservation_state": "failed",
+    "reservations": 1,
+    "result_bit": null,
+    "result_sha256": null,
+    "run_quota_used": 1,
+    "run_state": "stop_requested",
+    "score_jobs": 3,
+    "stop_requested": true,
+    "suite_id": "synthetic.holdout-abandoned-7441586d",
+    "suite_quota_used": 1,
+    "suite_version": 3,
+    "task_completions": 3,
+    "task_scores": 3
+  },
+  "authenticated_api_stop": {
+    "principal_origin": "local",
+    "principal_owner_id": "fixture:holdout-abandoned-ordinal",
+    "response_state": "stop_requested",
+    "status_code": 200
+  },
+  "before": {
+    "approvals": 0,
+    "error_code": null,
+    "experiments": 1,
+    "holdout_results": 0,
+    "origin": "local",
+    "owner_id": "fixture:holdout-abandoned-ordinal",
+    "reservation_state": "running",
+    "reservations": 1,
+    "result_bit": null,
+    "result_sha256": null,
+    "run_quota_used": 1,
+    "run_state": "running",
+    "score_jobs": 3,
+    "stop_requested": false,
+    "suite_id": "synthetic.holdout-abandoned-7441586d",
+    "suite_quota_used": 1,
+    "suite_version": 3,
+    "task_completions": 3,
+    "task_scores": 3
+  },
+  "created_at": "2026-09-27T01:04:21.862441+00:00",
+  "database": "swapp_lab_m0_holdout_030_71a10290fe89",
+  "database_endpoint": {
+    "database": "swapp_lab_m0_holdout_030_71a10290fe89",
+    "roles_verified": [
+      "director",
+      "migrator",
+      "planner",
+      "scorer"
+    ],
+    "server_identity_equal_across_roles": true,
+    "snapshot_scorer_alias_sha256": "bf19361d17784aab665da08b206b227f5988dcf391bb7b5de50468db8d4419c5"
+  },
+  "director_receipt": {
+    "bit": null,
+    "candidate_experiment_id": "exp_c07d4f5320ff49abb9b23b680f93a9c2",
+    "reservation_id": "3db50a05-07a6-41cd-945d-8118c337691f",
+    "run_id": "38ff466b-8870-430d-bcaa-6a119f80841a",
+    "state": "failed",
+    "trigger_index": 1,
+    "trigger_kind": "run_end"
+  },
+  "recovery_service": {
+    "exit_code": 0,
+    "invocation_id": "5bf6f0fd1a514a39a316ac72d78c1396",
+    "run_id": "38ff466b-8870-430d-bcaa-6a119f80841a",
+    "state": "drained",
+    "unit": "swapp-ai-scientist-scorer-4566adfd68fb4447851c3dcbeaa5071b.service"
+  },
+  "reservation_id": "3db50a05-07a6-41cd-945d-8118c337691f",
+  "run_id": "38ff466b-8870-430d-bcaa-6a119f80841a",
+  "schema": "holdout-030-lifecycle-review.v1",
+  "source": {
+    "harness_version": "0.30.0",
+    "image": "sha256:2ad07bb30f69a9a97ed05acbc402ebafacd06566209d0e70819432c62540484e",
+    "image_lock_sha256": "39fa924f7cff0912511b1fcc7f62cbf67360747d0b2474081ea64572cfcc1e7b",
+    "source_sha256": "9a2a2ae7619b1504bc05523f6f26cde16ec6917bd8477c12b42766dae08dd8bc"
+  },
+  "worker_generation": {
+    "aggregate_slice_limits": {
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "2147483648",
+      "MemorySwapMax": "0",
+      "TasksMax": "32"
+    },
+    "boot_id": "24ce6302-3913-4b99-9aea-3a5de341dfd1",
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3db50a0507a641cd945d8118c337691f.service",
+    "container": {
+      "container_id": "8fdfd107dadf9e1cdf8a4f6b4ce8b2c8dbb4210024fd2bfab7b43260bb01c9e7",
+      "container_name": "/swapp-lab-fit-237f7598c2f24a5898169bace5faaf17",
+      "image": "sha256:2ad07bb30f69a9a97ed05acbc402ebafacd06566209d0e70819432c62540484e",
+      "memory_bytes": 2147483648,
+      "nano_cpus": 1000000000,
+      "network_mode": "none",
+      "owner_label_value": "237f7598c2f24a5898169bace5faaf17",
+      "pids_limit": 64,
+      "running_before_stop": true
+    },
+    "container_gone_after_stop": true,
+    "drain": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-3db50a0507a641cd945d8118c337691f.service",
+      "drained": true,
+      "load_state": "not-found"
+    },
+    "invocation_id": "d8d991dc8bf64b099f9f2a8ecc341a9f",
+    "pid": 575577,
+    "source_binding": {
+      "cwd": "/home/cachyos/ai-scientist/data/runtime/holdout-030-lifecycle-fixture/71a10290fe8949bdb9592ec04e6925ff/source",
+      "executable": "/home/cachyos/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "module": "lab.scorer.holdout_worker",
+      "reservation_id": "3db50a05-07a6-41cd-945d-8118c337691f"
+    },
+    "start_ticks": 1881145,
+    "unit": "swapp-ai-scientist-scorer-3db50a0507a641cd945d8118c337691f.service",
+    "unit_limits": {
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "2147483648",
+      "MemorySwapMax": "0",
+      "TasksMax": "32"
+    }
+  }
+}

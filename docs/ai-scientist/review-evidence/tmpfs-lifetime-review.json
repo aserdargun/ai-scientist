@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-09-24T09:26:15.896116+00:00",
+  "purpose": "Docker tmpfs output persistence after phase process exit; infrastructure review, no candidate data",
+  "run": {
+    "command": [
+      "docker",
+      "run",
+      "--name",
+      "swapp-lab-review-tmpfs-f527185c5b9e",
+      "--network=none",
+      "--read-only",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--log-driver=none",
+      "--user=65534:65534",
+      "--memory=128m",
+      "--memory-swap=128m",
+      "--cpus=.5",
+      "--pids-limit=32",
+      "--tmpfs",
+      "/output:rw,noexec,nosuid,nodev,size=1m,uid=65534,gid=65534,mode=0700",
+      "python@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e",
+      "python",
+      "-c",
+      "from pathlib import Path; Path(\"/output/probe.bin\").write_bytes(b\"review-output\")"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "copy_after_exit": {
+    "exit_code": 1,
+    "stdout_bytes": 0,
+    "stderr": "Error response from daemon: Could not find the file /output/probe.bin in container swapp-lab-review-tmpfs-f527185c5b9e\n"
+  },
+  "cleanup_exit_code": 0
+}

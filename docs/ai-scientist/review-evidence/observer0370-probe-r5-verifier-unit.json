@@ -1,0 +1,54 @@
+{
+  "schema": "observer053-r5-verifier-unit.v1",
+  "cases": [
+    {
+      "stdout_hex": "",
+      "exit_code": 1,
+      "expected_absent": true,
+      "passed": true
+    },
+    {
+      "stdout_hex": "0a",
+      "exit_code": 1,
+      "expected_absent": true,
+      "passed": true
+    },
+    {
+      "stdout_hex": "0a0a",
+      "exit_code": 1,
+      "expected_absent": false,
+      "passed": true
+    },
+    {
+      "stdout_hex": "20",
+      "exit_code": 1,
+      "expected_absent": false,
+      "passed": true
+    },
+    {
+      "stdout_hex": "63616e646964617465",
+      "exit_code": 1,
+      "expected_absent": false,
+      "passed": true
+    },
+    {
+      "stdout_hex": "",
+      "exit_code": 0,
+      "expected_absent": false,
+      "passed": true
+    },
+    {
+      "stdout_hex": "",
+      "exit_code": 1,
+      "expected_absent": false,
+      "passed": true
+    },
+    {
+      "stdout_hex": "",
+      "exit_code": 1,
+      "expected_absent": false,
+      "passed": true
+    }
+  ],
+  "docker_executed": false
+}

@@ -1,0 +1,387 @@
+{
+  "schema": "holdout-030-migration-smoke.v2",
+  "created_at": "2026-09-26T22:12:37.380392+00:00",
+  "scope": "Disposable PostgreSQL 16 migration compilation and role checks only; no holdout scoring, wrapper crash proof, candidate container, GPU or AOS execution.",
+  "snapshot": "data/runtime/holdout-030-pg-smoke/7f1659ef71914b99bcad477dd0894603/source",
+  "frozen_driver": "data/runtime/holdout-030-pg-smoke/7f1659ef71914b99bcad477dd0894603/review_driver.py",
+  "source_sha256": {
+    "alembic.ini": "aab60ec24a4a1e0c65bed284631f8f19c2a2394d3110b8793f6d6078d8db3860",
+    "lab/__init__.py": "1a39d5e3ee50d08b91b175f667db7d5e6de2025f4e0fedac4659f0386407cc1a",
+    "lab/db/__init__.py": "f52763d89d95a46b0ff8a514c3336dba74a9ea6292343091e1ce0efa3ebf1fe7",
+    "lab/db/schema.py": "a921d05ce36985ce88685ecd7c8a5df901c555ab8ccf3b0d1cee736406f37d81",
+    "lab/db/migrations/__init__.py": "b9b682537c8c1c2adedde55ed6b45eaeaacd4d4d7804c65877373a029ad3d563",
+    "lab/db/migrations/env.py": "eef43a4e3cd91fbd408af738ed5c6baa80f4e0831d046aeba1f15d8e62c64e6f",
+    "lab/db/migrations/versions/0001_initial_ledger.py": "50cf40aaa9c40e7dddba583c0d4d7e159bf771eb0ece0524e3a14e3c4950ce02",
+    "lab/db/migrations/versions/0002_trusted_task_profiles.py": "7ea05bbd17d08c4163d1affa99b70d9d4451542a1de752e3503fc9b63b265caa",
+    "lab/db/migrations/versions/0003_evaluation_identity.py": "3b8413da3bc94ec2510a8a9f0cc3d49c12bf45f4a1ce42aea7bdb5a9b2071804",
+    "lab/db/migrations/versions/0004_durable_score_jobs.py": "83b2642bc0f1f06fd301046154d35a395c1354c555aef44445e23454c92f2658",
+    "lab/db/migrations/versions/0005_planner_run_read.py": "523c170384e1336baa380043a99bc14b7785f7c3bb690c5397729d0db4b41cad",
+    "lab/db/migrations/versions/0006_narrow_director_score_jobs.py": "a6ff193dd56eb31458f9c6b9d7ad82d9581838e3225d4820aadb72c9d6db57a8",
+    "lab/db/migrations/versions/0007_seal_task_plan.py": "9bf881163fca8d72d9a68ea36d1bfacd714df8eed20e4009fe7b410c0f2a3c8e",
+    "lab/db/migrations/versions/0008_terminal_task_outcomes.py": "b75b248f4050a514081de19e3634164f07c295d7dae4ab24d6f94e43de382bc6",
+    "lab/db/migrations/versions/0009_scorer_invocation_fence.py": "5e12da9d088e21b7fe0a364e6568867f7fea2e507d7b75e098802d8d0aec4341",
+    "lab/db/migrations/versions/0010_terminal_recovery_fence.py": "b51aefe70cae8805f437a65e3301672acb22e0a38a7ed7c847df4b5cfaeedb90",
+    "lab/db/migrations/versions/0011_experiment_ledger.py": "58e317af92df4b5a1ed0d4af5c72b459f0bd3405f47f8f16325a957ffdde6f8d",
+    "lab/db/migrations/versions/0012_experiment_finalization_fence.py": "731d1a9eec1925865a9e6f471dd599c107f030bb0abf75f29378aa863f41adad",
+    "lab/db/migrations/versions/0013_baseline_calibration.py": "8972df2285d777ba2f8f71d9815a45d66ebf6076e54abb253509bf29ee2668bb",
+    "lab/db/migrations/versions/0014_immutable_director_events.py": "8d25ed31b9c60b2bc92fd4c31c55b67b51f62abde77024580a9385f557de4fbc",
+    "lab/db/migrations/versions/0015_external_run_mapping.py": "3770dfce8e18bcfa458fd803eb3850360af17edbf132578c89bb5589c667da2e",
+    "lab/db/migrations/versions/0016_director_recovery.py": "764ae650a0e22e8d87dd46da744d847056995cbd18c0c212fe96ff610f689024",
+    "lab/db/migrations/versions/0018_public_task_semantics.py": "14e86d8955339f9a7b5d38d73f06f69a98ad49b5fa9af79883bf263972540fae",
+    "lab/db/migrations/versions/0019_bounded_holdout.py": "bda4cdb44f65390fd8b8c967639c3d6850ac623a98be9d494d20c82942309e96",
+    "lab/db/migrations/versions/0020_holdout_recovery.py": "2e33100b37db9835191b4d24d50bb879f999a816ca16c38b9cf1240a625d7e65"
+  },
+  "script_sha256": "ea69bc0e8eef85f5d45b241be3fcfe29ed964bc2cbbdb8adf759786cb128ef9f",
+  "checks": [
+    {
+      "role": "director",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_holdout_recovery_target(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.check_holdout_admission(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.recover_holdout_failure(uuid,uuid,integer,bigint,text,text,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.recover_unclaimed_holdout_failure(uuid,uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.list_holdout_recovery_targets(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.fence_missing_holdout_run_end(uuid,text,integer,text,text)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": true,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "function": "lab.read_holdout_run_end_fence(uuid)",
+      "allowed": false,
+      "passed": true
+    },
+    {
+      "role": "director",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "planner",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "role": "scorer",
+      "table": "lab.holdout_run_end_fences",
+      "direct_select": false,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": null,
+      "expected_sqlstate": null,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_director",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_planner",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_holdout_recovery_target",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "check_holdout_admission",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": null,
+      "expected_sqlstate": null,
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "recover_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "recover_unclaimed_holdout_failure",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "list_holdout_recovery_targets",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "P0001",
+      "expected_sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "fence_missing_holdout_run_end",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "function": "read_holdout_run_end_fence",
+      "scope": "Absent resource; permission and safe failure path only",
+      "sqlstate": "42501",
+      "expected_sqlstate": "42501",
+      "passed": true
+    },
+    {
+      "authenticated_role": "swapp_lab_scorer",
+      "table": "lab.holdout_run_end_fences",
+      "sqlstate": "42501",
+      "passed": true
+    }
+  ],
+  "image_id": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "container_id": "bdb1e483133bd1b659d15740aa4ecf253dd28c51648e05d2311d48151eae8e69",
+  "container_name": "swapp-holdout-030-pg-smoke-7f1659ef7191",
+  "database": "swapp_lab_m0_holdout_030_7f1659ef7191",
+  "port": 32771,
+  "migration_exit_code": 0,
+  "migration_output": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_ledger, Create isolated run ledger and scorer-only label tables.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0001_initial_ledger -> 0002_trusted_task_profiles, Bind scorer tasks to trusted split profiles rather than candidate metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0002_trusted_task_profiles -> 0003_evaluation_identity, Give every planned evaluation and seed its own score identity.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0003_evaluation_identity -> 0004_durable_score_jobs, Add durable queue records for an OS-isolated Scorer worker.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0004_durable_score_jobs -> 0005_planner_run_read, Permit the trusted planner to bind work only to active Lab runs.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0005_planner_run_read -> 0006_narrow_director_score_jobs, Keep score-job insertion inside the trusted planner boundary.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0006_narrow_director_score_jobs -> 0007_seal_task_plan, Seal the complete trusted run task set before report finalization.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0007_seal_task_plan -> 0008_terminal_task_outcomes, Add race-safe durable terminal results alongside independently scored tasks.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0008_terminal_task_outcomes -> 0009_scorer_invocation_fence, Bind durable Scorer writes to a verified systemd unit invocation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0009_scorer_invocation_fence -> 0010_terminal_recovery_fence, Allow cancellation of a drained stop-requested Scorer generation.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0010_terminal_recovery_fence -> 0011_experiment_ledger, Persist experiment lifecycle, immutable records, trajectories, and dev-only results.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0011_experiment_ledger -> 0012_experiment_report_fence, Require terminal experiment records before publishing terminal run reports.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0012_experiment_report_fence -> 0013_baseline_calibration, Bind proposal records to an immutable, run-scoped baseline calibration.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0013_baseline_calibration -> 0014_immutable_events, Make run events append-only for runtime roles.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0014_immutable_events -> 0015_external_run_mapping, Bind AOS task/run/action identities to Lab run ownership.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0015_external_run_mapping -> 0016_director_recovery, Persist Director ownership and idempotent interrupted-run recovery receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0016_director_recovery -> 0018_public_task_semantics, Store family-specific public task timing and masks behind the Scorer role.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0018_public_task_semantics -> 0019_bounded_holdout, Add private, quota-bound holdout registrations and one-bit receipts.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\nINFO  [alembic.runtime.migration] Running upgrade 0019_bounded_holdout -> 0020_holdout_recovery, Add Scorer-only admission and drained-worker recovery RPCs.\n",
+  "revision": "0020_holdout_recovery",
+  "trigger_exists": true,
+  "owned_container_removed": true,
+  "credentials_removed": true,
+  "source_now_matches_snapshot": true,
+  "exit_code": 0,
+  "actual_exec_session": 67594,
+  "actual_exec_exit_code": 0,
+  "outer_unit": "swapp-holdout-030-r2-pg-smoke-20260927-9e21d.service",
+  "service_runtime_seconds": 2.28,
+  "cpu_time_seconds": 0.485,
+  "reported_memory_peak": "82.5M",
+  "swap_bytes": 0
+}

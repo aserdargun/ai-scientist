@@ -1,0 +1,37 @@
+{
+  "schema": "baseline-ownership-execution-binding.v1",
+  "session_id": 56688,
+  "completion_chunk": "ae1b6e",
+  "exit_code": 1,
+  "source_head": "313056dd51e25c8b67b5f0695dc1abca1a11db1c",
+  "driver_sha256": "8caf2beec19cd8fc084e9a3fd467c081ed251bd2a0de0e92b67ec54f5f54ce90",
+  "sql_companion_sha256": "bb3ceb119161b3e6cd915165ffbc26d97533477d4a6145b24ea46e08711f2974",
+  "execution_evidence": "baseline-ownership-proof-033-e9e5fff5d2a7.json",
+  "execution_evidence_sha256": "66b92f7125c5e9312c5049caa2a58b736387afcba090c7269abef2b48618690a",
+  "migration_head": "0025_director_generations",
+  "migration_exit_code": 0,
+  "api_health": "ok",
+  "failure": "valid run-B registration reached 0024 shared trigger and raised UndefinedColumn: NEW.evaluation_kind on lab.experiments",
+  "measured_baseline_scores": 0,
+  "full_sql_subset_passed": false,
+  "full_matrix_started": false,
+  "queued_stop_scenario_started": false,
+  "cleanup": {
+    "run_cleanup_verified": true,
+    "api_process_reaped": true,
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "auxiliary_states": [
+    {
+      "run_id": "87d5be9d-5b6a-4a25-86c6-65746e37bd33",
+      "state": "stop_requested"
+    },
+    {
+      "run_id": "7dc14924-cb3c-410a-9ff6-52aeee0dd6ce",
+      "state": "stop_requested"
+    }
+  ],
+  "unrelated_container_inventory_unchanged": true,
+  "scope": "actual isolated PostgreSQL/API plus SQL fixtures; no baseline scores, real model/GPU/public-data/AOS execution; failed positive control preserved"
+}

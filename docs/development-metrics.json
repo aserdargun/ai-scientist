@@ -1,0 +1,66 @@
+{
+  "schema": "development-goal-usage.v1",
+  "source": "Codex get_goal",
+  "captured_at": "2026-09-30T06:52:10.048215+00:00",
+  "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
+  "goal_created_at_epoch": 1790237749,
+  "goal_updated_at_epoch": 1790751091,
+  "tokens_used": 89852106,
+  "active_seconds": 189374,
+  "active_hours": 52.60388888888889,
+  "calendar_hours": 142.595,
+  "status": "active",
+  "scope_note": "Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.",
+  "development_models": [
+    {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "role": "Teknik orkestrasyon ve mimari inceleme",
+      "observed_sessions": 5,
+      "currently_observed_sessions": 5
+    },
+    {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "xhigh",
+      "role": "Ana Codex oturumu",
+      "observed_sessions": 1,
+      "currently_observed_sessions": 1
+    },
+    {
+      "model": "gpt-6-luna",
+      "reasoning_effort": "high",
+      "role": "İlk uygulama ve odaklı doğrulama işleri",
+      "observed_sessions": 7,
+      "currently_observed_sessions": 7
+    },
+    {
+      "model": "gpt-6-sol",
+      "reasoning_effort": "high",
+      "role": "Kodlama, entegrasyon ve inceleme işleri",
+      "observed_sessions": 2,
+      "currently_observed_sessions": 2
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "role": "Rol doğrulanmadı",
+      "observed_sessions": 3,
+      "currently_observed_sessions": 3
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "medium",
+      "role": "Kalan teknik orkestrasyon, uygulama ve inceleme",
+      "observed_sessions": 12,
+      "currently_observed_sessions": 12
+    }
+  ],
+  "model_evidence": {
+    "source": "session_meta ancestry; all associated turn_context model/effort",
+    "related_sessions": 29,
+    "complete": true,
+    "limitations": [],
+    "raw_prompts_or_secrets_exported": false
+  },
+  "counter_decreases": []
+}

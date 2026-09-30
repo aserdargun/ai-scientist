@@ -1,0 +1,77 @@
+{
+  "schema": "aos-lab-coexistence-driver-review.v1",
+  "status": "prepared_not_executed",
+  "scope": "Isolated AOS plus Lab coexistence acceptance driver and caller-supplied desktop manifest pin.",
+  "execution": {
+    "model_called": false,
+    "gpu_called": false,
+    "aos_service_started": false,
+    "lab_service_started": false,
+    "preflight_run": false,
+    "preflight_pending_reason": "Root has not yet supplied the frozen 0.25 private Lab worktree and finalized suite registry paths.",
+    "acceptance_claimed": false
+  },
+  "driver": {
+    "path": "docs/ai-scientist/review-evidence/review_aos_lab_coexistence.py",
+    "sha256": "7bac8e7b9ddc5a7a5b5101a3dc67a9876dd27640f4c5f0bdb563dfa7a502fe91",
+    "features": [
+      "Explicit --execute switch; default only verifies the trusted suite registry and prints a no-GPU preflight result.",
+      "Actual path uses AOS typed Lab start, canonical run-bound Lab dispatcher unit, foreground hello task, status/report APIs, and private Lab report CLI.",
+      "Requires both owners to have completed GPU turns, sampled overlap of real work and owner units, and asserts the detached Lab job never appears in the AOS foreground scheduler jobs.",
+      "Separate restart-recovery phase quiesces, restarts the exact AOS unit, verifies a new session, explicitly recovers the same Lab run, and checks its terminal report.",
+      "Records API latency, host memory/NVIDIA samples, bounded systemd unit properties, GPU-turn ledger, input manifest hashes, and only error type on failure; no prompt/model reasoning is collected.",
+      "Only accepts an isolated Lab worktree under project data/runtime, loopback Lab API, private DSN/token files, exact AOS owner unit namespace, and bounded experiment/wall/token/poll values."
+    ]
+  },
+  "desktop_manifest_patch": {
+    "path": "docs/ai-scientist/review-evidence/aos-lab-desktop-manifest.patch",
+    "sha256": "4cf07e4f7f9628dc68d3d08a6b4049a547e772bd0bf81c1fffce0ee7e25d2b36",
+    "target": "scripts/serve_desktop.py",
+    "isolated_aos_base": "c33325349e856edf52d1ab37da394388eb0607c2",
+    "isolated_source_sha256": "581ef44d3ab2cbf392f0d15709a1df55d236bdc1b18ae3873c0409000c59a682",
+    "change": "Adds --desktop-manifest, retaining the existing default, and passes the explicit path into DesktopRuntime.",
+    "clean_base_git_apply_check_exit": 0,
+    "clean_base_check_log": {
+      "path": "docs/ai-scientist/review-evidence/aos-lab-desktop-manifest-patch-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "checks": [
+    {
+      "command": ".venv/bin/ruff check docs/ai-scientist/review-evidence/review_aos_lab_coexistence.py",
+      "exit": 0
+    },
+    {
+      "command": "python -m py_compile docs/ai-scientist/review-evidence/review_aos_lab_coexistence.py",
+      "exit": 0
+    },
+    {
+      "command": "python docs/ai-scientist/review-evidence/review_aos_lab_coexistence.py --help",
+      "exit": 0,
+      "stdout_path": "docs/ai-scientist/review-evidence/aos-lab-coexistence-driver-help.txt",
+      "stdout_sha256": "bb7fcbc9998b64a51d6d34f0b182408cffa0725f2c8a8a3f55ffcd68a2bdb861"
+    },
+    {
+      "command": "PYTHONPATH=<isolated-AOS>/src <isolated-AOS-venv>/bin/python <isolated-AOS>/scripts/serve_desktop.py --help",
+      "exit": 0,
+      "stdout_path": "docs/ai-scientist/review-evidence/aos-lab-desktop-manifest-help.txt",
+      "stdout_sha256": "7c4387076e4c4785452a7a3dba366e9626725590e4928e77d17feb7edc3cb80f"
+    },
+    {
+      "command": "PYTHONPATH=<isolated-AOS>/src python <isolated-AOS>/scripts/serve_desktop.py --help",
+      "exit": 1,
+      "stderr_path": "docs/ai-scientist/review-evidence/aos-lab-desktop-manifest-help-system-python-failure.txt",
+      "stderr_sha256": "16bc964af0b90cb182a4d1ab41cc597a8012e7a56ff0e57bc0310d8fa111d926",
+      "reason": "Host system Python lacks uvicorn; the isolated AOS virtualenv check above passed. No package installation was attempted."
+    },
+    {
+      "command": "git -C <isolated-AOS> worktree add --detach <temporary-clean-worktree> HEAD; git -C <temporary-clean-worktree> apply --check aos-lab-desktop-manifest.patch; remove temporary worktree",
+      "exit": 0
+    }
+  ],
+  "limitations": [
+    "This is a prepared acceptance driver, not an AOS/Lab coexistence result.",
+    "The 27-task public suite remains a runtime-supplied registered manifest identified by hash; this driver does not substitute fixtures or claim public-suite evidence.",
+    "The AOS package gate and actual model/GPU acceptance remain root-owned and unrun here."
+  ]
+}

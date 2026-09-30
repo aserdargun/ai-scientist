@@ -1,0 +1,24 @@
+[1] causality guard
+    CausalZ   violation=0.000e+00
+    LeakyZ    violation=3.274e-01
+    Centered  violation=4.106e-01
+[2] Referee
+    KEEP         delta=+0.0307 ci_low=+0.0261  anlamlı iyileşme
+    DISCARD      delta=-0.0099 ci_low=-0.0183  anlamlı iyileşme yok
+    KEEP_SIMPLER delta=-0.0021 ci_low=-0.0031  sadeleşme, anlamlı kayıp yok
+    REJECT       delta=+nan ci_low=+nan  guardrail
+    DISCARD      delta=+0.0167 ci_low=-0.0167  tek görevde büyük gerileme
+    DISCARD      delta=-0.0021 ci_low=-0.0030  anlamlı iyileşme yok
+[3] alarm politikası, PDM, NRM
+    PDM iyi dedektör       skor=0.7556 FA/gün=0.00 doluluk=0.000
+    PDM hep açık alarm     skor=0.0000 FA/gün=1.44 doluluk=1.000
+    PDM yanlış alarm + iyi skor=0.0000 FA/gün=1.44 doluluk=0.080
+    NRM tek alarm/10 gün   skor=0.9048 FA/gün=0.10 doluluk=0.0021
+[4] normalizasyon ve süit ağırlıkları
+    aile payları {'A': 0.25, 'B': 0.2, 'C': 0.05, 'D': 0.25, 'E': 0.25}  toplam=1.000000
+    3 aile / tavan 0.25 → ValueError: aile tavanı uygulanamaz: aile sayısı × tavan < 1
+[5] konum yanlılığı
+    rampa=0.987 gürültü=0.024
+[6] S1/S2 yönlendirme ve eleştirmen kapısı
+    rota=['S1', 'S2', 'S2', 'S1', 'S2', 'S2']  kapı=['escalate', 'run', 'run']
+OK

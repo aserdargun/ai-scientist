@@ -1,0 +1,111 @@
+{
+  "schema": "local-qwen-tokenizer-review.v1",
+  "checked_at": "2026-09-25T01:44:59.538649+00:00",
+  "scope": "CPU-only real pinned tokenizer/template over explicitly synthetic metadata and feedback. No model weights, GPU, AOS or research proposal execution.",
+  "source_sha256": {
+    "lab/director/local_llm.py": "8ad23f4172e4f72ce26a927878f2209f8d30f9eac3b86d8529adc3771a6d7340",
+    "lab/director/fake_llm.py": "410aafd14b0a3c4b6aa9ad028da8938c8002f72b90b6722c33ed56669f1fb0c3",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "docs/ai-scientist/review-evidence/review_local_qwen_tokenizer.py": "10ac5c6b47f91efcd7fa68a4d5e9dde3d04e3c7b1753003e2b945ae3a7cb23da"
+  },
+  "tokenizer_file_sha256": {
+    "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "config.json": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+    "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+  },
+  "production_selection": true,
+  "checks": {
+    "production_selector_exited_zero": true,
+    "required_context_and_feedback_order_preserved": true,
+    "actual_tokenizer_exited_zero": true,
+    "all_accepted_prompts_fit_declared_context": true,
+    "production_count_matches_independent_tokenizer": true,
+    "source_unchanged": true
+  },
+  "selection_process": {
+    "unit": "swapp-review-qwen-selection-0894afcbfe984f23a2751e13b1fc08f4.service",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  "selection_cases": [
+    {
+      "case": "S1_initial",
+      "preflight_prompt_tokens": 793,
+      "feedback_before": 0,
+      "feedback_after": 0,
+      "required_context_preserved": true,
+      "oldest_feedback_removed_first": true
+    },
+    {
+      "case": "S1_feedback",
+      "preflight_prompt_tokens": 1920,
+      "feedback_before": 30,
+      "feedback_after": 7,
+      "required_context_preserved": true,
+      "oldest_feedback_removed_first": true
+    },
+    {
+      "case": "S2_initial",
+      "preflight_prompt_tokens": 790,
+      "feedback_before": 0,
+      "feedback_after": 0,
+      "required_context_preserved": true,
+      "oldest_feedback_removed_first": true
+    },
+    {
+      "case": "S2_feedback",
+      "preflight_prompt_tokens": 1917,
+      "feedback_before": 30,
+      "feedback_after": 7,
+      "required_context_preserved": true,
+      "oldest_feedback_removed_first": true
+    }
+  ],
+  "unit": "swapp-review-qwen-tokenizer-28ca6dbd48ce4515aeb81d6647e2a249.service",
+  "process_exit_code": 0,
+  "stderr": "",
+  "input_sha256": "9fdf5fe30804002f0672dce9c844e7fb9acbd3982aa46327e2a9726675e49b22",
+  "tokenization": {
+    "tokenizer_class": "Qwen2Tokenizer",
+    "cases": [
+      {
+        "case": "S1_initial",
+        "prompt_tokens": 793,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "c4feca986a2576358f8dc63f9e06904936b76f02ea704d1e73ef373c1773bd8f"
+      },
+      {
+        "case": "S1_feedback",
+        "prompt_tokens": 1920,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "be20f41258faa49f423e71d1d3648dd8d004a90c6c8189021163b8808a8eb335"
+      },
+      {
+        "case": "S2_initial",
+        "prompt_tokens": 790,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "b9069d7315cae0f4fef307512d8630cc55c130c6cbb97a7eafb3e23aff540a37"
+      },
+      {
+        "case": "S2_feedback",
+        "prompt_tokens": 1917,
+        "context_limit": 2048,
+        "within_limit": true,
+        "token_ids_sha256": "c07921cb36622ecdb8654550d5672cf572e6d2ce9b65ed9efdc5d92b79f01978"
+      }
+    ]
+  },
+  "source_after_sha256": {
+    "lab/director/local_llm.py": "8ad23f4172e4f72ce26a927878f2209f8d30f9eac3b86d8529adc3771a6d7340",
+    "lab/director/fake_llm.py": "410aafd14b0a3c4b6aa9ad028da8938c8002f72b90b6722c33ed56669f1fb0c3",
+    "lab/llm/native_runtime.py": "99a0f55be15e0aa93ac27ca7f1d3781b6fd52045db4ba1c35bbbfd0276cd64f8",
+    "docs/ai-scientist/review-evidence/review_local_qwen_tokenizer.py": "10ac5c6b47f91efcd7fa68a4d5e9dde3d04e3c7b1753003e2b945ae3a7cb23da"
+  },
+  "overall_exit_code": 0
+}

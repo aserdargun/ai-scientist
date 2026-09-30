@@ -1,0 +1,16 @@
+{
+  "schema": "aos-v4-holdout-preparation-gate.v1",
+  "created_at": "2026-09-26T21:20:18.421624+00:00",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "base_commit": "1d8b07dc009e55470ec7c2c2c9333267eb5347c0",
+  "harness_sha256": "3be08c30da6132aada7d2bba0d8211e19d46c34eedd85f3349356a917031dd91",
+  "harness_files": 76,
+  "files": {
+    "docs/ai-scientist/review-evidence/review_aos_lab_coexistence_v4.py": "a3e9d06e2bd3934779135c94ad510397a31f83c1a6ba414f5ddef4dac3d37da2",
+    "docs/ai-scientist/review-evidence/test_aos_lab_coexistence_v4_contract.py": "3f72d1dec2a70bcfb3155687b403c2d93f803d484d762ec194a2ef335a7a38ec"
+  },
+  "gate": "docs/ai-scientist/evidence/quality-gate-aos-v4-holdout-preparation.json",
+  "gate_sha256": "74255d737992ad4eff834f02f07ae0c205d7898ddd648a5f57ed58e33ffa97b6",
+  "scope": "Main0.29 plus V4 CPU review driver/doc preparation; private holdout-030 runtime and public FarmB audit are not integrated."
+}

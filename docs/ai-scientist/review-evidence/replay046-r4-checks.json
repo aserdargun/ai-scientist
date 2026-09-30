@@ -1,0 +1,35 @@
+[
+  {
+    "command": [
+      "/home/cachyos/ai-scientist/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-m",
+      "not live and not gpu",
+      "tests/test_director_resume043.py"
+    ],
+    "exit_code": 0,
+    "output": "......................                                                   [100%]\n22 passed in 0.88s\n"
+  },
+  {
+    "command": [
+      "/home/cachyos/ai-scientist/.venv/bin/ruff",
+      "check",
+      "lab/director/holdout_replay.py",
+      "lab/db/migrations/versions/0030_director_resume.py",
+      "tests/test_director_resume043.py"
+    ],
+    "exit_code": 0,
+    "output": "All checks passed!\n"
+  },
+  {
+    "command": [
+      "/home/cachyos/ai-scientist/.venv/bin/mypy",
+      "--strict",
+      "lab/director/holdout_replay.py"
+    ],
+    "exit_code": 0,
+    "output": "Success: no issues found in 1 source file\n"
+  }
+]

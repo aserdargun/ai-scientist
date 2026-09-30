@@ -1,0 +1,216 @@
+{
+  "schema": "release0363-deployment.v1",
+  "scope": {
+    "memory": 2147483648,
+    "swap": 0,
+    "cpu_quota": 100000,
+    "cpu_period": 100000,
+    "tasks": 64
+  },
+  "steps": [
+    "three_owned_services_stopped",
+    "private_source_and_database_backups_complete",
+    "exact13_gated_payloads_copied",
+    "0031_migrated_without_critical_row_changes"
+  ],
+  "before": {
+    "revision": "0030_director_resume",
+    "migrator_dsn_sha256": "redacted_private_credential_file_digest",
+    "active": {
+      "75642033-6e46-4a73-82a9-9e1ecb6066d3": "stop_requested",
+      "b54c9282-ca69-4deb-9e28-ef50e36bf21c": "running",
+      "fac65252-e14d-4014-9744-333b88083963": "stop_requested"
+    },
+    "states": {
+      "75642033-6e46-4a73-82a9-9e1ecb6066d3": "stop_requested",
+      "b54c9282-ca69-4deb-9e28-ef50e36bf21c": "running",
+      "fac65252-e14d-4014-9744-333b88083963": "stop_requested"
+    },
+    "jobs": 0,
+    "generation": 2,
+    "score_count": 9,
+    "scores_sha256": "bc80206831271b10f833db247ab99775ad87ba114ccae9b48f015af120d7fc49",
+    "budgets_count": 2,
+    "budgets_sha256": "29cc221c5fa9eb52a393f4252b3b8c3bf8d96a0f3fb931098b3fd9d308c9a1dc",
+    "experiments": [
+      [
+        "exp_c73461c316dd5e548b19df6e9f8c46fa",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_151c2ebc131a50a0bc56a0ffdf0b8870",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_c9b522fc8e8353e683ef600f022d11ca",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_6b19d9ba655759fb9c45786899f0b93f",
+        "proposal",
+        "proposed"
+      ]
+    ],
+    "proposal_jobs": 0,
+    "stop_closures": []
+  },
+  "postgres": {
+    "id": "4b53bbbaaea95ab0f7692bf82e41a769dd119611f30c196d2e479ade2241105e",
+    "memory": 536870912,
+    "port": 55432,
+    "label": "ai-scientist-m0-ledger"
+  },
+  "manifest_sha256": "683c4f7c3cad8b28ed826769e4ecc5667ffb5b8d265eae379bf163d087145bd5",
+  "before_units": {
+    "swapp-ai-scientist-api.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "43926",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m lab.cli api serve --host 127.0.0.1 --port 8766 ; ignore_errors=no ; start_time=[Tue 2026-09-29 22:28:21 +03] ; stop_time=[n/a] ; pid=43926 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "1073741824",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "72f855ceb8b94df2b3f88218532b6f8c",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-api.service"
+    },
+    "swapp-ai-scientist-director-drain.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "43974",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m lab.cli director drain --poll-seconds 2 ; ignore_errors=no ; start_time=[Tue 2026-09-29 22:28:24 +03] ; stop_time=[n/a] ; pid=43974 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "2147483648",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "8b45431770224aa3b3e7e233d56ffa8a",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service"
+    },
+    "swapp-ai-scientist-console.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "43977",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m console.server ; ignore_errors=no ; start_time=[Tue 2026-09-29 22:28:24 +03] ; stop_time=[n/a] ; pid=43977 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "500ms",
+      "MemoryMax": "536870912",
+      "MemorySwapMax": "0",
+      "TasksMax": "64",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "b6cf1c8f600946748985ff92662828a4",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-console.service"
+    }
+  },
+  "database_backup": {
+    "path": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/stopped-proposal-055/review-evidence/pre-0363-ledger.dump",
+    "bytes": 2139859,
+    "sha256": "a9989cb53aaa3bb21c2154911933e00f5d3d5c7d69abf7760c36c73c213f8c84"
+  },
+  "after_units": {
+    "swapp-ai-scientist-api.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "74893",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m lab.cli api serve --host 127.0.0.1 --port 8766 ; ignore_errors=no ; start_time=[Tue 2026-09-29 23:08:24 +03] ; stop_time=[n/a] ; pid=74893 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "1073741824",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "12188bcc93524ba7acf8070c7ae88570",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-api.service"
+    },
+    "swapp-ai-scientist-director-drain.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "74898",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m lab.cli director drain --poll-seconds 2 ; ignore_errors=no ; start_time=[Tue 2026-09-29 23:08:25 +03] ; stop_time=[n/a] ; pid=74898 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "2147483648",
+      "MemorySwapMax": "0",
+      "TasksMax": "32",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "aeefe827fc0b436a8c81bf969db9cd8b",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-director-drain.service"
+    },
+    "swapp-ai-scientist-console.service": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "MainPID": "74901",
+      "ExecStart": "{ path=/home/cachyos/ai-scientist/.venv/bin/python ; argv[]=/home/cachyos/ai-scientist/.venv/bin/python -m console.server ; ignore_errors=no ; start_time=[Tue 2026-09-29 23:08:25 +03] ; stop_time=[n/a] ; pid=74901 ; code=(null) ; status=0/0 }",
+      "CPUQuotaPerSecUSec": "500ms",
+      "MemoryMax": "536870912",
+      "MemorySwapMax": "0",
+      "TasksMax": "64",
+      "WorkingDirectory": "/home/cachyos/ai-scientist",
+      "InvocationID": "adb9f2c39af1442da4f6b51eaa567f8d",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-console.service"
+    }
+  },
+  "status": "deployed",
+  "version": "0.36.3",
+  "after": {
+    "revision": "0031_stopped_proposal",
+    "migrator_dsn_sha256": "redacted_private_credential_file_digest",
+    "active": {
+      "75642033-6e46-4a73-82a9-9e1ecb6066d3": "stop_requested",
+      "b54c9282-ca69-4deb-9e28-ef50e36bf21c": "running",
+      "fac65252-e14d-4014-9744-333b88083963": "stop_requested"
+    },
+    "states": {
+      "75642033-6e46-4a73-82a9-9e1ecb6066d3": "stop_requested",
+      "b54c9282-ca69-4deb-9e28-ef50e36bf21c": "running",
+      "fac65252-e14d-4014-9744-333b88083963": "stop_requested"
+    },
+    "jobs": 0,
+    "generation": 2,
+    "score_count": 9,
+    "scores_sha256": "bc80206831271b10f833db247ab99775ad87ba114ccae9b48f015af120d7fc49",
+    "budgets_count": 2,
+    "budgets_sha256": "29cc221c5fa9eb52a393f4252b3b8c3bf8d96a0f3fb931098b3fd9d308c9a1dc",
+    "experiments": [
+      [
+        "exp_c73461c316dd5e548b19df6e9f8c46fa",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_151c2ebc131a50a0bc56a0ffdf0b8870",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_c9b522fc8e8353e683ef600f022d11ca",
+        "baseline",
+        "scored"
+      ],
+      [
+        "exp_6b19d9ba655759fb9c45786899f0b93f",
+        "proposal",
+        "proposed"
+      ]
+    ],
+    "proposal_jobs": 0,
+    "stop_closures": []
+  },
+  "migration_applied": true,
+  "changed_files": {
+    "harness/VERSION": "b9e0c0d76f518fa276655ba0bddbf32d63b5a2de1d84c2925c8ce7aa4c0da55a",
+    "lab/cli.py": "ad2eee81a51a180ddca2063a3912d09b8d8c66d54155e9e158d6e39b2696c304",
+    "lab/db/schema.py": "93f91e01c02c1b6f0a73d76db0453a926e3348c4038f4048ed8b2152305e2ebb",
+    "lab/director/contracts.py": "1a6426c25a43296ac005999ddc6b477f2c095d48644ae896b13f5042f652d388",
+    "lab/director/ledger.py": "0658d5fddbb32676fb8fe4cf10b84066ac7ad57b2b46d96f68f3ba64f9943da1",
+    "lab/director/recovery.py": "03ddd8ac0eba9aa575105455c5480f6d0a0bf214e3d4957b4c9f56a7d8fb4a1c",
+    "lab/reporting.py": "5c4e6f2229aae5e621c5083072e46fe0255084101935defa2c565bf9afc5ed37",
+    "lab/scorer/stop_recovery.py": "66c390b57234c2e1ae8ab448813ba2b581faff939191fa949a4aec32dbcb6af2",
+    "tests/test_postgres_resume046_chain.py": "b2a070a577cd4ce018a133c0e2653b33890e3a1f994efb7bcd19c316bb20fe14",
+    "lab/director/stopped_proposal.py": "9ca338b754972bb247e6e1222d2ca36f411b0e63c2ccc1e7a74a62251ab78bde",
+    "lab/db/migrations/versions/0031_stopped_proposal.py": "a87247ef64ce0c0e6b4fda30343f54ea1b99e8f246252dce59b2eeb2fa12e5d1",
+    "tests/test_stopped_proposal055.py": "26c31e8c5221f92fd8d10b8442e6fd699fb472e4910c61c6bcfc8bc60a9ed121",
+    "ops/sandbox-image.lock": "a8111c9b59c1ff7f83f1dc9b9931fe249bfd55024dd750f0842460b91c1b8e94"
+  }
+}

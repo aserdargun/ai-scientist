@@ -1,0 +1,16 @@
+{
+  "schema": "local-qwen-overrun-budget-review.v1",
+  "checked_at": "2026-09-25T01:45:40.008222+00:00",
+  "scope": "CPU budget invariants with explicit injected clocks. No PostgreSQL, model or GPU run. Actual overrun remains visible and admission/resume respects it.",
+  "source_sha256": "24e744956d7558bc0641c18a4e6ad349cd24d2d1a0bb3dd148fbe1f62282f0e9",
+  "checks": {
+    "actual_wall_overrun_not_clipped": true,
+    "charged_wall_exhausts_admission": true,
+    "no_work_after_wall_exhaustion": true,
+    "restored_exhaustion_preserved": true,
+    "duplicate_charge_rejected": true,
+    "elapsed_and_measured_not_double_counted": true,
+    "source_unchanged": true
+  },
+  "overall_exit_code": 0
+}

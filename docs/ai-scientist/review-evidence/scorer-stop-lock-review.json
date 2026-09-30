@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-24T10:13:06.728034+00:00",
+  "source_sha256": {
+    "lab/scorer/service.py": "ddb6a2a24b45817b0c4601fad6f72e0354d20da92a33293ae8db739757bcc97c",
+    "lab/api/app.py": "ea75b417eb3054878382c4f2c8b1248b705471395029ae48c8e6e67181860490",
+    "lab/db/schema.py": "b3078736fdf4bddf289d255ce28e9527ea6d0d3a228f69309809b532aa3f5542"
+  },
+  "scope": "Real PostgreSQL and actual API/scorer control flow; metric is a deliberately blocked fixture, not a VUS performance benchmark.",
+  "api_response_target_seconds": 2,
+  "stop_returned_before_metric_release": true,
+  "stop_elapsed_seconds": 0.010305633000825765,
+  "stop_status": 200,
+  "stop_state": "stop_requested",
+  "late_score": {
+    "rejected": "ValueError",
+    "reason": "run is no longer active for score commit"
+  },
+  "stop_blocked_by_metric_reproduced": false,
+  "cleanup_deleted_runs": 1,
+  "cleanup_deleted_profiles": 1,
+  "source_stable_during_probe": true,
+  "script_sha256": "1afa0dc2402de2295db84fd126146c74fd288e61cb1e5fb10b4fe9c679322f21",
+  "command": ".venv/bin/python docs/ai-scientist/review-evidence/review_scorer_stop_lock.py"
+}

@@ -1,0 +1,20 @@
+{
+  "director": {
+    "register": true,
+    "receipt": true,
+    "update": false,
+    "read_table": false
+  },
+  "planner": {
+    "register": false,
+    "receipt": false,
+    "update": false,
+    "read_table": false
+  },
+  "scorer": {
+    "register": false,
+    "receipt": false,
+    "update": false,
+    "read_table": false
+  }
+}

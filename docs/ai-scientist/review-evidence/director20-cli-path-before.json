@@ -1,0 +1,58 @@
+{
+  "schema": "director20-cli-review.v1",
+  "checked_at": "2026-09-24T19:00:54.738639+00:00",
+  "run_id": "e8548a21-0b13-4f2a-b527-dfa06eeffe2d",
+  "scope": "Production CLI baseline and 20 proposals on four synthetic EVT tasks. Fake provider supplies source only. Real Docker/Scorer/PostgreSQL required. No public data, real LLM, GPU, AOS, holdout or full replay acceptance.",
+  "harness_sha256": "b83e478cec1c79f0c7fa685d09bdf00e14a683b1395b8aeb41e609fb99d5a6e5",
+  "image": "sha256:7477a09cd6901ad5b2db4133ee3e6485065874630925553a06b6b19bc92ee6c3",
+  "inputs": {
+    "suite_file": "/home/cachyos/ai-scientist/data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/suite.json",
+    "suite_manifest_sha256": "8c4af7aabe31e8aa9d5e791ef26d1a455890820d0f6f30cc5598b7e5ae9565ad",
+    "scenario_file": "/home/cachyos/ai-scientist/data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/proposals.json",
+    "scenario_sha256": "91747f91991f55f9d43ae9fb3de7b1700bb5f9d29505dd970af3110007dceda3"
+  },
+  "command": [
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-m",
+    "lab.cli",
+    "run",
+    "--run-id",
+    "e8548a21-0b13-4f2a-b527-dfa06eeffe2d",
+    "--suite-id",
+    "synthetic.director20.v1",
+    "--suite-file",
+    "/home/cachyos/ai-scientist/data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/suite.json",
+    "--provider",
+    "fake-json",
+    "--scenario-file",
+    "/home/cachyos/ai-scientist/data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/proposals.json",
+    "--proposal-limit",
+    "20",
+    "--seed-wall-seconds",
+    "90",
+    "--artifact-root",
+    "/home/cachyos/ai-scientist/data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/blobs"
+  ],
+  "script_sha256": "dde9e5537d4113cbf8db92479b3fad5abfd3efca3a549ea7f0b25368cc132d31",
+  "checks": {},
+  "process_exit_code": 1,
+  "stdout_path": "data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/cli.stdout",
+  "stderr_path": "data/runtime/director20-review/e8548a21-0b13-4f2a-b527-dfa06eeffe2d/cli.stderr",
+  "error_type": "AssertionError",
+  "final_ledger_snapshot": {
+    "experiments": [],
+    "scored_tasks": 0
+  },
+  "owned_sql_fixtures_removed": true,
+  "source_unchanged": true,
+  "all_passed": false,
+  "diagnosis": {
+    "error_code": "sandbox_directory_inside_blob_store",
+    "actual_blob_root_entries": [
+      ".quota.lock",
+      "sandbox"
+    ],
+    "actual_blob_store_exception": "ValueError: unexpected entry in content-addressed artifact store",
+    "scope": "Production CLI placed sandbox workdir inside the strict content-addressed artifact root; no experiment registered or measurement started."
+  }
+}

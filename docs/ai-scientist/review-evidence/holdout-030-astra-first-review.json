@@ -1,0 +1,60 @@
+{
+  "schema": "holdout-030-astra-first-review.v1",
+  "created_at": "2026-09-26T21:34:53.503083+00:00",
+  "reviewer": "GPT-6 Astra/high",
+  "implementation_worker": "GPT-6 Luna/high",
+  "review_scope": "First frozen primary-owned current-base port only; recovery-owned files and shared supervisor excluded.",
+  "base_commit": "1d8b07dc009e55470ec7c2c2c9333267eb5347c0",
+  "source_patch": "data/runtime/parallel-m0/delivery/holdout-030-source.patch",
+  "source_patch_sha256": "a32926b8a723f50a24194e9ffe42c6ff1960dba01091191d40e1efcf2b062a3d",
+  "handoff": "docs/ai-scientist/review-evidence/holdout-030-first-handoff.md",
+  "handoff_sha256": "812d2d9fc3b360a4b76daab2e3676c4c3fffe437b6d574ada187808ca9678b6b",
+  "decision": "changes_required",
+  "worker_reported_checks": {
+    "focused_pytest_exit_code": 0,
+    "focused_pytest_passed": 16,
+    "ruff_exit_code": 0,
+    "mypy_exit_code": 0,
+    "py_compile_exit_code": 0,
+    "limits": "CPU fixtures/static only; privacy collection failure during concurrent scorer edit retained in handoff, no current PG/Docker/scoring proof."
+  },
+  "blocking_findings": [
+    {
+      "id": "030-A",
+      "path": "lab/director/loop.py",
+      "line": 554,
+      "finding": "check_run_end_holdout uses strict Python-dict validation on JSON-decoded UUID strings; fresh wrapper fails before evaluation.",
+      "required": "Use canonical JSON + strict model_validate_json; exercise actual wrapper."
+    },
+    {
+      "id": "030-B",
+      "path": "lab/db/migrations/versions/0019_bounded_holdout.py",
+      "line": 524,
+      "finding": "State-key regex still rejects combined periodic holdout and run_end_budget_reserved suffix.",
+      "required": "Admit exact valid compound key while preserving current-state hash/event checks; periodic10 then run_end test."
+    },
+    {
+      "id": "030-C",
+      "path": "lab/director/loop.py",
+      "line": 692,
+      "finding": "Run-end marker restoration recomputes expected state with a live budget snapshot, so elapsed time changes equality after a crash between state and marker.",
+      "required": "Persist reconciled budget/digest in application receipt and make restoration derivation pure."
+    },
+    {
+      "id": "030-D",
+      "path": "lab/director/loop.py",
+      "line": 1417,
+      "finding": "Charging an unresolved bound to measured wall only can be hidden by preexisting elapsed wall. Example measured20/elapsed80/unknown60 restores80 rather than140.",
+      "required": "Conservatively advance max(pre-work measured,elapsed) by full bound; nonzero gap regression."
+    },
+    {
+      "id": "030-E",
+      "path": "lab/director/loop.py",
+      "line": 523,
+      "finding": "Crash after immutable run-end intent before SQL reservation leaves permanent exception on restart.",
+      "required": "Idempotent exact-intent recovery with original budget or durable terminal bitless failure after exhaustion; no fresh allowance/query."
+    }
+  ],
+  "next_evidence": "Real wrapper fault injection at reservation, intent, result, state and marker boundaries including zero remaining wall, followed by isolated current-source PostgreSQL validation.",
+  "runtime_integrated": false
+}

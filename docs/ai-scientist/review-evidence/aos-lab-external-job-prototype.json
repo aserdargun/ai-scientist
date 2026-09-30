@@ -1,0 +1,93 @@
+{
+  "schema": "aos-lab-external-job-prototype-review.v1",
+  "scope": "Isolated opt-in copy only. Live AOS source, service, DB and runtime were not modified. Lab production API was not modified.",
+  "snapshot_root": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/source-current",
+  "live_aos_root": "/home/cachyos/aos",
+  "patch": "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/aos-lab-external-job-prototype.patch",
+  "patch_sha256": "c6708c3d53a8410d5fc7e6adcafe6704618d8e1148dc4809ff6ea3dfd6f58bf2",
+  "aos_test_environment_python": "3.12.13",
+  "aos_test_environment_path": "/home/cachyos/ai-scientist/data/runtime/aos-coexistence/.venv",
+  "aos_environment_pytest": "8.4.2",
+  "focused_test_command": "PYTHONPATH=src ../.venv/bin/python -m pytest -q tests/test_lab_external_jobs.py",
+  "focused_test_exit_code": 0,
+  "focused_test_result": "10 passed",
+  "package_gate_command": "PYTHONPATH=src ../.venv/bin/python scripts/validate_package.py",
+  "package_gate_exit_code": 0,
+  "package_gate_result": "PASS: 3838 package checks. No model/runtime/training tests were run.",
+  "live_aos_source_hashes": {
+    "src/aos/desktop_console.py": {
+      "capture_sha256": "75a361433b4551243c9a73b9500b584d9ad492ceaf16caec6277b61d67d629eb",
+      "live_sha256_after_prototype": "75a361433b4551243c9a73b9500b584d9ad492ceaf16caec6277b61d67d629eb",
+      "copy_sha256_after_prototype": "67f98f3bb26659642a6d0163b26289ef0602ea0a76ed25361d8196aed6ac63bc",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    },
+    "src/aos/desktop_tasks.py": {
+      "capture_sha256": "42acf3386903f60f60e212e66bfb86a9e622a334be13ee4645d86f95761bc435",
+      "live_sha256_after_prototype": "42acf3386903f60f60e212e66bfb86a9e622a334be13ee4645d86f95761bc435",
+      "copy_sha256_after_prototype": "42acf3386903f60f60e212e66bfb86a9e622a334be13ee4645d86f95761bc435",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    },
+    "src/aos/computer.py": {
+      "capture_sha256": "832f1a72f1fbb461693904f23dde1100c7e010ba1229a8a3cbe57d8851aeb5a5",
+      "live_sha256_after_prototype": "832f1a72f1fbb461693904f23dde1100c7e010ba1229a8a3cbe57d8851aeb5a5",
+      "copy_sha256_after_prototype": "832f1a72f1fbb461693904f23dde1100c7e010ba1229a8a3cbe57d8851aeb5a5",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    },
+    "src/aos/contracts.py": {
+      "capture_sha256": "2badc0b9c0ebb6a01891cbad5e95959d1d4381e68eca23769a6eec59d3f3d5c8",
+      "live_sha256_after_prototype": "2badc0b9c0ebb6a01891cbad5e95959d1d4381e68eca23769a6eec59d3f3d5c8",
+      "copy_sha256_after_prototype": "2badc0b9c0ebb6a01891cbad5e95959d1d4381e68eca23769a6eec59d3f3d5c8",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    },
+    "src/aos/task_plan.py": {
+      "capture_sha256": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "live_sha256_after_prototype": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "copy_sha256_after_prototype": "f439b28b516743154e0912b9732c088f28219260ab5d1019dd6548a92af63a04",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    },
+    "src/aos/storage.py": {
+      "capture_sha256": "64d8563365f00315052cc1eaf700a49366f30756a26c8300f05c482753a91b90",
+      "live_sha256_after_prototype": "64d8563365f00315052cc1eaf700a49366f30756a26c8300f05c482753a91b90",
+      "copy_sha256_after_prototype": "64d8563365f00315052cc1eaf700a49366f30756a26c8300f05c482753a91b90",
+      "live_unchanged_from_capture": true,
+      "copy_is_unchanged_from_capture_or_patch_target": true
+    }
+  },
+  "live_source_unchanged": true,
+  "implementation_summary": [
+    "Strict bounded Lab request/status/report models; loopback-only HTTP; token file O_NOFOLLOW/owner/mode checks; strict JSON UUID parsing and canonical report SHA verification.",
+    "Detached /api/lab start/status/stop/report routes; never call DesktopScheduler; database writes remain on AOS event-loop thread while only HTTP runs in asyncio.to_thread.",
+    "AOS SQLite migration maps external job ids to actual AOS tasks/runs/steps/actions and terminal verification; per-session namespaced remote idempotency prevents cross-session key collision.",
+    "Start and stop acknowledgements are followed by status observation; terminal status requires matching run identity, inner report run_id, terminal status, and report hash. Delayed nonterminal replies cannot regress a verified terminal state.",
+    "Report HTTP envelope cap is 256 KiB; ordinary control responses remain capped at 64 KiB. Larger report suites need pagination or an explicit bounded-size policy."
+  ],
+  "explicit_open_gaps": [
+    "Current Lab API still hardcodes origin=local and does not accept the authenticated AOS service-principal identity or external job/task binding. Prototype deliberately requires status origin=aos, so it is not live-compatible until Lab-side identity binding is implemented.",
+    "AOS typed HTTP task route is separate from ComputerGateway/MCP tool catalog; no claim of model/tool catalog integration.",
+    "Queued API response is dispatch acknowledgement, not research completion; no durable dispatcher/worker binding to Lab CLI run profile yet.",
+    "No actual AOS service/database route test or shared GPU/CPU/RAM coexistence acceptance; ASGI fixture + private SQLite and Lab fake are isolated tests.",
+    "Actual TrajectoryStore restart with an active external job currently raises Unknown run because typed runtime state is missing; see aos-store-restart-before.json."
+  ],
+  "live_source_mutation_by_this_agent": false,
+  "current_lab_api_compatibility": "blocked: deployed Lab API returns origin=local; this isolated AOS prototype requires origin=aos before it accepts run status.",
+  "terminal_race_review": {
+    "artifact": "aos-external-terminal-review.json",
+    "passed": "2/2",
+    "exit_code": 0,
+    "module_sha256": "8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb"
+  },
+  "report_transport_review": {
+    "artifact": "aos-report-transport-review.json",
+    "passed": "4/4",
+    "exit_code": 0,
+    "real_report_bytes": 70876,
+    "response_cap_bytes": 262144,
+    "module_sha256": "8565994c0aa2ddbc9af45e25ac4e31dcffe2191a2597c1ee8791dd7f5fca4dcb"
+  },
+  "packaging_review": "aos-patch-packaging-review.json"
+}

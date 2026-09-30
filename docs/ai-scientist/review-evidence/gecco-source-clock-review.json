@@ -1,0 +1,53 @@
+{
+  "dataset": "GECCO",
+  "source_path": "data/public/original-sources/GECCO/3884398/1_gecco2018_water_quality.csv",
+  "source_sha256": "c41221f3045696b75b79374f4c41c63f6c988e1df03b1dedcdbf910d44ea71cd",
+  "source_rows": 139566,
+  "source_columns": [
+    "Unnamed: 0",
+    "Time",
+    "Tp",
+    "Cl",
+    "pH",
+    "Redox",
+    "Leit",
+    "Trueb",
+    "Cl_2",
+    "Fm",
+    "Fm_2",
+    "EVENT"
+  ],
+  "source_time_start": "2016-08-03 11:49:00",
+  "source_time_end": "2016-11-08 08:54:00",
+  "timestamp_timezone": "unspecified in original source",
+  "cadence_seconds_counts": {
+    "-3540.0": 1,
+    "60.0": 139564
+  },
+  "source_nonfinite_sensor_count": 9397,
+  "curated_member": "TSB-AD-M/173_GECCO_id_1_Sensor_tr_16165_1st_16265.csv",
+  "curated_rows": 138521,
+  "curated_columns": [
+    "Tp",
+    "Cl",
+    "pH",
+    "Redox",
+    "Leit",
+    "Trueb",
+    "Cl_2",
+    "Fm",
+    "Fm_2",
+    "Label"
+  ],
+  "source_valid_sensor_rows": 138521,
+  "source_invalid_sensor_rows": 1045,
+  "drop_nonfinite_preserving_order_matches_curated_sensors": true,
+  "drop_nonfinite_preserving_order_matches_curated_labels": true,
+  "curated_source_row_gaps": {
+    "1": 138517,
+    "2": 1,
+    "61": 1,
+    "985": 1
+  },
+  "interpretation": "Curated rows preserve source order after rows with a nonfinite sensor are removed; source nominal cadence is 60 seconds. A single -3540s local-clock discontinuity is observed, timezone is unspecified; do not claim UTC. A production physical-time loader must retain removed-row gaps and explicitly version its source-clock policy."
+}

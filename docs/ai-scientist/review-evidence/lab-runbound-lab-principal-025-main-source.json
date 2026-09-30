@@ -1,0 +1,15 @@
+{
+  "schema": "root-patch-integration.v1",
+  "base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "patch_sha256": "29298234661c5fd059f2295d102e78551badee7f8a16ed6cd3116abb0e4026c8",
+  "agent_receipt_sha256": "5da946ecd6dc53efe025037a70fd408c6accdaba999de18a6dcce8621b460027",
+  "files": {
+    "lab/llm/gpu_scheduler.py": "39fc9996d12be6b4616239086313ac0b460c10f7bf2f02ac4f31534e7aed22f8",
+    "tests/test_gpu_scheduler.py": "09d1586e2d82f0d1fd5adcf0a7452500684fe7672a3946c3458db06ec6d46935"
+  },
+  "independent_main_apply_check_exit": 0,
+  "byte_parity": true,
+  "agent_log_hashes_verified": true,
+  "live_services_changed": false,
+  "full_quality_gate": "pending combined integration"
+}

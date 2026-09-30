@@ -1,0 +1,68 @@
+{
+  "schema": "m02-typed-reject-delivery.v1",
+  "worktree": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/m02-typed-reject",
+  "base_commit": "355df9bffc0a15de8ec14cd743470f6088ac75b4",
+  "commit_created": false,
+  "scope": "Fixture-backed active-run harness identity rejection; no Docker or Scorer dispatch after fingerprint mismatch. This does not prove the private PostgreSQL or full CLI restart path.",
+  "source_sha256": {
+    "lab/director/executor.py": "aa733327a9328ef5465337f341d1179c61e148535cc1aafa22014a3d7327a31f",
+    "lab/director/runner.py": "10c58376f953aac3552760bf8f7d32d7db207a20fb5bbc0b457bd9bbc10977d5",
+    "tests/test_director_harness_mismatch.py": "5ce47b1605046c79b8a7dfe42608a13f2ecdcb3e0c3141caea91639552f67d2a",
+    "tests/test_director_primary_recovery.py": "69e8cb095982cb09aef463b8d4d6e3cf9d9d5337c87a2f462bc4f6ecab87890a",
+    "tests/test_director_seed_resume_review.py": "bbdedf3597e40065a3a7a074a3b775ca41be7d4cd2e26a87c3607e964ecc7d03"
+  },
+  "patch": {
+    "path": "delivery/m02-typed-reject.patch",
+    "sha256": "77a5342428cb3895d297fd6d982b31104677a815c971c4e4133748a5602aabf0"
+  },
+  "checks": [
+    {
+      "command": "uv run pytest -q tests/test_director_harness_mismatch.py tests/test_director_primary_recovery.py tests/test_director_seed_resume_review.py",
+      "exit_code": 0,
+      "summary": "11 passed in 0.80s",
+      "stdout_path": "delivery/pytest-focused.stdout.txt",
+      "stdout_sha256": "bd6e3fc42587c4f70fb8ccc09c2676d82ab68ea1d7a73709274e4e8163474ec8"
+    },
+    {
+      "command": "uv run ruff check lab/director/executor.py lab/director/runner.py tests/test_director_harness_mismatch.py tests/test_director_primary_recovery.py tests/test_director_seed_resume_review.py",
+      "exit_code": 0,
+      "summary": "All checks passed!",
+      "stdout_path": "delivery/ruff.stdout.txt",
+      "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "command": "uv run mypy --strict harness lab/referee lab/llm/router.py",
+      "exit_code": 0,
+      "summary": "Success: no issues found in 11 source files",
+      "stdout_path": "delivery/mypy.stdout.txt",
+      "stdout_sha256": "049f51b850512be193c74d3fbb731e25fbc6374a66560d8ec0d6569d79c88ea6"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "summary": "No whitespace errors"
+    }
+  ],
+  "failed_attempts": [
+    {
+      "command": "uv run pytest -q tests/test_director_harness_mismatch.py tests/test_director_primary_recovery.py tests/test_director_seed_resume_review.py",
+      "exit_code": 2,
+      "reason": "pytest was not installed in the worktree venv; uv run reported Failed to spawn: pytest",
+      "resolution": "uv sync --extra dev completed with exit 0"
+    },
+    {
+      "command": "focused pytest with zsh wrapper variable named status",
+      "test_process_exit_code": 0,
+      "wrapper_exit_code": 1,
+      "reason": "zsh reserves status as a read-only shell variable; repeated with pytest_exit_code and captured test exit 0"
+    }
+  ],
+  "mutation_safety": {
+    "test_mutates_only_tmp_path_copy": true,
+    "live_harness_pin_rechecked_unchanged": true,
+    "test_is_fixture_evidence": true,
+    "private_postgresql_proof": "not run",
+    "full_cli_restart_after_mutation": "not proven; CLI baseline calibration pin precheck still rejects before DirectorLoop"
+  },
+  "integration_note": "Use with the coordinated loop hook only after root integrates this worktree. Do not weaken the CLI calibration or suite pin."
+}

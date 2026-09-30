@@ -1,0 +1,37 @@
+{
+  "schema": "local-qwen-repair-main-integration.v1",
+  "base_commit": "3e98269",
+  "handoff_sha256": "99219f64514cb80c7e075066830f11fd779e7650f08fe5f1b84db40965334fce",
+  "changes": [
+    {
+      "path": "harness/contracts.py",
+      "before_sha256": "ab64007b3ec7c13caa8ac9312a6e3c4e41aa0cf251c9eb6477df344110f0c4ec",
+      "after_sha256": "2e234eacd1b8187aec61fe453a1e2a4d356997c1f9c583909f7f0cbb560a5599"
+    },
+    {
+      "path": "lab/director/local_llm.py",
+      "before_sha256": "e8acd3b4b72c9bfe8433a07b47f90f4002073179addf369ddf260ca041c9b12c",
+      "after_sha256": "4f2861645d5debebc62bf43e99717a687b627447b205d933b096d08ca8cdc635"
+    },
+    {
+      "path": "lab/director/fake_llm.py",
+      "before_sha256": "622a8a33761f514463dc9b01581a2ae36a12d8d7fb931e27c637c6a892136b1e",
+      "after_sha256": "ca469fe3d79ce3f6249f2907f7c733801e3db91359fb5a756cd88e79c30e9836"
+    },
+    {
+      "path": "tests/test_local_qwen_provider.py",
+      "before_sha256": "5ee66bb10d84e149d84c84dbdbdf591a23f1b14abadc349f40cdb28486957c9e",
+      "after_sha256": "349aad50162bbe50c4eb77fb87e44a1da8d7242619192eedf63b323a14a79258"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/measure_repair_context_v2.py",
+      "before_sha256": null,
+      "after_sha256": "452f086dc673bf3e2eeda81d36dfbdc5f8691949ba9d369c4e460bdcfb127324"
+    },
+    {
+      "path": "docs/ai-scientist/review-evidence/repair-context-tokenizer-check.json",
+      "before_sha256": null,
+      "after_sha256": "1c90619297f6c04ef00f9e96f8cabd61a2480e37073fa4abb01a3cf05ce339ad"
+    }
+  ]
+}

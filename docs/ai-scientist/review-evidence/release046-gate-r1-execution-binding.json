@@ -1,0 +1,91 @@
+{
+  "schema": "release046-gate-execution-binding.v1",
+  "attempt": "r1",
+  "base_release": "0.35.3",
+  "candidate_release": "0.36.0",
+  "image": {
+    "session_id": 84663,
+    "launch_chunk": "7dd72d",
+    "final_chunk": "b26119",
+    "exit_code": 0,
+    "receipt": "release046-image-9fe9f01d24b2.json",
+    "allowed_change_only": "ops/sandbox-image.lock"
+  },
+  "gate": {
+    "session_id": 46327,
+    "launch_chunk": "213197",
+    "final_chunk": "596f04",
+    "exit_code": 1,
+    "elapsed_seconds": 79.83617035500356,
+    "source_unchanged": true,
+    "pytest_passed": 834,
+    "pytest_failed": 11,
+    "pytest_skipped": 7,
+    "pytest_deselected": 98,
+    "strict_mypy_sources": 131,
+    "command_exits": [
+      {
+        "command": [
+          "ruff",
+          "check",
+          "."
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit",
+          "-q",
+          "-r"
+        ],
+        "exit_code": 1
+      },
+      {
+        "command": [
+          "pytest",
+          "-m",
+          "not gpu and not live"
+        ],
+        "exit_code": 1
+      },
+      {
+        "command": [
+          "mypy",
+          "--strict",
+          "harness"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv",
+          "build",
+          "--wheel"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/home/cachyos/ai-scientist/.venv/bin/python",
+          "-c",
+          "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+        ],
+        "exit_code": 0
+      }
+    ]
+  },
+  "failures": [
+    "Ten existing unit fixtures did not isolate the new abandoned-experiment DB helper.",
+    "Staging lacked the existing .venv symlink required by the lifecycle fixture.",
+    "Bandit flagged two static migration rewrite strings."
+  ],
+  "scope": "Candidate gate failed; no deployment or main runtime mutation. PG R4 success remains a separate 33-test synthetic-ledger proof."
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "care-farm-b-astra-policy.v1",
+  "created_at": "2026-09-26T21:38:37.206621+00:00",
+  "reviewer": "GPT-6 Astra/high",
+  "decision": "Approve design as a versioned local adaptation; implementation and measurements of all 15 tasks are pending.",
+  "source_files_sha256": {
+    "care-farm-b-source-audit.json": "a075fbb1e5287406983908fa05b647768c04f6e3b278b1fea1aed22cccbecd00",
+    "care-farm-b-policy-analysis.json": "ac74320d562250d313f4dc21a94af73a6e59339397be340766152f6bd008f261"
+  },
+  "finding": "The source policy analysis names normal operating status inside an anomaly event positive_healthy support. This is not healthy exposure for the PDM false-alarm budget. Task 53 has its entire original prediction period inside the event.",
+  "original_prediction_pdm_healthy_exposure": [
+    {
+      "task_event_id": 19,
+      "unmasked_prediction_rows": 3696,
+      "unmasked_event_rows": 2855,
+      "healthy_outside_event_rows": 841
+    },
+    {
+      "task_event_id": 27,
+      "unmasked_prediction_rows": 8692,
+      "unmasked_event_rows": 8404,
+      "healthy_outside_event_rows": 288
+    },
+    {
+      "task_event_id": 34,
+      "unmasked_prediction_rows": 3889,
+      "unmasked_event_rows": 3046,
+      "healthy_outside_event_rows": 843
+    },
+    {
+      "task_event_id": 53,
+      "unmasked_prediction_rows": 5711,
+      "unmasked_event_rows": 5711,
+      "healthy_outside_event_rows": 0
+    },
+    {
+      "task_event_id": 7,
+      "unmasked_prediction_rows": 4911,
+      "unmasked_event_rows": 4210,
+      "healthy_outside_event_rows": 701
+    },
+    {
+      "task_event_id": 77,
+      "unmasked_prediction_rows": 8223,
+      "unmasked_event_rows": 7862,
+      "healthy_outside_event_rows": 361
+    }
+  ],
+  "policy": {
+    "suggested_version": "care_Bholdout_fixed_7day_reference_train_contiguous.v1",
+    "scope": "All 15 Farm B tasks; no label-dependent selection or selective prefix extension.",
+    "features": [
+      "reactive_power_11_avg",
+      "power_58_avg",
+      "wind_speed_59_avg",
+      "wind_speed_60_avg",
+      "wind_speed_61_avg",
+      "power_62_avg"
+    ],
+    "eval_prefix": "[source_prediction_start - 7 days, source_prediction_start), on a fixed 600-second grid. Hold this source train tail out of fit, threshold, feature and window selection.",
+    "fit_cutoff": "prefix_start - 86,400 seconds",
+    "fit_selection": "Longest finite, status 0/2 segment with exact 600-second spacing ending at or before cutoff; earliest segment wins ties.",
+    "sliding_window": "Existing autocorrelation algorithm, bounded to 10–100 samples, applied only to the exact selected contiguous fit segment.",
+    "nominal_prefix_labels": "Normal based on the source train role and status 0/2; this does not claim all training data are free of faults.",
+    "masking": "Mask absent rows, missing selected values and status 1/3/4/5. Use fit-only medians as finite placeholders; preserve observed zeros and do not forward-fill status.",
+    "events": "Preserve source event timestamps and all original prediction rows; only indices shift after the prefix.",
+    "healthy_requirement": "All 15 tasks must have positive unmasked healthy exposure and sufficient contiguous fit data; otherwise fail closed.",
+    "original_prediction_rows": 72128,
+    "prefix_grid_rows": 15120,
+    "new_eval_grid_rows": 87248
+  },
+  "next_required_proof": [
+    "Materialize all 15 source tasks and measure new fit lengths and healthy reference exposure.",
+    "Check original, added and missing counts and index/time boundary consistency.",
+    "Measure serialized Arrow byte caps and bounded process memory.",
+    "Confirm changes to labels, prefix and prediction values do not change fit, features or window selection.",
+    "Keep labels, masks and task maps in Scorer; verify they do not enter research contexts or the development manifest."
+  ],
+  "limits": [
+    "No loader, Arrow, registration or scoring acceptance yet.",
+    "The original source audit is preserved; this local policy is not equivalent to the published benchmark.",
+    "Farm C payloads must remain unopened."
+  ]
+}

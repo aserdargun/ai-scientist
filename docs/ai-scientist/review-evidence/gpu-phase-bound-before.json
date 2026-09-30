@@ -1,0 +1,18 @@
+{
+  "schema": "gpu-phase-bound-review.v1",
+  "source_sha256": "cbcb04fc0d8d09c8928ec8e7db9438dd05eed95dce20e547b732bb50bedb8b6a",
+  "source_unchanged": true,
+  "scope": "Production scheduler with fake clock/principal resolver/no-drain callback in a private temporary SQLite; no GPU/model/systemd unit.",
+  "requested_inference_seconds": 30,
+  "acquired_slice_seconds": 30,
+  "heartbeat_slice_seconds": 30,
+  "ready_at": 2,
+  "observed_inference_deadline": 32.0,
+  "expected_inference_deadline": 32,
+  "duplicate_mark_ready_at_1000_returned_receipt": true,
+  "checks": {
+    "inference_within_30_seconds_after_activation_heartbeat": true,
+    "expired_duplicate_mark_ready_rejected": false
+  },
+  "passed": false
+}

@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-24T09:36:36.554625+00:00",
+  "dataset": "CATSv2",
+  "record_id": 8338435,
+  "source_url": "https://zenodo.org/api/records/8338435/files/data.parquet/content",
+  "path": "data/public/original-sources/CATSv2/8338435/data.parquet",
+  "size": 554563684,
+  "upstream_checksum": "md5:824309369c26902aa520e4b5209977f7",
+  "upstream_checksum_verified": true,
+  "sha256": "259b5849a134e3318ed5e683bca0582d8c1005d1a008bb86094c8131ca1b2ff3",
+  "license_metadata": {
+    "id": "cc-by-4.0"
+  },
+  "usage_profile": "noncommercial_research",
+  "purpose": "Verify source-row/cadence mapping of curated TSB CATS slices; not experiment or evaluation acceptance"
+}

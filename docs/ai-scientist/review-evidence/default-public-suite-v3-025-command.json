@@ -1,0 +1,47 @@
+{
+  "schema": "public-suite-main-launch.v2",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-review-public-suite-v3-025.service",
+    "--slice=swapp-gpu.slice",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=240",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONPATH=/home/cachyos/ai-scientist",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_default_public_suite_v3.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 16.79247912300343,
+  "source_before": {
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/scorer/service.py": "0eb2306f2ce61dc8aac51e2504d8cde3c640488aea245ee07fca5265ee0ac246",
+    "lab/director/local_llm.py": "4f2861645d5debebc62bf43e99717a687b627447b205d933b096d08ca8cdc635",
+    "docs/ai-scientist/review-evidence/review_default_public_suite_v3.py": "56d3b5beb4594f882911046409af2889a9039942facb90fb6af8264eca1ce6ef"
+  },
+  "source_after": {
+    "harness/public_data.py": "b812fa9067d2558d08952f71f6d6672fab2adaf32b74521baf437ffb5a8edf0f",
+    "lab/director/public_suite.py": "d3a2324a90f4536209e21effe7972849b93ec8b9df2cff8c57d20412a9bde501",
+    "lab/director/suite_manifest.py": "7e5121eed1c2f8c0d5848491a6a9c74151264d79df41168571b52805f3724fad",
+    "lab/scorer/service.py": "0eb2306f2ce61dc8aac51e2504d8cde3c640488aea245ee07fca5265ee0ac246",
+    "lab/director/local_llm.py": "4f2861645d5debebc62bf43e99717a687b627447b205d933b096d08ca8cdc635",
+    "docs/ai-scientist/review-evidence/review_default_public_suite_v3.py": "56d3b5beb4594f882911046409af2889a9039942facb90fb6af8264eca1ce6ef"
+  },
+  "log_path": "data/runtime/parallel-m0/integration-025/public-manifest-v3.log",
+  "log_sha256": "90598703eb13bb381e37119db4423104c88f2921191744a9a742436c67ac07bc",
+  "scope": "Actual public v3 materialization/private DB registration/Planner readback; no scoring/model.",
+  "sources_unchanged": true
+}

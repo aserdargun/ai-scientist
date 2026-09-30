@@ -1,0 +1,1218 @@
+{
+  "schema": "source-discovery.v1",
+  "dataset": "TSB-AD-M",
+  "source_url": "https://www.thedatum.org/datasets/TSB-AD-M.zip",
+  "retrieved_at": "2026-09-24T08:48:12.041434+00:00",
+  "archive": "data/public/tsb-ad-m/source-2026-09-24/TSB-AD-M.zip",
+  "archive_bytes": 540383983,
+  "sha256": "7de86ac27f30eeb48d833bb061055670e3f3de07defd995cf2bd5db10ccc9a0d",
+  "source_response_headers": {
+    "Content-Length": "540383983",
+    "last-modified": "Sun, 10 May 2026 10:12:20 GMT"
+  },
+  "elapsed_seconds": 0.38,
+  "eligibility": "no dataset selection; licenses must be checked against original sources",
+  "extraction_status": "none",
+  "members": [
+    {
+      "path": "TSB-AD-M/097_SVDB_id_14_Medical_tr_1031_1st_1131.csv",
+      "uncompressed_bytes": 2995798,
+      "compressed_bytes": 646467,
+      "crc32": "005e5026"
+    },
+    {
+      "path": "TSB-AD-M/085_SVDB_id_2_Medical_tr_50000_1st_54982.csv",
+      "uncompressed_bytes": 2998309,
+      "compressed_bytes": 554126,
+      "crc32": "badac029"
+    },
+    {
+      "path": "TSB-AD-M/050_GHL_id_19_Sensor_tr_43750_1st_55001.csv",
+      "uncompressed_bytes": 35051769,
+      "compressed_bytes": 1933630,
+      "crc32": "21e93924"
+    },
+    {
+      "path": "TSB-AD-M/098_SVDB_id_15_Medical_tr_500_1st_303.csv",
+      "uncompressed_bytes": 2979079,
+      "compressed_bytes": 616617,
+      "crc32": "59c48793"
+    },
+    {
+      "path": "TSB-AD-M/067_SMD_id_11_Facility_tr_1980_1st_2080.csv",
+      "uncompressed_bytes": 6203506,
+      "compressed_bytes": 1602446,
+      "crc32": "a71019be"
+    },
+    {
+      "path": "TSB-AD-M/019_MITDB_id_1_Medical_tr_37500_1st_103211.csv",
+      "uncompressed_bytes": 2222611,
+      "compressed_bytes": 388820,
+      "crc32": "de9dd56b"
+    },
+    {
+      "path": "TSB-AD-M/186_Exathlon_id_13_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/080_LTDB_id_2_Medical_tr_500_1st_266.csv",
+      "uncompressed_bytes": 1988170,
+      "compressed_bytes": 483314,
+      "crc32": "b61da361"
+    },
+    {
+      "path": "TSB-AD-M/046_GHL_id_15_Sensor_tr_50000_1st_156462.csv",
+      "uncompressed_bytes": 39741008,
+      "compressed_bytes": 2267532,
+      "crc32": "251f1458"
+    },
+    {
+      "path": "TSB-AD-M/141_CATSv2_id_4_Sensor_tr_41727_1st_41827.csv",
+      "uncompressed_bytes": 51121682,
+      "compressed_bytes": 22526128,
+      "crc32": "d2aa1986"
+    },
+    {
+      "path": "TSB-AD-M/189_Exathlon_id_16_Facility_tr_11663_1st_13482.csv",
+      "uncompressed_bytes": 4872302,
+      "compressed_bytes": 1124668,
+      "crc32": "5e40c584"
+    },
+    {
+      "path": "TSB-AD-M/084_SVDB_id_1_Medical_tr_12973_1st_13073.csv",
+      "uncompressed_bytes": 2954911,
+      "compressed_bytes": 621182,
+      "crc32": "9305fa3d"
+    },
+    {
+      "path": "TSB-AD-M/005_MSL_id_4_Sensor_tr_855_1st_2700.csv",
+      "uncompressed_bytes": 813065,
+      "compressed_bytes": 36525,
+      "crc32": "41197ad6"
+    },
+    {
+      "path": "TSB-AD-M/169_SMAP_id_26_Sensor_tr_1811_1st_4510.csv",
+      "uncompressed_bytes": 738960,
+      "compressed_bytes": 2752,
+      "crc32": "d808b4e6"
+    },
+    {
+      "path": "TSB-AD-M/071_SMD_id_15_Facility_tr_1109_1st_1209.csv",
+      "uncompressed_bytes": 8365941,
+      "compressed_bytes": 2300399,
+      "crc32": "51275d36"
+    },
+    {
+      "path": "TSB-AD-M/065_SMD_id_9_Facility_tr_737_1st_837.csv",
+      "uncompressed_bytes": 7046857,
+      "compressed_bytes": 1952279,
+      "crc32": "99784122"
+    },
+    {
+      "path": "TSB-AD-M/099_SVDB_id_16_Medical_tr_1115_1st_1215.csv",
+      "uncompressed_bytes": 2947177,
+      "compressed_bytes": 582967,
+      "crc32": "b2e5e94e"
+    },
+    {
+      "path": "TSB-AD-M/180_Exathlon_id_7_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/104_SVDB_id_21_Medical_tr_50000_1st_106634.csv",
+      "uncompressed_bytes": 3036924,
+      "compressed_bytes": 620826,
+      "crc32": "11eb47e9"
+    },
+    {
+      "path": "TSB-AD-M/035_GHL_id_4_Sensor_tr_50000_1st_90001.csv",
+      "uncompressed_bytes": 39589453,
+      "compressed_bytes": 2240240,
+      "crc32": "88308426"
+    },
+    {
+      "path": "TSB-AD-M/192_Exathlon_id_19_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/070_SMD_id_14_Facility_tr_1070_1st_1170.csv",
+      "uncompressed_bytes": 8209859,
+      "compressed_bytes": 2237283,
+      "crc32": "e63ae7d2"
+    },
+    {
+      "path": "TSB-AD-M/139_CATSv2_id_2_Sensor_tr_5592_1st_5692.csv",
+      "uncompressed_bytes": 51378626,
+      "compressed_bytes": 22595694,
+      "crc32": "f8ec30a7"
+    },
+    {
+      "path": "TSB-AD-M/090_SVDB_id_7_Medical_tr_12157_1st_12257.csv",
+      "uncompressed_bytes": 628354,
+      "compressed_bytes": 137567,
+      "crc32": "5cc62882"
+    },
+    {
+      "path": "TSB-AD-M/147_SMAP_id_4_Sensor_tr_2160_1st_6449.csv",
+      "uncompressed_bytes": 1016130,
+      "compressed_bytes": 32006,
+      "crc32": "bf0209a1"
+    },
+    {
+      "path": "TSB-AD-M/052_GHL_id_21_Sensor_tr_50000_1st_98001.csv",
+      "uncompressed_bytes": 39834900,
+      "compressed_bytes": 2227561,
+      "crc32": "ce6d3a04"
+    },
+    {
+      "path": "TSB-AD-M/179_Exathlon_id_6_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 12882930,
+      "compressed_bytes": 3241191,
+      "crc32": "44de5eae"
+    },
+    {
+      "path": "TSB-AD-M/091_SVDB_id_8_Medical_tr_500_1st_126.csv",
+      "uncompressed_bytes": 2972561,
+      "compressed_bytes": 602076,
+      "crc32": "9f7b3a76"
+    },
+    {
+      "path": "TSB-AD-M/060_SMD_id_4_Facility_tr_7176_1st_10609.csv",
+      "uncompressed_bytes": 7906447,
+      "compressed_bytes": 1816016,
+      "crc32": "159cb29b"
+    },
+    {
+      "path": "TSB-AD-M/119_TAO_id_4_Environment_tr_500_1st_1.csv",
+      "uncompressed_bytes": 211253,
+      "compressed_bytes": 47893,
+      "crc32": "706a578e"
+    },
+    {
+      "path": "TSB-AD-M/161_SMAP_id_18_Sensor_tr_2075_1st_5550.csv",
+      "uncompressed_bytes": 974930,
+      "compressed_bytes": 10502,
+      "crc32": "f52a09ca"
+    },
+    {
+      "path": "TSB-AD-M/187_Exathlon_id_14_Facility_tr_6193_1st_6293.csv",
+      "uncompressed_bytes": 6829147,
+      "compressed_bytes": 1141017,
+      "crc32": "9cf68228"
+    },
+    {
+      "path": "TSB-AD-M/109_SVDB_id_26_Medical_tr_1038_1st_1138.csv",
+      "uncompressed_bytes": 3301546,
+      "compressed_bytes": 791987,
+      "crc32": "cf075860"
+    },
+    {
+      "path": "TSB-AD-M/102_SVDB_id_19_Medical_tr_50000_1st_107354.csv",
+      "uncompressed_bytes": 3021945,
+      "compressed_bytes": 598708,
+      "crc32": "9c7b2dd2"
+    },
+    {
+      "path": "TSB-AD-M/022_MITDB_id_4_Medical_tr_50000_1st_54253.csv",
+      "uncompressed_bytes": 4192602,
+      "compressed_bytes": 770329,
+      "crc32": "a8b39493"
+    },
+    {
+      "path": "TSB-AD-M/177_Exathlon_id_4_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/086_SVDB_id_3_Medical_tr_533_1st_633.csv",
+      "uncompressed_bytes": 2909135,
+      "compressed_bytes": 589271,
+      "crc32": "f1bd8296"
+    },
+    {
+      "path": "TSB-AD-M/056_GHL_id_25_Sensor_tr_50000_1st_105568.csv",
+      "uncompressed_bytes": 39796059,
+      "compressed_bytes": 2206902,
+      "crc32": "41134224"
+    },
+    {
+      "path": "TSB-AD-M/083_LTDB_id_5_Medical_tr_15502_1st_15602.csv",
+      "uncompressed_bytes": 1535511,
+      "compressed_bytes": 258369,
+      "crc32": "c785d340"
+    },
+    {
+      "path": "TSB-AD-M/029_MITDB_id_11_Medical_tr_50000_1st_518037.csv",
+      "uncompressed_bytes": 8874663,
+      "compressed_bytes": 1441888,
+      "crc32": "d3c94f9d"
+    },
+    {
+      "path": "TSB-AD-M/061_SMD_id_5_Facility_tr_7176_1st_15144.csv",
+      "uncompressed_bytes": 7887973,
+      "compressed_bytes": 1712969,
+      "crc32": "652b31de"
+    },
+    {
+      "path": "TSB-AD-M/190_Exathlon_id_17_Facility_tr_12538_1st_12638.csv",
+      "uncompressed_bytes": 21892023,
+      "compressed_bytes": 5912670,
+      "crc32": "44f738b7"
+    },
+    {
+      "path": "TSB-AD-M/125_TAO_id_10_Environment_tr_500_1st_9.csv",
+      "uncompressed_bytes": 211492,
+      "compressed_bytes": 47270,
+      "crc32": "9e6fab39"
+    },
+    {
+      "path": "TSB-AD-M/073_SMD_id_17_Facility_tr_5926_1st_10620.csv",
+      "uncompressed_bytes": 6443331,
+      "compressed_bytes": 1509431,
+      "crc32": "b5a8080b"
+    },
+    {
+      "path": "TSB-AD-M/174_Exathlon_id_1_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 5837115,
+      "compressed_bytes": 1495579,
+      "crc32": "6b79ba67"
+    },
+    {
+      "path": "TSB-AD-M/089_SVDB_id_6_Medical_tr_50000_1st_83083.csv",
+      "uncompressed_bytes": 3593793,
+      "compressed_bytes": 475201,
+      "crc32": "26dccbab"
+    },
+    {
+      "path": "TSB-AD-M/123_TAO_id_8_Environment_tr_500_1st_62.csv",
+      "uncompressed_bytes": 205809,
+      "compressed_bytes": 48344,
+      "crc32": "0cb62a1f"
+    },
+    {
+      "path": "TSB-AD-M/003_MSL_id_2_Sensor_tr_883_1st_1238.csv",
+      "uncompressed_bytes": 837348,
+      "compressed_bytes": 37771,
+      "crc32": "a6c3436a"
+    },
+    {
+      "path": "TSB-AD-M/129_OPPORTUNITY_id_1_HumanActivity_tr_1801_1st_1901.csv",
+      "uncompressed_bytes": 35317189,
+      "compressed_bytes": 10395666,
+      "crc32": "c8347753"
+    },
+    {
+      "path": "TSB-AD-M/184_Exathlon_id_11_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/032_GHL_id_1_Sensor_tr_50000_1st_65001.csv",
+      "uncompressed_bytes": 39755238,
+      "compressed_bytes": 2239166,
+      "crc32": "cc8d966d"
+    },
+    {
+      "path": "TSB-AD-M/095_SVDB_id_12_Medical_tr_6264_1st_6364.csv",
+      "uncompressed_bytes": 2949065,
+      "compressed_bytes": 601235,
+      "crc32": "bd394b6f"
+    },
+    {
+      "path": "TSB-AD-M/064_SMD_id_8_Facility_tr_2272_1st_2372.csv",
+      "uncompressed_bytes": 5953374,
+      "compressed_bytes": 1579387,
+      "crc32": "a42f17d3"
+    },
+    {
+      "path": "TSB-AD-M/172_SWaT_id_2_Sensor_tr_23700_1st_23800.csv",
+      "uncompressed_bytes": 108291874,
+      "compressed_bytes": 13251252,
+      "crc32": "58c759ae"
+    },
+    {
+      "path": "TSB-AD-M/122_TAO_id_7_Environment_tr_500_1st_19.csv",
+      "uncompressed_bytes": 211921,
+      "compressed_bytes": 47373,
+      "crc32": "386fcc89"
+    },
+    {
+      "path": "TSB-AD-M/027_MITDB_id_9_Medical_tr_25000_1st_52255.csv",
+      "uncompressed_bytes": 1486346,
+      "compressed_bytes": 252336,
+      "crc32": "420454c2"
+    },
+    {
+      "path": "TSB-AD-M/136_OPPORTUNITY_id_8_HumanActivity_tr_1495_1st_1595.csv",
+      "uncompressed_bytes": 39488399,
+      "compressed_bytes": 11292191,
+      "crc32": "20964610"
+    },
+    {
+      "path": "TSB-AD-M/030_MITDB_id_12_Medical_tr_50000_1st_84572.csv",
+      "uncompressed_bytes": 9218229,
+      "compressed_bytes": 1508962,
+      "crc32": "a4cded81"
+    },
+    {
+      "path": "TSB-AD-M/044_GHL_id_13_Sensor_tr_50000_1st_145001.csv",
+      "uncompressed_bytes": 39657556,
+      "compressed_bytes": 2213815,
+      "crc32": "cf791a2b"
+    },
+    {
+      "path": "TSB-AD-M/088_SVDB_id_5_Medical_tr_500_1st_168.csv",
+      "uncompressed_bytes": 3593688,
+      "compressed_bytes": 522446,
+      "crc32": "1cd1f51e"
+    },
+    {
+      "path": "TSB-AD-M/108_SVDB_id_25_Medical_tr_1238_1st_1338.csv",
+      "uncompressed_bytes": 2912453,
+      "compressed_bytes": 574415,
+      "crc32": "33918903"
+    },
+    {
+      "path": "TSB-AD-M/198_Exathlon_id_25_Facility_tr_12538_1st_12638.csv",
+      "uncompressed_bytes": 21892023,
+      "compressed_bytes": 5912670,
+      "crc32": "44f738b7"
+    },
+    {
+      "path": "TSB-AD-M/175_Exathlon_id_2_Facility_tr_10684_1st_10784.csv",
+      "uncompressed_bytes": 3411348,
+      "compressed_bytes": 672098,
+      "crc32": "b7670f46"
+    },
+    {
+      "path": "TSB-AD-M/063_SMD_id_7_Facility_tr_5923_1st_6506.csv",
+      "uncompressed_bytes": 6721190,
+      "compressed_bytes": 1833815,
+      "crc32": "1f22d29d"
+    },
+    {
+      "path": "TSB-AD-M/110_SVDB_id_27_Medical_tr_30824_1st_30924.csv",
+      "uncompressed_bytes": 3313293,
+      "compressed_bytes": 608584,
+      "crc32": "2b646082"
+    },
+    {
+      "path": "TSB-AD-M/199_Exathlon_id_26_Facility_tr_12538_1st_12638.csv",
+      "uncompressed_bytes": 21892023,
+      "compressed_bytes": 5912670,
+      "crc32": "44f738b7"
+    },
+    {
+      "path": "TSB-AD-M/120_TAO_id_5_Environment_tr_500_1st_3.csv",
+      "uncompressed_bytes": 211593,
+      "compressed_bytes": 47822,
+      "crc32": "f5076456"
+    },
+    {
+      "path": "TSB-AD-M/075_SMD_id_19_Facility_tr_564_1st_664.csv",
+      "uncompressed_bytes": 6828679,
+      "compressed_bytes": 1664932,
+      "crc32": "7b143f31"
+    },
+    {
+      "path": "TSB-AD-M/150_SMAP_id_7_Sensor_tr_2077_1st_5394.csv",
+      "uncompressed_bytes": 899620,
+      "compressed_bytes": 11318,
+      "crc32": "97e3adcb"
+    },
+    {
+      "path": "TSB-AD-M/045_GHL_id_14_Sensor_tr_50000_1st_85076.csv",
+      "uncompressed_bytes": 39647618,
+      "compressed_bytes": 2233236,
+      "crc32": "26dca346"
+    },
+    {
+      "path": "TSB-AD-M/017_MSL_id_16_Sensor_tr_512_1st_1850.csv",
+      "uncompressed_bytes": 466557,
+      "compressed_bytes": 4858,
+      "crc32": "1dbe945f"
+    },
+    {
+      "path": "TSB-AD-M/009_MSL_id_8_Sensor_tr_714_1st_1390.csv",
+      "uncompressed_bytes": 677872,
+      "compressed_bytes": 19179,
+      "crc32": "9a8695d0"
+    },
+    {
+      "path": "TSB-AD-M/059_SMD_id_3_Facility_tr_757_1st_857.csv",
+      "uncompressed_bytes": 6405807,
+      "compressed_bytes": 1183870,
+      "crc32": "ba92319c"
+    },
+    {
+      "path": "TSB-AD-M/160_SMAP_id_17_Sensor_tr_1832_1st_5300.csv",
+      "uncompressed_bytes": 862885,
+      "compressed_bytes": 57706,
+      "crc32": "62775b68"
+    },
+    {
+      "path": "TSB-AD-M/155_SMAP_id_12_Sensor_tr_1907_1st_4800.csv",
+      "uncompressed_bytes": 896179,
+      "compressed_bytes": 11607,
+      "crc32": "73695bff"
+    },
+    {
+      "path": "TSB-AD-M/165_SMAP_id_22_Sensor_tr_2129_1st_5000.csv",
+      "uncompressed_bytes": 903609,
+      "compressed_bytes": 5371,
+      "crc32": "b0c1596b"
+    },
+    {
+      "path": "TSB-AD-M/116_TAO_id_1_Environment_tr_500_1st_3.csv",
+      "uncompressed_bytes": 205701,
+      "compressed_bytes": 48666,
+      "crc32": "ae2058a8"
+    },
+    {
+      "path": "TSB-AD-M/167_SMAP_id_24_Sensor_tr_2094_1st_5600.csv",
+      "uncompressed_bytes": 983308,
+      "compressed_bytes": 84283,
+      "crc32": "86687574"
+    },
+    {
+      "path": "TSB-AD-M/149_SMAP_id_6_Sensor_tr_2128_1st_5000.csv",
+      "uncompressed_bytes": 903500,
+      "compressed_bytes": 5683,
+      "crc32": "cf2a5f0d"
+    },
+    {
+      "path": "TSB-AD-M/106_SVDB_id_23_Medical_tr_37500_1st_121963.csv",
+      "uncompressed_bytes": 1979017,
+      "compressed_bytes": 387085,
+      "crc32": "30993172"
+    },
+    {
+      "path": "TSB-AD-M/159_SMAP_id_16_Sensor_tr_1757_1st_2650.csv",
+      "uncompressed_bytes": 719276,
+      "compressed_bytes": 2831,
+      "crc32": "f8827585"
+    },
+    {
+      "path": "TSB-AD-M/197_Exathlon_id_24_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/137_CreditCard_id_1_Finance_tr_500_1st_541.csv",
+      "uncompressed_bytes": 148416956,
+      "compressed_bytes": 68036086,
+      "crc32": "8d8b4f13"
+    },
+    {
+      "path": "TSB-AD-M/031_MITDB_id_13_Medical_tr_50000_1st_79433.csv",
+      "uncompressed_bytes": 6669029,
+      "compressed_bytes": 1046179,
+      "crc32": "cf5aa78c"
+    },
+    {
+      "path": "TSB-AD-M/193_Exathlon_id_20_Facility_tr_8898_1st_8998.csv",
+      "uncompressed_bytes": 2992867,
+      "compressed_bytes": 446528,
+      "crc32": "f8bac14f"
+    },
+    {
+      "path": "TSB-AD-M/010_MSL_id_9_Sensor_tr_554_1st_1172.csv",
+      "uncompressed_bytes": 493615,
+      "compressed_bytes": 4274,
+      "crc32": "d04e7ebc"
+    },
+    {
+      "path": "TSB-AD-M/077_SMD_id_21_Facility_tr_3026_1st_3126.csv",
+      "uncompressed_bytes": 6084416,
+      "compressed_bytes": 1578151,
+      "crc32": "9e3be286"
+    },
+    {
+      "path": "TSB-AD-M/130_OPPORTUNITY_id_2_HumanActivity_tr_1045_1st_1145.csv",
+      "uncompressed_bytes": 7385538,
+      "compressed_bytes": 2197085,
+      "crc32": "b8400011"
+    },
+    {
+      "path": "TSB-AD-M/181_Exathlon_id_8_Facility_tr_11663_1st_13482.csv",
+      "uncompressed_bytes": 4872302,
+      "compressed_bytes": 1124668,
+      "crc32": "5e40c584"
+    },
+    {
+      "path": "TSB-AD-M/101_SVDB_id_18_Medical_tr_1851_1st_1951.csv",
+      "uncompressed_bytes": 2932874,
+      "compressed_bytes": 486321,
+      "crc32": "e7523376"
+    },
+    {
+      "path": "TSB-AD-M/162_SMAP_id_19_Sensor_tr_1908_1st_4690.csv",
+      "uncompressed_bytes": 780476,
+      "compressed_bytes": 3612,
+      "crc32": "f3208563"
+    },
+    {
+      "path": "TSB-AD-M/033_GHL_id_2_Sensor_tr_50000_1st_51001.csv",
+      "uncompressed_bytes": 39838911,
+      "compressed_bytes": 2244169,
+      "crc32": "a3c2b673"
+    },
+    {
+      "path": "TSB-AD-M/049_GHL_id_18_Sensor_tr_50000_1st_109001.csv",
+      "uncompressed_bytes": 39709764,
+      "compressed_bytes": 2211889,
+      "crc32": "6436336d"
+    },
+    {
+      "path": "TSB-AD-M/173_GECCO_id_1_Sensor_tr_16165_1st_16265.csv",
+      "uncompressed_bytes": 7401202,
+      "compressed_bytes": 870846,
+      "crc32": "c55c3515"
+    },
+    {
+      "path": "TSB-AD-M/094_SVDB_id_11_Medical_tr_20100_1st_23611.csv",
+      "uncompressed_bytes": 1029105,
+      "compressed_bytes": 233995,
+      "crc32": "bd391da1"
+    },
+    {
+      "path": "TSB-AD-M/143_CATSv2_id_6_Sensor_tr_50000_1st_60232.csv",
+      "uncompressed_bytes": 52636244,
+      "compressed_bytes": 23155052,
+      "crc32": "d27f3c46"
+    },
+    {
+      "path": "TSB-AD-M/142_CATSv2_id_5_Sensor_tr_30704_1st_30804.csv",
+      "uncompressed_bytes": 92129380,
+      "compressed_bytes": 40497189,
+      "crc32": "96e57f5c"
+    },
+    {
+      "path": "TSB-AD-M/105_SVDB_id_22_Medical_tr_500_1st_417.csv",
+      "uncompressed_bytes": 1967548,
+      "compressed_bytes": 416683,
+      "crc32": "6b1104f9"
+    },
+    {
+      "path": "TSB-AD-M/057_SMD_id_1_Facility_tr_4529_1st_4629.csv",
+      "uncompressed_bytes": 6036679,
+      "compressed_bytes": 1239761,
+      "crc32": "c5da9bf1"
+    },
+    {
+      "path": "TSB-AD-M/133_OPPORTUNITY_id_5_HumanActivity_tr_1745_1st_6500.csv",
+      "uncompressed_bytes": 10225277,
+      "compressed_bytes": 2764847,
+      "crc32": "ef22ffc7"
+    },
+    {
+      "path": "TSB-AD-M/152_SMAP_id_9_Sensor_tr_2073_1st_5600.csv",
+      "uncompressed_bytes": 852680,
+      "compressed_bytes": 5158,
+      "crc32": "f5b7174d"
+    },
+    {
+      "path": "TSB-AD-M/062_SMD_id_6_Facility_tr_7180_1st_15131.csv",
+      "uncompressed_bytes": 7811204,
+      "compressed_bytes": 1660146,
+      "crc32": "153d338e"
+    },
+    {
+      "path": "TSB-AD-M/127_TAO_id_12_Environment_tr_500_1st_24.csv",
+      "uncompressed_bytes": 206084,
+      "compressed_bytes": 48332,
+      "crc32": "359ff232"
+    },
+    {
+      "path": "TSB-AD-M/194_Exathlon_id_21_Facility_tr_6985_1st_7085.csv",
+      "uncompressed_bytes": 6658749,
+      "compressed_bytes": 665067,
+      "crc32": "977d2110"
+    },
+    {
+      "path": "TSB-AD-M/166_SMAP_id_23_Sensor_tr_1113_1st_1890.csv",
+      "uncompressed_bytes": 525484,
+      "compressed_bytes": 3130,
+      "crc32": "0e15ba25"
+    },
+    {
+      "path": "TSB-AD-M/037_GHL_id_6_Sensor_tr_50000_1st_80001.csv",
+      "uncompressed_bytes": 39769534,
+      "compressed_bytes": 2233878,
+      "crc32": "87f3f002"
+    },
+    {
+      "path": "TSB-AD-M/182_Exathlon_id_9_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/113_SVDB_id_30_Medical_tr_4552_1st_4652.csv",
+      "uncompressed_bytes": 2945634,
+      "compressed_bytes": 590230,
+      "crc32": "c7037733"
+    },
+    {
+      "path": "TSB-AD-M/040_GHL_id_9_Sensor_tr_50000_1st_92001.csv",
+      "uncompressed_bytes": 39691143,
+      "compressed_bytes": 2236694,
+      "crc32": "42a5d06a"
+    },
+    {
+      "path": "TSB-AD-M/058_SMD_id_2_Facility_tr_1087_1st_1187.csv",
+      "uncompressed_bytes": 8309827,
+      "compressed_bytes": 2271569,
+      "crc32": "34f9e598"
+    },
+    {
+      "path": "TSB-AD-M/096_SVDB_id_13_Medical_tr_500_1st_444.csv",
+      "uncompressed_bytes": 2944278,
+      "compressed_bytes": 597787,
+      "crc32": "fe62a6ae"
+    },
+    {
+      "path": "TSB-AD-M/134_OPPORTUNITY_id_6_HumanActivity_tr_1477_1st_1577.csv",
+      "uncompressed_bytes": 23662185,
+      "compressed_bytes": 7011325,
+      "crc32": "263e0ab7"
+    },
+    {
+      "path": "TSB-AD-M/158_SMAP_id_15_Sensor_tr_2075_1st_5610.csv",
+      "uncompressed_bytes": 971003,
+      "compressed_bytes": 5599,
+      "crc32": "6f5f3f28"
+    },
+    {
+      "path": "TSB-AD-M/055_GHL_id_24_Sensor_tr_50000_1st_118124.csv",
+      "uncompressed_bytes": 39505229,
+      "compressed_bytes": 2190523,
+      "crc32": "e3511730"
+    },
+    {
+      "path": "TSB-AD-M/144_SMAP_id_1_Sensor_tr_2052_1st_5300.csv",
+      "uncompressed_bytes": 965700,
+      "compressed_bytes": 18845,
+      "crc32": "d9e0103a"
+    },
+    {
+      "path": "TSB-AD-M/048_GHL_id_17_Sensor_tr_50000_1st_154001.csv",
+      "uncompressed_bytes": 39691740,
+      "compressed_bytes": 2198557,
+      "crc32": "0831470a"
+    },
+    {
+      "path": "TSB-AD-M/008_MSL_id_7_Sensor_tr_656_1st_1630.csv",
+      "uncompressed_bytes": 585515,
+      "compressed_bytes": 4946,
+      "crc32": "7d507529"
+    },
+    {
+      "path": "TSB-AD-M/014_MSL_id_13_Sensor_tr_1525_1st_4575.csv",
+      "uncompressed_bytes": 1445433,
+      "compressed_bytes": 24445,
+      "crc32": "344a48aa"
+    },
+    {
+      "path": "TSB-AD-M/001_Genesis_id_1_Sensor_tr_4055_1st_15538.csv",
+      "uncompressed_bytes": 803413,
+      "compressed_bytes": 115059,
+      "crc32": "39a74e90"
+    },
+    {
+      "path": "TSB-AD-M/185_Exathlon_id_12_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/117_TAO_id_2_Environment_tr_500_1st_1.csv",
+      "uncompressed_bytes": 216840,
+      "compressed_bytes": 46774,
+      "crc32": "445263da"
+    },
+    {
+      "path": "TSB-AD-M/076_SMD_id_20_Facility_tr_5925_1st_17580.csv",
+      "uncompressed_bytes": 6836236,
+      "compressed_bytes": 1660804,
+      "crc32": "b09b4ea2"
+    },
+    {
+      "path": "TSB-AD-M/038_GHL_id_7_Sensor_tr_50000_1st_100001.csv",
+      "uncompressed_bytes": 39753134,
+      "compressed_bytes": 2184165,
+      "crc32": "7f7b3fbc"
+    },
+    {
+      "path": "TSB-AD-M/103_SVDB_id_20_Medical_tr_12167_1st_12267.csv",
+      "uncompressed_bytes": 3661820,
+      "compressed_bytes": 377868,
+      "crc32": "b752011c"
+    },
+    {
+      "path": "TSB-AD-M/082_LTDB_id_4_Medical_tr_4456_1st_4556.csv",
+      "uncompressed_bytes": 1261256,
+      "compressed_bytes": 288232,
+      "crc32": "05fa0c4b"
+    },
+    {
+      "path": "TSB-AD-M/188_Exathlon_id_15_Facility_tr_12538_1st_12638.csv",
+      "uncompressed_bytes": 21892023,
+      "compressed_bytes": 5912670,
+      "crc32": "44f738b7"
+    },
+    {
+      "path": "TSB-AD-M/112_SVDB_id_29_Medical_tr_8226_1st_8326.csv",
+      "uncompressed_bytes": 2974259,
+      "compressed_bytes": 568431,
+      "crc32": "23cf2ebe"
+    },
+    {
+      "path": "TSB-AD-M/176_Exathlon_id_3_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/171_SWaT_id_1_Sensor_tr_3749_1st_9522.csv",
+      "uncompressed_bytes": 5389970,
+      "compressed_bytes": 539218,
+      "crc32": "fca3c834"
+    },
+    {
+      "path": "TSB-AD-M/126_TAO_id_11_Environment_tr_500_1st_7.csv",
+      "uncompressed_bytes": 211767,
+      "compressed_bytes": 47352,
+      "crc32": "43ff1aec"
+    },
+    {
+      "path": "TSB-AD-M/074_SMD_id_18_Facility_tr_7174_1st_21230.csv",
+      "uncompressed_bytes": 7733411,
+      "compressed_bytes": 1810066,
+      "crc32": "46445d86"
+    },
+    {
+      "path": "TSB-AD-M/168_SMAP_id_25_Sensor_tr_1998_1st_2098.csv",
+      "uncompressed_bytes": 1001922,
+      "compressed_bytes": 9529,
+      "crc32": "e0d327da"
+    },
+    {
+      "path": "TSB-AD-M/006_MSL_id_5_Sensor_tr_1150_1st_1250.csv",
+      "uncompressed_bytes": 1194904,
+      "compressed_bytes": 14199,
+      "crc32": "6a53fd20"
+    },
+    {
+      "path": "TSB-AD-M/036_GHL_id_5_Sensor_tr_50000_1st_67147.csv",
+      "uncompressed_bytes": 39463191,
+      "compressed_bytes": 2247507,
+      "crc32": "220affa6"
+    },
+    {
+      "path": "TSB-AD-M/021_MITDB_id_3_Medical_tr_50000_1st_57595.csv",
+      "uncompressed_bytes": 7133139,
+      "compressed_bytes": 1510313,
+      "crc32": "4a0677eb"
+    },
+    {
+      "path": "TSB-AD-M/054_GHL_id_23_Sensor_tr_50000_1st_135001.csv",
+      "uncompressed_bytes": 39489437,
+      "compressed_bytes": 2196679,
+      "crc32": "b75e8988"
+    },
+    {
+      "path": "TSB-AD-M/170_SMAP_id_27_Sensor_tr_2160_1st_4690.csv",
+      "uncompressed_bytes": 881352,
+      "compressed_bytes": 6512,
+      "crc32": "e193f927"
+    },
+    {
+      "path": "TSB-AD-M/051_GHL_id_20_Sensor_tr_50000_1st_75110.csv",
+      "uncompressed_bytes": 39663579,
+      "compressed_bytes": 2233254,
+      "crc32": "62989846"
+    },
+    {
+      "path": "TSB-AD-M/023_MITDB_id_5_Medical_tr_25000_1st_36913.csv",
+      "uncompressed_bytes": 1484351,
+      "compressed_bytes": 282234,
+      "crc32": "33184088"
+    },
+    {
+      "path": "TSB-AD-M/018_Daphnet_id_1_HumanActivity_tr_9693_1st_20732.csv",
+      "uncompressed_bytes": 1523951,
+      "compressed_bytes": 311298,
+      "crc32": "da7a21c6"
+    },
+    {
+      "path": "TSB-AD-M/124_TAO_id_9_Environment_tr_500_1st_1.csv",
+      "uncompressed_bytes": 205459,
+      "compressed_bytes": 48414,
+      "crc32": "7d8c8404"
+    },
+    {
+      "path": "TSB-AD-M/034_GHL_id_3_Sensor_tr_50000_1st_122001.csv",
+      "uncompressed_bytes": 39760414,
+      "compressed_bytes": 2191873,
+      "crc32": "00c1ce21"
+    },
+    {
+      "path": "TSB-AD-M/153_SMAP_id_10_Sensor_tr_1840_1st_4030.csv",
+      "uncompressed_bytes": 758253,
+      "compressed_bytes": 5695,
+      "crc32": "0e1172a9"
+    },
+    {
+      "path": "TSB-AD-M/025_MITDB_id_7_Medical_tr_37500_1st_88864.csv",
+      "uncompressed_bytes": 2227471,
+      "compressed_bytes": 334445,
+      "crc32": "8c4ae66b"
+    },
+    {
+      "path": "TSB-AD-M/042_GHL_id_11_Sensor_tr_50000_1st_150001.csv",
+      "uncompressed_bytes": 39802065,
+      "compressed_bytes": 2194847,
+      "crc32": "3b368fc5"
+    },
+    {
+      "path": "TSB-AD-M/132_OPPORTUNITY_id_4_HumanActivity_tr_895_1st_995.csv",
+      "uncompressed_bytes": 13316902,
+      "compressed_bytes": 4002566,
+      "crc32": "396b3aaf"
+    },
+    {
+      "path": "TSB-AD-M/148_SMAP_id_5_Sensor_tr_2011_1st_5060.csv",
+      "uncompressed_bytes": 825636,
+      "compressed_bytes": 3079,
+      "crc32": "56594560"
+    },
+    {
+      "path": "TSB-AD-M/093_SVDB_id_10_Medical_tr_500_1st_37.csv",
+      "uncompressed_bytes": 2871616,
+      "compressed_bytes": 697749,
+      "crc32": "89fb6ea2"
+    },
+    {
+      "path": "TSB-AD-M/200_Exathlon_id_27_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/041_GHL_id_10_Sensor_tr_50000_1st_57001.csv",
+      "uncompressed_bytes": 39537670,
+      "compressed_bytes": 2238875,
+      "crc32": "a9dad48b"
+    },
+    {
+      "path": "TSB-AD-M/043_GHL_id_12_Sensor_tr_39938_1st_40038.csv",
+      "uncompressed_bytes": 39370743,
+      "compressed_bytes": 2235647,
+      "crc32": "532e3861"
+    },
+    {
+      "path": "TSB-AD-M/178_Exathlon_id_5_Facility_tr_12538_1st_12638.csv",
+      "uncompressed_bytes": 21892023,
+      "compressed_bytes": 5912670,
+      "crc32": "44f738b7"
+    },
+    {
+      "path": "TSB-AD-M/079_LTDB_id_1_Medical_tr_3618_1st_3718.csv",
+      "uncompressed_bytes": 1300610,
+      "compressed_bytes": 261623,
+      "crc32": "4251967e"
+    },
+    {
+      "path": "TSB-AD-M/195_Exathlon_id_22_Facility_tr_10766_1st_12590.csv",
+      "uncompressed_bytes": 11893438,
+      "compressed_bytes": 3029862,
+      "crc32": "1282e7e0"
+    },
+    {
+      "path": "TSB-AD-M/004_MSL_id_3_Sensor_tr_530_1st_630.csv",
+      "uncompressed_bytes": 577095,
+      "compressed_bytes": 27263,
+      "crc32": "236e8613"
+    },
+    {
+      "path": "TSB-AD-M/151_SMAP_id_8_Sensor_tr_1971_1st_4870.csv",
+      "uncompressed_bytes": 925296,
+      "compressed_bytes": 21340,
+      "crc32": "6542432e"
+    },
+    {
+      "path": "TSB-AD-M/026_MITDB_id_8_Medical_tr_30495_1st_30595.csv",
+      "uncompressed_bytes": 5684511,
+      "compressed_bytes": 1039950,
+      "crc32": "aa038d3a"
+    },
+    {
+      "path": "TSB-AD-M/121_TAO_id_6_Environment_tr_500_1st_7.csv",
+      "uncompressed_bytes": 217362,
+      "compressed_bytes": 46192,
+      "crc32": "fcf351f2"
+    },
+    {
+      "path": "TSB-AD-M/163_SMAP_id_20_Sensor_tr_2051_1st_4575.csv",
+      "uncompressed_bytes": 963776,
+      "compressed_bytes": 15399,
+      "crc32": "cf60a309"
+    },
+    {
+      "path": "TSB-AD-M/016_MSL_id_15_Sensor_tr_500_1st_780.csv",
+      "uncompressed_bytes": 259842,
+      "compressed_bytes": 5474,
+      "crc32": "d0359185"
+    },
+    {
+      "path": "TSB-AD-M/100_SVDB_id_17_Medical_tr_17803_1st_17903.csv",
+      "uncompressed_bytes": 1643188,
+      "compressed_bytes": 361892,
+      "crc32": "fcafce97"
+    },
+    {
+      "path": "TSB-AD-M/140_CATSv2_id_3_Sensor_tr_28307_1st_28407.csv",
+      "uncompressed_bytes": 105415516,
+      "compressed_bytes": 46214397,
+      "crc32": "50c31468"
+    },
+    {
+      "path": "TSB-AD-M/114_SVDB_id_31_Medical_tr_25000_1st_63090.csv",
+      "uncompressed_bytes": 1307370,
+      "compressed_bytes": 258902,
+      "crc32": "d76c4fdd"
+    },
+    {
+      "path": "TSB-AD-M/154_SMAP_id_11_Sensor_tr_2117_1st_4770.csv",
+      "uncompressed_bytes": 993911,
+      "compressed_bytes": 91634,
+      "crc32": "21863daa"
+    },
+    {
+      "path": "TSB-AD-M/107_SVDB_id_24_Medical_tr_32805_1st_32905.csv",
+      "uncompressed_bytes": 3200090,
+      "compressed_bytes": 746637,
+      "crc32": "79a1db78"
+    },
+    {
+      "path": "TSB-AD-M/145_SMAP_id_2_Sensor_tr_2133_1st_5400.csv",
+      "uncompressed_bytes": 1005059,
+      "compressed_bytes": 11831,
+      "crc32": "287925aa"
+    },
+    {
+      "path": "TSB-AD-M/012_MSL_id_11_Sensor_tr_539_1st_940.csv",
+      "uncompressed_bytes": 512195,
+      "compressed_bytes": 5194,
+      "crc32": "02b6dc27"
+    },
+    {
+      "path": "TSB-AD-M/013_MSL_id_12_Sensor_tr_554_1st_1200.csv",
+      "uncompressed_bytes": 494785,
+      "compressed_bytes": 3827,
+      "crc32": "b594a048"
+    },
+    {
+      "path": "TSB-AD-M/087_SVDB_id_4_Medical_tr_5421_1st_5521.csv",
+      "uncompressed_bytes": 3602559,
+      "compressed_bytes": 439943,
+      "crc32": "bfa9360e"
+    },
+    {
+      "path": "TSB-AD-M/078_SMD_id_22_Facility_tr_500_1st_326.csv",
+      "uncompressed_bytes": 6458523,
+      "compressed_bytes": 1440842,
+      "crc32": "5b006d2f"
+    },
+    {
+      "path": "TSB-AD-M/039_GHL_id_8_Sensor_tr_50000_1st_63030.csv",
+      "uncompressed_bytes": 39873768,
+      "compressed_bytes": 2247490,
+      "crc32": "23fd3d74"
+    },
+    {
+      "path": "TSB-AD-M/135_OPPORTUNITY_id_7_HumanActivity_tr_2085_1st_2185.csv",
+      "uncompressed_bytes": 31052922,
+      "compressed_bytes": 9239177,
+      "crc32": "a81ffc18"
+    },
+    {
+      "path": "TSB-AD-M/118_TAO_id_3_Environment_tr_500_1st_7.csv",
+      "uncompressed_bytes": 205924,
+      "compressed_bytes": 48488,
+      "crc32": "016121e3"
+    },
+    {
+      "path": "TSB-AD-M/128_TAO_id_13_Environment_tr_500_1st_7.csv",
+      "uncompressed_bytes": 217362,
+      "compressed_bytes": 46192,
+      "crc32": "fcf351f2"
+    },
+    {
+      "path": "TSB-AD-M/011_MSL_id_10_Sensor_tr_1525_1st_4590.csv",
+      "uncompressed_bytes": 1445433,
+      "compressed_bytes": 24455,
+      "crc32": "5cc130d0"
+    },
+    {
+      "path": "TSB-AD-M/002_MSL_id_1_Sensor_tr_500_1st_900.csv",
+      "uncompressed_bytes": 407579,
+      "compressed_bytes": 5071,
+      "crc32": "b46c8557"
+    },
+    {
+      "path": "TSB-AD-M/164_SMAP_id_21_Sensor_tr_1976_1st_4200.csv",
+      "uncompressed_bytes": 806601,
+      "compressed_bytes": 5968,
+      "crc32": "4abfe5dd"
+    },
+    {
+      "path": "TSB-AD-M/020_MITDB_id_2_Medical_tr_50000_1st_52315.csv",
+      "uncompressed_bytes": 9035237,
+      "compressed_bytes": 1626562,
+      "crc32": "194c7111"
+    },
+    {
+      "path": "TSB-AD-M/156_SMAP_id_13_Sensor_tr_1173_1st_2750.csv",
+      "uncompressed_bytes": 544688,
+      "compressed_bytes": 3499,
+      "crc32": "8be30b92"
+    },
+    {
+      "path": "TSB-AD-M/053_GHL_id_22_Sensor_tr_50000_1st_126448.csv",
+      "uncompressed_bytes": 39686090,
+      "compressed_bytes": 2194748,
+      "crc32": "37e61ff6"
+    },
+    {
+      "path": "TSB-AD-M/072_SMD_id_16_Facility_tr_7119_1st_15849.csv",
+      "uncompressed_bytes": 8399285,
+      "compressed_bytes": 2225786,
+      "crc32": "65a43902"
+    },
+    {
+      "path": "TSB-AD-M/068_SMD_id_12_Facility_tr_1099_1st_1199.csv",
+      "uncompressed_bytes": 8383444,
+      "compressed_bytes": 2317056,
+      "crc32": "28683070"
+    },
+    {
+      "path": "TSB-AD-M/157_SMAP_id_14_Sensor_tr_2126_1st_5000.csv",
+      "uncompressed_bytes": 886298,
+      "compressed_bytes": 6427,
+      "crc32": "4f07b5c5"
+    },
+    {
+      "path": "TSB-AD-M/138_CATSv2_id_1_Sensor_tr_16568_1st_16668.csv",
+      "uncompressed_bytes": 26330863,
+      "compressed_bytes": 11549064,
+      "crc32": "63f5e729"
+    },
+    {
+      "path": "TSB-AD-M/047_GHL_id_16_Sensor_tr_50000_1st_77001.csv",
+      "uncompressed_bytes": 39600308,
+      "compressed_bytes": 2248690,
+      "crc32": "0d33ba28"
+    },
+    {
+      "path": "TSB-AD-M/081_LTDB_id_3_Medical_tr_500_1st_26.csv",
+      "uncompressed_bytes": 1265726,
+      "compressed_bytes": 295553,
+      "crc32": "05f1a005"
+    },
+    {
+      "path": "TSB-AD-M/131_OPPORTUNITY_id_3_HumanActivity_tr_7016_1st_26691.csv",
+      "uncompressed_bytes": 41279685,
+      "compressed_bytes": 11835548,
+      "crc32": "e1c4a8da"
+    },
+    {
+      "path": "TSB-AD-M/115_PSM_id_1_Facility_tr_50000_1st_129872.csv",
+      "uncompressed_bytes": 101183628,
+      "compressed_bytes": 36532614,
+      "crc32": "208f1438"
+    },
+    {
+      "path": "TSB-AD-M/191_Exathlon_id_18_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/066_SMD_id_10_Facility_tr_2634_1st_2734.csv",
+      "uncompressed_bytes": 6632671,
+      "compressed_bytes": 1580271,
+      "crc32": "cff101ca"
+    },
+    {
+      "path": "TSB-AD-M/183_Exathlon_id_10_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/007_MSL_id_6_Sensor_tr_980_1st_3550.csv",
+      "uncompressed_bytes": 931605,
+      "compressed_bytes": 44957,
+      "crc32": "5334ecaf"
+    },
+    {
+      "path": "TSB-AD-M/028_MITDB_id_10_Medical_tr_37500_1st_39948.csv",
+      "uncompressed_bytes": 2140360,
+      "compressed_bytes": 440576,
+      "crc32": "bf60fa38"
+    },
+    {
+      "path": "TSB-AD-M/111_SVDB_id_28_Medical_tr_1791_1st_1891.csv",
+      "uncompressed_bytes": 3607787,
+      "compressed_bytes": 431145,
+      "crc32": "9b48bf49"
+    },
+    {
+      "path": "TSB-AD-M/069_SMD_id_13_Facility_tr_5925_1st_12760.csv",
+      "uncompressed_bytes": 6336359,
+      "compressed_bytes": 1405018,
+      "crc32": "5b31cf7e"
+    },
+    {
+      "path": "TSB-AD-M/092_SVDB_id_9_Medical_tr_2674_1st_2774.csv",
+      "uncompressed_bytes": 2929598,
+      "compressed_bytes": 588175,
+      "crc32": "e1681747"
+    },
+    {
+      "path": "TSB-AD-M/196_Exathlon_id_23_Facility_tr_11665_1st_13484.csv",
+      "uncompressed_bytes": 6215105,
+      "compressed_bytes": 1500376,
+      "crc32": "14b5debe"
+    },
+    {
+      "path": "TSB-AD-M/146_SMAP_id_3_Sensor_tr_2128_1st_5000.csv",
+      "uncompressed_bytes": 902149,
+      "compressed_bytes": 5849,
+      "crc32": "e21c2c57"
+    },
+    {
+      "path": "TSB-AD-M/024_MITDB_id_6_Medical_tr_50000_1st_58118.csv",
+      "uncompressed_bytes": 2960841,
+      "compressed_bytes": 444755,
+      "crc32": "ab3b18ce"
+    },
+    {
+      "path": "TSB-AD-M/015_MSL_id_14_Sensor_tr_575_1st_1250.csv",
+      "uncompressed_bytes": 533957,
+      "compressed_bytes": 15338,
+      "crc32": "e65578be"
+    }
+  ]
+}

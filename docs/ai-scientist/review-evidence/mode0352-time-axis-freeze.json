@@ -1,0 +1,27 @@
+{
+  "schema": "mode0352-time-axis-freeze.v1",
+  "payload_files": {
+    "lab/scorer/task_semantics.py": "bbd978a1f8b0a965c280cab0354f01623bdf8e66e89163d283e5348db39fbe1a",
+    "lab/scorer/service.py": "04f2f6def22d070d982081672277ba9ae4e0ba1726decc850f1ae571a5f7940f",
+    "tests/test_mode_scorer_time_axis.py": "b4fc9584f1e98eca5493433881f3ef237dbb6619262d1b9b37cb76b0cea9181b",
+    "tests/test_public_scorer_families.py": "4da058be64bafe53c7f00376cf04682becbd6b8d62c4dba3bd7cbc2e5bd41044"
+  },
+  "base_files": {
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "lab/scorer/service.py": "dd7b7eb4d9ce94ee904302f076b5964606d2b488c7143c2d554519e81f8b7727",
+    "tests/test_mode_scorer_time_axis.py": null,
+    "tests/test_public_scorer_families.py": "09eac1af87d1492ea713d221a36e5caf82adc2f1d1e8511441c0130998d2dfb8"
+  },
+  "patch_sha256": "67d794f89f0dd3930159434142a80970d69cc9f987ec42336a6d4759a3d1e2cd",
+  "checks": {
+    "session_id": 78575,
+    "initial_chunk": "9345cd",
+    "final_chunk": "b0e1c3",
+    "actual_exit": 0,
+    "pytest_passed": 16,
+    "ruff": 0,
+    "strict_mypy_modules": 2,
+    "strict_mypy_exit": 0
+  },
+  "scope": "Homogeneous explicit canonical UTC axis or existing naive axis; preserve exact semantics bytes/hash/cadence; no SQL/DB mutation; EVT and full SQLite PDM/NRM coverage."
+}

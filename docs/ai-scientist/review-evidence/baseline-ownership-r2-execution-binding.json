@@ -1,0 +1,36 @@
+{
+  "schema": "baseline-ownership-execution-binding.v1",
+  "session_id": 81064,
+  "completion_chunk": "ae94fb",
+  "exit_code": 1,
+  "source_head": "f2b9100ba2dcdb846ffafe0264bd7d1fcbacf8a1",
+  "driver_sha256": "8caf2beec19cd8fc084e9a3fd467c081ed251bd2a0de0e92b67ec54f5f54ce90",
+  "sql_companion_sha256": "bb3ceb119161b3e6cd915165ffbc26d97533477d4a6145b24ea46e08711f2974",
+  "execution_evidence": "baseline-ownership-proof-033-9fc429897d0c.json",
+  "execution_evidence_sha256": "67e1060f4374bfc1888ae3b70a960c3c2d7799932038733c9d1c54c8d51dad2c",
+  "migration_head": "0025_director_generations",
+  "migration_exit_code": 0,
+  "api_health": "ok",
+  "failure": "proof driver attempted forbidden Director SELECT on lab.holdout_reservations before production dispatch",
+  "measured_baseline_scores": 0,
+  "full_sql_subset_passed": true,
+  "full_matrix_started": false,
+  "queued_stop_scenario_started": false,
+  "original_cleanup": {
+    "run_cleanup_verified": false,
+    "api_process_reaped": true,
+    "owned_container_removed": false,
+    "credentials_removed": false
+  },
+  "resource_cleanup_followup": {
+    "evidence": "baseline-ownership-r2-resource-cleanup.json",
+    "sha256": "0c565a5d389837df9bd27243a03b539e7c70116926279c4b74eea3b73a44d153",
+    "session_id": 33805,
+    "completion_chunk": "010bb4",
+    "exit_code": 0,
+    "container_removed": true,
+    "credentials_removed": true,
+    "unrelated_container_inventory_unchanged": true
+  },
+  "scope": "Actual isolated PostgreSQL/API SQL owner subset passed; primary baseline never dispatched, 0 scores. R2 remains failed. Follow-up disposes resources only, no terminal/report acceptance."
+}

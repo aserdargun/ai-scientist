@@ -1,0 +1,16 @@
+FROM python@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e
+
+WORKDIR /opt/swapp-ai-scientist
+COPY docker/sandbox/requirements.txt /tmp/requirements.txt
+RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.txt \
+    && rm /tmp/requirements.txt
+
+COPY harness /opt/swapp-ai-scientist/harness
+COPY lab /opt/swapp-ai-scientist/lab
+COPY vendor /opt/swapp-ai-scientist/vendor
+
+RUN groupadd --gid 10001 candidate \
+    && useradd --uid 10001 --gid 10001 --no-create-home --shell /usr/sbin/nologin candidate
+
+ENV PYTHONHASHSEED=0
+USER 10001:10001

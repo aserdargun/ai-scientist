@@ -1,0 +1,47 @@
+{
+  "base_image": "python@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e",
+  "built_image_id": "sha256:9bc29821bbebf418db1aa27ec0c8dbff93acf24e5cc93c5d2e7ab69d58c211f7",
+  "code_sha256": {
+    "Dockerfile.sandbox": "e9051b122769dd3eac6967e12a61d385b644c3539ea7fa4bc15c1b06fc9659ac",
+    "docker/sandbox/requirements.txt": "cfa6650061e68249c3dcff28d2002541df4c1a6b19bd9d0351a9119ed23e28ea",
+    "harness/VERSION": "a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8",
+    "harness/fingerprint.py": "37ea7ed0edfa196540353e694a790ea2530a850c428dc0c46b33737d517fbb8f",
+    "lab/sandbox/candidate_entrypoint.py": "7232834421174532ff5ea152d1d7bf4e70f1cb067712180947186d710a368cda",
+    "lab/sandbox/docker_runner.py": "b44134beb7cf883acca7b37db30b0a82eedd96d0092169a3f098726e043eaa35",
+    "lab/sandbox/evaluation.py": "e915e64206d09e7797148b3909bfdec4f305d5d7902967b86b3102b559d94076",
+    "lab/sandbox/sandbox_wrapper.py": "72c18fceaab30d1a20367cd17bdb1b8dc27b8840342fda1b168108d692337e98",
+    "ops/sandbox-image.lock": "701bcf8123f6b704b80f2f6b115596b27bf4c462e875efe4b01f8af187aac162",
+    "tests/test_evaluation_guards.py": "ceb4db70743b378153cd4536c1d791562e8787f53ae6c00861d2570882de12e7",
+    "tests/test_sandbox_runner.py": "915a828c4ceba91fd53d5e872a34ed22bcc7fa14f49458d87cb11abbe618e730"
+  },
+  "command": "uv run --python 3.12 --locked pytest -q -m live tests/test_sandbox_runner.py",
+  "docker_client_version": "29.8.1",
+  "exit_code": 0,
+  "harness_sha256": "75ecbcc4b47ea5894db05f416cc755b89dff4229e8119842c21df8023e5c7289",
+  "limitations": [
+    "This is a sandbox boundary smoke, not full M0.3 acceptance.",
+    "Label/eval invisibility, a trusted forbidden-access audit, integrity against a candidate tampering with observer state, supervisor PID/memory boundaries, prompt-injection tool boundaries, and AOS integration remain unverified.",
+    "Artifact bytes are candidate-controlled; framing and SHA-256 provide transport integrity only, not trust or correctness.",
+    "The exact host PID absence and host /proc memory denial tested by test_candidate_cannot_inspect_host_process_or_memory passed; no GPU or model inference was started."
+  ],
+  "result": "10 passed, 1 deselected",
+  "schema": "sandbox_docker_live_check.v1",
+  "scope": "Current pinned typed candidate image: original sandbox boundary cases plus typed fit/score, independent fit/score containers, full fit+score determinism, and same-frozen-fit causality with fresh score containers. Separate 19-candidate guard suite is recorded in guard-docker-review.json.",
+  "verified_controls": [
+    "P=1 caps: 4 GiB, 2 CPU, 128 PIDs, phase timeout <=600 s",
+    "network=none; tested outbound TCP denial by IP",
+    "no NVIDIA devices in container",
+    "read-only rootfs and candidate source mount",
+    "candidate score process cannot modify fit artifact mount",
+    "Arrow IPC stdin payload readable in sandbox",
+    "bounded output tmpfs and artifact frame byte/hash checks",
+    "symlink output rejected; output quota failure rejected",
+    "candidate setsid child drained before output collection",
+    "timed-out owned container removed while independent sentinel container remained live",
+    "host process PID absent in candidate PID namespace and host /proc memory not readable",
+    "typed FitContext and candidate contract; host never opens candidate pickle",
+    "fit and score use distinct new containers with image-lock enforcement",
+    "full fit+score repeat at the same seed for determinism",
+    "causality perturbations use independent score containers restored from the same frozen fit artifact"
+  ]
+}

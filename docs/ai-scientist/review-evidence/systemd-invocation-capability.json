@@ -1,0 +1,127 @@
+{
+  "checked_at": "2026-09-24T12:52:22.419647+00:00",
+  "checks": {
+    "unknown_unit_explicitly_not_found": true,
+    "active_invocation_is_32_hex": true,
+    "actual_pid_belongs_to_reported_cgroup": true,
+    "bus_failure_is_distinct_from_explicit_absence": true,
+    "first_owned_stop_succeeded": true,
+    "same_name_gets_new_invocation": true,
+    "same_name_cgroup_path_can_be_reused": true,
+    "sentinel_survives_other_unit_stop_and_restart": true,
+    "owned_units_inactive": true,
+    "owned_cgroups_drained": true
+  },
+  "observations": {
+    "initial_absent": {
+      "exit_code": 0,
+      "properties": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "InvocationID": "",
+        "MainPID": "0",
+        "ControlGroup": ""
+      },
+      "stderr_present": false
+    },
+    "first_invocation": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "running",
+      "InvocationID": "e20654e9d3f3484e84030e0e53c78c4b",
+      "MainPID": "956233",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-invocation-review-3fd214e4ce7248cc81225b3535de9ba1.service"
+    },
+    "unavailable_bus": {
+      "exit_code": 1,
+      "properties": {},
+      "stderr_present": true
+    },
+    "after_first_stop": {
+      "exit_code": 0,
+      "properties": {
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "SubState": "dead",
+        "InvocationID": "",
+        "MainPID": "0",
+        "ControlGroup": ""
+      },
+      "stderr_present": false
+    },
+    "second_invocation": {
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "running",
+      "InvocationID": "6108f9f0235c4cb2ad757d994624d9ed",
+      "MainPID": "956240",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/swapp-ai-scientist-invocation-review-3fd214e4ce7248cc81225b3535de9ba1.service"
+    },
+    "final_units": [
+      {
+        "exit_code": 0,
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "SubState": "dead",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "stderr_present": false
+      },
+      {
+        "exit_code": 0,
+        "properties": {
+          "LoadState": "not-found",
+          "ActiveState": "inactive",
+          "SubState": "dead",
+          "InvocationID": "",
+          "MainPID": "0",
+          "ControlGroup": ""
+        },
+        "stderr_present": false
+      }
+    ]
+  },
+  "scope": "Host systemd metadata capability only: bounded owned sleep services, same unit name reused, deliberately unavailable session bus and runtime directory in one child command environment. No DB, production recovery helper, GPU or AOS acceptance.",
+  "sentinel_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--collect",
+    "--unit=swapp-ai-scientist-invocation-sentinel-c1992f8c7272464586b0034bc3b96b5e.service",
+    "--property=Type=exec",
+    "--property=MemoryMax=64M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=15",
+    "--property=TimeoutStopSec=1",
+    "--property=KillMode=control-group",
+    "--property=NoNewPrivileges=yes",
+    "/usr/bin/sleep",
+    "12"
+  ],
+  "worker_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--collect",
+    "--unit=swapp-ai-scientist-invocation-review-3fd214e4ce7248cc81225b3535de9ba1.service",
+    "--property=Type=exec",
+    "--property=MemoryMax=64M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=15",
+    "--property=TimeoutStopSec=1",
+    "--property=KillMode=control-group",
+    "--property=NoNewPrivileges=yes",
+    "/usr/bin/sleep",
+    "12"
+  ],
+  "all_passed": true,
+  "script_sha256": "b320f7367db27891a3a43729c9b8bdf6500f4148a6c804b7b9c1d892607bd35f"
+}

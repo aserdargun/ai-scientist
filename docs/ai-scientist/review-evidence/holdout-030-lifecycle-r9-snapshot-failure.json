@@ -1,0 +1,32 @@
+{
+  "schema": "holdout-lifecycle-execution-failure.v1",
+  "actual_session": 6071,
+  "actual_exit_code": 1,
+  "completion_chunk": "074860",
+  "unit": "swapp-holdout-lifecycle-20260927-r9a.service",
+  "wall_seconds": 12.357,
+  "cpu_seconds": 3.748,
+  "reported_driver_memory_peak": "197.2M",
+  "swap_bytes": 0,
+  "private_receipt": "data/runtime/holdout-030-lifecycle-fixture/1a556227c3454c76afa59e780da0d9fd/fixture-receipt.json",
+  "private_receipt_sha256": "3881c7d1f55e2c60d01bb38e0ff0ace35983b5dfb06997d9e2e67645b9d9253e",
+  "source_unchanged": true,
+  "failure_stage": "candidate_readiness",
+  "failure_code": "fixture_child_exited_before_ready",
+  "fixture_pytest_exit": 1,
+  "sanitized_pytest_output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____ test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row _____\ntests/test_postgres_holdout_api_identity.py:465: in test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row\n    assert all(\nE   assert False\nE    +  where False = all(<generator object test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row.<locals>.<genexpr> at 0x7f2155f7b780>)\n=============================== warnings summary ===============================\n../../../../../.venv/lib/python3.12/site-packages/starlette/testclient.py:45\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\ntests/test_postgres_holdout_api_identity.py::test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row\n  /home/cachyos/ai-scientist/data/runtime/holdout-030-lifecycle-fixture/1a556227c3454c76afa59e780da0d9fd/source/lab/api/app.py:173: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    @app.on_event(\"shutdown\")\n\ntests/test_postgres_holdout_api_identity.py::test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row\n  /home/cachyos/ai-scientist/.venv/lib/python3.12/site-packages/fastapi/applications.py:4681: DeprecationWarning: \n          on_event is deprecated, use lifespan event handlers instead.\n  \n          Read more about it in the\n          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).\n          \n    return self.router.on_event(event_type)  # ty: ignore[deprecated]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/test_postgres_holdout_api_identity.py::test_run_end_accepts_resumed_abandoned_ordinal_without_experiment_row\n1 failed, 3 warnings in 6.21s\n",
+  "migration_exit_code": 0,
+  "production_cleanup_exit": 0,
+  "setup_worker_cleanup_exit": 0,
+  "owned_database_container_removed": true,
+  "credentials_removed": true,
+  "source_defect_confirmed": {
+    "missing_fingerprint_files": [
+      "Dockerfile.sandbox",
+      "docker/sandbox/requirements.txt"
+    ],
+    "snapshot_fingerprint_probe": "required trusted source file is missing: /home/cachyos/ai-scientist/data/runtime/holdout-030-lifecycle-fixture/1a556227c3454c76afa59e780da0d9fd/source/Dockerfile.sandbox",
+    "scorer_worker_inference": "Production process_one catches this FileNotFoundError/OSError and returns retrying; individual returned states were not captured in this attempt."
+  },
+  "scope": "Synthetic setup stopped before holdout reservation. No lifecycle acceptance; driver memory excludes sibling cgroups."
+}

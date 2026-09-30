@@ -1,0 +1,53 @@
+{
+  "schema": "public-suite-main-launch.v1",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--wait",
+    "--collect",
+    "--quiet",
+    "--pipe",
+    "--unit=swapp-review-public-full-eval-capacity.service",
+    "--slice=swapp-gpu.slice",
+    "--property=MemoryMax=2G",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=100%",
+    "--property=TasksMax=128",
+    "--property=RuntimeMaxSec=240",
+    "--working-directory=/home/cachyos/ai-scientist",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=OMP_NUM_THREADS=1",
+    "--setenv=MKL_NUM_THREADS=1",
+    "--setenv=PYTHONPATH=/home/cachyos/ai-scientist",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_public_full_eval_capacity.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 11.985620191000635,
+  "source_before": {
+    "harness/contracts.py": "ab64007b3ec7c13caa8ac9312a6e3c4e41aa0cf251c9eb6477df344110f0c4ec",
+    "harness/public_data.py": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021",
+    "lab/director/public_suite.py": "9c68dcf6ef76ef3384c6360f214d96c06d2ae777f3868347881831b99d55b825",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_manifest.py": "91a0011ddff5170a89265b6199aa6f4aa769c2089597a7a401d5d060756add1c",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/scorer/service.py": "3203d4aa6219d35877b32d03f63c3e96aea2ac424ef6cc104eb86f89feee97b0",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "docs/ai-scientist/review-evidence/review_public_full_eval_capacity.py": "dc73274d9df0e548d9b25f6bd609d16643886fead2ebc94627a6efc35fa41341"
+  },
+  "source_after": {
+    "harness/contracts.py": "ab64007b3ec7c13caa8ac9312a6e3c4e41aa0cf251c9eb6477df344110f0c4ec",
+    "harness/public_data.py": "1a7ab27485c2f971c07c95b0c4c3d950072ae25b0394002957aa322c8e738021",
+    "lab/director/public_suite.py": "9c68dcf6ef76ef3384c6360f214d96c06d2ae777f3868347881831b99d55b825",
+    "lab/director/suite.py": "342d9b3062b558024b6f34a625349cedc2474d960787fe4aac6d83190e207820",
+    "lab/director/suite_manifest.py": "91a0011ddff5170a89265b6199aa6f4aa769c2089597a7a401d5d060756add1c",
+    "lab/director/suite_weights.py": "744d3610cd21558bcea044c1083cec827a40336d44ad5ca371714ad72fa7b3d3",
+    "lab/scorer/service.py": "3203d4aa6219d35877b32d03f63c3e96aea2ac424ef6cc104eb86f89feee97b0",
+    "lab/director/baselines.py": "8cd2b0ddb02c84e3b7b7674b7324ddee918ff267b485abf3b5907d5d4e9663f9",
+    "docs/ai-scientist/review-evidence/review_public_full_eval_capacity.py": "dc73274d9df0e548d9b25f6bd609d16643886fead2ebc94627a6efc35fa41341"
+  },
+  "sources_unchanged": true,
+  "log_sha256": "40eb2ac44b896dd0322ef186ebc52fb0538064cfd32483ee55cbc254d3920c1e",
+  "log_path": "data/runtime/parallel-m0/integration-024/public-full-eval-capacity.log",
+  "scope": "Full-eval review-only JSON cap measurement, no DB writes/scoring/model run."
+}

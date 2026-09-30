@@ -1,0 +1,191 @@
+{
+  "checked_at": "2026-09-24T13:20:42.428003+00:00",
+  "source_sha256": {
+    "lab/scorer/supervisor.py": "322b4f43b709f85225541c990ae2839abbe95719654a44e079e57979327f08ee"
+  },
+  "scope": "Production stop helper, real bounded owned process trees and sentinel. Includes a deliberately nonstandard KillMode=process fixture to test surviving-child detection. No PostgreSQL claim/recovery writer or GPU/AOS acceptance.",
+  "checks": {
+    "wrong_invocation_rejected": true,
+    "wrong_invocation_preserves_tree": true,
+    "manager_failure_rejected": true,
+    "manager_failure_preserves_tree": true,
+    "stop_waits_on_real_lifecycle_flock": true,
+    "tree_alive_while_lifecycle_lock_held": true,
+    "matching_invocation_stop_succeeded": true,
+    "parent_and_child_drained": true,
+    "separate_sentinel_unchanged": true,
+    "surviving_child_never_reported_drained": true,
+    "owned_processes_cleaned": true,
+    "private_fixture_root_removed": true
+  },
+  "fixtures": [
+    {
+      "job_id": "8406671f-4ee0-438c-9305-43aeacf3eaee",
+      "unit": "swapp-ai-scientist-scorer-8406671f4ee0438c930543aeacf3eaee.service",
+      "properties": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "InvocationID": "ec22ede8f59a454998434ccd266520da",
+        "MainPID": "988262",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-8406671f4ee0438c930543aeacf3eaee.service"
+      },
+      "identities": {
+        "parent": {
+          "pid": 988262,
+          "start_ticks": "3066264",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-8406671f4ee0438c930543aeacf3eaee.service"
+        },
+        "child": {
+          "pid": 988263,
+          "start_ticks": "3066268",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-8406671f4ee0438c930543aeacf3eaee.service"
+        }
+      },
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-ai-scientist-scorer-8406671f4ee0438c930543aeacf3eaee.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=30",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_unit_drain.py",
+        "tree",
+        "/home/cachyos/ai-scientist/data/runtime/owned-scorer-drain-review-8j4gna7m/8406671f4ee0438c930543aeacf3eaee.json"
+      ]
+    },
+    {
+      "job_id": "44962d50-0ddf-4b11-a0c4-790f241c915b",
+      "unit": "swapp-ai-scientist-scorer-44962d500ddf4b11a0c4790f241c915b.service",
+      "properties": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "InvocationID": "019b753062e3442f9902cad21561542c",
+        "MainPID": "988266",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-44962d500ddf4b11a0c4790f241c915b.service"
+      },
+      "identities": {
+        "parent": {
+          "pid": 988266,
+          "start_ticks": "3066271",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-44962d500ddf4b11a0c4790f241c915b.service"
+        },
+        "child": {
+          "pid": 988269,
+          "start_ticks": "3066274",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-44962d500ddf4b11a0c4790f241c915b.service"
+        }
+      },
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-ai-scientist-scorer-44962d500ddf4b11a0c4790f241c915b.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=30",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=control-group",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_unit_drain.py",
+        "tree",
+        "/home/cachyos/ai-scientist/data/runtime/owned-scorer-drain-review-8j4gna7m/44962d500ddf4b11a0c4790f241c915b.json"
+      ]
+    },
+    {
+      "job_id": "adf9a49a-d269-47ff-ab4d-e929ee829ee9",
+      "unit": "swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service",
+      "properties": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "InvocationID": "4a848b763c454b678eab3ba1682b3887",
+        "MainPID": "988315",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service"
+      },
+      "identities": {
+        "parent": {
+          "pid": 988315,
+          "start_ticks": "3066394",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service"
+        },
+        "child": {
+          "pid": 988318,
+          "start_ticks": "3066397",
+          "state": "R",
+          "cgroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service"
+        }
+      },
+      "command": [
+        "/usr/bin/systemd-run",
+        "--user",
+        "--quiet",
+        "--collect",
+        "--unit=swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service",
+        "--slice=swapp-ai-scientist-scorer.slice",
+        "--property=Type=exec",
+        "--property=MemoryMax=64M",
+        "--property=MemorySwapMax=0",
+        "--property=CPUQuota=25%",
+        "--property=TasksMax=8",
+        "--property=RuntimeMaxSec=30",
+        "--property=TimeoutStopSec=1",
+        "--property=KillMode=process",
+        "--property=NoNewPrivileges=yes",
+        "--working-directory=/home/cachyos/ai-scientist",
+        "/home/cachyos/ai-scientist/.venv/bin/python",
+        "/home/cachyos/ai-scientist/docs/ai-scientist/review-evidence/review_scorer_unit_drain.py",
+        "tree",
+        "/home/cachyos/ai-scientist/data/runtime/owned-scorer-drain-review-8j4gna7m/adf9a49ad26947ffab4de929ee829ee9.json"
+      ]
+    }
+  ],
+  "manager_failure_result": {
+    "accepted": false,
+    "error_type": "RuntimeError",
+    "error": "systemd unit inspection failed"
+  },
+  "nonstandard_kill_mode": {
+    "helper_accepted": false,
+    "child_still_running": true,
+    "unit_after": {
+      "exit_code": 0,
+      "properties": {
+        "LoadState": "loaded",
+        "ActiveState": "failed",
+        "SubState": "failed",
+        "InvocationID": "4a848b763c454b678eab3ba1682b3887",
+        "MainPID": "0",
+        "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/swapp.slice/swapp-ai.slice/swapp-ai-scientist.slice/swapp-ai-scientist-scorer.slice/swapp-ai-scientist-scorer-adf9a49ad26947ffab4de929ee829ee9.service"
+      },
+      "stderr_present": false
+    }
+  },
+  "source_unchanged": true,
+  "all_passed": true,
+  "script_sha256": "5cc48c5043ae8954522b45c9e8505b05c5a26f987963a9d5a36438ae7d6a7cdc"
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "holdout-lifecycle-stdout-correction.v1",
+  "reviewer": "GPT-6 Astra / high",
+  "review_result": "ready_for_bounded_lifecycle_retry",
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "308868dcb5816b7769a121c3d8944d598519f8f44ba7ff4ede2923ac466d40cf",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "a9c9db8f425b15d7f54822a3b487e9a97f4ece5a4217d16d169bc2a244e364b0"
+  },
+  "previous_sha256": {
+    "docs/ai-scientist/review-evidence/holdout-030-lifecycle-fixture.py": "61aaaecf27c3d2a6d68f30499fdcee37e09bb91651c080e4f343da15081311c1",
+    "tests/test_holdout030_lifecycle_fixture_safety.py": "cf7c7cc2bb8685bd78fb8cded0d7b779a1382ccb3467df75c5218ebabb2c83f3"
+  },
+  "changes": [
+    "private 0600 child logs",
+    "always record child exit including already-exited paths",
+    "bounded tails omit initial partial line before password redaction",
+    "truthful truncation flags",
+    "unresolved child output omitted",
+    "temporary logs removed after child cleanup"
+  ],
+  "worker_reported_checks": {
+    "focused_tests_passed": 10,
+    "test_exit_code": 0,
+    "ruff_exit_code": 0
+  },
+  "actual_lifecycle_execution": false
+}

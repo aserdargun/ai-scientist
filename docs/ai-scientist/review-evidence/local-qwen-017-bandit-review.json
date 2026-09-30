@@ -1,0 +1,6 @@
+{
+  "old_sha256": "8ad23f4172e4f72ce26a927878f2209f8d30f9eac3b86d8529adc3771a6d7340",
+  "new_sha256": "bdd8791291090b63a88c8e09a397dbb9b4cdfa8a00eefb38eadc26ddcc751bd8",
+  "same_executable_ast_ignoring_module_documentation": true,
+  "scope": "Only leading module documentation excluded; all remaining executable syntax including embedded tokenizer program compared."
+}

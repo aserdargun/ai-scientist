@@ -1,0 +1,50 @@
+{
+  "schema": "holdout034-pg-execution-binding.v1",
+  "attempt": "r7",
+  "evidence": "holdout-generation-034-pg-867896bd65a7.json",
+  "evidence_sha256": "10d27aeb33411c19031a8345a42aa587fcc5fcc7c7b89df5f27a97be77a56887",
+  "fixture_id": "867896bd65a7441995930a1cbeba9ee3",
+  "migration_exit_code": 0,
+  "test_exit_code": 1,
+  "collected_test_count": 22,
+  "executed_test_count": 5,
+  "failures": [
+    {
+      "failure": {
+        "line": 681,
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'durably unavailable'\n Input: \"(psycopg.errors.InsufficientPrivilege) permission denied for table holdout_run_end_intents\\n[SQL: INSERT INTO lab.holdout_run_end_intents (run_id,terminal_status,completed_proposals,proposal_limit,candidate_experiment_id,candidate_sha256,state_checkpoint_key,state_checkpoint_sha256,state_checkpoint_sequence,intent_checkpoint_sha256,intent_checkpoint_sequence,wall_seconds,elapsed_wall_seconds,reserved_wall_seconds,model_tokens,reserved_model_tokens,admitted_generation,execution_sha256) VALUES (%(run)s,'proposal_limit_reached',1,1,%(candidate)s,%(candidate_sha)s,%(state_key)s,%(state_sha)s,%(state_seq)s,%(intent_sha)s,%(intent_seq)s,120,1,0,0,0,%(generation)s,%(execution_sha)s)]\\n[parameters: {'run': UUID('7503433c-3089-4d08-b1f9-95bcbe77bbaa'), 'candidate': 'exp_3484b12b31274a6b953f206e34f84cb6', 'candidate_sha': '6167a30e91a4b6c0f6e8c3079461019da667b374ac753d0de267a2124ae6320c', 'state_key': 'director-state:synthetic-prior', 'state_sha': 'dfe3ffcf0333966bb39487d261ac13836574ccec1fbc93f242f91f9b41fd2535', 'state_seq': 10, 'intent_sha': '239cb07fcc27853a79dcc53319b1cb328ed87b28a598151c0306f668fbd8c085', 'intent_seq': 11, 'generation': 1, 'execution_sha': '6658621dfffc33f8ad5502ed7d86c60bd8ca8550e1241017e41c91204589d57e'}]\\n(Background on this error at: https://sqlalche.me/e/20/f405)\"",
+        "path": "/home/cachyos/ai-scientist/data/runtime/holdout-generation-034-pg-smoke/867896bd65a7441995930a1cbeba9ee3/source/tests/test_postgres_run_end_unavailable.py"
+      },
+      "nodeid": "tests/test_postgres_run_end_unavailable.py::test_unavailable_fence_rpc_is_role_bound_idempotent_and_bitless[fresh_wall_budget_unavailable-False]",
+      "outcome": "failed",
+      "wasxfail": null,
+      "when": "call"
+    }
+  ],
+  "cleanup": {
+    "owned_container_removed": true,
+    "credentials_removed": true
+  },
+  "source_checks": {
+    "source_now_matches_snapshot": true,
+    "snapshot_unchanged": true,
+    "runner_unchanged": true,
+    "pytest_observer_unchanged": true
+  },
+  "launch": {
+    "command": "/home/cachyos/ai-scientist/.venv/bin/python - <<'PY'\nimport hashlib,json,os\nfrom pathlib import Path\nroot=Path('/home/cachyos/ai-scientist')\nsource=root/'data/runtime/parallel-m0/holdout-generation-034'\nmanifest=source/'review-evidence/closure034-sol-freeze.json'\nassert hashlib.sha256(manifest.read_bytes()).hexdigest()=='699a61af5ff76a548bffb84b4d1ee0a8f04f3e530e44cd4b80bdaefccc3c4fdd'\nfreeze=json.loads(manifest.read_bytes())\nfor name,digest in freeze['files'].items():\n    assert hashlib.sha256((source/name).read_bytes()).hexdigest()==digest,name\nassert all(check['exit_code']==0 for check in freeze['checks'].values())\nrunner=root/'data/runtime/parallel-m0/holdout-generation-034-checks/run_holdout034_pg.py'\nassert hashlib.sha256(runner.read_bytes()).hexdigest()=='2d936440f8e2e7d1c8bcd34ec3b0143b9dfb94aa0b19970d1e69eb5ddb32f9f4'\nargv=['flock',str(root/'data/runtime/parallel-m0/cpu-check.lock'),'systemd-run','--user','--wait','--pipe','--collect','--unit=swapp-review-holdout034-pg-r7.service','--slice=swapp-gpu.slice','--property=MemoryMax=1G','--property=MemorySwapMax=0','--property=CPUQuota=50%','--property=TasksMax=64','--property=RuntimeMaxSec=300','--property=TimeoutStopSec=30','--property=KillMode=control-group','--working-directory='+str(root),'--setenv=OPENBLAS_NUM_THREADS=1','--setenv=OMP_NUM_THREADS=1','--setenv=MKL_NUM_THREADS=1','--setenv=CUDA_VISIBLE_DEVICES=','--setenv=TMPDIR=/home/cachyos/.m0r10',str(root/'.venv/bin/python'),str(runner),'--execute-reviewed-pg']\nos.execvp(argv[0],argv)\nPY",
+    "tool_session_id": 42492,
+    "tool_initial_chunk_id": "05cc46",
+    "tool_completion_chunk_id": "2ee03c",
+    "actual_exit_code": 1,
+    "service_runtime_seconds": 5.961,
+    "memory_peak_reported": "204.2M",
+    "swap_peak_bytes": 0
+  },
+  "freeze_manifest_sha256": "699a61af5ff76a548bffb84b4d1ee0a8f04f3e530e44cd4b80bdaefccc3c4fdd",
+  "runner_sha256": "2d936440f8e2e7d1c8bcd34ec3b0143b9dfb94aa0b19970d1e69eb5ddb32f9f4",
+  "scope": "Failfast diagnostic attempt on unchanged runtime; final pass still requires all collected tests and phases.",
+  "failure": "Negative late-intent insert lacked holdout-specific execution context; retain actual diagnostics.",
+  "acceptance_claim": false,
+  "test_passed_count": 4
+}

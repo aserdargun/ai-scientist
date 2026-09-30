@@ -1,0 +1,29 @@
+{
+  "schema": "split-feasibility-review.v1",
+  "dataset": "SKAB",
+  "revision": "b2c0d46c2971dcbfe71e26087b6d231998bb91c2",
+  "labeled_sessions": 34,
+  "normal_prefix_samples": {
+    "min": 104,
+    "median": 572.0,
+    "max": 796
+  },
+  "sessions_with_nonuniform_intervals": 34,
+  "observed_interval_seconds": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    16.0,
+    19.0,
+    21.0,
+    33.0,
+    54.0,
+    64.0,
+    65.0,
+    76.0,
+    247.0
+  ],
+  "purpose": "aggregate pre-implementation review; no production split or acceptance claim"
+}

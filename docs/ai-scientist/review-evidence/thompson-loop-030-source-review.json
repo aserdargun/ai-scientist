@@ -1,0 +1,94 @@
+{
+  "schema": "swapp-review-evidence.v1",
+  "task": "durable-thompson-director-loop-source-review",
+  "reviewer": "GPT-6 Astra / high",
+  "review_date": "2026-09-27",
+  "base_commit": "d70dffcad1b746bf6f0cec9070c05a51a01fe852",
+  "worktree": "data/runtime/parallel-m0/thompson-loop-030",
+  "execution": false,
+  "review_method": "Read-only source, diff, delivery receipt, test-body and SHA-256 inspection. Reviewer did not execute product tests, PostgreSQL, Docker, models or AOS.",
+  "integration_decision": "approve_source_integration_with_two_test_fixes_and_required_gates_pending",
+  "blocking_source_findings": [],
+  "source_hashes_start": {
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/reporting.py": "771c12cf4e9472802b52cee39b644b59c50f74d91cc699c05efce9cc0697bfc1",
+    "tests/test_director_loop_strategy.py": "326c7d8fcda7ee4edc30b0105ef25b0d5a92294c0cb692950b1a38a0fbd9abab",
+    "tests/test_director_strategy.py": "6de52a376904c1eca7113aeb867a55c88272bf3190daa5ca854aa3e81a3fa62e"
+  },
+  "source_hashes_end": {
+    "lab/director/loop.py": "5c4cc5f2d6fe58eef932cef49e3ed972a4189ad7155ca727e3163659955539e2",
+    "lab/reporting.py": "771c12cf4e9472802b52cee39b644b59c50f74d91cc699c05efce9cc0697bfc1",
+    "tests/test_director_loop_strategy.py": "326c7d8fcda7ee4edc30b0105ef25b0d5a92294c0cb692950b1a38a0fbd9abab",
+    "tests/test_director_strategy.py": "6de52a376904c1eca7113aeb867a55c88272bf3190daa5ca854aa3e81a3fa62e"
+  },
+  "delivery": {
+    "path": "review-evidence/thompson-loop-030-delivery.json",
+    "sha256": "97b888e538b974e582577635505c7ef649f4ff19285296d550f94ce6c33d7dfd",
+    "patch_sha256": "8f43beca00a77d3b7c356d91873cf848effddbb55deff89e24e5c13543a5c59a",
+    "worker_reported_verification": {
+      "pytest": "86 passed, 3 warnings; exit 0",
+      "mypy": "strict check of 3 sources; exit 0",
+      "ruff_check": "exit 0",
+      "ruff_format_check": "4 files already formatted; exit 0",
+      "git_diff_check": "exit 0"
+    },
+    "independently_reexecuted_by_reviewer": false
+  },
+  "closed_findings": [
+    {
+      "id": "terminal-json-roundtrip",
+      "source": "lab/director/loop.py:3115",
+      "fix": "Terminal advancement builds a JSON payload and uses strict model_validate_json at line 3155, preserving UUID and nested tuple decoding for the holdout snapshot.",
+      "evidence": "tests/test_director_loop_strategy.py:319 uses an actual terminal receipt and calls _recover_committed_terminal after JSON reloading the pending state; the recovered state equals uninterrupted advancement apart from elapsed budget."
+    },
+    {
+      "id": "provider-failure-checkpoint-replay",
+      "source": "lab/director/loop.py:1866",
+      "fix": "Existing provider-failure checkpoint is verified and returned before taking another elapsed-time budget snapshot; pending strategy bytes and ordinal remain unchanged.",
+      "evidence": "tests/test_director_loop_strategy.py:443 replays the checkpoint with a different current budget and asserts identical saved state and no second append."
+    },
+    {
+      "id": "budget-receipt-order",
+      "source": "lab/director/loop.py:1763",
+      "fix": "Load requires the verified loop-state receipt sequence. _restore_budget passes it to _latest_budget_checkpoint at lines 2688-2747, which excludes receipts at or before that sequence.",
+      "evidence": "Source closes the older-budget overwrite. The current test covers a newer receipt; add the older-only regression listed below."
+    },
+    {
+      "id": "report-v2-compatibility",
+      "source": "lab/reporting.py:310",
+      "fix": "Report uses the strict DirectorLoopState contract and consistency check for both historical v1 and current v2, retaining run identity and holdout-approved champion validation.",
+      "evidence": "tests/test_director_loop_strategy.py:568 parametrizes historical v1 and v2 report inputs."
+    }
+  ],
+  "required_integration_test_fixes": [
+    {
+      "id": "older-only-budget-regression",
+      "severity": "test_coverage",
+      "source": "tests/test_director_loop_strategy.py:480",
+      "finding": "The fixture supplies newer sequence 12 before older sequence 9. Returning the newer receipt does not exercise the exclusion condition and would also succeed with the prior selector.",
+      "minimal_fix": "First expose only sequence 9 with state floor 10 and assert baseline wall 5/tokens 10 remains. Also cover equality at sequence 10. Retain newer sequence 12 asserting wall 8/tokens 40."
+    },
+    {
+      "id": "post-application-terminal-recovery",
+      "severity": "test_coverage",
+      "source": "tests/test_director_loop_strategy.py:319",
+      "finding": "Recovery before state application is now exercised meaningfully. The final direct _advance_state duplicate rejection does not test recovery after reloading the already persisted advanced state.",
+      "minimal_fix": "Reload the state checkpoint written by _recover_committed_terminal, make the fake terminal query respect the requested next ordinal, invoke _recover_committed_terminal again, and assert None with no new checkpoint, posterior/RNG/count mutation or external work."
+    }
+  ],
+  "reviewed_contracts": [
+    "Run-derived seed and canonical hashed v2 strategy bind pending selection, next ordinal and completed count.",
+    "Selection and proposal intent are durably reloaded and checked before provider use for both fake and local providers.",
+    "Existing runner.py:356 rejects provider move disagreement before registering the proposal; fixtures must supply the selected move rather than silently relabeling it.",
+    "Terminal outcomes resolve the pending posterior once; abandonment decays without a reward; provider infrastructure leaves posterior/RNG/pending intent unresolved and stores consumed budget.",
+    "Holdout champion restoration retains strategy state and counters.",
+    "Historical canonical v1 reports remain readable. Active v1 continuation fails explicitly because it has no preregistered strategy history."
+  ],
+  "remaining_gates_and_scope": [
+    "Root integrates the four-file source slice and the two test additions, records new test hashes, and runs the required full quality gate with actual exit codes before commit.",
+    "Version/image rebuild and fresh PostgreSQL proof remain pending. Adapt R10 fixture to a valid v2 pending selection; do not reuse old runtime evidence as proof of this source.",
+    "Component terminal-checkpoint replay is not a new-owner Director restart implementation. Admitted same-intent/budget recovery, owner-generation fencing, persistent retry/deadline accounting and raw lab-run lifecycle restrictions remain required open work.",
+    "Provider infrastructure currently follows the existing dispatcher terminal-failure behavior. This slice introduces no paused status or supported resume entrypoint.",
+    "EXPLORE family verification, complete M0 acceptance, real local-model/GPU/public-data/AOS acceptance and independent drain-before-terminal-CAS ordering remain open."
+  ]
+}

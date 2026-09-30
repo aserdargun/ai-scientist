@@ -1,0 +1,50 @@
+diff --git a/lab/llm/gpu_scheduler.py b/lab/llm/gpu_scheduler.py
+--- a/lab/llm/gpu_scheduler.py
++++ b/lab/llm/gpu_scheduler.py
+@@ -245,7 +245,7 @@
+             return False
+         if not _process_identity_alive(receipt.identity):
+             return False
+-        values = _systemctl_show(receipt.unit)
++        values = _systemctl_show(receipt.unit, owner=receipt.owner)
+         cgroup = values["ControlGroup"].rstrip("/")
+         return (
+             values["LoadState"] == "loaded"
+diff --git a/tests/test_gpu_scheduler.py b/tests/test_gpu_scheduler.py
+--- a/tests/test_gpu_scheduler.py
++++ b/tests/test_gpu_scheduler.py
+@@ -123,6 +123,34 @@
+ def test_noncanonical_director_units_are_rejected(unit: str) -> None:
+     with pytest.raises(ValueError, match="fixed owner"):
+         SystemdPrincipalResolver({"aos": "swapp-aos-gpu-review.service", "lab": unit})
++
++
++def test_principal_verification_keeps_owner_bound_unit_lookup(monkeypatch) -> None:
++    unit = "swapp-ai-scientist-director-dispatch-0123456789abcdef0123456789abcdef.service"
++    resolver = SystemdPrincipalResolver(
++        {"aos": "swapp-aos-gpu-review.service", "lab": unit}
++    )
++    identity = _current_process_identity()
++    receipt = PrincipalReceipt("lab", identity, unit, "a" * 32)
++    calls: list[tuple[str, str]] = []
++
++    def fake_show(selected_unit: str, *, owner: str) -> dict[str, str]:
++        calls.append((selected_unit, owner))
++        return {
++            "LoadState": "loaded",
++            "ActiveState": "active",
++            "InvocationID": "a" * 32,
++            "ControlGroup": f"/user.slice/swapp-gpu.slice/{unit}",
++            "MainPID": str(identity.pid),
++        }
++
++    monkeypatch.setattr("lab.llm.gpu_scheduler._systemctl_show", fake_show)
++    monkeypatch.setattr(
++        "lab.llm.gpu_scheduler._process_cgroup",
++        lambda pid: f"/user.slice/swapp-gpu.slice/{unit}" if pid == identity.pid else "",
++    )
++    assert resolver.verify(receipt)
++    assert calls == [(unit, "lab")]
+ 
+ 
+ def test_submission_is_idempotent_and_rejects_changed_terms(tmp_path: Path) -> None:

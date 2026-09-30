@@ -1,0 +1,116 @@
+{
+  "schema": "referee-appendix-c-review.v1",
+  "checks": [
+    {
+      "case": 1,
+      "verdict": "KEEP",
+      "values": {
+        "delta": {
+          "reference_hex": "0x1.f62c5c01c32fdp-6",
+          "production_hex": "0x1.f62c5c01c32fcp-6",
+          "absolute_difference": 3.469446951953614e-18
+        },
+        "ci_low": {
+          "reference_hex": "0x1.ab97e618d01e5p-6",
+          "production_hex": "0x1.ab97e618d01e5p-6",
+          "absolute_difference": 0.0
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": 2,
+      "verdict": "DISCARD",
+      "values": {
+        "delta": {
+          "reference_hex": "-0x1.440a1b1284735p-7",
+          "production_hex": "-0x1.440a1b1284735p-7",
+          "absolute_difference": 0.0
+        },
+        "ci_low": {
+          "reference_hex": "-0x1.2c1110444c198p-6",
+          "production_hex": "-0x1.2c1110444c198p-6",
+          "absolute_difference": 0.0
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": 3,
+      "verdict": "KEEP_SIMPLER",
+      "values": {
+        "delta": {
+          "reference_hex": "-0x1.0dd3773e9269bp-9",
+          "production_hex": "-0x1.0dd3773e9269bp-9",
+          "absolute_difference": 0.0
+        },
+        "ci_low": {
+          "reference_hex": "-0x1.901775feddc07p-9",
+          "production_hex": "-0x1.901775feddc07p-9",
+          "absolute_difference": 0.0
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": 4,
+      "verdict": "REJECT",
+      "values": {
+        "delta": {
+          "original": "NaN",
+          "current": null,
+          "review_json_fix": true
+        },
+        "ci_low": {
+          "original": "NaN",
+          "current": null,
+          "review_json_fix": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": 5,
+      "verdict": "DISCARD",
+      "values": {
+        "delta": {
+          "reference_hex": "0x1.1111111111117p-6",
+          "production_hex": "0x1.1111111111117p-6",
+          "absolute_difference": 0.0
+        },
+        "ci_low": {
+          "reference_hex": "-0x1.111111111110dp-6",
+          "production_hex": "-0x1.111111111110dp-6",
+          "absolute_difference": 0.0
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": 6,
+      "verdict": "DISCARD",
+      "values": {
+        "delta": {
+          "reference_hex": "-0x1.138849c0bdf45p-9",
+          "production_hex": "-0x1.138849c0bdf45p-9",
+          "absolute_difference": 0.0
+        },
+        "ci_low": {
+          "reference_hex": "-0x1.87994d282779bp-9",
+          "production_hex": "-0x1.87994d282779bp-9",
+          "absolute_difference": 0.0
+        }
+      },
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "source_sha256": {
+    "docs/ai-scientist/01-ai-scientist-spec.md": "0c14e2647e01eda5a5556269656e60a224de42e1a6dccab6e1a90ecbfe1cb691",
+    "harness/referee.py": "a5952cb5e621b36ca8f491573642c96fe92216f243e460a36c87865de6f243f2",
+    "docs/ai-scientist/review-evidence/review_referee_appendix_c_v2.py": "be8fe96dc5376ab96c5355ba217acd1b477247bffc75dd640ad448491a5c3c45"
+  },
+  "source_unchanged": true,
+  "harness_sha256": "0c96264015cf32f8be9f7d4ef1de0572987203e97b1d044f69e9af9af780cb71",
+  "scope": "Exact Appendix C [2] deterministic fixtures. Six required verdict assertions and the printed four-decimal finite outputs match; guard REJECT uses the reviewed strict-JSON null replacement. Replay bit parity is a separate production-run check. No generalization or public/model acceptance."
+}

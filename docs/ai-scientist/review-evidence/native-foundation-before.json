@@ -1,0 +1,63 @@
+{
+  "schema": "native-foundation-review.v1",
+  "scope": "Real systemd CPU property inspection plus actual SQLite/scheduler with fixture principal, unit and GPU observations; no model or GPU.",
+  "frozen_source_path": "data/runtime/native-foundation-review/1d59457e500140d8927b0b4860189b86/native_runtime.py",
+  "source_sha256": "6547c92d710ba625830a11be4f78ba6c01a32d47470cbf9c2e9942151a4a44de",
+  "script_sha256": "73641379aed7df98af32aa2b288918053416296d0e169b9bb3243294055aa587",
+  "checks": {
+    "aggregate_slice_inspection": false,
+    "real_active_unit_numeric_limits": false,
+    "real_collected_unit_inspection": false,
+    "created_launch_can_bind_identity": false,
+    "scheduler_release_with_runtime_verifier": false
+  },
+  "observations": {
+    "aggregate_slice_inspection": {
+      "error": "ValueError: runtime unit is outside the fixed model namespace",
+      "seconds": 6.131400004960597e-05
+    },
+    "real_active_unit_numeric_limits": {
+      "error": "ModelRuntimeError: systemd runtime identity/limits are invalid",
+      "seconds": 0.004149027998209931
+    },
+    "real_collected_unit_inspection": {
+      "error": "ModelRuntimeError: systemd runtime identity/limits are invalid",
+      "seconds": 0.004327730006480124
+    },
+    "created_launch_can_bind_identity": {
+      "error": "RuntimeError: legacy GPU scheduler schema needs explicit offline migration",
+      "seconds": 0.004584850001265295
+    },
+    "scheduler_release_with_runtime_verifier": {
+      "error": "RuntimeError: legacy GPU scheduler schema needs explicit offline migration",
+      "seconds": 0.004113660994335078
+    }
+  },
+  "real_unit_properties": {
+    "RuntimeMaxUSec": "5s",
+    "MainPID": "2213927",
+    "CPUQuotaPerSecUSec": "250ms"
+  },
+  "real_unit_command": [
+    "/usr/bin/systemd-run",
+    "--user",
+    "--quiet",
+    "--wait",
+    "--pipe",
+    "--collect",
+    "--unit=swapp-lab-gpu-turn-1d59457e500140d8927b0b4860189b86.service",
+    "--service-type=exec",
+    "--property=MemoryMax=128M",
+    "--property=MemorySwapMax=0",
+    "--property=CPUQuota=25%",
+    "--property=TasksMax=8",
+    "--property=RuntimeMaxSec=5",
+    "--property=TimeoutStopSec=1",
+    "--property=KillMode=control-group",
+    "/home/cachyos/ai-scientist/.venv/bin/python",
+    "-c",
+    "import time; time.sleep(2)"
+  ],
+  "cpu_unit_process_exit_code": 0,
+  "passed": false
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "actual-public-sandbox-scorer.v1",
+  "passed": false,
+  "scope": "Actual public data; robust_z seed0, fresh Docker fit/score/guards and separate Scorer. No LLM, full calibration, Referee, training or AOS acceptance.",
+  "database": "swapp_lab_m0_public_suite_3ddaa2d8",
+  "worktree": "data/runtime/parallel-m0/public-execution",
+  "source_commit": "7d3fd22633ae280537f88924332563a09ae4d357",
+  "harness_sha256": "7d8f157024790b7c5b4b47b66340a861bc80b5390e2c4f27ebba56aac1d6861e",
+  "image": "sha256:88c617d0082d9d862c830d49159c94df58804289dbc8efe8a9c96aecedc34683",
+  "manifest_sha256": "4aeeb8c015ebb7f3ef68a76d38b158a7d286f0b9a46b6fa19a8682c3a4a8ca1f",
+  "run_id": "8fc1d104-b7ed-4d29-9f0c-712f7be3bec6",
+  "experiment_id": "exp_44ecc5a98b9547f8877557310358e945",
+  "candidate_sha256": "ec2cbc809c9deb103bf026f796ff24156a3123bb0b329fa078c429e5bcd2d5c7",
+  "driver_sha256": "fc33a1afd7a86856f8906b1c3042e4b040df8f678d7d9b900a68e7f3c6ee2013",
+  "measurements": [
+    {
+      "task_id": "care-a-000",
+      "dataset_id": "CARE-A",
+      "family": "PDM",
+      "profile_sha256": "28093d485fe20ac3bac2338e7847157a0fd167d9aa6149930c5a47bfe0085e44",
+      "seed": 0,
+      "score": {
+        "task_family": "PDM",
+        "task_score": "0.0",
+        "vus_pr": null,
+        "vus_roc": null
+      },
+      "fit_seconds": 1.214713364999625,
+      "score_seconds": 1.1266184769920073,
+      "elapsed_seconds": 13.634201849999954,
+      "fit_container": "swapp-lab-fit-028eb15ae0684878a4d43d41fa632ab9",
+      "score_container": "swapp-lab-score-7a2cec00988040e0842e085a2a774f6c",
+      "candidate_output_sha256": "83ed5529f07ecd51b810d94bf197d3521f2a3e249c7efd03e133763121549a80",
+      "worker_unit": "swapp-ai-scientist-scorer-f094291b5a3c4627851ad1e0ce88aa1e.service",
+      "worker_pid": "3177266",
+      "guards_passed": true
+    }
+  ],
+  "cleanup": {
+    "own_private_run_removed": true
+  },
+  "elapsed_seconds": 40.06969939699047,
+  "failed_worker": {
+    "exit_code": 0,
+    "state": "retrying",
+    "unit": "swapp-ai-scientist-scorer-dac7b832cbce4e2e8be594115c2a81b8.service"
+  },
+  "error_type": "RuntimeError",
+  "error_frames": [
+    {
+      "file": "review_public_sandbox_scorer.py",
+      "line": 142,
+      "function": "main"
+    }
+  ],
+  "sources_unchanged": true
+}

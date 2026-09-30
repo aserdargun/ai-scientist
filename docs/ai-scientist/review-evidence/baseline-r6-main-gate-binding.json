@@ -1,0 +1,17 @@
+{
+  "schema": "main-documentation-quality-gate-binding.v1",
+  "session_id": 71346,
+  "completion_chunk": "53ba56",
+  "exit_code": 0,
+  "source_head_before_commit": "2d7ff5d04aa8b9f30d9db241e52e07a305b04209",
+  "runtime_files_changed": [],
+  "command_record": "baseline-r6-main-gate-commands.json",
+  "command_record_sha256": "a5de7be270c5eb3457dae740027229561c89ddb31fd80b77650834693f6f9035",
+  "log": "baseline-r6-main-gate.log.txt",
+  "log_sha256": "6e302a5623de3aba663bb0c83a174041435d2ed1d8ed20397d4aa5ee425af34b",
+  "raw_log": "data/runtime/parallel-m0/integration-033-checks/main-r6-quality-gate.raw.log",
+  "raw_log_sha256": "f3042d03f57b5b5d2de2521f5d9f3de2a350124bb007872a735274e57c412aef",
+  "display_log_normalization": "Only trailing whitespace was removed; raw log retained at the private path.",
+  "all_seven_commands_exit_zero": true,
+  "scope": "Documentation/evidence update for R4/R5 numerical budget checks and R6 complete baseline/queued-stop proof; main runtime remains 0.32.0."
+}

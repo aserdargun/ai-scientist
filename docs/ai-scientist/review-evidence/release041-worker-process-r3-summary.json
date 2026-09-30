@@ -1,0 +1,75 @@
+{
+  "schema": "release041-synthetic-worker-process-r3-summary.v1",
+  "scope": "One real normal Scorer process job using synthetic inputs and normal Director, Planner, and Scorer transport.",
+  "phase": "completed",
+  "root_wrapper_exit_code": 0,
+  "root_terminal_tool_receipt": "67bc50",
+  "driver_exit_code": 0,
+  "waiter_exit_code": 0,
+  "job_count": 1,
+  "committed_claim_attempt": 1,
+  "stdout_committed_rpc_parity": {
+    "job": true,
+    "unit": true,
+    "invocation": true,
+    "attempt": true
+  },
+  "normal_checkpoint_roundtrip": true,
+  "completed_process_quiescence_checked_separately": true,
+  "canonical_director_owner_and_generation_verified": true,
+  "job_elapsed_seconds": 66.961,
+  "total_elapsed_seconds": 68.105,
+  "preservation": {
+    "all_preexisting_rows_retained": true,
+    "preexisting_run_states_and_full_rows_retained": true,
+    "catalog_roles_grants_unchanged": true,
+    "production_source_bytes_unchanged": true,
+    "failed_derivatives_and_evidence_preserved": true
+  },
+  "fixture_director_pool": {
+    "size": 2,
+    "max_overflow": 0,
+    "timeout_seconds": 5
+  },
+  "earlier_fixture_failures": [
+    {
+      "revision": "R1",
+      "failure_type": "ImportError",
+      "driver_exit_code": 1,
+      "before_database_or_scorer_runtime": true,
+      "actual_waiter_observed": false,
+      "cause": "Fixture imported an absent owner-capture function.",
+      "correction": "Use the existing production owner-capture function.",
+      "evidence_preserved": true,
+      "private_receipt_sha256": "0b6f8263b930e01e6f59b51375fb34fe39f83aafd9770b3a0e304b8e95e4ced3"
+    },
+    {
+      "revision": "R2",
+      "failure_type": "TimeoutError",
+      "driver_exit_code": 1,
+      "actual_waiter_observed": false,
+      "cause": "The fixture Director pool allowed one connection while its normal run lease retained a connection and registration needed another.",
+      "correction": "Allow two connections only for the fixture Director engine, with zero overflow and a five-second checkout timeout.",
+      "existing_owner_generation_and_rows_preserved": true,
+      "evidence_preserved": true,
+      "private_receipt_sha256": "cbee5d90057e658234d2d0436cc0b58dab3b0c3fbe8765499b1166fce8f900f3"
+    }
+  ],
+  "limits": {
+    "scientific_run_completed": false,
+    "plan_sealed": false,
+    "calibration_created": false,
+    "public_measurements": 0,
+    "model_calls": 0,
+    "gpu_used": false,
+    "aos_acceptance_claimed": false,
+    "full_baseline_or_research_acceptance_claimed": false,
+    "m0_acceptance_completed": false
+  },
+  "evidence_sha256": {
+    "private_driver_receipt": "bedaef2e232b8c412e455f1c12c8509931cd7d557694913271b8a0ae275b107f",
+    "private_waiter_receipt": "dd46446cd5ba92eb343f65f634fe816d137834979df33894b84d69023ce10c09",
+    "private_root_wrapper_receipt": "2ae9adfc1398f6bf5858782b088b8356112cf181ff5d5a0608c4dd3393a9f2de",
+    "reviewed_final_source_freeze": "daee4bf610b66437b4d78e1bccd04a2f8a2d687c5d7b6325c722d6799a38e0ff"
+  }
+}

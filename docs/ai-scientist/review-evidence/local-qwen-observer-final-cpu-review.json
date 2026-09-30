@@ -1,0 +1,171 @@
+{
+  "schema": "local-qwen-observer-cpu-review.v1",
+  "checks": {
+    "two_distinct_model_generations_observed": true,
+    "different_principal_generation_rejected": true,
+    "only_registered_generations_stopped": true,
+    "unregistered_service_still_running": true,
+    "registered_services_inactive": true,
+    "sources_unchanged": true,
+    "all_cpu_fixtures_finally_inactive": true
+  },
+  "scope": "Actual bounded CPU sleep services, synthetic binding rows; review-observer ownership only. No model, GPU, AOS or research acceptance.",
+  "commands": [
+    [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-lab-gpu-review-1f7a2b0e33fd462faf38b6ed9d45b02a.service",
+      "--slice=swapp-gpu.slice",
+      "--description=SWAPP CPU observer fixture 1f7a2b0e33fd462faf38b6ed9d45b02a",
+      "--property=MemoryMax=32M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=1%",
+      "--property=TasksMax=4",
+      "--property=RuntimeMaxSec=90",
+      "--property=TimeoutStopSec=3",
+      "--property=KillMode=control-group",
+      "/usr/bin/sleep",
+      "60"
+    ],
+    [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-lab-gpu-turn-98bb80aa75cc4e2981574bac574ce6a5.service",
+      "--slice=swapp-gpu.slice",
+      "--description=SWAPP CPU fixture swapp-lab-gpu-turn-98bb80aa75cc4e2981574bac574ce6a5.service",
+      "--property=MemoryMax=32M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=1%",
+      "--property=TasksMax=4",
+      "--property=RuntimeMaxSec=90",
+      "--property=TimeoutStopSec=3",
+      "--property=KillMode=control-group",
+      "/usr/bin/sleep",
+      "60"
+    ],
+    [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-lab-gpu-turn-1a78ee7c5c5f463f8a8fc13d3ae58380.service",
+      "--slice=swapp-gpu.slice",
+      "--description=SWAPP CPU fixture swapp-lab-gpu-turn-1a78ee7c5c5f463f8a8fc13d3ae58380.service",
+      "--property=MemoryMax=32M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=1%",
+      "--property=TasksMax=4",
+      "--property=RuntimeMaxSec=90",
+      "--property=TimeoutStopSec=3",
+      "--property=KillMode=control-group",
+      "/usr/bin/sleep",
+      "60"
+    ],
+    [
+      "/usr/bin/systemd-run",
+      "--user",
+      "--quiet",
+      "--wait",
+      "--pipe",
+      "--collect",
+      "--unit=swapp-lab-gpu-review-130024b1a7d84085b63b341428b1ef4c.service",
+      "--slice=swapp-gpu.slice",
+      "--description=SWAPP observer excluded fixture 1f7a2b0e33fd462faf38b6ed9d45b02a",
+      "--property=MemoryMax=32M",
+      "--property=MemorySwapMax=0",
+      "--property=CPUQuota=1%",
+      "--property=TasksMax=4",
+      "--property=RuntimeMaxSec=90",
+      "--property=TimeoutStopSec=3",
+      "--property=KillMode=control-group",
+      "/usr/bin/sleep",
+      "60"
+    ]
+  ],
+  "cleanup": [
+    {
+      "unit": "swapp-lab-gpu-review-130024b1a7d84085b63b341428b1ef4c.service",
+      "stop_exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "docs/ai-scientist/review-evidence/review_local_qwen_observer_check.py": "4a305a9c4859286373a97455f9c03a4b8925ab4963c628ab6d91b2398e23bae8",
+    "docs/ai-scientist/review-evidence/review_local_qwen_observer.py": "453708bca240ddb7d24cb507a5e2b4863f39924dd967bf435591fb04e49bc76c"
+  },
+  "observer_cleanup": [
+    {
+      "unit": "swapp-lab-gpu-review-1f7a2b0e33fd462faf38b6ed9d45b02a.service",
+      "invocation_id": "f705c1c822fb4cdcb39f9e6c3272bfca",
+      "stop_exit_code": 0,
+      "after": {
+        "Description": "swapp-lab-gpu-review-1f7a2b0e33fd462faf38b6ed9d45b02a.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "InvocationID": "",
+        "RuntimeMaxUSec": "infinity",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "",
+        "MemoryPeak": "[not set]",
+        "CPUQuotaPerSecUSec": "infinity",
+        "MemoryMax": "infinity",
+        "MemorySwapMax": "infinity",
+        "TasksMax": "37347"
+      }
+    },
+    {
+      "unit": "swapp-lab-gpu-turn-98bb80aa75cc4e2981574bac574ce6a5.service",
+      "invocation_id": "e7898c401d424594a2f8e09e0ed37489",
+      "stop_exit_code": 0,
+      "after": {
+        "Description": "swapp-lab-gpu-turn-98bb80aa75cc4e2981574bac574ce6a5.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "InvocationID": "",
+        "RuntimeMaxUSec": "infinity",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "",
+        "MemoryPeak": "[not set]",
+        "CPUQuotaPerSecUSec": "infinity",
+        "MemoryMax": "infinity",
+        "MemorySwapMax": "infinity",
+        "TasksMax": "37347"
+      }
+    },
+    {
+      "unit": "swapp-lab-gpu-turn-1a78ee7c5c5f463f8a8fc13d3ae58380.service",
+      "invocation_id": "5adf7090eb6d4636aa3bcb5a49bb1558",
+      "stop_exit_code": 0,
+      "after": {
+        "Description": "swapp-lab-gpu-turn-1a78ee7c5c5f463f8a8fc13d3ae58380.service",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "InvocationID": "",
+        "RuntimeMaxUSec": "infinity",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "ControlGroup": "",
+        "MemoryPeak": "[not set]",
+        "CPUQuotaPerSecUSec": "infinity",
+        "MemoryMax": "infinity",
+        "MemorySwapMax": "infinity",
+        "TasksMax": "37347"
+      }
+    }
+  ],
+  "passed": true
+}

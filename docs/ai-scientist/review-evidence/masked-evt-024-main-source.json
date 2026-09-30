@@ -1,0 +1,14 @@
+{
+  "schema": "masked-evt-source-integration.v1",
+  "before": {
+    "lab/scorer/service.py": "3203d4aa6219d35877b32d03f63c3e96aea2ac424ef6cc104eb86f89feee97b0",
+    "lab/scorer/task_semantics.py": null,
+    "tests/test_evt_masks.py": null
+  },
+  "after": {
+    "lab/scorer/service.py": "0eb2306f2ce61dc8aac51e2504d8cde3c640488aea245ee07fca5265ee0ac246",
+    "lab/scorer/task_semantics.py": "0e7ef2eef9b87538e8a92012a4cf7848d05c30306e94698edee207e6f8ddb8c8",
+    "tests/test_evt_masks.py": "f91a53480b8c365845169e8c7fac32038b94059f0ec4f86d2d7898c6edc7030a"
+  },
+  "scope": "Only EVT branch and independent helper; current PDM/NRM and fencing remain unchanged."
+}

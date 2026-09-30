@@ -1,0 +1,52 @@
+{
+  "apply_check": {
+    "command": "git -C ../training-doctor apply --check <training-runtime-corrections.patch>",
+    "exit_code": 0,
+    "target_head": "221e5d94ceb17e7ef1f933f55db60e8d02987a02"
+  },
+  "checks": {
+    "focused": {
+      "exit_code": 0,
+      "result": "24 passed; strict mypy 6 files; memory peak 37.7 MiB; swap 0; 1 GiB, 50% CPU, 64 tasks, 240 s",
+      "unit": "swapp-luna-train-supplement-final-check-97ae2d5a029548a28bcd3bb5c8a6ff49.service"
+    },
+    "parent_context_probe": {
+      "exit_code": 0,
+      "result": "Exact worktree import; no model libraries imported; project-local private DB path validation passed without creating DB; shared production DB path absent and rejected; 11.6 MiB peak",
+      "unit": "swapp-lab-train-job-881d6558b99c4ddaa87512ee2e2e00da.service"
+    },
+    "pylint_bandit": {
+      "exit_code": 0,
+      "result": "Pylint 9.96/10 with preserved existing warnings; Bandit exit 0; peak 100.7 MiB; swap 0",
+      "unit": "swapp-luna-train-supplement-lint-6118ef91b2d047e795df26f9e82058f2.service"
+    },
+    "ruff": {
+      "exit_code": 0,
+      "result": "All checks passed"
+    },
+    "strict_mount_negative_probe": {
+      "exit_code": 0,
+      "result": "Expected fail-closed validation recorded; root mapped to uid65534 mode0555 under ProtectSystem=strict",
+      "unit": "swapp-luna-strict-mount-negative-7c8341a90c944e3a9bb096f28fd81d13.service"
+    }
+  },
+  "files": {
+    "docs/ai-scientist/adr/0015-training-runtime-fencing-corrections.md": "5e5acdccc67c672c3298bb28070692d2a4e27a8878b6ce490d350b56df2bfd61",
+    "docs/ai-scientist/review-evidence/training-runtime-focused-check.log": "c1d9be990d4f54e06d5e45061e0886eafaa03bba565284a17d43fd6779ba9335",
+    "docs/ai-scientist/review-evidence/training-runtime-import-probe.log": "f4185114543345e65ff46ccae7ceb1ec5c14d7acacd4b933c12e548a010496c1",
+    "docs/ai-scientist/review-evidence/training-runtime-import-probe.py": "8505eb525e04983afca87da1e9904d86da2328c943d538f1f2917ca85825741e",
+    "docs/ai-scientist/review-evidence/training-runtime-lint-check.log": "95a8f7040d4f7127e440181140d91823ad50e4493ca46b938302bcbfc6719aad",
+    "docs/ai-scientist/review-evidence/training-runtime-strict-mount-negative-probe.log": "ead13b16ef67495b70f7e565a7242047851a748c17482cb2fbef59d804365924",
+    "lab/training/maintenance.py": "6004f81342692f74121f0c2e2ac09fd90234ddf80247358d7afe5e7e21e1ec51",
+    "lab/training/worker.py": "bb0ce2d498b2e6ae50e93a0a5b0c798d23a82f0e09a9d6e16bc0c8aa7f6b9a3b",
+    "tests/test_training_maintenance.py": "8bcac720510aa948b6694e18e5d3aed46556af030850eea924393e8821a6491f"
+  },
+  "open_acceptance": [
+    "No GPU/model training or model import was run. Full integrated image/quality gate remains root-owned. Shared production arbiter path was absent and was not created or changed."
+  ],
+  "patch_base_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "patch_bytes": 32821,
+  "patch_sha256": "3d6f0cac3d3c269cf4dc2abf928d06175062635d27bd8a358a2f555cf3227b66",
+  "schema": "training-runtime-corrections-delivery.v1",
+  "status": "cpu_reviewed_runtime_corrections_pending_root_integration"
+}

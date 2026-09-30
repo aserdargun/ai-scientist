@@ -1,0 +1,39 @@
+{
+  "schema": "stop039-focused-safe-summary.v1",
+  "date": "2026-09-30",
+  "candidate": "private release039 with same-run RPC guard",
+  "installed_version": "0.38.0",
+  "actual_exit_code": 0,
+  "passed": 93,
+  "new_stop_fixtures": 50,
+  "sql_lookup_regressions": 5,
+  "sql_lookup_fixture_engine": "SQLite executing extracted migration SELECT; not PostgreSQL",
+  "baseline_regressions": 5,
+  "calibration_receipt_regressions": 5,
+  "existing_stop_regressions": 28,
+  "source_before": {
+    "lab/director/stop_closure.py": "759f80c8ecf99ac66af1446e9094beac8f0066abe7943092d25c36e5434a945f",
+    "lab/scorer/stop_recovery.py": "87ec76cf7fd0cd35ae2e49db685e2a610737c22da5b7c686bc71564f36ddeb11",
+    "lab/db/migrations/versions/0033_measured_baseline_stop.py": "91b673a89385534d1363770f9b9f3e9bf8150baae9e9655797068960c9e95fc9",
+    "tests/test_measured_baseline_stop039.py": "6314c2626feba315c49b897d75618c9b34675ebfaa8e1e889c77f6ee9ffda8da",
+    "lab/director/baseline_runner.py": "607111c7c2cb5fd3e6e8aad0d9c6872ffb492184aeb4b07ac675eff1366c1920",
+    "tests/test_director_baseline_records_review.py": "4b40d5a8b0b43da9f9a0dea0f94852b399053dfcda029d73c54106cbed210674"
+  },
+  "source_after": {
+    "lab/director/stop_closure.py": "759f80c8ecf99ac66af1446e9094beac8f0066abe7943092d25c36e5434a945f",
+    "lab/scorer/stop_recovery.py": "87ec76cf7fd0cd35ae2e49db685e2a610737c22da5b7c686bc71564f36ddeb11",
+    "lab/db/migrations/versions/0033_measured_baseline_stop.py": "91b673a89385534d1363770f9b9f3e9bf8150baae9e9655797068960c9e95fc9",
+    "tests/test_measured_baseline_stop039.py": "6314c2626feba315c49b897d75618c9b34675ebfaa8e1e889c77f6ee9ffda8da",
+    "lab/director/baseline_runner.py": "607111c7c2cb5fd3e6e8aad0d9c6872ffb492184aeb4b07ac675eff1366c1920",
+    "tests/test_director_baseline_records_review.py": "4b40d5a8b0b43da9f9a0dea0f94852b399053dfcda029d73c54106cbed210674"
+  },
+  "source_unchanged": true,
+  "elapsed_seconds": 1.4711358209988248,
+  "postgres_executed": false,
+  "gpu_executed": false,
+  "actual_research_completed": false,
+  "limitations": [
+    "SQL authorities and Docker mocked in original focused tests",
+    "PostgreSQL clone, rollback, full gate and deployment pending"
+  ]
+}

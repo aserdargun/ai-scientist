@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-09-24T17:54:37.367630+00:00",
+  "scope": "Six negative promotion checks using synthetic score vectors and the actual Referee/terminal preconditions. No SQL, Docker, process restart or Director20 acceptance.",
+  "production_source_sha256": {
+    "lab/director/runner.py": "79fdfe66f213019cb177323a4fd3ee7ed98cf4f044058307ef8e57b9638d7c35"
+  },
+  "production_matches_frozen_image_source": true,
+  "test_source_sha256_observed_after_test": "25c7362bb2436d86d51a86200a78d68cb0f12709ab21eb5eddfbf20e4bf0f3b2",
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "--fix",
+        "tests/test_director_confirmation_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "-q",
+        "--tb=short",
+        "tests/test_director_confirmation_review.py"
+      ],
+      "exit_code": 0,
+      "stdout": "......                                                                   [100%]\n6 passed in 0.79s\n"
+    }
+  ],
+  "checks": [
+    "provisional_KEEP_without_seed1_denied",
+    "confirmed_KEEP_without_seed2_denied",
+    "foreign_candidate_noise_denied",
+    "foreign_profile_noise_denied",
+    "missing_noise_guard_denied",
+    "duplicate_noise_task_denied"
+  ],
+  "all_passed": true
+}

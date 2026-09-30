@@ -1,0 +1,88 @@
+{
+  "schema": "release041-image-gate-r4-safe-summary.v1",
+  "date": "2026-09-30",
+  "candidate_version": "0.41.0",
+  "scope": "Actual bounded offline Docker image parity and mandatory seven-command CPU/static/wheel gate on candidate R4. Main clone and promotion are separate pending gates.",
+  "source_runtime_count": 306,
+  "test_document_count": 58,
+  "tools_venv_excluded_from_runtime": true,
+  "final_payload_freeze_sha256": "daee4bf610b66437b4d78e1bccd04a2f8a2d687c5d7b6325c722d6799a38e0ff",
+  "image": {
+    "image_digest": "sha256:dd00f5b81144103d7d084a08c4e99aceca2bf2f9a7ef0d39810bc22cfe718160",
+    "actual_root_wrapper_exit_code": 0,
+    "root_final_chunk": "e673fe",
+    "receipt_sha256": "5726ab83a945c3cba920a6a7880aa7065f95e89fecce285af269fb15f2299cb8",
+    "launch_receipt_sha256": "da76fcc00c54cb18f566531edd00e6b91f9d59ff5dd429d6d0b853bb1ea2a176",
+    "parity_receipt_sha256": "0c0cda4671c23f50bd033eb0e3f37b9f79809659bbc367f81fb48d3c96edd570",
+    "build_exit_code": 0,
+    "parity_exit_code": 0,
+    "launch_exit_code": 0,
+    "image_user": "10001:10001",
+    "only_expected_pin_change": true,
+    "parity_source_unchanged": true
+  },
+  "gate": {
+    "root_session": 57927,
+    "root_final_chunk": "cae391",
+    "actual_root_wrapper_exit_code": 0,
+    "receipt_sha256": "deca15867ce456e4923301751a9665973b977a05f8b7c3481006abee6dac7a00",
+    "launch_receipt_sha256": "f84244b2a6434063d3d0df8e07d75e8c5423d5830ec973df2c0894b7caee81bf",
+    "commands_receipt_sha256": "e1a6a95e92f4ab3670e2a7d536797293a68009af3bb63a033083ef4fa4ea071d",
+    "actual_gate_exit_code": 0,
+    "launch_exit_code": 0,
+    "seven_actual_commands": true,
+    "commands": {
+      "ruff": {
+        "actual_exit_code": 0
+      },
+      "pylint": {
+        "actual_exit_code": 0
+      },
+      "bandit": {
+        "actual_exit_code": 0
+      },
+      "pytest": {
+        "actual_exit_code": 0
+      },
+      "strict_mypy": {
+        "actual_exit_code": 0
+      },
+      "wheel_build": {
+        "actual_exit_code": 0
+      },
+      "installed_wheel_imports": {
+        "actual_exit_code": 0
+      }
+    },
+    "source_unchanged": true,
+    "elapsed_seconds": 82.11398951500087,
+    "pytest": {
+      "passed": 1247,
+      "skipped": 7,
+      "deselected": 120,
+      "warnings": 33,
+      "seconds": 18.51,
+      "GPU_and_live_tests_excluded": true
+    }
+  },
+  "typing_fix": {
+    "only_changed_production_path": "lab/director/stop_closure.py",
+    "old_sha256": "5d0532d938e83cf5ed167307ab35e88ff57fafc74aaff916c35f4abbbbb77bc1",
+    "fixed_sha256": "b0e0f050cd810f6c7b333771e9e484c82973771364b8950be3a578559ad818b4",
+    "change": "Separate raw RowMapping rows from typed dictionary rows, preserving SQL/control flow and materialization timing.",
+    "strict_mypy_unchanged": true
+  },
+  "preserved_r3_gate_failure": {
+    "root_session": 33345,
+    "root_final_chunk": "0fcc30",
+    "actual_root_wrapper_exit_code": 1,
+    "receipt_sha256": "1c10d7cabf904f151a85b3b2c7173144632a72aaa72b0ae2471fd24287ddb4f2",
+    "failed_command": "strict_mypy",
+    "error_count": 3,
+    "pytest_passed": 1247,
+    "original_source_and_failure_receipts_preserved": true
+  },
+  "main_clone_or_promotion_complete": false,
+  "actual_worker_process_exit_acceptance": false,
+  "scientific_GPU_LLM_AOS_M0_acceptance": false
+}

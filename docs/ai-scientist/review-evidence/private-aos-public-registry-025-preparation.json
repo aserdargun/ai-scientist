@@ -1,0 +1,17 @@
+{
+  "schema": "private-aos-public-registry-preparation.v1",
+  "source_commit": "221e5d94ceb17e7ef1f933f55db60e8d02987a02",
+  "lab_root": "/home/cachyos/ai-scientist/data/runtime/parallel-m0/public-execution-025",
+  "config_directory": "data/runtime/parallel-m0/public-execution-025/data/runtime/aos-coexistence",
+  "registry_sha256": "87b58112bddcb1aa57c0915c79b69b042dac105686138e5ac540bab9b023f7d0",
+  "entry_sha256": "33f66c4135b6175ad0de1087c572aafeb53c6b5368ca2a0a476a88798952ff07",
+  "suite_manifest_sha256": "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c",
+  "provider": "local-qwen",
+  "profile_set": "research",
+  "provider_config_sha256": "7d0c59a9cf9f050b6ca6a3373cfcf4a330449e3f6aced923af8a73f10caad4a1",
+  "proposal_limit": 6,
+  "private_principal_count": 1,
+  "api_started": false,
+  "gpu_started": false,
+  "verified_manifest_bytes": 72330055
+}

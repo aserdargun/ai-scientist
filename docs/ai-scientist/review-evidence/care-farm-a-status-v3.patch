@@ -1,0 +1,137 @@
+diff --git a/harness/public_data.py b/harness/public_data.py
+index 57cda7d..4f74259 100644
+--- a/harness/public_data.py
++++ b/harness/public_data.py
+@@ -852,8 +852,11 @@ def load_care_farm_a_task(
+     if np.any(np.diff(timestamp_seconds) % 600 != 0):
+         raise ValueError("CARE source timestamps must retain the 600-second source grid")
+ 
+-    # This status mapping comes from the versioned CARE source README: 0 normal
+-    # production, 2 idling; 1 derated and 3/4/5 service/downtime/other are masked.
++    # Farm A status ids are useful for filtering training data, but the v6
++    # release explicitly says to ignore them for prediction-time evaluation:
++    # unlike Farms B/C, Farm A statuses were derived from the failure logbook.
++    # Keep validation here so an unknown upstream code cannot silently enter a
++    # new source revision; status codes do not create evaluation masks.
+     statuses = pd.to_numeric(frame["status_type_id"], errors="raise").to_numpy(dtype=np.int64)
+     if not set(np.unique(statuses)).issubset({0, 1, 2, 3, 4, 5}):
+         raise ValueError("CARE status_type_id contains an undocumented status")
+@@ -895,7 +898,6 @@ def load_care_farm_a_task(
+     if len(grid_times) < selected_window:
+         raise ValueError("CARE Farm A prediction segment is too short")
+     eval_frame = pd.DataFrame(np.nan, index=np.arange(len(grid_times)), columns=sensor_columns)
+-    eval_status = np.full(len(grid_times), -1, dtype=np.int64)
+     eval_source_indices = np.full(len(grid_times), -1, dtype=np.int64)
+     for source_index in prediction_indices:
+         offset = int(timestamp_seconds[source_index] - grid_times[0])
+@@ -903,11 +905,13 @@ def load_care_farm_a_task(
+             raise ValueError("CARE prediction timestamp is off the fixed 600-second grid")
+         grid_index = offset // 600
+         eval_source_indices[grid_index] = int(source_index)
+-        eval_status[grid_index] = int(statuses[source_index])
+         eval_frame.iloc[grid_index] = numeric.iloc[source_index].to_numpy(dtype=np.float64)
+     observed = eval_source_indices >= 0
+     feature_missing_grid = eval_frame.isna().any(axis=1).to_numpy(dtype=np.bool_)
+-    masked = (~observed) | (~np.isin(eval_status, (0, 2))) | feature_missing_grid
++    # Farm A status ids are retrospective fault-logbook labels, not a valid
++    # prediction-time mask. Only unobserved source-grid points and missing
++    # selected sensor values are excluded from evaluation.
++    masked = (~observed) | feature_missing_grid
+     if max_forward_fill_steps:
+         eval_frame = eval_frame.ffill(limit=max_forward_fill_steps)
+     eval_frame = eval_frame.fillna(0.0)
+@@ -964,7 +968,9 @@ def load_care_farm_a_task(
+         task_id=safe_task,
+         dataset_id="CARE-A",
+         split_id="Adev",
+-        session_id=f"{source_revision}:farm-A:event-{event_id}",
++        session_id=(
++            f"{source_revision}:farm-A-status-eval-ignored.v3:event-{event_id}"
++        ),
+         family=family,
+         train_values=train_values.astype(np.float64),
+         train_source_indices=train_indices,
+diff --git a/lab/director/public_suite.py b/lab/director/public_suite.py
+index 180b00f..7a63ed7 100644
+--- a/lab/director/public_suite.py
++++ b/lab/director/public_suite.py
+@@ -44,7 +44,7 @@ CARE_ACCESS_TERMS = (
+     "CC BY-SA 4.0; noncommercial research profile only; preserve attribution and share-alike "
+     "terms for redistributed adaptations"
+ )
+-CARE_FEATURE_POLICY = "care_named_physical_averages_statusmask.v2"
++CARE_FEATURE_POLICY = "care_named_physical_averages_train_status_only.v3"
+ CARE_FEATURE_COLUMNS = (
+     "wind_speed_3_avg",
+     "wind_speed_4_avg",
+@@ -53,7 +53,7 @@ CARE_FEATURE_COLUMNS = (
+     "power_29_avg",
+     "power_30_avg",
+ )
+-CARE_SPLIT_POLICY = "care_Adev_train_healthy_embargo_1day_prediction.v2"
++CARE_SPLIT_POLICY = "care_Adev_train_healthy_embargo_1day_prediction_status_eval_ignored.v3"
+ PUBLIC_SUITE_ID = "public-ad-v1"
+ SCORER_LABEL_INSERT_BATCH_ROWS = 10_000
+ 
+@@ -1210,7 +1210,7 @@ def build_default_public_suite_manifest(
+         tuple(item.task for item in weighted),
+         pending,
+         suite_id=PUBLIC_SUITE_ID,
+-        suite_version=2,
++        suite_version=3,
+     )
+     try:
+         for item in weighted:
+diff --git a/tests/test_public_data.py b/tests/test_public_data.py
+index d9af544..e8ede52 100644
+--- a/tests/test_public_data.py
++++ b/tests/test_public_data.py
+@@ -24,7 +24,9 @@ from harness.public_data import (
+ )
+ 
+ 
+-def test_care_masks_status_missing_features_and_source_time_gaps(tmp_path: Path) -> None:
++def test_care_farm_a_ignores_status_for_eval_but_masks_gaps_and_missing_features(
++    tmp_path: Path,
++) -> None:
+     member = "CARE_To_Compare/Wind Farm A/datasets/0.csv"
+     timestamps = list(pd.date_range("2023-01-01", periods=16, freq="10min"))
+     timestamps.extend(pd.date_range("2023-01-03", periods=8, freq="10min"))
+@@ -35,7 +37,7 @@ def test_care_masks_status_missing_features_and_source_time_gaps(tmp_path: Path)
+             "asset_id": ["1"] * 24,
+             "id": list(range(24)),
+             "train_test": ["train"] * 16 + ["prediction"] * 8,
+-            "status_type_id": [0] * 19 + [3] + [0] * 4,
++            "status_type_id": [0] * 16 + [1, 3, 4, 1, 0, 0, 0, 0],
+             "wind_speed_3_avg": [float(i) for i in range(24)],
+             "sensor_0_avg": [float(i + 1) for i in range(24)],
+         }
+@@ -65,15 +67,24 @@ def test_care_masks_status_missing_features_and_source_time_gaps(tmp_path: Path)
+         sliding_window=2,
+         max_forward_fill_steps=0,
+     )
+-    # Source gap at prediction index 4, invalid service status at index 3, and
+-    # observed feature NaN at index 5 remain Scorer-masked despite finite fill.
+-    assert task.masked_samples[3]
+-    assert task.masked_samples[5]
++    # Farm A's retrospective status codes do not mask prediction-time ground
++    # truth; source gaps and observed NaNs remain masked after finite fill.
++    assert not task.masked_samples[0]
++    assert not task.masked_samples[1]
++    assert task.labels[2]
++    assert not task.masked_samples[2]
++    assert not task.masked_samples[3]
++    assert task.labels[3]
+     assert task.masked_samples[4]
++    missing_feature_index = int(
++        (timestamps[20] - timestamps[16]).total_seconds() // 600
++    )
++    assert task.masked_samples[missing_feature_index]
+     assert np.isfinite(task.evaluation_values.to_numpy()).all()
+     assert task.train_source_indices == tuple(range(16))
+     assert task.train_values.shape[0] == 16
+     assert task.embargo_seconds == 86_400
++    assert task.session_id.endswith("farm-A-status-eval-ignored.v3:event-0")
+ 
+ 
+ def _skab_source(root: Path, *, sensors: list[str] | None = None) -> tuple[SourceManifest, str]:
