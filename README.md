@@ -5,7 +5,8 @@ olan bağımsız laboratuvar. Hedef; veri seçmek, yöntem ve hiperparametre
 denemek, sonuçları doğrulamak ve yeniden kullanılabilir bilgi, skill ve
 eğitim verisi üretmek.
 
-**Geliştirme sürümü:** çekirdek `0.41.0`. Açık kaynak yayın hazırlığı sürüyor;
+**Geliştirme sürümü:** çekirdek `0.41.0`.
+[Public geliştirme deposu](https://github.com/aserdargun/ai-scientist) yayımlandı;
 proje lisansı henüz seçilmedi. Tam M0 kabulü tamamlanmadı.
 
 Public teslim temizlenmiş kaynak snapshot'ıyla başlar; eski yerel geliştirme
@@ -107,14 +108,14 @@ içermemelidir. Tarayıcı açılmasını atlamak için `--no-browser` / `-NoBro
 tablo, oturum metadata’sında fiilen gözlenen model ve ayarları gösterir.
 
 <!-- development-metrics:start -->
-Sayaç güncellemesi: **2026-09-30 09:51:31 Europe/Istanbul**.
+Sayaç güncellemesi: **2026-09-30 10:01:12 Europe/Istanbul**.
 
 | Ölçüm | Değer |
 |---|---:|
-| Aktif süre | 52 saat 36 dakika 14 saniye |
-| Aktif süre (saniye) | 189374 |
-| Token | 89852106 |
-| Takvim süresi | 142.595000 saat |
+| Aktif süre | 52 saat 45 dakika 55 saniye |
+| Aktif süre (saniye) | 189955 |
+| Token | 89905084 |
+| Takvim süresi | 142.756389 saat |
 
 Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.
 

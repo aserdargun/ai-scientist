@@ -49,7 +49,10 @@ proposal sayısı 0. Bu araştırma tamamlanmış sayılmaz.
    arayüzden durdur/devam/raporu (OM.1–7).
 7. **Açık kaynak teslimi ve sonraki laboratuvar dilimleri:** taşınabilir
    kurulum/yeni makine testi, genel adaptörler, model/skill/eğitim kayıt
-   zinciri. Lisans seçimi ve Git remote/auth henüz yok; PR/yayın açık.
+   zinciri. Public kaynak snapshot'ı
+   [aserdargun/ai-scientist](https://github.com/aserdargun/ai-scientist)
+   olarak yayımlandı ve uzak commit doğrulandı. Lisans seçimi, taşınabilir
+   kurulum ve M0 kapsamındaki PR/kabul işleri açık.
    [44 numaralı yol haritasındaki](44-open-laboratory-roadmap.md) M0 sonrası
    işler tamamlanmış sayılmayacak.
 

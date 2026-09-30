@@ -34,17 +34,25 @@ kabulleri açık kalır.
 
 ## Public GitHub teslimi
 
-Kullanıcı `aserdargun` hesabında public yayın istedi. Yerel GitHub CLI
-kimlik doğrulaması geçersiz; ilk cihaz girişinin süresi doldu ve yeni giriş
-gerekiyor. Yayın taraması 104 erişilebilir commit ve
+Kullanıcı `aserdargun` hesabında public yayın istedi. İlk cihaz girişinin
+süresi doldu; sonraki kontrolde yerel CLI'nin `aserdargun` oturumu geçerli
+olarak doğrulandı. [Public depo](https://github.com/aserdargun/ai-scientist)
+oluşturuldu ve temiz ilk kaynak commit'i
+`6a6b681cbd6ff383687200a4617c973b22c2d375` normal push ile `main` dalına
+gönderildi. Uzak Git ref, GitHub commit/tree, boş parent listesi, `PUBLIC`
+görünürlük ve varsayılan `main` ayrı okumalarla doğrulandı. İlk public
+snapshot 1602 dosya içerir; yayın kapısı **1247 test / yedi komut / exit 0**.
+
+Yayın taraması 104 erişilebilir yerel commit ve
 2409 ayrı Git blobunu kapsadı; güncel özel kimlik bilgilerinden eşleşme yok.
 Eski bir SQL hata receipt'inde bulunan tarihsel işçi anahtarı public
 dosyada temizlendi; özgün kayıt özel alanda korundu ve receipt'e redaksiyon
 notu eklendi. Tarihsel başarısız sonuç değiştirilmedi.
 
 Eski Git geçmişi yerelde korunur; public teslim temizlenmiş kaynak
-snapshot'ıyla başlayacaktır. Runtime, ham özel kayıtlar, kimlik bilgileri,
+snapshot'ıyla başladı. Runtime, ham özel kayıtlar, kimlik bilgileri,
 veri setleri ve model ağırlıkları teslimin parçası değildir. Proje lisansı
 henüz seçilmedi; public depo oluşturulması lisans seçimi yerine geçmez.
-GitHub push tamamlanmış sayılmak için uzak commit ve public görünürlük
-ayrıca doğrulanacaktır.
+Sonraki public değişiklikler bu temiz geçmişten devam etmelidir. Eski yerel
+geliştirme dalı veya tüm ref'ler public remote'a gönderilmez; kullanıcılar
+public depoyu clone/fork ederek bağımsız çalışabilir.

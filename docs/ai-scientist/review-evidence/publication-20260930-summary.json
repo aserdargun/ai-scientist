@@ -1,7 +1,7 @@
 {
   "schema": "public-source-publication-review.v1",
   "date": "2026-09-30",
-  "publication_complete": false,
+  "publication_complete": true,
   "target": "aserdargun/ai-scientist",
   "strategy": "sanitized initial source snapshot; original local Git history retained privately",
   "review": {
@@ -46,7 +46,32 @@
     "synthetic pool044"
   ],
   "license_selected": false,
-  "github_authentication": "Local CLI token invalid; first device flow expired; refreshed login required",
-  "remote_commit_verified": false,
-  "private_original_receipt_retained": true
+  "github_authentication": "Authenticated aserdargun CLI; exact account verified",
+  "remote_commit_verified": true,
+  "private_original_receipt_retained": true,
+  "repository_url": "https://github.com/aserdargun/ai-scientist",
+  "visibility": "PUBLIC",
+  "default_branch": "main",
+  "initial_public_commit": "6a6b681cbd6ff383687200a4617c973b22c2d375",
+  "initial_public_tree": "7bbc32ee238a1cdc2ae9154a76e15ea2aa4d5da6",
+  "initial_public_parent_count": 0,
+  "published_file_count": 1602,
+  "actual_remote_tools": {
+    "create": {
+      "terminal_chunk": "672923",
+      "exit_code": 0
+    },
+    "push": {
+      "terminal_chunk": "d26ce8",
+      "exit_code": 0
+    },
+    "metadata": {
+      "chunk": "dcbcbb",
+      "exit_code": 0
+    },
+    "ref_and_commit": {
+      "chunk": "c84421",
+      "exit_code": 0
+    }
+  }
 }
