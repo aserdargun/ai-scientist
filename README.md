@@ -222,10 +222,10 @@ ağırlıklarının yayın izni değildir. Proje lisansı kararı açık kalır.
 <!-- api-cost-summary:start -->
 ## Hypothetical API cost / Varsayımsal API maliyeti
 
-**USD 2,950.66** — Standard short-context API scenario; not an actual bill.
-Last observed UTC / Son gözlem UTC: **2026-10-03T18:59:59.193000+00:00**.
+**USD 2,973.94** — Standard short-context API scenario; not an actual bill.
+Last observed UTC / Son gözlem UTC: **2026-10-03T19:24:05.685000+00:00**.
 
-Observed / Gözlenen: **5,532,450,227** tokens; priced / fiyatlandırılan: **5,532,369,248**; unpriced / fiyatlandırılamayan: **80,979**.
+Observed / Gözlenen: **5,556,578,861** tokens; priced / fiyatlandırılan: **5,556,497,882**; unpriced / fiyatlandırılamayan: **80,979**.
 Separate local runtime / Ayrı yerel runtime: **8,278** tokens; excluded from this cloud estimate.
 
 Actual API billing and subscription charges are unknown. Gerçek API faturası ve abonelik bedeli bilinmiyor; bu tutar varsayımsaldır.
