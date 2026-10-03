@@ -1,5 +1,7 @@
 # AOS sonraki kaynak teslimi
 
+> Update — 2026-10-03: [real local CPU active-Scorer cancellation](132-active-scorer-cancellation.md) now passed, including repeated stop, verified report and exact cleanup. Historical timing gaps below remain unchanged as evidence of those earlier runs. AOS panel and GPU cancellation are separate open acceptances.
+
 ## Fresh CPU panel scope prepared — 2026-10-03 19:42 UTC
 
 The circular preparation wait is resolved on the Scientist side: a **fresh,

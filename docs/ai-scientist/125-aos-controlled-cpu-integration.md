@@ -1,5 +1,7 @@
 # Kontrollü AOS → Scientist CPU entegrasyonu
 
+> Update — 2026-10-03: [real local CPU active-Scorer cancellation](132-active-scorer-cancellation.md) now passed, including repeated stop, verified report and exact cleanup. Historical timing gaps below remain unchanged as evidence of those earlier runs. AOS panel and GPU cancellation are separate open acceptances.
+
 Durum (2026-10-03): izole adayda normal CPU koşusu **completed**; ayrı
 kontrollü iptal koşusu **stopped** ve terminal raporu doğrulandı. Gerçek
 API, PostgreSQL, Director ve bağımsız Scorer kullanıldı. AOS karar/onay

@@ -1,5 +1,7 @@
 # M0 kabul kaydı
 
+> Update — 2026-10-03: [real local CPU active-Scorer cancellation](132-active-scorer-cancellation.md) now passed, including repeated stop, verified report and exact cleanup. Historical timing gaps below remain unchanged as evidence of those earlier runs. AOS panel and GPU cancellation are separate open acceptances.
+
 ## Son CPU teslimi — 2026-10-03, koşular arası seçilmiş bulgu aktarımı
 
 `3873c13b-66fb-475c-916e-d2f28633bc2c` completed: önceki üç LSH/OPTICS/SOM

@@ -247,18 +247,18 @@ Aşağıdaki fiili model listesi metadata gözlemidir; talep edilen model fiilen
 çalışmış gibi kaydedilmez. Goal tokenı, API tokenı ve fatura birbirine eklenmez.
 
 <!-- development-metrics:start -->
-Sayaç güncellemesi: **2026-10-03 22:46:08 Europe/Istanbul**.
+Sayaç güncellemesi: **2026-10-03 23:04:45 Europe/Istanbul**.
 
 | Ölçüm | Değer |
 |---|---:|
-| Güncel goal dönemi aktif süre | 40 saat 7 dakika 38 saniye |
-| Güncel goal dönemi aktif süre (saniye) | 144458 |
-| Güncel goal dönemi token | 37512625 |
-| Güncel goal dönemi takvim süresi | 61.369722 saat |
+| Güncel goal dönemi aktif süre | 40 saat 26 dakika 15 saniye |
+| Güncel goal dönemi aktif süre (saniye) | 145575 |
+| Güncel goal dönemi token | 37769521 |
+| Güncel goal dönemi takvim süresi | 61.680000 saat |
 | Kaydedilen dönem sayısı | 2 |
-| Kaydedilen dönemlerin toplam aktif süresi | 111.963333 saat |
-| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 403068 |
-| Kaydedilen dönemlerin toplam tokenı | 139714443 |
+| Kaydedilen dönemlerin toplam aktif süresi | 112.273611 saat |
+| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 404185 |
+| Kaydedilen dönemlerin toplam tokenı | 139971339 |
 
 Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.
 Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplamıdır; ardışık snapshot'lar ve tekrarlar toplanmaz. Tarihsel gözlemlerin kapsamı eksiktir; gözlenmeyen dönemler veya son gözlemden sonraki kullanım bilinmez.

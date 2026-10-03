@@ -1,0 +1,74 @@
+{
+  "schema": "scientist.active-scorer-stop-acceptance.v1",
+  "observed_at": "2026-10-03T20:00:29.445663+00:00",
+  "scope": "real local CPU lifecycle over synthetic data; no AOS panel, primary OPTICS or GPU acceptance",
+  "run_id": "c8a7d697-e41e-4cfd-9862-12dc01d0eef2",
+  "owner_origin": "local",
+  "budget": {
+    "experiments": 1,
+    "wall_seconds": 600,
+    "model_tokens": 0
+  },
+  "recipe": {
+    "scenario": "step",
+    "seed": 104,
+    "train_rows": 1024,
+    "evaluation_rows": 1024
+  },
+  "planned_primary": "optics",
+  "interrupted_stage": "baseline Isolation Forest seed 0",
+  "job_id": "1a829021-7408-4148-b62c-c64a44a62cce",
+  "generation": 1,
+  "execution_sha256": "04872fa9500c492535aa8a8c0bf7a076e9fbc3a0c4ce7ad466ee7d8d3f758151",
+  "original_invocation_id": "b0a0d1b3bc5d46d093eb50e62e4ba83e",
+  "final_running_observation_at": "2026-10-03 19:57:27.304192+00:00",
+  "stop_event_at": "2026-10-03 19:57:27.309301+00:00",
+  "original_worker_exit_at": "2026-10-03T19:57:27.729543+00:00",
+  "job_terminal_at": "2026-10-03 19:57:30.647312+00:00",
+  "run_terminal_at": "2026-10-03 19:57:31.262868+00:00",
+  "stop_before_worker_exit_ms": 420.242,
+  "stop_to_run_terminal_seconds": 3.953567,
+  "stop_responses": [
+    "stop_requested",
+    "stop_requested"
+  ],
+  "stop_event_count": 1,
+  "run_state": "stopped",
+  "job_state": "failed",
+  "job_outcome": "scorer_error",
+  "outcome_explanation": "Existing post-drain stopped-baseline recovery policy; not a cancelled job label. Precise original worker exception was not retained.",
+  "report_sha256": "d7ff500418db88c3b6e3e11bf810dd00fbd563a19829a95f306970058f9f76e5",
+  "report_hash_independently_verified": true,
+  "cleanup": {
+    "exact_units_absent": 3,
+    "recorded_processes_retired": 2,
+    "cgroups_absent_or_empty": true,
+    "sandbox_empty": true,
+    "labelled_sandbox_containers_absent": true,
+    "closure_state": "drained",
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "field_lab_services": {
+      "api": "active",
+      "director-drain": "active",
+      "console": "active"
+    }
+  },
+  "initial_observer_failure": "HTTP keepalive BrokenPipe; recovery observer attached to same run, no second experiment",
+  "source_hashes": {
+    "lab/api/app.py": "ca866cc50935c922886ea6b153ba82ef9907b79ea4e4b5dc02546c85be2e5f5a",
+    "lab/scorer/worker.py": "cb92830372219da9a4da61d750736c66a3b35445637018d1c2e2877787549497",
+    "lab/scorer/stop_recovery.py": "72fb52bb7ed7ffaa5635c45f5565bf98bc534c1b2b1263ed4cc0e252c04c651a",
+    "lab/db/migrations/versions/0036_stopped_job_claim_cleanup.py": "ca952d8ff102262c6f6f9353490a10ae7a9f60dc8e01aa25382eabc8df22a78b"
+  },
+  "private_receipt_sha256": "299747d41c9891bb2032c903f02b2636600916af2d7873467eebe08bcf4e20aa",
+  "worker_journal_sha256": "4ad37391b8e8b41a91a096985ae313c3ab85e5c9871a81fc2725503b233bc453",
+  "gpu_calls": 0,
+  "model_calls": 0,
+  "model_quantization_context": null,
+  "vram_peak_measured": false,
+  "acceptance": "passed_with_documented_legacy_outcome_label"
+}
