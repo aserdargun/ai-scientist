@@ -1,5 +1,49 @@
 # AOS sonraki kaynak teslimi
 
+## Fresh CPU panel scope prepared — 2026-10-03 19:42 UTC
+
+The circular preparation wait is resolved on the Scientist side: a **fresh,
+inert CPU profile and credentials** now exist. No API, database, Director,
+experiment, model or GPU process was started by this preparation; the grant
+is a preview and is not registered yet. Retired scope identities are not reused.
+
+- Profile: `aos-cpu-panel-v2-9cff0c0cfd0c`; owner: `aos:cpu-panel-v2`.
+- Proposed Scientist API: `http://127.0.0.1:8770`; PostgreSQL: `55436`;
+  Scientist console port `8792` reserved but not started.
+- Suite preview: `aos-cpu-a4ca034a5b801f1b3e32e13f4e438a4140cc40d6bf3dc7be`.
+- Grant preview SHA-256:
+  `a4ca034a5b801f1b3e32e13f4e438a4140cc40d6bf3dc7be328cefc97cf2f010`.
+- Existing synthetic snapshot was independently reloaded and its values/split
+  identity verified: `2bfe95c90d3ba4053814a8149be72b945105382792e2b52034b011a4e237080a`.
+- Scope: one OPTICS candidate, at most 600 seconds, zero model tokens.
+- Private preparation and fresh credential handoff are under candidate
+  `data/runtime/aos-cpu-panel-v2/`. Credentials must never enter Git or chat.
+
+Read-only inspection found the AOS isolated consumer already prepared at
+`/home/cachyos/aos/data/scientist-cpu-panel-20261003/`, using source
+`a892a8926e6916c97532f4732c4127a6e412ef71`, source manifest
+`2044a3d88ec79daba3fc6bda50d10a1750e2b54c5d721b49b14234dfbec2d0e5`,
+and proposed console port `8771`. Its `review/startup.json`, `grant.json`, and
+`scientist.token` are still absent. This isolated source is distinct from
+current AOS publication; no runtime ACK is inferred.
+
+**Next ownership:** Scientist supplies expected registered capability and
+fresh source/config pins after its source freeze and CPU resource admission.
+AOS reviews these, supplies its final isolated consumer config/unit pins and
+adds explicit CPUQuota and MemorySwapMax=0 to its draft unit before launch.
+AOS alone writes its checkout/runtime files. The actual panel flow remains
+pending: descriptor → field intent → approval → run → verified report →
+experience → explicit history selection/new draft. No second run is included.
+
+Combined resource admission must include the AOS unit's 2 GiB cap. The initial
+readback had about 16.92 GiB available, below the 18.125 GiB combined conservative
+requirement (including the existing 6 GiB host reserve). Recheck after the
+Scientist-owned quality gate ends; do not reclaim memory from other sessions.
+After the owned quality gate exited, a second readback showed 19,165,786,112
+bytes available against 19,461,570,560 required; admission still failed.
+No runtime was started. The inter-thread tool still fails at transport; this file is the handoff.
+**GPU HOLD remains. Active-Scorer cancellation needs a separate bounded scope.**
+
 ## Güncel karşılıklı kaynak incelemesi — 2026-10-03 18:19 UTC
 
 **Scientist `bdad5b24eaa62519af7ca09a7ee9acaf17fc8355` ↔ AOS publication

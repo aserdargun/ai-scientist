@@ -1,0 +1,25 @@
+{
+  "schema": "cpu-delivery-gate.v1",
+  "observed_at": "2026-10-03T19:45:38.282772+00:00",
+  "source_base": "776236d6fe41fe7067381cbb491c417315f65e9d",
+  "passed": 3657,
+  "skipped": 49,
+  "deselected": 177,
+  "commands_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "quality_gate_exit": 0,
+  "quality_gate_receipt_sha256": "0351173b078a0005f1369c25f60f766c27515e5017d581063f8a9fcc2f622ae5",
+  "gpu_or_live_tests_executed": false,
+  "runtime_seconds": 363.149,
+  "owned_gate_terminal": true,
+  "backend_image_unchanged": true,
+  "frontend_receipt": "frontend-light-theme-20261003.json",
+  "scope": "Light theme and fresh inert CPU panel preparation; actual AOS/GPU acceptance remains open"
+}

@@ -1,14 +1,14 @@
 {
   "schema": "development-goal-usage.v1",
   "source": "Codex get_goal",
-  "captured_at": "2026-10-03T19:19:18.926101+00:00",
+  "captured_at": "2026-10-03T19:46:49.045322+00:00",
   "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
   "goal_created_at_epoch": 1790835837,
-  "goal_updated_at_epoch": 1791055130,
-  "tokens_used": 37238021,
-  "active_seconds": 142821,
-  "active_hours": 39.6725,
-  "calendar_hours": 60.914722222222224,
+  "goal_updated_at_epoch": 1791056768,
+  "tokens_used": 37512625,
+  "active_seconds": 144458,
+  "active_hours": 40.12722222222222,
+  "calendar_hours": 61.36972222222222,
   "status": "active",
   "scope_note": "Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.",
   "development_models": [
@@ -51,8 +51,8 @@
       "model": "gpt-6.1-sol",
       "reasoning_effort": "high",
       "role": "Rol doğrulanmadı",
-      "observed_sessions": 19,
-      "currently_observed_sessions": 19
+      "observed_sessions": 20,
+      "currently_observed_sessions": 20
     },
     {
       "model": "gpt-6.1-sol",
@@ -71,7 +71,7 @@
   ],
   "model_evidence": {
     "source": "session_meta ancestry; all associated turn_context model/effort",
-    "related_sessions": 99,
+    "related_sessions": 100,
     "complete": true,
     "limitations": [],
     "raw_prompts_or_secrets_exported": false
@@ -80,9 +80,9 @@
   "recorded_goal_period_totals": {
     "source": "latest observed counters per (goal_thread_id, goal_created_at_epoch)",
     "observed_periods": 2,
-    "tokens_used": 139439839,
-    "active_seconds": 401431,
-    "active_hours": 111.50861111111111,
+    "tokens_used": 139714443,
+    "active_seconds": 403068,
+    "active_hours": 111.96333333333334,
     "periods": [
       {
         "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
@@ -94,9 +94,9 @@
       {
         "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
         "goal_created_at_epoch": 1790835837,
-        "goal_updated_at_epoch": 1791055130,
-        "tokens_used": 37238021,
-        "active_seconds": 142821
+        "goal_updated_at_epoch": 1791056768,
+        "tokens_used": 37512625,
+        "active_seconds": 144458
       }
     ],
     "complete": false,

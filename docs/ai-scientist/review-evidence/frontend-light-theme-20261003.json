@@ -1,0 +1,63 @@
+{
+  "theme_persistence_and_cross_tab": true,
+  "light_all_navigation_pages": true,
+  "light_sidebar_and_agent_panel_white": true,
+  "light_secondary_buttons_readable": true,
+  "light_and_dark_mobile": true,
+  "theme_storage_denial_fallback": true,
+  "scope": "live UI read-only",
+  "browser_plugin": "not available; existing Playwright used",
+  "default_english_with_turkish_browser": true,
+  "language_and_document_title_switch": true,
+  "selection_survives_reload": true,
+  "cross_tab_selection_sync": true,
+  "storage_denial_session_fallback": true,
+  "field_draft_preserved_on_switch": true,
+  "navigation": [
+    {
+      "nav": "Agent",
+      "heading": "Research control center"
+    },
+    {
+      "nav": "Overview",
+      "heading": "Research control center"
+    },
+    {
+      "nav": "Acceptance items",
+      "heading": "Research control center"
+    },
+    {
+      "nav": "Operating modes",
+      "heading": "Research control center"
+    },
+    {
+      "nav": "Experiments",
+      "heading": "Research control center"
+    },
+    {
+      "nav": "System",
+      "heading": "Research control center"
+    }
+  ],
+  "desktop": [
+    1440,
+    1050
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "mobile_overflow": false,
+  "page_errors": [],
+  "non_readonly_requests": [],
+  "source_css_sha256": "350c9b171e8a524e0fe60af355bd805e82e83d99ff15dc1cd6bc8b8bb1fda3ad",
+  "live_index_sha256": "d8455e16f2828c5ca657857404941a8bb442083f7818d4256d5e6e87c1843cde",
+  "visual_review": {
+    "palette": "AOS light tokens; white sidebar and agent panel; pale teal selection",
+    "layout_and_controls": "unchanged; language then theme after brand",
+    "typography_and_copy": "unchanged; dark readable secondary actions",
+    "mobile": "390x844 no horizontal overflow",
+    "dark": "existing palette preserved",
+    "method": "Playwright screenshots visually inspected; browser plugin unavailable"
+  }
+}

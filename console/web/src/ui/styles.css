@@ -269,6 +269,48 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .language-switch button:hover, .theme-switch button:hover { border-color: var(--teal); }
 @media (max-width: 640px) { .app-topbar { gap: 10px; } .language-switch { margin-left: auto; } }
 
+/* Light mode uses AOS light surfaces throughout, including navigation and status. */
+:root:not([data-theme=dark]) {
+  --sidebar: #fff;
+  --shell-line: #cbd5df;
+}
+:root:not([data-theme=dark]) .nav-button { color: var(--text); }
+:root:not([data-theme=dark]) .nav-button .icon,
+:root:not([data-theme=dark]) .side-footer { color: var(--muted); }
+:root:not([data-theme=dark]) .nav-button:hover,
+:root:not([data-theme=dark]) .nav-button.active {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+:root:not([data-theme=dark]) .nav-button.active { border-color: var(--teal); }
+:root:not([data-theme=dark]) .nav-button.active .icon { color: var(--teal); }
+:root:not([data-theme=dark]) .agent-status {
+  --text: #0b1f3a;
+  --muted: #46566b;
+  --line: #cbd5df;
+  --teal: #087b80;
+  --teal-dark: #065c60;
+  --teal-soft: #edf8f8;
+  background: #fff;
+  border-color: var(--line);
+}
+:root:not([data-theme=dark]) .agent-status .button.secondary {
+  background: #fff;
+  color: var(--text);
+  border-color: var(--line);
+}
+:root:not([data-theme=dark]) .agent-status .button.secondary:hover:not(:disabled),
+:root:not([data-theme=dark]) .button.primary:hover:not(:disabled) {
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+  border-color: var(--teal);
+}
+:root:not([data-theme=dark]) .agent-status .agent-label.available {
+  color: var(--teal);
+  background: var(--teal-soft);
+}
+:root:not([data-theme=dark]) .agent-status .agent-active-run { border-color: var(--line); }
+
 /* Dark mode uses the current AOS shared UMAY tokens and semantic status colors. */
 :root[data-theme=dark] {
   color-scheme: dark;
