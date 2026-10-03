@@ -1,0 +1,62 @@
+{
+  "schema": "scientist.runtime-policy-revocation-review.v1",
+  "observed_at": "2026-10-03T21:52:08.681223+00:00",
+  "scientist_base_commit": "41f981b6a51c10b179437f954f5f797b46b66447",
+  "source_sha256": {
+    "lab/llm/aos_gpu_control.py": "a2376146e11becaedf737770efd371611078bfd45afc0d992883a8d3bfc0ec73",
+    "lab/llm/aos_gpu_control_store.py": "6538c9d4c6eba960a0f5457eb306461d957beae1ca96b24b0430337ebb53fd3b",
+    "lab/llm/aos_gpu_service.py": "6775d0efb512f612f5b8e6b67d6ca6cde404be10cf1bd1224a63a25ea61b790e",
+    "lab/llm/gpu_scheduler.py": "c42684fe50240b91b364420f50111b4c4908a3549e8034e1d001ad22b25bcdaf",
+    "tests/aos_admission_fixture.py": "55bad35d0397bf4d0c219b1e4f48d4d59cfe45000598df74163b9c8335280259",
+    "tests/test_aos_control_store.py": "7f9c2b2a9d550ae83f3875ad614bba835adcd0a475fa5da1e76faf04d22f86d0",
+    "tests/test_aos_cleanup_authority.py": "53b6972130425ab324090058924602d61c980aa13c7cbf89281d07f086fde36b",
+    "tests/test_aos_profile_integration.py": "73e4686ba56449919f483a386f659c8c41de6ed1b220bf92801716ecd41d9f04",
+    "tests/test_aos_terminal_publication.py": "6d226623cacc3222d0b90ada049acbb7d20ea3efeab483824c748d56214703a3"
+  },
+  "aos_publication_reference": "d631f35d5545372b9aa5984e7c58d2b9db794ccc",
+  "before_fix": {
+    "regression_exit_code": 1,
+    "policy_enabled": false,
+    "original_admission_verifier": "rejected",
+    "unexpected_allocation": {
+      "owner": "aos",
+      "fencing_token": 1,
+      "phase": "activating"
+    }
+  },
+  "after_fix": {
+    "focused_passed": 137,
+    "focused_exit_code": 0,
+    "revoked_unallocated": "failed with never_admitted receipt; no allocation",
+    "other_principal_progress": "Lab can acquire without an AOS retry",
+    "allocated_revocation": "quarantine and original-target physical drain required",
+    "default_missing_verifier": "deny",
+    "same_sqlite_transaction": true,
+    "original_deadlines_after_callback": true,
+    "independent_review": "approved"
+  },
+  "full_gate": {
+    "passed": 3753,
+    "skipped": 51,
+    "deselected": 177,
+    "warnings": 603,
+    "commands": 7,
+    "exit_code": 0,
+    "receipt_sha256": "8d18867bd8245e4b7b0b8b6c40aeca334dad6f60aed54a350fdd72c9ba23053f",
+    "source_freeze_unchanged": true,
+    "unit": "scientist-revocation-gate.service",
+    "invocation_id": "2c5a0541bc6f4fa88304d85866435dac",
+    "cleanup": "inactive; MainPID=0; ExecMainStatus=0"
+  },
+  "gpu_execution": false,
+  "model_calls": 0,
+  "live_service_changes": false,
+  "vram_peak_mib": null,
+  "runtime_handoff_latency_seconds": null,
+  "limits": [
+    "CPU/private-policy and SQLite evidence only; process, clock and physical drain observations use fixtures.",
+    "Shared-launch entered-service binding and immutable physical closure remain open.",
+    "No real AOS/Scientist coordinated GPU acceptance or live deployment was performed."
+  ],
+  "tracked_source_diff_sha256": "ae76afa5eda39e07af87f770ddea46bc59cdb8e8f2a7203913135de4b8107644"
+}

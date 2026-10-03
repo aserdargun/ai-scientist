@@ -20,7 +20,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Protocol
 
-from lab.llm.aos_gpu_control_store import ControlStore
+from lab.llm.aos_gpu_control_store import ControlStore, ControlStoreError
 
 OWNERS = ("aos", "lab")
 HEARTBEAT_SECONDS = 30
@@ -627,6 +627,24 @@ class SharedGpuScheduler:
                         (ticket["owner"], ticket["request_id"]),
                     )
                 else:
+                    if ticket["owner"] == "aos" and self._control_store is not None:
+                        try:
+                            self._control_store.before_acquire(connection, ticket["request_id"])
+                        except ControlStoreError as error:
+                            if error.code not in {"unauthorized", "stale_generation"}:
+                                raise
+                            # Retire only proved unallocated work in this transaction,
+                            # before choosing either owner. A revoked head cannot
+                            # block the other principal until its queue timeout.
+                            self._control_store.no_admission(
+                                connection,
+                                ticket["request_id"],
+                                "failed",
+                                "generation_lost"
+                                if error.code == "stale_generation"
+                                else "execution_failed",
+                            )
+                            continue
                     live.append(ticket)
             if not live:
                 connection.commit()
@@ -782,6 +800,8 @@ class SharedGpuScheduler:
                     )
                     connection.commit()
                     return None
+                if lease.owner == "aos" and self._control_store is not None:
+                    self._control_store.mark_ready(connection, asdict(self._lease_from_row(state)))
                 connection.commit()
                 return self._lease_from_row(state)
             if (

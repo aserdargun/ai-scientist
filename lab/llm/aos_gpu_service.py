@@ -392,6 +392,9 @@ def serve(*, retained_channel: socket.socket | None = None) -> None:
         clock=boottime,
         boot_id=_boot_id,
         peer_verifier=lambda peer: authenticator.still_current(PeerGeneration(**peer)),
+        current_admission_verifier=lambda connection, binding: control.verify_saved_admission(
+            connection, binding
+        ),
     )
     policy_path = os.environ.get("SWAPP_GPU_CONTROL_POLICY")
     policy = ControlPolicy(

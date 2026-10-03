@@ -479,3 +479,20 @@ AOS adapter `d631f35` is acknowledged as source preparation. The existing draft
 wire stays unchanged; runtime composition still needs original consumed-launch
 entry, per-inference checks, independently observed cleanup and reciprocal
 full-source/policy review. **GPU HOLD; no services changed.**
+
+
+## Current inference-policy revocation — 2026-10-03T21:56:16.598758+00:00
+
+Scientist rechecks current policy/source/profile and original caller/broker
+bindings using the existing SQLite allocation transaction, and again at
+plan/start/go and running checks. Missing verification denies execution.
+Revoked unallocated requests terminate without blocking the other principal;
+allocated requests keep their fencing and require original-target physical
+drain. An unrelated queued readback failure cannot block active recovery.
+
+137 focused CPU checks and the complete gate (3,753 passed; seven commands
+exit 0) passed. [Behavior and limits](134-runtime-policy-revocation.md).
+The wire descriptor is unchanged. New source pins are required before any
+runtime composition; this source delivery does not update a running broker.
+Entered-service launch binding and independent physical closure remain open.
+**GPU HOLD; no AOS or Scientist service changes.**

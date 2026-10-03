@@ -3,12 +3,12 @@
 import hashlib
 import json
 from contextlib import closing
-from dataclasses import replace
+from dataclasses import asdict, replace
 from types import SimpleNamespace
 
 import pytest
 from aos_admission_fixture import output_pin
-from test_aos_control_store import CONFIG, DEPLOYMENT, PEER, PROFILE, SCHEMA, TARGET, Rig
+from test_aos_control_store import CONFIG, DEPLOYMENT, PEER, PROFILE, REQUEST, SCHEMA, TARGET, Rig
 
 from lab.llm.aos_gpu_broker import PeerGeneration
 from lab.llm.aos_gpu_control import (
@@ -111,6 +111,7 @@ def cleanup_rig(tmp_path, monkeypatch):
             server_generation=dict(server),
             clock=lambda: rig.now,
         )
+        rig.store._current_admission_verifier = control.verify_saved_admission
         return control
 
     def call(control, operation="capability", *, target=None, capability=None, caller=peer):
@@ -186,6 +187,138 @@ def test_explicit_cleanup_survives_rotation_disabled_admission_and_retired_profi
         assert connection.execute(
             "SELECT active_owner,active_token FROM gpu_turn_state"
         ).fetchone()[:] == (None, 0)
+
+
+def test_queued_policy_revoke_prevents_gpu_allocation(cleanup_rig):
+    f = cleanup_rig
+    f.rig.register()
+    f.rig.submit()
+    policy = json.loads(f.policy_path.read_bytes())
+    policy["enabled"] = False
+    f.policy_path.write_bytes(canonical(policy))
+    with pytest.raises(ControlError, match="capability_mismatch"):
+        f.rig.admission.verify_current()
+    assert f.rig.scheduler.try_acquire("aos", REQUEST) is None
+    with closing(f.rig.store._connect()) as connection:
+        assert connection.execute(
+            "SELECT active_owner,active_token FROM gpu_turn_state"
+        ).fetchone()[:] == (None, 0)
+        assert connection.execute(
+            "SELECT state,allocation_json FROM aos_control_requests WHERE request_id=?",
+            (REQUEST,),
+        ).fetchone()[:] == ("failed", None)
+    assert f.rig.status()["terminal_receipt"]["release_outcome"] == "never_admitted"
+
+
+def test_revoked_queued_head_does_not_block_lab_without_aos_retry(cleanup_rig):
+    f = cleanup_rig
+    f.rig.register()
+    f.rig.submit()
+    f.rig.scheduler.submit("lab", "lab-request", b"fixture-lab")
+    policy = json.loads(f.policy_path.read_bytes())
+    policy["enabled"] = False
+    f.policy_path.write_bytes(canonical(policy))
+    lease = f.rig.scheduler.try_acquire("lab", "lab-request")
+    assert lease is not None and lease.owner == "lab" and lease.fencing_token == 1
+    terminal = f.rig.status()["terminal_receipt"]
+    assert terminal["release_outcome"] == "never_admitted"
+    assert terminal["allocation_binding_sha256"] is None
+
+
+@pytest.mark.parametrize("stage", ["submit", "plan", "start", "go", "ready", "running"])
+def test_policy_revoke_blocks_each_execution_boundary(cleanup_rig, stage):
+    f = cleanup_rig
+    if stage == "submit":
+        f.rig.register()
+        lease = None
+    else:
+        lease = f.rig.acquire()
+        previous = {"start": ["plan"], "go": ["plan", "start"]}.get(stage, [])
+        with closing(f.rig.store._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            for prior in previous:
+                f.rig.store.launch_handoff(connection, asdict(lease), prior)
+            connection.commit()
+    policy = json.loads(f.policy_path.read_bytes())
+    policy["enabled"] = False
+    f.policy_path.write_bytes(canonical(policy))
+    with pytest.raises(ControlStoreError, match="unauthorized"):
+        if stage == "submit":
+            f.rig.submit()
+        elif stage == "running":
+            f.rig.store.check_running(asdict(lease))
+        elif stage == "ready":
+            f.rig.scheduler.mark_ready(lease)
+        else:
+            with closing(f.rig.store._connect()) as connection:
+                connection.execute("BEGIN IMMEDIATE")
+                f.rig.store.launch_handoff(connection, asdict(lease), stage)
+    with closing(f.rig.store._connect()) as connection:
+        row = connection.execute(
+            "SELECT handoff_stage,result_json,drain_json,receipt_json FROM aos_control_requests"
+        ).fetchone()
+        assert row[:] == ({"start": "plan", "go": "start"}.get(stage), None, None, None)
+        active = connection.execute(
+            "SELECT active_owner,active_token FROM gpu_turn_state"
+        ).fetchone()
+        assert active[:] == ((None, 0) if lease is None else ("aos", lease.fencing_token))
+
+
+def test_revoked_active_lease_requires_original_physical_drain(cleanup_rig):
+    f = cleanup_rig
+    lease = f.rig.acquire()
+    original = f.rig.store.cleanup_original(PEER, TARGET, PROFILE, DEPLOYMENT)
+    control = f.make(entries=[f.entry(original)], enabled=False)
+    capability = f.call(control, target=TARGET)
+    f.rig.prove_drain = False
+    with pytest.raises(ControlStoreError, match="internal_unavailable"):
+        f.rig.scheduler.recover_controlled_turn()
+    with closing(f.rig.store._connect()) as connection:
+        assert connection.execute(
+            "SELECT active_owner,active_token,phase FROM gpu_turn_state"
+        ).fetchone()[:] == ("aos", lease.fencing_token, "quarantined")
+    assert f.rig.status()["terminal_receipt"] is None
+    f.rig.prove_drain = True
+    assert f.rig.scheduler.recover_controlled_turn()
+    response = f.call(
+        control, "reconcile", target=TARGET, capability=capability["capability_sha256"]
+    )
+    terminal = response["data"]["observation"]["terminal_receipt"]
+    assert terminal["release_outcome"] == "recovered_released"
+    assert terminal["drain_evidence_sha256"] is not None
+    assert terminal["admission_binding"] == json.loads(f.rig.admission.binding_json)
+
+
+def test_orphan_policy_revoke_terminalizes_unallocated_original_without_new_caller(cleanup_rig):
+    f = cleanup_rig
+    f.rig.register()
+    f.rig.submit()
+    policy = json.loads(f.policy_path.read_bytes())
+    policy["enabled"] = False
+    f.policy_path.write_bytes(canonical(policy))
+    assert f.rig.scheduler.recover_controlled_turn()
+    terminal = f.rig.status()["terminal_receipt"]
+    assert terminal["release_outcome"] == "never_admitted"
+    assert terminal["original_principal"] == PEER
+    assert terminal["allocation_binding_sha256"] is None
+
+
+def test_capability_expiry_does_not_renew_or_revoke_original_queued_budget(cleanup_rig):
+    f = cleanup_rig
+    f.rig.register(200.0)
+    f.rig.submit()
+    f.rig.now = 161.0
+    with pytest.raises(ControlError, match="capability_mismatch"):
+        f.rig.admission.verify_current()
+    lease = f.rig.scheduler.try_acquire("aos", REQUEST)
+    assert lease is not None and lease.total_deadline <= 200.0
+    with closing(f.rig.store._connect()) as connection:
+        assert (
+            connection.execute(
+                "SELECT original_deadline FROM aos_control_requests WHERE request_id=?", (REQUEST,)
+            ).fetchone()[0]
+            == 200.0
+        )
 
 
 def test_current_capability_cannot_bypass_missing_retired_cleanup_acl(cleanup_rig):

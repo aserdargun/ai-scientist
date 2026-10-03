@@ -11,6 +11,7 @@ import json
 import os
 import re
 import socket
+import sqlite3
 import stat
 import struct
 import threading
@@ -718,6 +719,30 @@ class LabAOSControl:
 
         verify_current()
         return AdmissionGrant(binding_json, verify_current)
+
+    def verify_saved_admission(
+        self, connection: sqlite3.Connection, binding: dict[str, Any]
+    ) -> None:
+        """Check queued/allocated authority without renewing its original budget.
+
+        Stable admission pins survive capability expiry; execution still needs
+        the same live caller, broker, reviewed sources, profile and enabled policy.
+        No store API is called while the scheduler owns its transaction.
+        """
+        if not connection.in_transaction:
+            raise ControlError("internal_unavailable")
+        binding = validate_admission_binding(binding, require_output_contract=True)
+        peer = PeerGeneration(**binding["caller_generation"])
+        self._current(peer)
+        profile = self.policy.bound_profile(
+            peer, binding["profile_id"], binding["profile_pin"]["deployment_digest"]
+        )
+        if self.policy.config is None or not self.policy.config["enabled"]:
+            raise ControlError("unauthorized")
+        if self._binding(peer, profile) != binding:
+            raise ControlError("capability_mismatch")
+        self._current(peer)
+        self.policy.verify_policy_hash()
 
     def _control_authority(
         self,

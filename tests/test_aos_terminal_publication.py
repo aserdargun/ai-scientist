@@ -11,7 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from aos_admission_fixture import BOOT, grant_for, output_pin
+from aos_admission_fixture import BOOT, fixture_current_admission, grant_for, output_pin
 
 from lab.llm import aos_gpu_executor
 from lab.llm.aos_gpu_broker import PeerGeneration, TurnReceipt
@@ -40,9 +40,7 @@ def _bind_fixture_child(p, lease, directory):
                 lease.fencing_token,
                 p.profile.profile_id,
                 p.profile.deployment_digest,
-                hashlib.sha256(
-                    aos_gpu_executor._profile_payload(p.profile, p.payload)
-                ).hexdigest(),
+                hashlib.sha256(aos_gpu_executor._profile_payload(p.profile, p.payload)).hexdigest(),
                 p.result.unit,
                 "9" * 64,
                 str(directory),
@@ -82,6 +80,7 @@ def publication(tmp_path, monkeypatch):
         clock=lambda: 100.0,
         boot_id=lambda: peer.boot_id,
         peer_verifier=lambda actual: actual == asdict(peer),
+        current_admission_verifier=fixture_current_admission,
     )
     pin = output_pin()
     contract = load_contract(

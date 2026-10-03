@@ -39,3 +39,4 @@ ayrı izlenir.
 - [Hypothetical API cost and coverage](ai-scientist/131-api-cost-summary.md)
 
 - [Shared desktop launch: Scientist reciprocal proposal](ai-scientist/133-shared-launch-response.md)
+- [Runtime policy revocation and cleanup boundaries](ai-scientist/134-runtime-policy-revocation.md)

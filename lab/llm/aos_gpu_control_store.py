@@ -48,6 +48,7 @@ CLEANUP_GRANT_RESERVE = 8
 CONTROL_REFRESH_SECONDS = 60
 CONTROL_DRAIN_SECONDS = 30
 CONTROL_RECOVERY_MARGIN = 2
+CURRENT_ADMISSION_SECONDS = 3.0
 MAX_TARGET_REFRESHES = 40
 CLEANUP_OPS = frozenset({"status", "cancel", "reconcile"})
 
@@ -282,11 +283,14 @@ class ControlStore:
         clock: Callable[[], float] = _boottime,
         boot_id: Callable[[], str] = _boot_id,
         peer_verifier: Callable[[dict[str, Any]], bool] | None = None,
+        current_admission_verifier: Callable[[sqlite3.Connection, dict[str, Any]], None]
+        | None = None,
     ) -> None:
         self.database = Path(database)
         self._clock = clock
         self._boot_id = boot_id
         self._peer_verifier = peer_verifier
+        self._current_admission_verifier = current_admission_verifier
         parent = self.database.parent.lstat()
         if (
             not stat.S_ISDIR(parent.st_mode)
@@ -438,6 +442,57 @@ class ControlStore:
         if self._peer_verifier is not None and not self._peer_verifier(peer):
             raise ControlStoreError("stale_generation")
         return peer
+
+    def _current_admission(
+        self,
+        connection: sqlite3.Connection,
+        row: sqlite3.Row,
+        *,
+        phase_deadline: float | None = None,
+    ) -> None:
+        """Recheck trusted live authority using the caller's existing transaction.
+
+        Missing composition denies execution. Cleanup and drain evidence never
+        use this gate: losing admission cannot prove physical release.
+        """
+        if not connection.in_transaction:
+            raise ControlStoreError("internal_unavailable")
+        binding = self._saved_binding(row, require_output_contract=True)
+        if self._current_admission_verifier is None:
+            raise ControlStoreError("unauthorized")
+        outer = control_deadline.get()
+        deadline = time.monotonic() + CURRENT_ADMISSION_SECONDS
+        if outer is not None:
+            deadline = min(deadline, outer)
+        token = control_deadline.set(deadline)
+        try:
+            _remaining()
+            self._current_admission_verifier(connection, binding)
+            _remaining()
+            deadlines = [row["original_deadline"]]
+            if row["state"] == "queued" and row["queue_deadline"] is not None:
+                deadlines.append(row["queue_deadline"])
+            if phase_deadline is not None:
+                deadlines.append(phase_deadline)
+            if row["original_boot_id"] != self._boot_id() or self._now() >= min(deadlines):
+                raise ControlStoreError("deadline_exceeded")
+        except ControlStoreError:
+            raise
+        except Exception as error:
+            code = getattr(error, "code", None)
+            if code in {"stale_generation", "deadline_exceeded", "busy"}:
+                raise ControlStoreError(code) from error
+            if code in {
+                "unauthorized",
+                "capability_mismatch",
+                "profile_mismatch",
+                "deployment_mismatch",
+                "invalid_frame",
+            }:
+                raise ControlStoreError("unauthorized") from error
+            raise ControlStoreError("internal_unavailable") from error
+        finally:
+            control_deadline.reset(token)
 
     def _target(self, peer: Mapping[str, Any], target: Mapping[str, Any]) -> None:
         if (
@@ -2278,6 +2333,18 @@ class ControlStore:
                     if exc.code != "stale_generation":
                         raise
                     reason = "generation_lost"
+            if reason is None:
+                try:
+                    self._current_admission(connection, row)
+                except ControlStoreError as exc:
+                    if exc.code not in {"unauthorized", "stale_generation"}:
+                        # An unavailable queued authority supplies no terminal
+                        # evidence and must not prevent active physical recovery.
+                        continue
+                    reason = (
+                        "generation_lost" if exc.code == "stale_generation" else "execution_failed"
+                    )
+                    state = "failed"
             if reason is not None:
                 self.no_admission(connection, row["request_id"], state, reason)
                 recovered += 1
@@ -2307,6 +2374,7 @@ class ControlStore:
             raise ControlStoreError("stale_generation")
         if row["original_boot_id"] != self._boot_id() or self._now() >= row["original_deadline"]:
             raise ControlStoreError("deadline_exceeded")
+        self._current_admission(connection, row)
         queue_deadline = (
             min(queue_deadline, float(row["original_deadline"]))
             if row["queue_deadline"] is None
@@ -2328,6 +2396,7 @@ class ControlStore:
         self._peer(json.loads(row["principal_json"]))
         if row["original_boot_id"] != self._boot_id() or self._now() >= row["original_deadline"]:
             raise ControlStoreError("deadline_exceeded")
+        self._current_admission(connection, row)
         return float(row["original_deadline"])
 
     def bind_allocation(self, connection: sqlite3.Connection, lease: Mapping[str, Any]) -> None:
@@ -2336,6 +2405,13 @@ class ControlStore:
             raise ControlCanceled()
         self._saved_binding(row, require_output_contract=True)
         self._require_reservation(connection, lease["request_id"])
+        self._current_admission(
+            connection,
+            row,
+            phase_deadline=min(
+                lease["activation_deadline"], lease["total_deadline"], lease["heartbeat_deadline"]
+            ),
+        )
         binding = {
             "lease": dict(lease),
             "admission_binding_sha256": row["admission_binding_sha256"],
@@ -2420,6 +2496,11 @@ class ControlStore:
         ):
             raise ControlStoreError("deadline_exceeded")
         self._peer(json.loads(row["principal_json"]))
+        self._current_admission(
+            connection,
+            row,
+            phase_deadline=min(phase_deadline, live["total_deadline"], live["heartbeat_deadline"]),
+        )
         return row
 
     def mark_ready(self, connection: sqlite3.Connection, lease: Mapping[str, Any]) -> None:
@@ -2451,6 +2532,12 @@ class ControlStore:
         except ControlStoreError as exc:
             if exc.code != "stale_generation":
                 raise
+            recover = True
+        try:
+            self._current_admission(connection, row)
+        except ControlStoreError:
+            # Lost or unavailable admission requests quarantine and the existing
+            # trusted physical drain. It never supplies release evidence itself.
             recover = True
         return recover
 

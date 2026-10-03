@@ -11,7 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from aos_admission_fixture import BOOT, grant_for
+from aos_admission_fixture import BOOT, fixture_current_admission, grant_for
 from test_aos_profile_output import DIRECTORY, GENERATION, bonsai, decider
 
 from lab.llm import aos_gpu_executor
@@ -76,6 +76,7 @@ def wired(tmp_path, monkeypatch, contract):
         clock=lambda: 100.0,
         boot_id=lambda: BOOT,
         peer_verifier=lambda value: value == asdict(peer),
+        current_admission_verifier=fixture_current_admission,
     )
     executor = BrokerOwnedTurnExecutor(
         database,

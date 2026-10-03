@@ -5,10 +5,21 @@ import json
 from pathlib import Path
 
 from lab.llm.aos_gpu_control import CONTROL_SCHEMA_HASH, INFER_SCHEMA_HASH
-from lab.llm.aos_gpu_control_store import TERMINAL_SCHEMA_HASH, AdmissionGrant, canonical
+from lab.llm.aos_gpu_control_store import (
+    TERMINAL_SCHEMA_HASH,
+    AdmissionGrant,
+    canonical,
+    validate_admission_binding,
+)
 from lab.llm.aos_profile_output import load_contract
 
 BOOT = "00000000-0000-0000-0000-000000000001"
+
+
+def fixture_current_admission(connection, binding):
+    """Synthetic store/runtime fixtures only; supplies no live policy evidence."""
+    assert connection.in_transaction
+    validate_admission_binding(binding, require_output_contract=True)
 
 
 def output_pin():

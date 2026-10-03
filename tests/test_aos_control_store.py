@@ -6,13 +6,15 @@ Source prepared without running tests. The coordinated root owns execution.
 from __future__ import annotations
 
 import hashlib
+import json
+import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from dataclasses import asdict, replace
 from threading import Barrier
 
 import pytest
-from aos_admission_fixture import BOOT, grant_for
+from aos_admission_fixture import BOOT, fixture_current_admission, grant_for
 
 from lab.llm.aos_gpu_control_store import (
     ControlCanceled,
@@ -88,6 +90,7 @@ class Rig:
             clock=lambda: self.now,
             boot_id=lambda: self.boot,
             peer_verifier=lambda peer: peer == PEER,
+            current_admission_verifier=fixture_current_admission,
         )
         self.scheduler = SharedGpuScheduler(
             self.database,
@@ -165,6 +168,109 @@ def test_unknown_does_not_prove_no_admission(rig):
     assert status["state"] == "unknown"
     assert status["terminal_receipt"] is None
     assert status["cancel_requested"] is False
+
+
+def test_missing_current_authority_denies_queue_but_preserves_cancel(rig):
+    rig.register()
+    rig.store._current_admission_verifier = None
+    with pytest.raises(ControlStoreError, match="unauthorized"):
+        rig.submit()
+    assert rig.cancel()["terminal_receipt"]["release_outcome"] == "never_admitted"
+
+
+def test_current_authority_uses_existing_transaction_and_restores_outer_deadline(rig, monkeypatch):
+    rig.register()
+    expected = json.loads(rig.admission.binding_json)
+    observed = []
+    outer = time.monotonic() + 10.0
+
+    def verify(connection, binding):
+        assert connection.in_transaction and binding == expected
+        assert control_deadline.get() < outer
+        assert (
+            connection.execute("SELECT original_deadline FROM aos_control_requests").fetchone()[0]
+            == 200.0
+        )
+        observed.append(connection)
+
+    rig.store._current_admission_verifier = verify
+    monkeypatch.setattr(
+        rig.store, "_connect", lambda: pytest.fail("Current authority opened a nested connection")
+    )
+    token = control_deadline.set(outer)
+    try:
+        rig.submit()
+        assert rig.scheduler.try_acquire("aos", REQUEST) is not None
+        assert control_deadline.get() == outer and len(observed) >= 3
+    finally:
+        control_deadline.reset(token)
+
+
+@pytest.mark.parametrize("boundary", ["acquire", "bind", "running"])
+def test_slow_current_authority_cannot_cross_original_or_phase_deadline(rig, boundary):
+    if boundary in {"acquire", "bind"}:
+        rig.register(105.0 if boundary == "acquire" else 200.0)
+        rig.submit()
+        lease = None
+        expires = 105.0 if boundary == "acquire" else 110.0
+    else:
+        lease = rig.acquire()
+        expires = lease.activation_deadline
+
+    def verify(_connection, _binding):
+        if (
+            boundary != "bind"
+            or _connection.execute("SELECT active_owner FROM gpu_turn_state").fetchone()[0] == "aos"
+        ):
+            rig.now = expires
+
+    rig.store._current_admission_verifier = verify
+    with pytest.raises(ControlStoreError, match="deadline_exceeded"):
+        if lease is None:
+            rig.scheduler.try_acquire("aos", REQUEST)
+        else:
+            rig.store.check_running(asdict(lease))
+    assert control_deadline.get() is None
+    with closing(rig.store._connect()) as connection:
+        assert connection.execute(
+            "SELECT active_owner,active_token FROM gpu_turn_state"
+        ).fetchone()[:] == ((None, 0) if lease is None else ("aos", lease.fencing_token))
+
+
+def test_unavailable_queued_authority_cannot_block_active_physical_recovery(rig):
+    lease = rig.acquire()
+    queued = "9" * 32
+    rig.store.register_intent(
+        PEER,
+        queued,
+        REQUEST_HASH,
+        PROFILE,
+        DEPLOYMENT,
+        CONFIG,
+        SCHEMA,
+        200.0,
+        BUDGET,
+        admission=rig.admission,
+    )
+    rig.scheduler.submit("aos", queued, PAYLOAD)
+
+    def unavailable(_connection, _binding):
+        raise ControlStoreError("internal_unavailable")
+
+    rig.store._current_admission_verifier = unavailable
+    rig.prove_drain = False
+    with pytest.raises(ControlStoreError, match="internal_unavailable"):
+        rig.scheduler.recover_controlled_turn()
+    with closing(rig.store._connect()) as connection:
+        assert connection.execute(
+            "SELECT active_owner,active_token,phase FROM gpu_turn_state"
+        ).fetchone()[:] == ("aos", lease.fencing_token, "quarantined")
+        assert connection.execute(
+            "SELECT state,receipt_json FROM aos_control_requests WHERE request_id=?", (queued,)
+        ).fetchone()[:] == ("queued", None)
+    rig.prove_drain = True
+    assert rig.scheduler.recover_controlled_turn()
+    assert rig.status()["terminal_receipt"]["drain_evidence_sha256"] is not None
 
 
 def test_cancel_before_intent_is_durable_and_prevents_late_submit(rig):
