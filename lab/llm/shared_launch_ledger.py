@@ -5,8 +5,9 @@ Trusted composition must authenticate the issuer and supply a bounded verifier
 that checks current policy, recursive source/config pins, original generations,
 prerequisites and unit absence inside each transaction. A hash is not authority.
 Claim additionally verifies an already durable AOS intent, before any OS spawn.
-The spawn gap and actual post-spawn caller guard remain integration obligations;
-neither verify nor a status response grants model/backend or cleanup rights.
+Entry binds one observed service after consumption. Actual transport/composition
+and physical cleanup remain integration obligations; a status response grants
+no model/backend or cleanup rights.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ SHA = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 ID = Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")]
 BOOT = Annotated[str, Field(pattern=r"^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$")]
 UINT = Annotated[int, Field(ge=0, le=2**53 - 1)]
-Operation = Literal["issue", "verify", "claim", "status", "revoke"]
+Operation = Literal["issue", "verify", "claim", "enter", "verify_runtime", "status", "revoke"]
 
 
 class LaunchLedgerError(RuntimeError):
@@ -62,6 +63,13 @@ class ServiceGeneration(ProcessGeneration):
         """Reject relative or traversing cgroups."""
         _absolute(self.control_group)
         return self
+
+
+class EnteredServiceGeneration(ServiceGeneration):
+    """Actual entered MainPID and its independently observed Linux pid namespace."""
+
+    pid_namespace_device: UINT
+    pid_namespace_inode: Annotated[int, Field(ge=1, le=2**53 - 1)]
 
 
 class LaunchPins(_Strict):
@@ -167,8 +175,9 @@ class CurrentVerifier(Protocol):
     ) -> None:
         """Raise on denial; authenticate real current identities, never wire assertions.
 
-        Issue/verify/claim require fresh admission policy and source checks.
-        Claim also checks AOS intent durability and prelaunch exclusion. Status
+        Issue/verify/claim/enter/runtime require fresh policy and source checks.
+        Claim also checks AOS intent durability and prelaunch exclusion; entry
+        and runtime use ongoing prerequisites and the actual entered service. Status
         and revoke require separate original-target read/control authority even
         after expiry, reboot or policy disablement. Cleanup rights are external.
         The connection is for bounded read checks, not commit/rollback or writes.
@@ -233,6 +242,24 @@ class SharedLaunchLedger:
 
     @contextmanager
     def _transaction(self, *, write: bool) -> Iterator[sqlite3.Connection]:
+        self._private_database()
+        connection = sqlite3.connect(
+            self.database.as_uri() + "?mode=rw", uri=True, timeout=1, isolation_level=None
+        )
+        connection.row_factory = sqlite3.Row
+        try:
+            if not write:
+                connection.execute("PRAGMA query_only=ON")
+            connection.execute("BEGIN IMMEDIATE" if write else "BEGIN")
+            self._existing_transaction(connection)
+            yield connection
+            connection.commit()
+        except sqlite3.Error as exc:
+            raise LaunchLedgerError("ledger_unavailable") from exc
+        finally:
+            connection.close()
+
+    def _private_database(self) -> None:
         if not self._enabled or self._verifier is None:
             raise LaunchLedgerError("draft_disabled")
         if self.database.resolve() != self.database:
@@ -247,27 +274,21 @@ class SharedLaunchLedger:
                 or not (stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode))
             ):
                 raise LaunchLedgerError("private_arbiter_required")
-        connection = sqlite3.connect(
-            self.database.as_uri() + "?mode=rw", uri=True, timeout=1, isolation_level=None
-        )
-        connection.row_factory = sqlite3.Row
-        try:
-            if not write:
-                connection.execute("PRAGMA query_only=ON")
-            connection.execute("BEGIN IMMEDIATE" if write else "BEGIN")
-            if (
-                connection.execute(
-                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='gpu_turn_state'"
-                ).fetchone()
-                is None
-            ):
-                raise LaunchLedgerError("canonical_arbiter_required")
-            yield connection
-            connection.commit()
-        except sqlite3.Error as exc:
-            raise LaunchLedgerError("ledger_unavailable") from exc
-        finally:
-            connection.close()
+
+    def _existing_transaction(self, connection: sqlite3.Connection) -> None:
+        self._private_database()
+        if not connection.in_transaction or connection.row_factory is not sqlite3.Row:
+            raise LaunchLedgerError("existing_transaction_required")
+        databases = connection.execute("PRAGMA database_list").fetchall()
+        if not any(row[1] == "main" and row[2] == str(self.database) for row in databases):
+            raise LaunchLedgerError("canonical_arbiter_required")
+        if (
+            connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='gpu_turn_state'"
+            ).fetchone()
+            is None
+        ):
+            raise LaunchLedgerError("canonical_arbiter_required")
 
     def initialize_draft_schema(self) -> None:
         """Explicitly initialize only this draft table in an existing arbiter."""
@@ -286,6 +307,23 @@ class SharedLaunchLedger:
                 CHECK((intent_json IS NULL) = (consumed_boottime IS NULL)),
                 CHECK((consumed_boottime IS NOT NULL) = (cleanup_required=1))
             )""")
+            connection.execute("""CREATE TABLE IF NOT EXISTS aos_shared_launch_entries_draft_v1 (
+                request_id TEXT PRIMARY KEY REFERENCES aos_shared_launch_draft_v1(request_id),
+                binding_sha256 TEXT NOT NULL CHECK(length(binding_sha256)=64),
+                intent_sha256 TEXT NOT NULL CHECK(length(intent_sha256)=64),
+                entered_sha256 TEXT NOT NULL UNIQUE CHECK(length(entered_sha256)=64),
+                entered_json TEXT NOT NULL,
+                entered_boottime REAL NOT NULL
+            )""")
+            for action in ("UPDATE", "DELETE"):
+                connection.execute(
+                    "CREATE TRIGGER IF NOT EXISTS aos_shared_launch_entry_"
+                    + action.lower()
+                    + " BEFORE "
+                    + action
+                    + " ON aos_shared_launch_entries_draft_v1 "
+                    "BEGIN SELECT RAISE(ABORT, 'immutable_launch_entry'); END"
+                )
 
     def _current(
         self,
@@ -450,3 +488,100 @@ class SharedLaunchLedger:
             if row is None:
                 raise LaunchLedgerError("ledger_corrupt")
             return self._status(row, binding)
+
+    def _entered_row(
+        self, connection: sqlite3.Connection, binding: LaunchBinding
+    ) -> tuple[sqlite3.Row, DurableLaunchIntent]:
+        row = self._row(connection, binding)
+        if (
+            row is None
+            or row["state"] != "consumed"
+            or row["consumed_boottime"] is None
+            or not row["cleanup_required"]
+            or row["intent_json"] is None
+        ):
+            raise LaunchLedgerError("entry_admission_closed")
+        intent = DurableLaunchIntent.model_validate_json(row["intent_json"], strict=True)
+        if (
+            intent.request_id != binding.request_id
+            or intent.binding_sha256 != binding.sha256()
+            or canonical(intent.model_dump(mode="json")) != row["intent_json"]
+        ):
+            raise LaunchLedgerError("intent_conflict")
+        return row, intent
+
+    @staticmethod
+    def _entered_scope(binding: LaunchBinding, entered: EnteredServiceGeneration) -> None:
+        if type(entered) is not EnteredServiceGeneration or (
+            entered.uid,
+            entered.boot_id,
+            entered.unit,
+        ) != (binding.uid, binding.boot_id, binding.unit):
+            raise LaunchLedgerError("entered_generation_conflict")
+
+    def enter(
+        self, binding: LaunchBinding, intent_sha256: str, entered: EnteredServiceGeneration
+    ) -> LaunchStatus:
+        """Append one actual service generation; duplicate entry never permits spawn."""
+        self._entered_scope(binding, entered)
+        with self._transaction(write=True) as connection:
+            row, intent = self._entered_row(connection, binding)
+            if intent.intent_sha256 != intent_sha256:
+                raise LaunchLedgerError("intent_conflict")
+            prior = connection.execute(
+                "SELECT * FROM aos_shared_launch_entries_draft_v1 WHERE request_id=?",
+                (binding.request_id,),
+            ).fetchone()
+            encoded = canonical(entered.model_dump(mode="json"))
+            checksum = digest(entered.model_dump(mode="json"))
+            if prior is not None and (
+                prior["binding_sha256"] != binding.sha256()
+                or prior["intent_sha256"] != intent_sha256
+                or prior["entered_sha256"] != checksum
+                or prior["entered_json"] != encoded
+            ):
+                raise LaunchLedgerError("entered_generation_conflict")
+            self._current(connection, binding, "enter", intent)
+            entered_at = self._live(binding)
+            if prior is None:
+                connection.execute(
+                    "INSERT INTO aos_shared_launch_entries_draft_v1 "
+                    "(request_id,binding_sha256,intent_sha256,entered_sha256,entered_json,"
+                    "entered_boottime) VALUES(?,?,?,?,?,?)",
+                    (
+                        binding.request_id,
+                        binding.sha256(),
+                        intent_sha256,
+                        checksum,
+                        encoded,
+                        entered_at,
+                    ),
+                )
+            return self._status(row, binding)
+
+    def verify_runtime(
+        self,
+        connection: sqlite3.Connection,
+        binding: LaunchBinding,
+        entered: EnteredServiceGeneration,
+    ) -> LaunchStatus:
+        """Read the original entry in an existing transaction; never renew or adopt."""
+        self._existing_transaction(connection)
+        self._entered_scope(binding, entered)
+        row, intent = self._entered_row(connection, binding)
+        prior = connection.execute(
+            "SELECT * FROM aos_shared_launch_entries_draft_v1 WHERE request_id=?",
+            (binding.request_id,),
+        ).fetchone()
+        if prior is None:
+            raise LaunchLedgerError("entry_required")
+        if (
+            prior["binding_sha256"] != binding.sha256()
+            or prior["intent_sha256"] != intent.intent_sha256
+            or prior["entered_sha256"] != digest(entered.model_dump(mode="json"))
+            or prior["entered_json"] != canonical(entered.model_dump(mode="json"))
+        ):
+            raise LaunchLedgerError("entered_generation_conflict")
+        self._current(connection, binding, "verify_runtime", intent)
+        self._live(binding)
+        return self._status(row, binding)

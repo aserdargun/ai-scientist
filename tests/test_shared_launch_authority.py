@@ -10,13 +10,17 @@ import subprocess
 import sys
 import threading
 import time
+from dataclasses import asdict
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from aos_admission_fixture import binding_for, output_pin
 from test_shared_launch_ledger import binding
 
 from lab.llm.aos_gpu_control import ControlError, ControlPolicy
 from lab.llm.aos_gpu_control_store import canonical, digest
+from lab.llm.aos_gpu_executor import SystemdSocketPeerAuthenticator
 from lab.llm.gpu_scheduler import SharedGpuScheduler, _process_cgroup
 from lab.llm.shared_launch_authority import (
     LaunchPolicyDocument,
@@ -47,11 +51,15 @@ def directory_identity(path):
 
 
 class Rig:
-    def __init__(self, tmp_path, issuer=None, contract_sha256=None):
+    def __init__(self, tmp_path, issuer=None, contract_sha256=None, manager=None):
         self.broker_live = True
         self.native_safe = True
         self.base = tmp_path
         self.process = process_generation(os.getpid())
+        self.service_main = self.process
+        self.service_invocation = "e" * 32
+        self.service_members = {self.process.pid}
+        self.phases = []
         self.now = time.clock_gettime(time.CLOCK_BOOTTIME)
         self.aos = tmp_path / "aos"
         self.scientist = tmp_path / "scientist"
@@ -71,20 +79,22 @@ class Rig:
         python_files = {str(self.python): hashlib.sha256(self.python.read_bytes()).hexdigest()}
         config_files = {str(self.launch_input): launch_input_sha}
         profile = SimpleNamespace(
+            profile_id="aos.decider.turn.v1",
             deployment_digest="a" * 64,
             manifest_sha256="b" * 64,
             config_sha256="c" * 64,
             response_schema_sha256="d" * 64,
-            output_contract=None,
+            output_contract=output_pin(),
             source_root=self.aos,
         )
+        self.profile = profile
         config = {
             "enabled": True,
             "source_files": {
                 "aos": {"source.py": source_sha},
                 "scientist": {"scripts/aos_native_launch.py": launcher_sha},
             },
-            "profile_pins": {"fixture": ControlPolicy._pin(profile)},
+            "profile_pins": {profile.profile_id: ControlPolicy._pin(profile)},
         }
         self.control_path = tmp_path / "control-policy.json"
         write(self.control_path, config)
@@ -159,7 +169,7 @@ class Rig:
             **{
                 **data,
                 "issuer": (issuer or self.process).model_dump(),
-                "manager": self.process.model_dump(),
+                "manager": (manager or self.process).model_dump(),
                 "boot_id": self.process.boot_id,
                 "broker": {
                     **self.process.model_dump(),
@@ -224,6 +234,7 @@ class Rig:
             contract_sha256=self.grant.pins.contract_sha256,
             broker_current=lambda *_: self.broker_live,
             prerequisites=self.prerequisite,
+            authenticator_factory=self.authenticator,
             draft_enabled=True,
         )
         self.authority.ledger.initialize_draft_schema()
@@ -242,8 +253,49 @@ class Rig:
         self.intent_path = self.session / "shared-launch-intent.json"
 
     def prerequisite(self, *_):
+        self.phases.append(_[1])
         if not self.native_safe:
             raise LaunchLedgerError("fixture_native_unsafe")
+
+    def authenticator(self, unit):
+        """Real proc/peer checks, with explicit CPU systemd MainPID/cgroup observations."""
+        authenticator = SystemdSocketPeerAuthenticator(
+            unit, units=SimpleNamespace(cgroup_pids=lambda _: self.service_members)
+        )
+        authenticator._parent = lambda: (
+            _process_cgroup(self.service_main.pid),
+            self.service_invocation,
+            self.service_main.pid,
+            self.service_main.start_ticks,
+        )
+        return authenticator
+
+    def consume(self):
+        self.call("issue", peer=self.grant.issuer)
+        sha = write(self.intent_path, self.intent)
+        assert self.call("claim", intent_sha256=sha, peer=self.grant.manager)["consumed_now"]
+        return sha
+
+    def admission(self, pid=None):
+        peer = self.authenticator(self.grant.unit).authenticate(
+            pid or self.process.pid, os.getuid()
+        )
+        value = binding_for(
+            asdict(peer),
+            self.profile.profile_id,
+            self.profile.deployment_digest,
+            self.profile.config_sha256,
+            self.profile.response_schema_sha256,
+        )
+        value.update(
+            server_generation=self.grant.broker.model_dump(mode="json"),
+            policy_sha256=self.control.sha256,
+            source_fingerprints={
+                key: digest(files) for key, files in self.control.config["source_files"].items()
+            },
+            profile_pin=ControlPolicy._pin(self.profile),
+        )
+        return value
 
     def call(self, operation, *, intent_sha256=None, peer=None):
         peer = peer or self.process
@@ -488,3 +540,204 @@ def test_actual_socket_authority_policy_and_ledger_composition(tmp_path):
         worker.join(5)
         assert not worker.is_alive()
     assert not errors
+
+
+def test_actual_mainpid_entry_and_runtime_allow_runtime_files_but_keep_original_facts(rig):
+    sha = rig.consume()
+    with sqlite3.connect(rig.database) as connection:
+        original = connection.execute("SELECT * FROM aos_shared_launch_draft_v1").fetchall()
+    (rig.workspace / "runtime-file").write_text("CPU fixture runtime artifact")
+    (rig.session / "trajectory.sqlite3").write_bytes(b"CPU fixture database")
+    result = rig.call("enter", intent_sha256=sha)
+    assert result["consumed_now"] is False
+    assert set(result["status"]) == {
+        "request_id",
+        "binding_sha256",
+        "state",
+        "consumed",
+        "cleanup_required",
+        "expired",
+    }
+    assert result["status"]["state"] == "consumed"
+    assert result["status"]["consumed"] and result["status"]["cleanup_required"]
+    assert not result["status"]["expired"]
+    assert rig.call("enter", intent_sha256=sha) == result
+    assert rig.call("verify_runtime", intent_sha256=sha) == result
+    assert {"enter", "verify_runtime"} <= set(rig.phases)
+    with sqlite3.connect(rig.database) as connection:
+        assert connection.execute("SELECT * FROM aos_shared_launch_draft_v1").fetchall() == original
+        assert (
+            connection.execute(
+                "SELECT COUNT(*) FROM aos_shared_launch_entries_draft_v1"
+            ).fetchone()[0]
+            == 1
+        )
+        assert connection.execute("SELECT active_token FROM gpu_turn_state").fetchone()[0] == 0
+
+
+def test_missing_entry_denies_runtime_and_existing_transaction_does_not_open_another(
+    rig, monkeypatch
+):
+    sha = rig.consume()
+    admission = rig.admission()
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("BEGIN IMMEDIATE")
+        with pytest.raises(LaunchLedgerError, match="entry_required"):
+            rig.authority.verify_runtime(connection, admission, deadline=rig.now + 4)
+        connection.rollback()
+    rig.call("enter", intent_sha256=sha)
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("BEGIN IMMEDIATE")
+        monkeypatch.setattr(
+            rig.authority.ledger,
+            "_transaction",
+            lambda **_: pytest.fail("Nested ledger transaction"),
+        )
+        before = connection.total_changes
+        assert rig.authority.verify_runtime(connection, admission, deadline=rig.now + 4) is None
+        assert connection.in_transaction and connection.total_changes == before
+
+
+def test_runtime_authenticates_service_descendant_but_wire_entry_requires_mainpid(rig):
+    sha = rig.consume()
+    rig.call("enter", intent_sha256=sha)
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(20)"])
+    try:
+        descendant = process_generation(child.pid)
+        rig.service_members.add(child.pid)
+        with pytest.raises(LaunchLedgerError, match="service_mainpid_required"):
+            rig.call("enter", intent_sha256=sha, peer=descendant)
+        with sqlite3.connect(rig.database) as connection:
+            connection.row_factory = sqlite3.Row
+            connection.execute("BEGIN IMMEDIATE")
+            rig.authority.verify_runtime(
+                connection,
+                rig.admission(child.pid),
+                deadline=time.clock_gettime(time.CLOCK_BOOTTIME) + 4,
+            )
+    finally:
+        child.terminate()
+        child.wait(timeout=2)
+
+
+def test_exited_manager_does_not_block_service_entry_or_runtime(tmp_path):
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(20)"])
+    try:
+        manager = process_generation(child.pid)
+        rig = Rig(tmp_path, manager=manager)
+        sha = rig.consume()
+    finally:
+        child.terminate()
+        child.wait(timeout=2)
+    assert rig.call("enter", intent_sha256=sha)["status"]["consumed"]
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("BEGIN IMMEDIATE")
+        rig.authority.verify_runtime(connection, rig.admission(), deadline=rig.now + 4)
+
+
+@pytest.mark.parametrize("change", ["namespace", "invocation", "policy", "expired"])
+def test_entry_final_identity_policy_and_original_expiry_checks_roll_back(rig, monkeypatch, change):
+    sha = rig.consume()
+    original = rig.authority._prerequisites
+
+    def slow(binding, operation, deadline):
+        original(binding, operation, deadline)
+        if operation != "enter":
+            return
+        if change == "namespace":
+            info = Path(f"/proc/{os.getpid()}/ns/pid").stat()
+            monkeypatch.setattr(
+                "lab.llm.shared_launch_authority._pid_namespace",
+                lambda _: (info.st_dev, info.st_ino + 1),
+            )
+        elif change == "invocation":
+            rig.service_invocation = "f" * 32
+        elif change == "policy":
+            write(rig.control_path, {**rig.control.config, "enabled": False})
+        else:
+            rig.authority.ledger._clock = lambda: rig.grant.expires_boottime
+
+    rig.authority._prerequisites = slow
+    with pytest.raises((LaunchLedgerError, ControlError)):
+        rig.call("enter", intent_sha256=sha)
+    with sqlite3.connect(rig.database) as connection:
+        assert (
+            connection.execute(
+                "SELECT COUNT(*) FROM aos_shared_launch_entries_draft_v1"
+            ).fetchone()[0]
+            == 0
+        )
+        state = connection.execute(
+            "SELECT state,cleanup_required FROM aos_shared_launch_draft_v1"
+        ).fetchone()
+        assert state == ("consumed", 1)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "policy",
+        "launch-policy",
+        "source",
+        "workspace",
+        "invocation",
+        "broker",
+        "namespace",
+        "revoked",
+        "expired",
+        "missing-prerequisites",
+        "profile",
+    ],
+)
+def test_runtime_rechecks_original_live_authority_and_preserves_cleanup(rig, monkeypatch, change):
+    sha = rig.consume()
+    rig.call("enter", intent_sha256=sha)
+    admission = rig.admission()
+    if change == "policy":
+        write(rig.control_path, {**rig.control.config, "enabled": False})
+    elif change == "launch-policy":
+        write(rig.policy_path, {**rig.policy_document, "enabled": False})
+    elif change == "source":
+        rig.source.write_text("source changed")
+    elif change == "workspace":
+        rig.workspace.rename(rig.session / "old-workspace")
+        rig.workspace.mkdir(mode=0o700)
+    elif change == "invocation":
+        rig.service_invocation = "f" * 32
+    elif change == "broker":
+        rig.broker_live = False
+    elif change == "namespace":
+        info = Path(f"/proc/{os.getpid()}/ns/pid").stat()
+        monkeypatch.setattr(
+            "lab.llm.shared_launch_authority._pid_namespace",
+            lambda _: (info.st_dev, info.st_ino + 1),
+        )
+    elif change == "revoked":
+        rig.call("revoke")
+    elif change == "expired":
+        rig.authority.ledger._clock = lambda: rig.grant.expires_boottime
+    elif change == "missing-prerequisites":
+        rig.authority._prerequisites = None
+    else:
+        admission["profile_pin"]["deployment_digest"] = "f" * 64
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("BEGIN IMMEDIATE")
+        with pytest.raises((LaunchLedgerError, ControlError)):
+            rig.authority.verify_runtime(connection, admission, deadline=rig.now + 4)
+        assert connection.in_transaction
+        assert (
+            connection.execute(
+                "SELECT cleanup_required FROM aos_shared_launch_draft_v1"
+            ).fetchone()[0]
+            == 1
+        )
+        assert (
+            connection.execute(
+                "SELECT COUNT(*) FROM aos_shared_launch_entries_draft_v1"
+            ).fetchone()[0]
+            == 1
+        )

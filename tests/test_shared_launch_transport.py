@@ -16,11 +16,12 @@ import pytest
 from test_shared_launch_ledger import Rig, intent
 
 from lab.llm import shared_launch_transport as wire
-from lab.llm.shared_launch_ledger import LaunchStatus, ServiceGeneration
+from lab.llm.shared_launch_ledger import ClaimResult, LaunchStatus, ServiceGeneration
 
 REQUEST = "1" * 32
 BINDING = "2" * 64
 INTENT = "3" * 64
+V1_SHA256 = "842fe08b2f7f7dbb1f0d0bcf000a5d3029eb4335114da800324d0e34952478f6"
 
 
 def deadline():
@@ -126,7 +127,7 @@ def exchange_client(controller, *, checker=current, serve=None):
 def request(operation="verify", **updates):
     value = {
         "schema": wire.SCHEMA,
-        "version": 1,
+        "version": wire.VERSION,
         "schema_sha256": wire.WIRE_SCHEMA_SHA256,
         "nonce": "f" * 32,
         "operation": operation,
@@ -134,7 +135,7 @@ def request(operation="verify", **updates):
         "binding_sha256": BINDING,
         "broker_generation_sha256": wire._generation_hash(broker()),
     }
-    if operation == "claim":
+    if operation in {"claim", "enter", "verify_runtime"}:
         value["intent_sha256"] = INTENT
     return {**value, **updates}
 
@@ -142,10 +143,14 @@ def request(operation="verify", **updates):
 def test_real_credentials_all_operations_and_original_deadline():
     controller = Controller()
     client, threads, errors = exchange_client(controller)
-    for operation in ("issue", "verify", "status", "claim", "revoke"):
+    for operation in ("issue", "verify", "status", "claim", "enter", "verify_runtime", "revoke"):
         original = deadline()
         result = client.request(
-            operation, REQUEST, BINDING, INTENT if operation == "claim" else None, deadline=original
+            operation,
+            REQUEST,
+            BINDING,
+            INTENT if operation in {"claim", "enter", "verify_runtime"} else None,
+            deadline=original,
         )
         assert result.consumed_now == (operation == "claim")
         context = controller.calls[-1][-1]
@@ -173,6 +178,12 @@ def test_repeated_claim_is_status_only_and_aos_callback_denies():
     "raw",
     [
         wire.encoding.canonical(request(version=True)) + b"\n",
+        wire.encoding.canonical(request(version=1)) + b"\n",
+        wire.encoding.canonical(
+            request(schema="aos-scientist.shared-launch.transport.v1-proposal2.draft")
+        )
+        + b"\n",
+        wire.encoding.canonical(request(schema_sha256=V1_SHA256)) + b"\n",
         wire.encoding.canonical(request(schema_sha256="0" * 64)) + b"\n",
         wire.encoding.canonical(request(marker="/peer/selected")) + b"\n",
         wire.encoding.canonical(request(intent_sha256=INTENT)) + b"\n",
@@ -241,7 +252,7 @@ def test_client_rejects_uncorrelated_or_invalid_response(changed):
             elif changed == "consumed_now":
                 response[changed] = True  # Never fresh for verify.
             elif changed == "version":
-                response[changed] = True  # Equal to 1 in Python; still invalid wire type.
+                response[changed] = True  # Boolean versions never satisfy the wire type.
             else:
                 response[changed] = "0" * 32
             wire._send(endpoint, response, original_deadline)
@@ -459,3 +470,173 @@ def test_server_denies_authority_with_different_contract_before_dispatch():
     with pytest.raises(wire.SharedLaunchTransportError):
         wire.SharedLaunchServer(controller, expected_broker=broker(), broker_current=current)
     assert controller.calls == []
+
+
+def test_v2_descriptor_is_closed_and_has_distinct_review_pin():
+    assert wire.VERSION == 2
+    assert wire.SCHEMA == "aos-scientist.shared-launch.transport.v2-proposal2.draft"
+    assert wire.WIRE_SCHEMA_SHA256 == (
+        "53844d314db2080cea681745e95179730b5083ba9e98b33528f1d7995bdeab3f"
+    )
+    assert wire.WIRE_SCHEMA_SHA256 != V1_SHA256
+    assert wire.WIRE_DESCRIPTOR["intent_operations"] == ["claim", "enter", "verify_runtime"]
+    assert wire.WIRE_DESCRIPTOR["status_fields"] == sorted(
+        {"request_id", "binding_sha256", "state", "consumed", "cleanup_required", "expired"}
+    )
+
+
+def test_entry_convenience_methods_return_proof_without_fresh_claim():
+    controller = Controller()
+    client, threads, errors = exchange_client(controller)
+    assert client.require_fresh_claim(REQUEST, BINDING, INTENT, deadline=deadline()).consumed_now
+    for operation in ("enter", "verify_runtime", "enter"):
+        original = deadline()
+        result = getattr(client, operation)(REQUEST, BINDING, INTENT, deadline=original)
+        assert isinstance(result, ClaimResult)
+        assert result.status == LaunchStatus(REQUEST, BINDING, "consumed", True, True, False)
+        assert result.consumed_now is False
+        assert controller.calls[-1] == (
+            operation,
+            REQUEST,
+            BINDING,
+            INTENT,
+            {"peer_pid": os.getpid(), "peer_uid": os.getuid(), "deadline": original},
+        )
+    for thread in threads:
+        joined(thread)
+    assert all(error == [] for error in errors)
+
+
+@pytest.mark.parametrize("operation", ["enter", "verify_runtime"])
+@pytest.mark.parametrize(
+    "change", ["missing_intent", "bad_intent", "generation", "v1_version", "v1_hash", "v1_schema"]
+)
+def test_entry_request_denied_before_authority_dispatch(operation, change):
+    value = request(operation)
+    if change == "missing_intent":
+        del value["intent_sha256"]
+    elif change == "bad_intent":
+        value["intent_sha256"] = "A" * 64
+    elif change == "generation":
+        value["generation"] = broker().model_dump(mode="json")
+    elif change == "v1_version":
+        value["version"] = 1
+    elif change == "v1_hash":
+        value["schema_sha256"] = V1_SHA256
+    else:
+        value["schema"] = "aos-scientist.shared-launch.transport.v1-proposal2.draft"
+    controller = Controller()
+    server, endpoint = pair()
+    producer = wire.SharedLaunchServer(controller, expected_broker=broker(), broker_current=current)
+    thread, errors = worker(lambda: producer.serve_once(server, deadline=deadline()))
+    with endpoint:
+        wire._send(endpoint, value, deadline())
+    joined(thread)
+    assert len(errors) == 1 and isinstance(errors[0], wire.SharedLaunchTransportError)
+    assert controller.calls == []
+
+
+@pytest.mark.parametrize("operation", ["claim", "enter", "verify_runtime"])
+@pytest.mark.parametrize("bad_intent", [None, "", "a" * 63, "A" * 64, True])
+def test_missing_or_invalid_intent_denied_before_socket_factory(operation, bad_intent):
+    calls = []
+
+    def factory(original_deadline):
+        calls.append(original_deadline)
+        raise AssertionError("invalid request must not open a socket")
+
+    client = wire.SharedLaunchClient(factory, expected_broker=broker(), broker_current=current)
+    with pytest.raises(wire.SharedLaunchTransportError):
+        client.request(operation, REQUEST, BINDING, bad_intent, deadline=deadline())
+    assert calls == []
+
+
+@pytest.mark.parametrize("operation", ["enter", "verify_runtime"])
+@pytest.mark.parametrize(
+    "change",
+    [
+        "reviewed",
+        "revoked",
+        "expired",
+        "fresh",
+        "not_consumed",
+        "no_cleanup",
+        "integer_flag",
+        "generation",
+        "intent",
+        "operation",
+        "v1_version",
+        "v1_hash",
+        "v1_schema",
+    ],
+)
+def test_entry_client_requires_exact_correlated_runtime_proof(operation, change):
+    def serve(endpoint, original_deadline):
+        with endpoint:
+            peer = wire._prepare(endpoint)
+            req = wire._read(endpoint, peer, original_deadline)
+            response = {
+                **req,
+                "status": asdict(LaunchStatus(REQUEST, BINDING, "consumed", True, True, False)),
+                "consumed_now": False,
+            }
+            if change == "reviewed":
+                response["status"].update(state="reviewed", consumed=False, cleanup_required=False)
+            elif change == "revoked":
+                response["status"]["state"] = "revoked"
+            elif change == "expired":
+                response["status"]["expired"] = True
+            elif change == "fresh":
+                response["consumed_now"] = True
+            elif change == "not_consumed":
+                response["status"].update(consumed=False, cleanup_required=False)
+            elif change == "no_cleanup":
+                response["status"]["cleanup_required"] = False
+            elif change == "integer_flag":
+                response["status"]["expired"] = 0
+            elif change == "generation":
+                response["status"]["generation"] = broker().model_dump(mode="json")
+            elif change == "intent":
+                response["intent_sha256"] = "0" * 64
+            elif change == "operation":
+                response["operation"] = "claim"
+            elif change == "v1_version":
+                response["version"] = 1
+            elif change == "v1_hash":
+                response["schema_sha256"] = V1_SHA256
+            else:
+                response["schema"] = "aos-scientist.shared-launch.transport.v1-proposal2.draft"
+            wire._send(endpoint, response, original_deadline)
+
+    client, threads, errors = exchange_client(Controller(), serve=serve)
+    with pytest.raises(wire.SharedLaunchTransportError):
+        getattr(client, operation)(REQUEST, BINDING, INTENT, deadline=deadline())
+    joined(threads[0])
+    assert errors == [[]]
+    assert len(threads) == 1  # Invalid proof never causes a connection retry.
+
+
+@pytest.mark.parametrize("operation", ["enter", "verify_runtime"])
+@pytest.mark.parametrize("change", ["reviewed", "revoked", "expired", "fresh"])
+def test_server_does_not_serialize_generic_status_as_entry_proof(operation, change):
+    class InvalidProof(Controller):
+        def handle(self, *args, **context):
+            self.consumed = True
+            result = super().handle(*args, **context)
+            if change == "reviewed":
+                result["status"].update(state="reviewed", consumed=False, cleanup_required=False)
+            elif change == "revoked":
+                result["status"]["state"] = "revoked"
+            elif change == "expired":
+                result["status"]["expired"] = True
+            else:
+                result["consumed_now"] = True
+            return result
+
+    controller = InvalidProof()
+    client, threads, errors = exchange_client(controller)
+    with pytest.raises(wire.SharedLaunchTransportError):
+        getattr(client, operation)(REQUEST, BINDING, INTENT, deadline=deadline())
+    joined(threads[0])
+    assert len(errors[0]) == 1 and isinstance(errors[0][0], wire.SharedLaunchTransportError)
+    assert len(controller.calls) == 1

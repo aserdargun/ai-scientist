@@ -14,6 +14,7 @@ from pydantic import ValidationError
 from lab.llm.gpu_scheduler import SharedGpuScheduler
 from lab.llm.shared_launch_ledger import (
     DurableLaunchIntent,
+    EnteredServiceGeneration,
     LaunchBinding,
     LaunchLedgerError,
     SharedLaunchLedger,
@@ -85,6 +86,20 @@ def intent(grant):
         binding_sha256=grant.sha256(),
         intent_sha256="b" * 64,
         marker="/fixture/durable-intent.json",
+    )
+
+
+def entered(grant, **updates):
+    return EnteredServiceGeneration.model_validate(
+        {
+            **grant.manager.model_dump(),
+            "unit": grant.unit,
+            "invocation_id": "c" * 32,
+            "control_group": "/fixture/shared.service",
+            "pid_namespace_device": 4,
+            "pid_namespace_inode": 42,
+            **updates,
+        }
     )
 
 
@@ -294,3 +309,115 @@ def test_verify_cannot_mutate_even_through_callback(rig):
     with pytest.raises(LaunchLedgerError, match="ledger_unavailable"):
         ledger.verify(rig.grant)
     assert rig.rows() == before
+
+
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"pid_namespace_device": True},
+        {"pid_namespace_inode": 0},
+        {"pid_namespace_inode": True},
+        {"pid_namespace_device": -1},
+        {"pid_namespace_inode": 2**53},
+        {"unexpected": 1},
+    ],
+)
+def test_entered_generation_is_strict_and_closed(updates):
+    with pytest.raises(ValidationError):
+        entered(binding(), **updates)
+    assert "pid_namespace_inode" not in binding().broker.model_dump()
+
+
+def test_entry_appends_once_without_changing_consumption_or_cleanup(rig):
+    rig.ledger.issue(rig.grant)
+    with pytest.raises(LaunchLedgerError, match="entry_admission_closed"):
+        rig.ledger.enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant))
+    rig.ledger.claim(rig.grant, intent(rig.grant))
+    original = rig.rows()
+    status = rig.ledger.enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant))
+    assert status.consumed and status.cleanup_required and not status.expired
+    with sqlite3.connect(rig.database) as connection:
+        prior = connection.execute("SELECT * FROM aos_shared_launch_entries_draft_v1").fetchall()
+    rig.now += 1
+    assert (
+        rig.reopen().enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant)) == status
+    )
+    assert rig.rows() == original
+    with sqlite3.connect(rig.database) as connection:
+        assert (
+            connection.execute("SELECT * FROM aos_shared_launch_entries_draft_v1").fetchall()
+            == prior
+        )
+        with pytest.raises(sqlite3.IntegrityError, match="immutable_launch_entry"):
+            connection.execute("DELETE FROM aos_shared_launch_entries_draft_v1")
+
+
+@pytest.mark.parametrize(
+    "updates", [{"pid": 125}, {"invocation_id": "f" * 32}, {"pid_namespace_inode": 43}]
+)
+def test_entry_never_rebinds_a_consumed_request(rig, updates):
+    rig.ledger.issue(rig.grant)
+    rig.ledger.claim(rig.grant, intent(rig.grant))
+    rig.ledger.enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant))
+    with pytest.raises(LaunchLedgerError, match="entered_generation_conflict"):
+        rig.ledger.enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant, **updates))
+    assert rig.ledger.status(rig.grant).cleanup_required
+
+
+def test_runtime_verification_requires_entry_and_uses_the_existing_transaction(rig, monkeypatch):
+    rig.ledger.issue(rig.grant)
+    rig.ledger.claim(rig.grant, intent(rig.grant))
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        with pytest.raises(LaunchLedgerError, match="existing_transaction_required"):
+            rig.ledger.verify_runtime(connection, rig.grant, entered(rig.grant))
+        connection.execute("BEGIN IMMEDIATE")
+        with pytest.raises(LaunchLedgerError, match="entry_required"):
+            rig.ledger.verify_runtime(connection, rig.grant, entered(rig.grant))
+        connection.rollback()
+    rig.ledger.enter(rig.grant, intent(rig.grant).intent_sha256, entered(rig.grant))
+    monkeypatch.setattr(rig.ledger, "_transaction", lambda **_: pytest.fail("Nested transaction"))
+    with sqlite3.connect(rig.database) as connection:
+        connection.row_factory = sqlite3.Row
+        connection.execute("BEGIN IMMEDIATE")
+        before = connection.total_changes
+        status = rig.ledger.verify_runtime(connection, rig.grant, entered(rig.grant))
+        assert status.consumed and connection.in_transaction and connection.total_changes == before
+        with pytest.raises(LaunchLedgerError, match="entered_generation_conflict"):
+            rig.ledger.verify_runtime(connection, rig.grant, entered(rig.grant, start_ticks=46))
+
+
+@pytest.mark.parametrize("cause", ["policy", "boot", "expired", "revoked", "intent", "late-check"])
+def test_entry_and_runtime_keep_original_authority_and_expiry(rig, cause):
+    rig.ledger.issue(rig.grant)
+    rig.ledger.claim(rig.grant, intent(rig.grant))
+    sha = intent(rig.grant).intent_sha256
+    if cause == "policy":
+        rig.policy_open = False
+    elif cause == "boot":
+        rig.boot = "00000000-0000-0000-0000-000000000002"
+    elif cause == "expired":
+        rig.now = rig.grant.expires_boottime
+    elif cause == "revoked":
+        rig.ledger.revoke(rig.grant)
+    elif cause == "intent":
+        sha = "e" * 64
+    else:
+        original = rig.check
+
+        def late(connection, grant, operation, marker):
+            original(connection, grant, operation, marker)
+            if operation == "enter":
+                rig.now = grant.expires_boottime
+
+        rig.ledger._verifier = late
+    with pytest.raises(LaunchLedgerError):
+        rig.ledger.enter(rig.grant, sha, entered(rig.grant))
+    with sqlite3.connect(rig.database) as connection:
+        assert (
+            connection.execute(
+                "SELECT COUNT(*) FROM aos_shared_launch_entries_draft_v1"
+            ).fetchone()[0]
+            == 0
+        )
+    assert rig.ledger.status(rig.grant).consumed and rig.ledger.status(rig.grant).cleanup_required

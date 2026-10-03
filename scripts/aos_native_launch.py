@@ -48,7 +48,7 @@ SHARED_SCOPE_KEYS = {
 def _shared_scope_contract(cfg):
     """The shared caller must name its exact filesystem preparation, never infer it."""
     if cfg["caller_unit"] != SHARED_CALLER_UNIT:
-        if "shared_scope" in cfg:
+        if "shared_scope" in cfg or "shared_launch_runtime" in cfg:
             raise ValueError("Legacy acceptance cannot carry shared scope")
         return None
     scope = cfg.get("shared_scope")
@@ -285,6 +285,48 @@ def _shared_scope_preflight(cfg, args, static, path, expected, deadline):
         for _directory, _identity, descriptor in reversed(descriptors):
             os.close(descriptor)
     _remaining(deadline)
+    return {
+        "intent_sha256": hashlib.sha256(marker_raw).hexdigest(),
+        "session_directory": plan.session_directory,
+        "workspace": plan.workspace,
+        "workspace_device": provision.workspace_identity.device,
+        "workspace_inode": provision.workspace_identity.inode,
+        "workspace_uid": provision.workspace_identity.owner_uid,
+        "app_session": plan.app_session,
+        "boot_id": boot,
+        "issued_boottime": activation.issued_monotonic,
+        "expires_boottime": activation.expires_monotonic,
+        "activation_config_paths": frozenset(activation.config_files),
+    }
+
+
+def _shared_launch_runtime(cfg, args, static, bindings, expected, verified, deadline):
+    """Verify the in-unit client source before constructing any socket client."""
+    root = Path(args["source_roots"]["scientist"])
+    required = (
+        "scripts/aos_shared_launch_runtime.py",
+        "lab/llm/shared_launch_authority.py",
+        "lab/llm/shared_launch_ledger.py",
+        "lab/llm/shared_launch_transport.py",
+    )
+    for relative in required:
+        path = root / relative
+        pin = args["source_files"].get("scientist", {}).get(relative)
+        if (
+            not pin
+            or static["source_inputs"].get(str(path)) != pin
+            or hashlib.sha256(read_regular(path, 8 * 1024**2)).hexdigest() != pin
+        ):
+            raise ValueError("Shared launch runtime client lacks independent source pins")
+        _remaining(deadline)
+    from scripts import aos_shared_launch_runtime as runtime
+
+    for relative in required:
+        module_name = relative.removesuffix(".py").replace("/", ".")
+        module = sys.modules[module_name]
+        if Path(module.__file__).absolute() != root / relative:
+            raise ValueError("Shared launch runtime imported another Scientist source root")
+    return runtime.build_shared_launch_runtime(cfg, bindings, expected, verified, deadline)
 
 
 def _retained_factory(cfg, args, static, module, admission_factory):
@@ -645,12 +687,14 @@ class CurrentRuntimeRights:
         native_exclusion=None,
         shared_scope=None,
         source_inputs=None,
+        shared_launch_runtime=None,
     ):
         self.bindings = bindings
         self.configuration = configuration
         self.native_exclusion = native_exclusion
         self.shared_scope = shared_scope
         self.source_inputs = source_inputs
+        self.shared_launch_runtime = shared_launch_runtime
 
     def _verify_native_exclusion(self, caller, deadline):
         """Post-spawn observation only; unsupported active-model coexistence stays denied."""
@@ -856,6 +900,10 @@ class CurrentRuntimeRights:
                     raise ValueError("Caller or broker changed during native exclusion observation")
             policy.verify()
             policy.verify_policy_hash()
+            if any(item.caller_generation.unit == SHARED_CALLER_UNIT for item in selected.values()):
+                if self.shared_launch_runtime is None:
+                    raise ValueError("Shared model admission requires its entered launch")
+                self.shared_launch_runtime.verify(end)
             if exclusion_deadline is not None and (
                 time.clock_gettime(time.CLOCK_BOOTTIME) >= exclusion_deadline
             ):
@@ -915,9 +963,14 @@ def _prepare_launch(path, expected, deadline):
             or hashlib.sha256(read_regular(candidate, 8 * 1024**2)).hexdigest() != expected_source
         ):
             raise ValueError("Native launch/receipt producer source lacks independent pin")
+    shared_runtime = None
     if shared_scope is not None:
-        _shared_scope_preflight(cfg, args, static, path, expected, deadline)
+        verified = _shared_scope_preflight(cfg, args, static, path, expected, deadline)
         _native_exclusion_sources(args, native_exclusion, static["source_inputs"], deadline)
+        shared_runtime = _shared_launch_runtime(
+            cfg, args, static, bindings, expected, verified, deadline
+        )
+        shared_runtime.enter(deadline)
 
     def native_verify():
         command = [
@@ -943,6 +996,8 @@ def _prepare_launch(path, expected, deadline):
         receipt["expires_boottime"] = min(receipt["expires_boottime"], authority_expiry)
     _remaining(deadline)
     body = canonical(receipt)
+    if shared_runtime is not None:
+        shared_runtime.verify(deadline)
     output = Path(cfg["receipt_output"])
     root = Path(args["source_roots"]["scientist"]) / "data/runtime"
     if not output.is_absolute() or not output.parent.resolve(strict=True).is_relative_to(
@@ -965,15 +1020,19 @@ def _prepare_launch(path, expected, deadline):
             native_exclusion=native_exclusion,
             shared_scope=shared_scope,
             source_inputs=static["source_inputs"],
+            shared_launch_runtime=shared_runtime,
         ),
     )
     factory = ConfiguredScientistAdmissionFactory(
         bindings, **args, verify_artifact_closure=provider
     )
     if shared_scope is not None:
-        factory.verify_shared_scope_before_main = lambda: _shared_scope_preflight(
-            cfg, args, static, path, expected, deadline
-        )
+
+        def verify_shared_scope_before_main():
+            _shared_scope_preflight(cfg, args, static, path, expected, deadline)
+            shared_runtime.verify(deadline)
+
+        factory.verify_shared_scope_before_main = verify_shared_scope_before_main
     script = Path(args["source_roots"]["aos"]) / "scripts/serve_desktop.py"
     expected_script = args["source_files"]["aos"]["scripts/serve_desktop.py"]
     if hashlib.sha256(read_regular(script, 256 * 1024)).hexdigest() != expected_script:

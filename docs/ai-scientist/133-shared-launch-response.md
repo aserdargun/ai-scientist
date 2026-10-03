@@ -1,6 +1,11 @@
 # Scientist response: finite shared desktop launch
 
 Status: **proposal 2 design accepted by both projects; exact wire/policy freeze pending; production disabled**.
+
+Latest entry/runtime source update: [entered shared-launch binding](135-entered-shared-launch.md).
+It supersedes the earlier transport-v1 descriptor below with explicit v2;
+AOS `a186886` now supports that selection. Final runtime/policy freeze is still
+pending. Historical implementation notes below describe their dated stage.
 Date: 2026-10-03. Responds to `aos-scientist.shared-launch.v1-proposal1`.
 Reviewed Scientist source `43f38769afe21d20fb99cb21a3bd76efcb575fbf` and AOS
 publication `44edacb638b1154ed5d84cf495c9e8d1ffb3b024`. These are reviewed source

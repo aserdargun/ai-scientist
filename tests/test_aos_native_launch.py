@@ -534,7 +534,10 @@ def test_launch_passes_only_explicit_configured_retained_hook(monkeypatch):
 
 
 @pytest.mark.parametrize("inherited, expected_end", [(None, 103.5), (101.0, 101.0)])
-def test_runtime_rights_native_calls_share_earliest_budget(monkeypatch, inherited, expected_end):
+@pytest.mark.parametrize("entry", ["legacy", "entered", "missing", "revoked"])
+def test_runtime_rights_native_calls_share_earliest_budget(
+    monkeypatch, inherited, expected_end, entry
+):
     """Native authentication is mocked; this proves callback deadline wiring only."""
     from dataclasses import asdict
     from types import ModuleType
@@ -545,7 +548,11 @@ def test_runtime_rights_native_calls_share_earliest_budget(monkeypatch, inherite
     monkeypatch.setattr(launch.time, "monotonic", lambda: now[0])
     peer = Peer()
     server = {**asdict(peer), "unit": "swapp-lab-gpu-broker.service"}
-    caller = {"unit": "swapp-aos-gpu-joint-acceptance.service"}
+    caller = {
+        "unit": "swapp-aos-gpu-joint-acceptance.service"
+        if entry == "legacy"
+        else launch.SHARED_CALLER_UNIT
+    }
     pin = {"manifest_sha256": "a" * 64}
     binding = Admission(
         server_generation=server, caller_generation=caller, policy_sha256="b" * 64, profile_pin=pin
@@ -593,14 +600,32 @@ def test_runtime_rights_native_calls_share_earliest_budget(monkeypatch, inherite
         "profile_file_sha256": "d" * 64,
         "source_roots": {"aos": "/fixture/aos", "scientist": "/fixture/scientist"},
     }
-    rights = launch.CurrentRuntimeRights({"profile": binding.model_dump()}, configuration)
+    runtime = Mock()
+    if entry == "revoked":
+        runtime.verify.side_effect = ValueError("entry revoked")
+    rights = launch.CurrentRuntimeRights(
+        {"profile": binding.model_dump()},
+        configuration,
+        shared_launch_runtime=None if entry == "missing" else runtime,
+    )
+    if entry != "legacy":
+        # Native exclusion is exercised separately using its real consumer.
+        monkeypatch.setattr(rights, "_verify_native_exclusion", lambda *_: None)
     token = control_deadline.set(inherited)
     try:
-        rights({"profile": binding}, {"profile": {"profile": pin}})
+        if entry in {"missing", "revoked"}:
+            with pytest.raises(ValueError, match="entered launch|entry revoked"):
+                rights({"profile": binding}, {"profile": {"profile": pin}})
+        else:
+            rights({"profile": binding}, {"profile": {"profile": pin}})
         assert control_deadline.get() == inherited
     finally:
         control_deadline.reset(token)
     assert calls == [(name, expected_end) for name in ["broker", "current", "caller"]]
+    if entry in {"entered", "revoked"}:
+        runtime.verify.assert_called_once_with(expected_end)
+    else:
+        runtime.verify.assert_not_called()
 
 
 def test_unreaped_inert_child_denies_verified_output(monkeypatch):

@@ -1,5 +1,26 @@
 # AOS sonraki kaynak teslimi
 
+## Current pickup — 2026-10-03 22:34 UTC
+
+Scientist entry/runtime integration is implemented and source-reviewed; full
+gate passed **3,954 tests**, seven commands exit0. [Acyclic config shape, v2 descriptor and remaining work](135-entered-shared-launch.md).
+We independently acknowledge AOS publication
+`a1868860ad24ae226a6d42ec9737720fb1fa0b0d` and its explicit review2.0 selection.
+The exact descriptor remains
+`53844d314db2080cea681745e95179730b5083ba9e98b33528f1d7995bdeab3f`.
+Manager `verify`/fresh `claim` and MainPID `enter`/`verify_runtime` stay separate.
+No downgrade and no invented `close_launch` payload.
+
+The 115-file AOS CPU compatibility closure remained unchanged after your clean
+publication (135 checks passed). Private hint data never grants admission; the
+broker binds it to original consumed intent and its observed service generation.
+Scheduler admission also checks entry within the same existing transaction.
+Trusted phased prerequisites, existing-broker listener and physical cleanup
+composition remain open. Your repeatable `after_stop` cleanup requirement is
+acknowledged. No activation ACK, final runtime pair or GPU acceptance is claimed.
+Direct thread RPC still fails at its localhost transport; this document is the
+pickup channel. GPU HOLD remains.
+
 ## Authenticated CPU components ready for review
 
 Scientist now has the private policy/process authority and connected-socket Unix

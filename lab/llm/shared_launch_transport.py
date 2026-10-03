@@ -24,11 +24,13 @@ from lab.llm.shared_launch_ledger import ClaimResult, LaunchStatus, ServiceGener
 
 ExpectedServiceGeneration = ServiceGeneration
 BrokerCurrent = Callable[[ServiceGeneration, float], bool]
-SCHEMA = "aos-scientist.shared-launch.transport.v1-proposal2.draft"
-VERSION = 1
+SCHEMA = "aos-scientist.shared-launch.transport.v2-proposal2.draft"
+VERSION = 2
 MAX_BYTES = 4096
 MAX_SECONDS = 3.0
-OPERATIONS = frozenset({"issue", "verify", "claim", "status", "revoke"})
+OPERATIONS = frozenset({"issue", "verify", "claim", "status", "revoke", "enter", "verify_runtime"})
+_INTENT_OPERATIONS = frozenset({"claim", "enter", "verify_runtime"})
+_ENTRY_OPERATIONS = frozenset({"enter", "verify_runtime"})
 _COMMON = frozenset(
     {
         "schema",
@@ -52,7 +54,8 @@ WIRE_DESCRIPTOR = {
     "framing": "canonical-json-LF-EOF; one request and response per connected Unix stream",
     "credentials": "SO_PEERCRED and each SCM_CREDENTIALS; identical pid/uid/gid",
     "request_fields": sorted(_COMMON),
-    "claim_only_field": "intent_sha256",
+    "intent_field": "intent_sha256",
+    "intent_operations": sorted(_INTENT_OPERATIONS),
     "response_extra_fields": ["consumed_now", "status"],
     "status_fields": sorted(_STATUS),
     "status_states": ["consumed", "reviewed", "revoked"],
@@ -62,6 +65,11 @@ WIRE_DESCRIPTOR = {
     "version_type": "nonboolean integer",
     "status_flags": "booleans; cleanup_required equals consumed",
     "fresh_claim": "claim only; consumed state, consumed and cleanup_required, not expired",
+    "entry_success": (
+        "enter and verify_runtime only; consumed state, consumed and cleanup_required, "
+        "not expired, consumed_now false; correlated operation authenticates entry/runtime proof"
+    ),
+    "runtime_identity": "authority observed; no generation fields accepted from wire",
 }
 WIRE_SCHEMA_SHA256 = hashlib.sha256(encoding.canonical(WIRE_DESCRIPTOR)).hexdigest()
 _CREDENTIALS = struct.Struct("3i")
@@ -213,7 +221,7 @@ def _send(connection: socket.socket, value: dict[str, Any], deadline: float) -> 
 def _request(value: dict[str, Any], broker_hash: str) -> None:
     operation = value.get("operation")
     _require(type(operation) is str and operation in OPERATIONS)
-    keys = _COMMON | ({"intent_sha256"} if operation == "claim" else set())
+    keys = _COMMON | ({"intent_sha256"} if operation in _INTENT_OPERATIONS else set())
     _require(set(value) == keys and value["schema"] == SCHEMA)
     _require(type(value["version"]) is int and value["version"] == VERSION)
     _require(
@@ -223,7 +231,7 @@ def _request(value: dict[str, Any], broker_hash: str) -> None:
     _require(
         _hex(value["nonce"], 32) and _hex(value["request_id"], 32) and _hex(value["binding_sha256"])
     )
-    if operation == "claim":
+    if operation in _INTENT_OPERATIONS:
         _require(_hex(value["intent_sha256"]))
 
 
@@ -246,6 +254,14 @@ def _result(value: dict[str, Any], request: dict[str, Any]) -> ClaimResult:
     )
     fresh = value["consumed_now"]
     _require(type(fresh) is bool)
+    if request["operation"] in _ENTRY_OPERATIONS:
+        _require(
+            status["state"] == "consumed"
+            and status["consumed"]
+            and status["cleanup_required"]
+            and not status["expired"]
+            and not fresh
+        )
     if fresh:
         _require(
             request["operation"] == "claim"
@@ -386,6 +402,20 @@ class SharedLaunchClient(_PinnedBroker):
         _remaining(deadline)
         _require(result.consumed_now)
         return result
+
+    def enter(
+        self, request_id: str, binding_sha256: str, intent_sha256: str, *, deadline: float
+    ) -> ClaimResult:
+        """Return authenticated runtime entry proof for the consumed original intent."""
+        return self.request("enter", request_id, binding_sha256, intent_sha256, deadline=deadline)
+
+    def verify_runtime(
+        self, request_id: str, binding_sha256: str, intent_sha256: str, *, deadline: float
+    ) -> ClaimResult:
+        """Return current runtime proof; consumption status alone cannot prove entry."""
+        return self.request(
+            "verify_runtime", request_id, binding_sha256, intent_sha256, deadline=deadline
+        )
 
     def activation_claimer(
         self, request_id: str, binding_sha256: str, intent_sha256: str, *, deadline: float

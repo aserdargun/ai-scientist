@@ -40,3 +40,4 @@ ayrı izlenir.
 
 - [Shared desktop launch: Scientist reciprocal proposal](ai-scientist/133-shared-launch-response.md)
 - [Runtime policy revocation and cleanup boundaries](ai-scientist/134-runtime-policy-revocation.md)
+- [Entered shared-launch identity and per-call admission](ai-scientist/135-entered-shared-launch.md)

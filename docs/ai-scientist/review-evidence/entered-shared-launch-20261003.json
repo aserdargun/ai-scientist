@@ -1,0 +1,149 @@
+{
+  "schema": "entered-shared-launch-source-review.v1",
+  "created_at": "2026-10-03T22:34:19.699442+00:00",
+  "scope": "CPU/source-only; no runtime deployment or GPU acceptance",
+  "scientist_parent": "2a4c0b374daaac970a5ba8534880e0bd7654f446",
+  "aos_publication": "a1868860ad24ae226a6d42ec9737720fb1fa0b0d",
+  "aos_tested_closure_sha256": "536d2a2cdc1aa291b9506b932c11d014c52444ef717a01351eb19924d9907540",
+  "aos_tested_source_files": 115,
+  "aos_tested_files_unchanged_after_clean_publication": true,
+  "wire_schema": "aos-scientist.shared-launch.transport.v2-proposal2.draft",
+  "wire_schema_sha256": "53844d314db2080cea681745e95179730b5083ba9e98b33528f1d7995bdeab3f",
+  "tracked_source_diff_sha256": "e8c50b5129bf752d1c5b934cfc7740873bf383ae81e359d4d8eac63f8f927550",
+  "tracked_diff_excludes_untracked_files": true,
+  "all_changed_source_files": {
+    "lab/llm/aos_gpu_service.py": "d35efd3823a23c426d048dd69e024ef6125dc0dad4fab5d4ef34b59e3a57c11c",
+    "lab/llm/shared_launch_authority.py": "afe73affe742f476601407a3db121c340a726251c36a70e26d6dbc430dc3e634",
+    "lab/llm/shared_launch_ledger.py": "ddbfc2184e4f14b57b040fb8e44f510a499ed6159a516677185a1fed7c723534",
+    "lab/llm/shared_launch_transport.py": "347619107f2e162b4788b073116e5f8cb4134c6b3b5dd3e3189566ea6291f156",
+    "scripts/aos_native_launch.py": "85ce0652d456f4455224fa20093dc2d1b2a3fcc0771fba53f4755a4b5b2a2cec",
+    "scripts/aos_shared_launch_runtime.py": "cb524c738900a1eaebadd367e5cb1ee903856fd3e84fd8c95fd6dd05b5511511",
+    "tests/test_aos_native_launch.py": "d806ad91f7299be401759937bb2eab9517a180fdca9060f567f0902dbf0a2f52",
+    "tests/test_aos_shared_launch_runtime.py": "a01d0c3e8b15d3aa006403e849dcb58eab7cd416d6f3b6ff550d8f8b67240b74",
+    "tests/test_aos_shared_scope_preflight.py": "70780f3518633098c00d33029af04317825c24ade1a8aea929a1b4cff7974c6d",
+    "tests/test_native_exclusion_consumer.py": "f8402ad71fcff84c9f3bdc14c49efc3ba011f71cdd67ab27d855ce2d314d7e5d",
+    "tests/test_shared_launch_authority.py": "bb7a43f3fd6ffacadd86087a8b941b3bca097fec5c92bfd9686936501ecb1f22",
+    "tests/test_shared_launch_ledger.py": "28e572e970388d7f06707db2067dc629c85b06841a37c3e79e35f84ad65cd167",
+    "tests/test_shared_launch_service_admission.py": "3be467061febec3d6433b881f184ed8f694cce37c45c25bb5594cca7d718852b",
+    "tests/test_shared_launch_transport.py": "f6b4ec78d360c2b8b9cc2e667d9311f39581ab768ad8e6a382eef4362fe2aa56"
+  },
+  "source_map_sha256": "90a7698876f6e4e928aeae3fecee46f28815b65ab6b993909b112885fb26afca",
+  "source_unchanged_during_gate": true,
+  "quality_gate": {
+    "overall_exit_code": 0,
+    "commands": [
+      {
+        "command": [
+          "ruff",
+          "check",
+          "."
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit",
+          "-q",
+          "-r",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pytest",
+          "-m",
+          "not gpu and not live"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "mypy",
+          "--strict",
+          "harness",
+          "lab/referee",
+          "lab/analytics",
+          "lab/operating_modes",
+          "lab/llm",
+          "lab/sandbox",
+          "lab/api",
+          "lab/db",
+          "lab/director",
+          "lab/scorer",
+          "lab/training",
+          "lab/cli.py",
+          "lab/reporting.py",
+          "lab/replay.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv",
+          "build",
+          "--wheel",
+          "--out-dir",
+          "<temporary>"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/home/cachyos/ai-scientist/data/runtime/aos-integration-v01/.venv/bin/python",
+          "-c",
+          "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "passed": 3954,
+    "skipped": 54,
+    "deselected": 177,
+    "warnings": 603,
+    "pytest_seconds": 301.65,
+    "raw_receipt_sha256": "732485333f5c7e468de0a2e47a0fa82c5323e7ee481de888b4bb53c06d1b2cf6",
+    "strict_mypy_source_files": 184,
+    "wheel_build_and_import": true
+  },
+  "focused": {
+    "actual_aos_source_cpu_checks": 135,
+    "private_client_checks": 69,
+    "service_admission_checks": 24,
+    "evidence_kind": "private real files/sockets/SQLite; mocked service/model/native observations"
+  },
+  "gate_cleanup": {
+    "invocation_id": "534b3e3591b6442aa97af410bbd00866",
+    "active_state": "inactive",
+    "sub_state": "dead",
+    "main_pid": 0,
+    "exit_code": 0
+  },
+  "gpu_acceptance": {
+    "run": false,
+    "model": null,
+    "quantization": null,
+    "context_tokens": null,
+    "peak_vram_mib": null,
+    "wait_seconds": null,
+    "handoff_seconds": null,
+    "inference_seconds": null,
+    "physical_gpu_release_proven": false
+  },
+  "remaining": [
+    "trusted phase-aware prerequisite provider",
+    "existing-broker launch listener composition",
+    "physical cleanup and never-entered reconciliation",
+    "final reviewed runtime/config pair and resource reservation",
+    "coordinated AOS/Scientist GPU acceptance"
+  ]
+}

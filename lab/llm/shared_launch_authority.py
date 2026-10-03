@@ -2,7 +2,8 @@
 
 Reviewed private policy is the authority source. Request data selects only an
 already reviewed request/digest; it cannot select paths, generations or grants.
-Post-spawn entry and physical cleanup remain separate, unimplemented obligations.
+Post-spawn entry is recorded against an observed MainPID; physical cleanup
+remains a separate obligation and entry grants no GPU or model authority.
 Native drain/seal/exclusion checks require a reviewed prerequisite verifier;
 without one, admission denies. File hashes alone do not prove those facts.
 """
@@ -26,12 +27,25 @@ from typing import Annotated, Any, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from lab.llm.aos_gpu_control import ControlPolicy, strict_json
-from lab.llm.aos_gpu_control_store import control_deadline, digest
+from lab.llm.aos_gpu_control import (
+    CONTROL_SCHEMA_HASH,
+    INFER_SCHEMA_HASH,
+    ControlPolicy,
+    strict_json,
+)
+from lab.llm.aos_gpu_control_store import (
+    TERMINAL_SCHEMA_HASH,
+    canonical,
+    control_deadline,
+    digest,
+    validate_admission_binding,
+)
+from lab.llm.aos_gpu_executor import SystemdSocketPeerAuthenticator
 from lab.llm.gpu_scheduler import _process_cgroup, _read_process_identity, _systemctl_show
 from lab.llm.shared_launch_ledger import (
     SHA,
     DurableLaunchIntent,
+    EnteredServiceGeneration,
     LaunchBinding,
     LaunchLedgerError,
     Operation,
@@ -42,7 +56,7 @@ from lab.llm.shared_launch_ledger import (
 
 CALL_SECONDS = 5.0
 BROKER_UNIT = "swapp-lab-gpu-broker.service"
-OPS = frozenset({"issue", "verify", "claim", "status", "revoke"})
+OPS = frozenset({"issue", "verify", "claim", "enter", "verify_runtime", "status", "revoke"})
 _LIMIT = 64 * 1024
 
 
@@ -120,6 +134,20 @@ def broker_generation_current(expected: ServiceGeneration, deadline: float) -> b
         )
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
         return False
+
+
+def _pid_namespace(pid: int) -> tuple[int, int]:
+    """Observe the namespace object twice; proc namespace symlinks are intentional."""
+    try:
+        path = Path(f"/proc/{pid}/ns/pid")
+        before = path.stat()
+        after = path.stat()
+        observed = (before.st_dev, before.st_ino)
+        if observed != (after.st_dev, after.st_ino) or before.st_ino <= 0:
+            raise LaunchLedgerError("pid_namespace_changed")
+        return observed
+    except OSError as error:
+        raise LaunchLedgerError("pid_namespace_unavailable") from error
 
 
 class _Strict(BaseModel):
@@ -281,6 +309,8 @@ class _Request:
     peer_uid: int
     deadline: float
     entry: LaunchPolicyEntry
+    entered: EnteredServiceGeneration | None = None
+    admission_binding: dict[str, Any] | None = None
 
 
 _request: ContextVar[_Request | None] = ContextVar("shared_launch_request", default=None)
@@ -298,6 +328,9 @@ class SharedLaunchAuthority:
         contract_sha256: str,
         broker_current: Callable[[ServiceGeneration, float], bool] = broker_generation_current,
         prerequisites: Callable[[LaunchBinding, Operation, float], None] | None = None,
+        authenticator_factory: Callable[
+            [str], SystemdSocketPeerAuthenticator
+        ] = SystemdSocketPeerAuthenticator,
         draft_enabled: bool = False,
     ) -> None:
         self.policy = policy
@@ -305,11 +338,82 @@ class SharedLaunchAuthority:
         self.contract_sha256 = contract_sha256
         self._broker_current = broker_current
         self._prerequisites = prerequisites
+        self._authenticator_factory = authenticator_factory
         self.ledger = SharedLaunchLedger(database, draft_enabled=draft_enabled, verifier=self)
 
-    @staticmethod
-    def _authenticate(request: _Request) -> None:
+    def _observe_service(
+        self,
+        unit: str,
+        pid: int,
+        uid: int,
+        *,
+        require_main: bool,
+        caller: dict[str, Any] | None = None,
+    ) -> EnteredServiceGeneration:
+        try:
+            peer = self._authenticator_factory(unit).authenticate(pid, uid)
+            if require_main and (peer.pid, peer.start_ticks) != (
+                peer.parent_pid,
+                peer.parent_start_ticks,
+            ):
+                raise LaunchLedgerError("service_mainpid_required")
+            if caller is not None and asdict(peer) != caller:
+                raise LaunchLedgerError("runtime_caller_changed")
+            actual = process_generation(pid)
+            if (actual.uid, actual.pid, actual.start_ticks, actual.boot_id) != (
+                peer.uid,
+                peer.pid,
+                peer.start_ticks,
+                peer.boot_id,
+            ):
+                raise LaunchLedgerError("stale_generation")
+            main = process_generation(peer.parent_pid)
+            if (main.uid, main.start_ticks, main.boot_id) != (
+                peer.uid,
+                peer.parent_start_ticks,
+                peer.boot_id,
+            ) or _process_cgroup(main.pid) != peer.control_group:
+                raise LaunchLedgerError("entered_generation_conflict")
+            namespace = _pid_namespace(main.pid)
+            if _pid_namespace(pid) != namespace:
+                raise LaunchLedgerError("pid_namespace_changed")
+            return EnteredServiceGeneration(
+                **main.model_dump(mode="json"),
+                unit=peer.unit,
+                invocation_id=peer.invocation_id,
+                control_group=peer.control_group,
+                pid_namespace_device=namespace[0],
+                pid_namespace_inode=namespace[1],
+            )
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+            if isinstance(error, LaunchLedgerError):
+                raise
+            raise LaunchLedgerError("stale_service") from error
+
+    def _authenticate(self, request: _Request) -> None:
         binding = request.entry.binding
+        if request.operation in {"enter", "verify_runtime"}:
+            entered = self._observe_service(
+                binding.unit,
+                request.peer_pid,
+                request.peer_uid,
+                require_main=request.admission_binding is None,
+                caller=None
+                if request.admission_binding is None
+                else request.admission_binding["caller_generation"],
+            )
+            if entered != request.entered or (entered.uid, entered.boot_id) != (
+                binding.uid,
+                binding.boot_id,
+            ):
+                raise LaunchLedgerError("entered_generation_conflict")
+            if _pid_namespace(binding.broker.pid) != (
+                entered.pid_namespace_device,
+                entered.pid_namespace_inode,
+            ):
+                raise LaunchLedgerError("pid_namespace_changed")
+            _remaining(request.deadline)
+            return
         expected = binding.manager
         if request.operation in {"issue", "revoke"}:
             expected = binding.issuer
@@ -344,6 +448,22 @@ class SharedLaunchAuthority:
         ):
             raise LaunchLedgerError("control_binding_changed")
         self.control_policy.verify()
+        admission = request.admission_binding
+        if admission is not None and (
+            admission["policy_sha256"] != pins.policy_revision_sha256
+            or admission["source_fingerprints"]
+            != {name: digest(files) for name, files in config["source_files"].items()}
+            or admission["profile_pin"] != config["profile_pins"].get(admission["profile_id"])
+            or any(
+                admission[name]["sha256"] != checksum
+                for name, checksum in (
+                    ("infer_schema", INFER_SCHEMA_HASH),
+                    ("control_schema", CONTROL_SCHEMA_HASH),
+                    ("terminal_schema", TERMINAL_SCHEMA_HASH),
+                )
+            )
+        ):
+            raise LaunchLedgerError("runtime_admission_changed")
         for name, pin in config["profile_pins"].items():
             if (
                 str(self.control_policy.profiles.get(name, pin["deployment_digest"]).source_root)
@@ -399,6 +519,10 @@ class SharedLaunchAuthority:
                 if intent is None:
                     raise LaunchLedgerError("intent_required")
                 _durable_intent(request, intent)
+            elif operation in {"enter", "verify_runtime"}:
+                if intent is None:
+                    raise LaunchLedgerError("intent_required")
+                _durable_intent(request, intent, pristine=False)
             self.control_policy.verify_policy_hash()
         # Slow source/OS/readback work cannot bypass revocation or original clocks.
         if not self._broker_current(binding.broker, request.deadline):
@@ -435,15 +559,21 @@ class SharedLaunchAuthority:
         if remaining > CALL_SECONDS:
             raise LaunchLedgerError("invalid_deadline")
         entry = self.policy.resolve(request_id, binding_sha256, deadline)
-        request = _Request(operation, peer_pid, peer_uid, deadline, entry)
-        self._authenticate(request)
-        token = _request.set(request)
-        selected = time.monotonic() + remaining
+        selected = time.monotonic() + _remaining(deadline)
         inherited = control_deadline.get()
         legacy_deadline = control_deadline.set(
             selected if inherited is None else min(selected, inherited)
         )
+        token = None
         try:
+            entered = None
+            if operation in {"enter", "verify_runtime"}:
+                entered = self._observe_service(
+                    entry.binding.unit, peer_pid, peer_uid, require_main=True
+                )
+            request = _Request(operation, peer_pid, peer_uid, deadline, entry, entered)
+            self._authenticate(request)
+            token = _request.set(request)
             binding = entry.binding
             if operation == "claim":
                 if intent_sha256 is None:
@@ -456,13 +586,78 @@ class SharedLaunchAuthority:
                 )
                 result = self.ledger.claim(binding, intent)
                 return {"status": asdict(result.status), "consumed_now": result.consumed_now}
+            if operation in {"enter", "verify_runtime"}:
+                if intent_sha256 is None or entered is None:
+                    raise LaunchLedgerError("intent_required")
+                if operation == "enter":
+                    status = self.ledger.enter(binding, intent_sha256, entered)
+                else:
+                    with self.ledger._transaction(write=False) as connection:
+                        _row, intent = self.ledger._entered_row(connection, binding)
+                        if intent.intent_sha256 != intent_sha256:
+                            raise LaunchLedgerError("intent_conflict")
+                        status = self.ledger.verify_runtime(connection, binding, entered)
+                return {"status": asdict(status), "consumed_now": False}
             if intent_sha256 is not None:
                 raise LaunchLedgerError("unexpected_intent")
             status = getattr(self.ledger, operation)(binding)
             return {"status": asdict(status), "consumed_now": False}
         finally:
             control_deadline.reset(legacy_deadline)
-            _request.reset(token)
+            if token is not None:
+                _request.reset(token)
+
+    def verify_runtime(
+        self, connection: sqlite3.Connection, admission_binding: dict[str, Any], *, deadline: float
+    ) -> None:
+        """Resolve the original entered service inside the caller's existing transaction."""
+        if not connection.in_transaction:
+            raise LaunchLedgerError("existing_transaction_required")
+        if type(deadline) not in (int, float) or not math.isfinite(deadline):
+            raise LaunchLedgerError("invalid_deadline")
+        remaining = _remaining(deadline)
+        if remaining > CALL_SECONDS:
+            raise LaunchLedgerError("invalid_deadline")
+        admission = validate_admission_binding(admission_binding, require_output_contract=True)
+        caller = admission["caller_generation"]
+        unit = "swapp-aos-gpu-shared-desktop-default.service"
+        if caller["unit"] != unit:
+            raise LaunchLedgerError("unauthorized_principal")
+        outer = control_deadline.get()
+        selected = time.monotonic() + remaining
+        budget = control_deadline.set(selected if outer is None else min(selected, outer))
+        token = None
+        try:
+            entered = self._observe_service(
+                unit, caller["pid"], caller["uid"], require_main=False, caller=caller
+            )
+            self.ledger._existing_transaction(connection)
+            rows = connection.execute(
+                "SELECT original.binding_json,entry.entered_json "
+                "FROM aos_shared_launch_draft_v1 original "
+                "JOIN aos_shared_launch_entries_draft_v1 entry USING(request_id) "
+                "WHERE entry.entered_sha256=? LIMIT 2",
+                (digest(entered.model_dump(mode="json")),),
+            ).fetchall()
+            if len(rows) != 1 or rows[0]["entered_json"] != canonical(
+                entered.model_dump(mode="json")
+            ):
+                raise LaunchLedgerError("entry_required")
+            binding = LaunchBinding.model_validate_json(rows[0]["binding_json"], strict=True)
+            if admission["server_generation"] != binding.broker.model_dump(mode="json"):
+                raise LaunchLedgerError("stale_broker")
+            entry = self.policy.resolve(binding.request_id, binding.sha256(), deadline)
+            request = _Request(
+                "verify_runtime", caller["pid"], caller["uid"], deadline, entry, entered, admission
+            )
+            token = _request.set(request)
+            self.ledger.verify_runtime(connection, binding, entered)
+        except sqlite3.Error as error:
+            raise LaunchLedgerError("entry_required") from error
+        finally:
+            if token is not None:
+                _request.reset(token)
+            control_deadline.reset(budget)
 
 
 def _directory(path: Path, expected: dict[str, Any]) -> None:
@@ -484,7 +679,9 @@ def _directory(path: Path, expected: dict[str, Any]) -> None:
         raise LaunchLedgerError("workspace_changed")
 
 
-def _durable_intent(request: _Request, intent: DurableLaunchIntent) -> None:
+def _durable_intent(
+    request: _Request, intent: DurableLaunchIntent, *, pristine: bool = True
+) -> None:
     """Exact canonical AOS v1 documents and pristine original directory scope."""
     binding = request.entry.binding
     workspace = Path(binding.workspace)
@@ -608,11 +805,15 @@ def _durable_intent(request: _Request, intent: DurableLaunchIntent) -> None:
         or any(observed[name] is not value for name, value in flags.items())
     ):
         raise LaunchLedgerError("intent_conflict")
-    if os.listdir(workspace) or set(os.listdir(session)) != {
-        "workspace",
-        "shared-provision.json",
-        "shared-launch-intent.json",
-    }:
+    if pristine and (
+        os.listdir(workspace)
+        or set(os.listdir(session))
+        != {
+            "workspace",
+            "shared-provision.json",
+            "shared-launch-intent.json",
+        }
+    ):
         raise LaunchLedgerError("scope_not_pristine")
     _directory(session, provision["session_identity"])
     _directory(workspace, provision["workspace_identity"])

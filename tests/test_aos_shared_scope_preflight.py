@@ -98,6 +98,10 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     from aos.shared_desktop_provision import claim_launch, load_provision, provision_scope
 
     case = receipt_launch
+    # Broker entry transport has its own real socket/ledger tests. This source
+    # compatibility fixture never contacts a broker or launches a native worker.
+    case.shared_runtime = Mock()
+    monkeypatch.setattr(launch, "_shared_launch_runtime", Mock(return_value=case.shared_runtime))
     root = Path(aos.__file__).resolve().parents[2]
     script = root / "scripts/serve_desktop.py"
     spec = importlib.util.spec_from_file_location("shared_preflight_fixture_desktop", script)
@@ -295,7 +299,42 @@ def test_exact_pristine_claim_is_read_only_and_preserves_legacy_authority_gates(
     factory.verify_shared_scope_before_main()
     case.capture.assert_called_once()
     case.native.assert_called_once()
+    case.shared_runtime.enter.assert_called_once_with(case.deadline)
+    assert case.shared_runtime.verify.call_count == 2
     assert json.loads(case.output.read_bytes())["expires_boottime"] == 600.0
+
+
+def test_shared_entry_denial_prevents_native_work_and_receipt(shared_launch):
+    case = shared_launch
+    case.shared_runtime.enter.side_effect = ValueError("entry revoked")
+    with pytest.raises(ValueError, match="entry revoked"):
+        case.prepare()
+    case.native.assert_not_called()
+    case.shared_runtime.verify.assert_not_called()
+    assert not case.output.exists()
+
+
+def test_shared_revocation_after_native_verification_prevents_receipt(shared_launch):
+    case = shared_launch
+
+    def revoke():
+        case.shared_runtime.enter.assert_called_once_with(case.deadline)
+        case.shared_runtime.verify.side_effect = ValueError("entry revoked")
+
+    case.on_verify = revoke
+    with pytest.raises(ValueError, match="entry revoked"):
+        case.prepare()
+    case.native.assert_called_once()
+    assert not case.output.exists()
+
+
+def test_shared_revocation_before_desktop_is_rechecked(shared_launch):
+    case = shared_launch
+    _module, factory, _lab = case.prepare()
+    case.shared_runtime.verify.side_effect = ValueError("entry revoked")
+    with pytest.raises(ValueError, match="entry revoked"):
+        factory.verify_shared_scope_before_main()
+    assert case.shared_runtime.verify.call_count == 2
 
 
 def test_unsupported_transport_fails_before_native_verification_or_receipt(

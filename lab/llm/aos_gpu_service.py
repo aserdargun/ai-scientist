@@ -5,6 +5,7 @@ from __future__ import annotations
 import array
 import concurrent.futures
 import errno
+import math
 import os
 import re
 import select
@@ -16,6 +17,7 @@ import time
 from dataclasses import asdict
 from pathlib import Path
 from subprocess import SubprocessError  # nosec B404 -- exception type only; no process launch here
+from typing import Any
 
 from lab.llm.aos_gpu_broker import LabAOSBroker, PeerGeneration
 from lab.llm.aos_gpu_control import (
@@ -25,7 +27,7 @@ from lab.llm.aos_gpu_control import (
     ControlPolicy,
     LabAOSControl,
 )
-from lab.llm.aos_gpu_control_store import ControlStore, control_deadline
+from lab.llm.aos_gpu_control_store import ControlStore, ControlStoreError, control_deadline
 from lab.llm.aos_gpu_executor import (
     PROJECT_ROOT,
     AOSProfile,
@@ -46,11 +48,102 @@ from lab.llm.gpu_scheduler import (
     boottime,
 )
 from lab.llm.native_runtime import NvidiaSmiObserver, SystemdUnitManager
+from lab.llm.shared_launch_authority import SharedLaunchAuthority
+from lab.llm.shared_launch_ledger import LaunchLedgerError
+from lab.llm.shared_launch_transport import WIRE_SCHEMA_SHA256
 
 MAX_CONFIG_BYTES = 64 * 1024
 WORKERS = 4
 PROFILE_KEYS = frozenset({"aos.decider.turn.v1", "aos.bonsai.recovery.v1", "aos.bonsai.vision.v1"})
 BROKER_UNIT = "swapp-lab-gpu-broker.service"
+SHARED_DESKTOP_UNIT = "swapp-aos-gpu-shared-desktop-default.service"
+_SHARED_ADMISSION_DENIALS = frozenset(
+    {
+        "draft_disabled",
+        "entry_required",
+        "entry_admission_closed",
+        "admission_closed",
+        "expired_or_not_yet_issued",
+        "unauthorized_principal",
+        "unreviewed_request",
+        "request_conflict",
+        "intent_conflict",
+        "launch_policy_disabled",
+        "policy_changed",
+        "control_policy_disabled",
+        "control_binding_changed",
+        "runtime_admission_changed",
+        "reviewed_file_changed",
+        "private_review_required",
+        "prerequisite_verifier_required",
+        "workspace_changed",
+        "invalid_provision",
+        "plan_changed",
+        "activation_changed",
+        "scope_not_pristine",
+    }
+)
+_SHARED_GENERATION_DENIALS = frozenset(
+    {
+        "wrong_boot",
+        "stale_generation",
+        "stale_broker",
+        "stale_service",
+        "service_mainpid_required",
+        "runtime_caller_changed",
+        "entered_generation_conflict",
+        "pid_namespace_changed",
+    }
+)
+
+
+def _verify_current_admission(
+    connection: sqlite3.Connection,
+    binding: dict[str, Any],
+    *,
+    control: LabAOSControl,
+    shared_launch_authority: SharedLaunchAuthority | None = None,
+) -> None:
+    """Verify current turn authority, then require the original shared service entry.
+
+    Trusted bootstrap supplies the authority with phase-aware prerequisites.
+    No listener, policy path or prerequisite is created by this composition.
+    Both verifiers use the caller's existing canonical arbiter transaction.
+    """
+    control.verify_saved_admission(connection, binding)
+    caller = binding["caller_generation"]
+    if caller["unit"] != SHARED_DESKTOP_UNIT:
+        return
+    if (
+        shared_launch_authority is None
+        or shared_launch_authority.ledger.database != Path(control.store.database).absolute()
+        or shared_launch_authority.contract_sha256 != WIRE_SCHEMA_SHA256
+    ):
+        raise ControlStoreError("unauthorized")
+    inherited = control_deadline.get()
+    if inherited is not None and (
+        type(inherited) not in (float, int) or not math.isfinite(inherited)
+    ):
+        raise ControlStoreError("deadline_exceeded")
+    remaining = 3.0 if inherited is None else min(3.0, inherited - time.monotonic())
+    if remaining <= 0:
+        raise ControlStoreError("deadline_exceeded")
+    try:
+        shared_launch_authority.verify_runtime(connection, binding, deadline=boottime() + remaining)
+    except LaunchLedgerError as error:
+        # An unreadable observer/DB is not an affirmative revocation witness.
+        if isinstance(error.__cause__, (OSError, sqlite3.Error, SubprocessError)):
+            raise ControlStoreError("internal_unavailable") from error
+        code = str(error)
+        if code in _SHARED_ADMISSION_DENIALS:
+            raise ControlStoreError("unauthorized") from error
+        if code in _SHARED_GENERATION_DENIALS:
+            raise ControlStoreError("stale_generation") from error
+        if code == "deadline_exceeded":
+            raise ControlStoreError("deadline_exceeded") from error
+        raise ControlStoreError("internal_unavailable") from error
+    except (OSError, sqlite3.Error, SubprocessError) as error:
+        raise ControlStoreError("internal_unavailable") from error
 
 
 def _broker_unit_snapshot() -> dict[str, str]:
@@ -339,11 +432,17 @@ def _retained_channel_worker(
         channel.close()
 
 
-def serve(*, retained_channel: socket.socket | None = None) -> None:
+def serve(
+    *,
+    retained_channel: socket.socket | None = None,
+    shared_launch_authority: SharedLaunchAuthority | None = None,
+) -> None:
     """Serve the canonical broker; trusted bootstrap may supply one private FD.
 
     No environment flag creates a provider listener. Bootstrap must pass the
     other endpoint to the separately authorized AOS service generation.
+    Shared Desktop execution additionally requires an explicitly supplied
+    launch authority; absent composition denies that caller's admission.
     """
     if retained_channel is not None:
         prepare_channel(retained_channel)
@@ -392,8 +491,8 @@ def serve(*, retained_channel: socket.socket | None = None) -> None:
         clock=boottime,
         boot_id=_boot_id,
         peer_verifier=lambda peer: authenticator.still_current(PeerGeneration(**peer)),
-        current_admission_verifier=lambda connection, binding: control.verify_saved_admission(
-            connection, binding
+        current_admission_verifier=lambda connection, binding: _verify_current_admission(
+            connection, binding, control=control, shared_launch_authority=shared_launch_authority
         ),
     )
     policy_path = os.environ.get("SWAPP_GPU_CONTROL_POLICY")

@@ -360,6 +360,8 @@ def test_actual_current_rights_callback_invokes_reader_after_authentication(
         profile_pin=pin,
     )
     f.rights.bindings = {"profile": binding.model_dump()}
+    # Entry authorization is tested with the real ledger in its own suite.
+    f.rights.shared_launch_runtime = Mock()
     f.modules["scientist_admission_history"].ScientistAdmissionBindingV2 = Wire
     native = f.modules["scientist_transport"]
     native.BrokerPeer = Peer
@@ -408,6 +410,7 @@ def test_actual_current_rights_callback_invokes_reader_after_authentication(
         control_deadline.reset(token)
     assert events == ["broker", "broker-current", "caller", "exclusion", "broker-current", "caller"]
     policy.verify.assert_called_once()
+    f.rights.shared_launch_runtime.verify.assert_called_once_with(101.0)
 
 
 def test_legacy_launch_keeps_existing_factory_shape(receipt_launch):
