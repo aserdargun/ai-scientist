@@ -96,6 +96,25 @@ def test_bad_markers_fail_before_any_output_write(tmp_path, markers):
     assert (repo / "README.md").read_text() == markers
 
 
+def test_direct_parent_metadata_includes_child_and_rejects_conflict(tmp_path):
+    repo, snapshot, sessions, _, _ = _fixture(tmp_path)
+    _session(sessions / "root.jsonl", "root")
+    child = sessions / "child.jsonl"
+    _session(child, "child", contexts=(("gpt-6.1-sol", "high"),))
+    rows = [json.loads(line) for line in child.read_text().splitlines()]
+    rows[0]["payload"]["parent_thread_id"] = "root"
+    child.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    result = update(repo, snapshot, sessions)
+    assert result["model_evidence"]["related_sessions"] == 2
+    assert any(row["model"] == "gpt-6.1-sol" for row in result["development_models"])
+    rows[0]["payload"]["source"] = {
+        "subagent": {"thread_spawn": {"parent_thread_id": "other"}}
+    }
+    child.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    with pytest.raises(ValueError, match="Conflicting parent metadata"):
+        update(repo, snapshot, sessions)
+
+
 def test_retry_dedup_and_counter_decrease_is_not_hidden(tmp_path):
     repo, snapshot, sessions, goal, _ = _fixture(tmp_path)
     _session(sessions / "root.jsonl", "root")
@@ -108,8 +127,75 @@ def test_retry_dedup_and_counter_decrease_is_not_hidden(tmp_path):
     result = update(repo, snapshot, sessions)
     assert result["tokens_used"] == 1 and result["active_seconds"] == 2
     assert result["counter_decreases"] == ["tokens_used", "active_seconds"]
+    assert result["recorded_goal_period_totals"]["tokens_used"] == 1
+    assert result["recorded_goal_period_totals"]["active_seconds"] == 2
     assert update(repo, snapshot, sessions)["counter_decreases"] == result["counter_decreases"]
     assert len(history.read_text().splitlines()) == 2
+
+
+def test_goal_period_reset_sums_latest_observations_without_counting_retries(tmp_path):
+    repo, snapshot, sessions, goal, _ = _fixture(tmp_path)
+    _session(sessions / "root.jsonl", "root")
+    update(repo, snapshot, sessions)
+    goal.update(tokensUsed=102201818, timeUsedSeconds=258610, updatedAt=1790835800)
+    snapshot.write_text(json.dumps({"goal": goal}))
+    update(repo, snapshot, sessions)
+    goal.update(
+        createdAt=1790835837,
+        updatedAt=1790932588,
+        tokensUsed=17468641,
+        timeUsedSeconds=73257,
+    )
+    snapshot.write_text(json.dumps({"goal": goal}))
+    result = update(repo, snapshot, sessions)
+    totals = result["recorded_goal_period_totals"]
+    assert result["counter_decreases"] == []  # New epoch, not a same-period regression.
+    assert totals["observed_periods"] == 2
+    assert totals["tokens_used"] == 119670459
+    assert totals["active_seconds"] == 331867
+    assert totals["active_hours"] == 331867 / 3600
+    assert not totals["complete"]
+    assert totals["periods"][0]["goal_created_at_epoch"] == 1790237749
+    assert totals["periods"][1]["goal_created_at_epoch"] == 1790835837
+    assert update(repo, snapshot, sessions)["recorded_goal_period_totals"] == totals
+    assert len((repo / "docs/development-metrics-history.jsonl").read_text().splitlines()) == 3
+    readme = (repo / "README.md").read_text()
+    assert "Güncel goal dönemi token | 17468641" in readme
+    assert "toplam tokenı | 119670459" in readme
+    assert "Tarihsel gözlemlerin kapsamı eksiktir" in readme
+
+
+def test_foreign_thread_history_is_excluded_and_existing_foreign_output_rejected(tmp_path):
+    repo, snapshot, sessions, _, _ = _fixture(tmp_path)
+    _session(sessions / "root.jsonl", "root")
+    initial = update(repo, snapshot, sessions)
+    foreign = {**initial, "goal_thread_id": "foreign", "tokens_used": 999999999}
+    history = repo / "docs/development-metrics-history.jsonl"
+    with history.open("a") as stream:
+        stream.write(json.dumps(foreign) + "\n")
+    result = update(repo, snapshot, sessions)
+    totals = result["recorded_goal_period_totals"]
+    assert totals["tokens_used"] == initial["tokens_used"]
+    assert totals["observed_periods"] == 1
+    assert "unattributed_or_foreign_thread_history_excluded" in totals["limitations"]
+    output = repo / "docs/development-metrics.json"
+    output.write_text(json.dumps(foreign))
+    before = {path: path.read_bytes() for path in (repo / "README.md", output, history)}
+    with pytest.raises(ValueError, match="another goal"):
+        update(repo, snapshot, sessions)
+    assert all(path.read_bytes() == raw for path, raw in before.items())
+
+
+def test_equal_counters_in_new_epoch_are_distinct_history_observations(tmp_path):
+    repo, snapshot, sessions, goal, _ = _fixture(tmp_path)
+    _session(sessions / "root.jsonl", "root")
+    update(repo, snapshot, sessions)
+    goal["createdAt"] += 1
+    snapshot.write_text(json.dumps({"goal": goal}))
+    result = update(repo, snapshot, sessions)
+    assert result["recorded_goal_period_totals"]["observed_periods"] == 2
+    assert result["recorded_goal_period_totals"]["tokens_used"] == 2 * goal["tokensUsed"]
+    assert len((repo / "docs/development-metrics-history.jsonl").read_text().splitlines()) == 2
 
 
 def test_missing_logs_preserve_previous_model_observations(tmp_path):

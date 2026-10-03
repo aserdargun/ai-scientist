@@ -5,11 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from pathlib import Path
 from uuid import UUID
 
 from sqlalchemy import create_engine
 
+from lab.scorer.credential_path import configured_scorer_dsn_file
 from lab.scorer.holdout import recover_holdout_reservation, recover_holdout_run
 from lab.scorer.worker import DEFAULT_DSN_FILE, _secret, verify_systemd_invocation
 
@@ -31,7 +31,10 @@ def main(argv: list[str] | None = None) -> int:
     unit = f"swapp-ai-scientist-scorer-{args.recovery_unit_id.hex}.service"
     verify_systemd_invocation(unit)
     engine = create_engine(
-        _secret(Path(DEFAULT_DSN_FILE)), pool_size=1, max_overflow=0, pool_timeout=5
+        _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)),
+        pool_size=1,
+        max_overflow=0,
+        pool_timeout=5,
     )
     try:
         if args.reservation_id is not None:

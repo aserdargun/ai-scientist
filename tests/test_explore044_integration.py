@@ -38,6 +38,7 @@ def _ready(tmp_path: Path):
     lease = MemoryLease()
     loop = _loop(state, lease)
     loop.artifact_root = tmp_path
+    loop.holdout_enabled = False
     loop.budget = RunBudget(
         proposal_limit=35, wall_limit=1000, token_limit=10000, monotonic=lambda: 0.0
     )

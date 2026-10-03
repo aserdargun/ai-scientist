@@ -7,12 +7,15 @@ from pathlib import Path
 from typing import Literal
 from uuid import UUID
 
+import numpy as np
+import pandas as pd
 import pytest
 
-from harness.contracts import FitContext
+from harness.contracts import ADPipeline, AlarmPolicy, FitContext
 from lab.director import runner
 from lab.director.fake_llm import AgentContext, ProviderReceipt
 from lab.director.local_llm import (
+    _CANDIDATE_CONTRACT_EXAMPLE,
     _CANDIDATE_PROPOSAL_SCHEMA,
     _CANDIDATE_SCHEMA_NAME,
     _LOCAL_CANDIDATE_SOURCE_MAX_LENGTH,
@@ -340,7 +343,7 @@ def test_prompt_collector_discards_old_feedback_before_required_context() -> Non
 def test_compact_local_schema_is_versioned_and_applied_to_primary_and_repair() -> None:
     config = provider_profile_config()
     properties = _CANDIDATE_PROPOSAL_SCHEMA["properties"]
-    assert _PROMPT_TEMPLATE == "director.candidate-contract.metadata-only.v5"
+    assert _PROMPT_TEMPLATE == "director.candidate-contract.metadata-only.v6"
     assert _CANDIDATE_SCHEMA_NAME == "candidate-proposal-local-multiline-python.v3"
     assert properties["hypothesis"]["maxLength"] == _LOCAL_HYPOTHESIS_MAX_LENGTH == 384
     assert "minLength" not in properties["candidate_source"]
@@ -368,6 +371,31 @@ def test_compact_local_schema_is_versioned_and_applied_to_primary_and_repair() -
     assert "escaped JSON \\n sequences" in prompt
     assert "multi-line Python" in prompt
     assert "no markdown, code fences" in prompt
+
+
+def test_prompt_example_preserves_multisensor_fit_state_and_causal_row_scores() -> None:
+    # This executes the fixed, trusted prompt example, never generated candidate text.
+    namespace: dict[str, object] = {}
+    exec(compile(_CANDIDATE_CONTRACT_EXAMPLE, "<trusted-contract-example>", "exec"), namespace)
+    factory = namespace["build_candidate"]
+    assert callable(factory)
+    pipeline = factory()
+    assert isinstance(pipeline, ADPipeline)
+    train = pd.DataFrame({"a": [1.0, 3.0, 5.0, 7.0], "b": [9.0, 5.0, 3.0, 1.0]})
+    pipeline.fit(train, FitContext(0, ("b", "a"), (), 1, 60.0))
+    evaluation = pd.DataFrame({"a": [2.0, 4.0, 20.0], "b": [6.0, 3.0, 50.0]})
+    full = pipeline.score(evaluation)
+    assert full.shape == (len(evaluation),)
+    assert np.isfinite(full).all()
+    assert np.unique(full).size > 1
+    np.testing.assert_array_equal(pipeline.score(evaluation.iloc[:2]), full[:2])
+    changed_future = evaluation.copy()
+    changed_future.iloc[2] = [1e6, -1e6]
+    np.testing.assert_array_equal(pipeline.score(changed_future)[:2], full[:2])
+    np.testing.assert_array_equal(pipeline.score(evaluation), full)
+    policy = pipeline.alarm_policy(pipeline.score(train))
+    assert isinstance(policy, AlarmPolicy)
+    assert policy.release <= policy.threshold and policy.dwell >= 1
 
 
 def test_fit_context_allows_only_positive_sampling_or_unknown_cadence_none() -> None:

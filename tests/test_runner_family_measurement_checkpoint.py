@@ -96,3 +96,22 @@ def test_checkpoint_rejects_family_mismatch_or_invalid_family_measurement(
     mutate(row)
     with pytest.raises(RuntimeError):
         _read(family, row)
+
+
+@pytest.mark.parametrize("family", ["EVT", "PDM", "NRM"])
+def test_optional_wall_timings_survive_checkpoint_replay_without_filling_legacy(family):
+    row = _measurement(family)
+    old = _read(family, row)
+    assert "guarded_wall_seconds" not in old
+    assert "scorer_wall_seconds" not in old
+    row.update(guarded_wall_seconds=14.0, scorer_wall_seconds=0)
+    assert _read(family, row) == row
+
+
+@pytest.mark.parametrize("field", ["guarded_wall_seconds", "scorer_wall_seconds"])
+@pytest.mark.parametrize("value", [-1, float("nan"), float("inf"), True, None, "0.1", 10**1000])
+def test_optional_wall_timings_cannot_bypass_checkpoint_validation(field, value):
+    row = _measurement("EVT")
+    row[field] = value
+    with pytest.raises(RuntimeError, match="timing|provenance"):
+        _read("EVT", row)

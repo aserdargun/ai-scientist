@@ -8,7 +8,7 @@ import json
 import math
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from typing import cast
 
@@ -69,6 +69,7 @@ class GuardedCandidateEvaluation:
     determinism: GuardResult
     causality: GuardResult
     hardcoding: GuardResult
+    guarded_wall_seconds: float = 0.0
 
 
 def _arrow_bytes(frame: pd.DataFrame, *, allowed_sensor_columns: tuple[str, ...]) -> bytes:
@@ -214,6 +215,191 @@ def _run_candidate_phase(
         raise
 
 
+@dataclass(frozen=True, slots=True)
+class _PreparedInputs:
+    """Same-call immutable wire inputs; never an external evaluation cache."""
+
+    candidate_source: bytes
+    train_bytes: bytes
+    eval_bytes: bytes
+    context: FitContext
+    evaluation_rows: int
+    trusted_baseline_name: str | None
+    fingerprint: str
+
+
+def _input_fingerprint(inputs: _PreparedInputs) -> str:
+    document = {
+        "candidate_sha256": hashlib.sha256(inputs.candidate_source).hexdigest(),
+        "train_sha256": hashlib.sha256(inputs.train_bytes).hexdigest(),
+        "evaluation_sha256": hashlib.sha256(inputs.eval_bytes).hexdigest(),
+        "context": asdict(inputs.context),
+        "evaluation_rows": inputs.evaluation_rows,
+        "trusted_baseline_name": inputs.trusted_baseline_name,
+    }
+    return hashlib.sha256(
+        json.dumps(document, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def _prepare_inputs(
+    candidate_source: bytes,
+    train: pd.DataFrame,
+    evaluation: pd.DataFrame,
+    context: FitContext,
+    trusted_baseline_name: str | None,
+) -> _PreparedInputs:
+    if not isinstance(context, FitContext):
+        raise CandidateGuardReject("invalid_fit_context")
+    allowed_columns = tuple(context.signals)
+    if (
+        not allowed_columns
+        or len(allowed_columns) != len(set(allowed_columns))
+        or any(signal not in allowed_columns for signal in context.regime_signals)
+    ):
+        raise CandidateGuardReject("invalid_fit_context")
+    # Serialize once from validated numeric values: no labels, index, attrs or
+    # categorical metadata survive. Callbacks never receive these host frames.
+    inputs = _PreparedInputs(
+        candidate_source=bytes(candidate_source),
+        train_bytes=_arrow_bytes(train, allowed_sensor_columns=allowed_columns),
+        eval_bytes=_arrow_bytes(evaluation, allowed_sensor_columns=allowed_columns),
+        context=replace(
+            context, signals=allowed_columns, regime_signals=tuple(context.regime_signals)
+        ),
+        evaluation_rows=len(evaluation),
+        trusted_baseline_name=trusted_baseline_name,
+        fingerprint="",
+    )
+    return replace(inputs, fingerprint=_input_fingerprint(inputs))
+
+
+def _assert_inputs(inputs: _PreparedInputs) -> None:
+    if _input_fingerprint(inputs) != inputs.fingerprint:
+        raise CandidateGuardReject("guard_input_provenance_changed")
+
+
+def _remaining_phase(deadline: float, limit: int) -> int:
+    remaining = int(deadline - time.monotonic())
+    if remaining < 1:
+        raise CandidateGuardReject("timeout")
+    return min(limit, remaining)
+
+
+def _prepared_phase(
+    runner: LocalDockerRunner,
+    inputs: _PreparedInputs,
+    *,
+    phase: Phase,
+    arrow_input: bytes,
+    fit_artifact: bytes | None,
+    deadline: float,
+    timeout_seconds: int,
+    admission_check: Callable[[], None] | None,
+) -> SandboxResult:
+    def admitted() -> None:
+        if admission_check is not None:
+            admission_check()
+        _assert_inputs(inputs)
+        _remaining_phase(deadline, timeout_seconds)
+
+    result = _run_candidate_phase(
+        runner,
+        phase=phase,
+        candidate_source=inputs.candidate_source,
+        arrow_input=arrow_input,
+        fit_artifact=fit_artifact,
+        context=inputs.context,
+        timeout_seconds=_remaining_phase(deadline, timeout_seconds),
+        trusted_baseline_name=inputs.trusted_baseline_name,
+        admission_check=admitted,
+    )
+    _assert_inputs(inputs)
+    _remaining_phase(deadline, timeout_seconds)
+    return result
+
+
+def _prepared_score(
+    runner: LocalDockerRunner,
+    inputs: _PreparedInputs,
+    *,
+    arrow_input: bytes,
+    fit_artifact: bytes,
+    policy: AlarmPolicy,
+    deadline: float,
+    timeout_seconds: int = 30,
+    admission_check: Callable[[], None] | None,
+) -> tuple[SandboxResult, CandidateScoreArtifact]:
+    score = _prepared_phase(
+        runner,
+        inputs,
+        phase="score",
+        arrow_input=arrow_input,
+        fit_artifact=fit_artifact,
+        deadline=deadline,
+        timeout_seconds=timeout_seconds,
+        admission_check=admission_check,
+    )
+    if len(score.artifacts) != 1 or score.artifacts[0].name != "scores.json":
+        raise CandidateGuardReject("score_artifact_set_mismatch")
+    artifact = _score_artifact(
+        score.artifacts[0].content,
+        inputs.evaluation_rows,
+        allow_constant_scores=inputs.trusted_baseline_name is not None,
+        expected_policy=policy,
+    )
+    return score, artifact
+
+
+def _prepared_fit_score(
+    runner: LocalDockerRunner,
+    inputs: _PreparedInputs,
+    *,
+    deadline: float,
+    fit_timeout_seconds: int = 60,
+    score_timeout_seconds: int = 30,
+    admission_check: Callable[[], None] | None,
+) -> CandidateEvaluation:
+    fit = _prepared_phase(
+        runner,
+        inputs,
+        phase="fit",
+        arrow_input=inputs.train_bytes,
+        fit_artifact=None,
+        deadline=deadline,
+        timeout_seconds=fit_timeout_seconds,
+        admission_check=admission_check,
+    )
+    by_name = {artifact.name: artifact for artifact in fit.artifacts}
+    if set(by_name) != {"model.bin", "policy.json"}:
+        raise CandidateGuardReject("fit_artifact_set_mismatch")
+    fit_artifact = by_name["model.bin"].content
+    if not fit_artifact:
+        raise CandidateGuardReject("empty_fit_artifact")
+    policy = _strict_policy(by_name["policy.json"].content)
+    score, artifact = _prepared_score(
+        runner,
+        inputs,
+        arrow_input=inputs.eval_bytes,
+        fit_artifact=fit_artifact,
+        policy=policy,
+        deadline=deadline,
+        timeout_seconds=score_timeout_seconds,
+        admission_check=admission_check,
+    )
+    return CandidateEvaluation(
+        fit_artifact=fit_artifact,
+        fit_artifact_sha256=hashlib.sha256(fit_artifact).hexdigest(),
+        scores=tuple(artifact.scores),
+        policy=policy,
+        fit_seconds=fit.elapsed_seconds,
+        score_seconds=score.elapsed_seconds,
+        score_document=score.artifacts[0].content,
+        fit_container_name=fit.container_name,
+        score_container_name=score.container_name,
+    )
+
+
 def run_candidate_fit_score(
     runner: LocalDockerRunner,
     *,
@@ -228,8 +414,6 @@ def run_candidate_fit_score(
     admission_check: Callable[[], None] | None = None,
 ) -> CandidateEvaluation:
     """Run typed fit and score in separate fresh containers and validate output."""
-    if not isinstance(context, FitContext):
-        raise CandidateGuardReject("invalid_fit_context")
     if (
         isinstance(remaining_seconds, bool)
         or not isinstance(remaining_seconds, int)
@@ -237,66 +421,14 @@ def run_candidate_fit_score(
     ):
         raise ValueError("remaining evaluation deadline must be within 1..600 seconds")
     deadline = time.monotonic() + remaining_seconds
-    allowed_columns = tuple(context.signals)
-    if (
-        not allowed_columns
-        or len(allowed_columns) != len(set(allowed_columns))
-        or any(signal not in allowed_columns for signal in context.regime_signals)
-    ):
-        raise CandidateGuardReject("invalid_fit_context")
-    train_bytes = _arrow_bytes(train, allowed_sensor_columns=allowed_columns)
-    eval_bytes = _arrow_bytes(evaluation, allowed_sensor_columns=allowed_columns)
-    fit = _run_candidate_phase(
+    inputs = _prepare_inputs(candidate_source, train, evaluation, context, trusted_baseline_name)
+    return _prepared_fit_score(
         runner,
-        phase="fit",
-        candidate_source=candidate_source,
-        arrow_input=train_bytes,
-        fit_artifact=None,
-        context=context,
-        timeout_seconds=min(fit_timeout_seconds, max(1, int(deadline - time.monotonic()))),
-        trusted_baseline_name=trusted_baseline_name,
+        inputs,
+        deadline=deadline,
+        fit_timeout_seconds=fit_timeout_seconds,
+        score_timeout_seconds=score_timeout_seconds,
         admission_check=admission_check,
-    )
-    by_name = {artifact.name: artifact for artifact in fit.artifacts}
-    if set(by_name) != {"model.bin", "policy.json"}:
-        raise CandidateGuardReject("fit_artifact_set_mismatch")
-    fit_artifact = by_name["model.bin"].content
-    if not fit_artifact:
-        raise CandidateGuardReject("empty_fit_artifact")
-    policy = _strict_policy(by_name["policy.json"].content)
-    remaining = int(deadline - time.monotonic())
-    if remaining < 1:
-        raise CandidateGuardReject("timeout")
-    score = _run_candidate_phase(
-        runner,
-        phase="score",
-        candidate_source=candidate_source,
-        arrow_input=eval_bytes,
-        fit_artifact=fit_artifact,
-        context=context,
-        timeout_seconds=min(score_timeout_seconds, remaining),
-        trusted_baseline_name=trusted_baseline_name,
-        admission_check=admission_check,
-    )
-    if len(score.artifacts) != 1 or score.artifacts[0].name != "scores.json":
-        raise CandidateGuardReject("score_artifact_set_mismatch")
-    score_document = score.artifacts[0].content
-    artifact = _score_artifact(
-        score_document,
-        len(evaluation),
-        allow_constant_scores=trusted_baseline_name is not None,
-        expected_policy=policy,
-    )
-    return CandidateEvaluation(
-        fit_artifact=fit_artifact,
-        fit_artifact_sha256=hashlib.sha256(fit_artifact).hexdigest(),
-        scores=tuple(artifact.scores),
-        policy=policy,
-        fit_seconds=fit.elapsed_seconds,
-        score_seconds=score.elapsed_seconds,
-        score_document=score_document,
-        fit_container_name=fit.container_name,
-        score_container_name=score.container_name,
     )
 
 
@@ -360,6 +492,11 @@ def check_determinism(
         trusted_baseline_name=trusted_baseline_name,
         admission_check=admission_check,
     )
+    return _compare_determinism(first, second)
+
+
+def _compare_determinism(first: CandidateEvaluation, second: CandidateEvaluation) -> GuardResult:
+    """Compare two independently executed full fit/score participants."""
     delta = _relative_difference(np.asarray(first.scores), np.asarray(second.scores))
     same_policy = first.policy == second.policy
     passed = delta <= DETERMINISM_REL_TOLERANCE and same_policy
@@ -446,7 +583,24 @@ def check_causality(
             ).scores
         )
 
-    reference = score(eval_bytes)
+    return _causality_against_reference(
+        score(eval_bytes),
+        score,
+        evaluation=evaluation,
+        context=context,
+        cuts=cuts,
+    )
+
+
+def _causality_against_reference(
+    reference: np.ndarray,
+    score: Callable[[bytes], np.ndarray],
+    *,
+    evaluation: pd.DataFrame,
+    context: FitContext,
+    cuts: tuple[float, ...],
+) -> GuardResult:
+    """Same frozen fit and one independent reference against fresh perturbations."""
     max_delta = 0.0
     for index, fraction in enumerate(cuts):
         if not 0.0 < fraction < 1.0:
@@ -618,7 +772,8 @@ def run_guarded_seed_evaluation(
         or not 1 <= remaining_seconds <= 600
     ):
         raise ValueError("guarded seed deadline must be within 1..600 seconds")
-    deadline = time.monotonic() + remaining_seconds
+    started = time.monotonic()
+    deadline = started + remaining_seconds
     hardcoding = check_hardcoding(
         candidate_source,
         task_ids=task_ids,
@@ -634,44 +789,61 @@ def run_guarded_seed_evaluation(
             raise CandidateGuardReject("timeout")
         return seconds
 
-    candidate = run_candidate_fit_score(
-        runner,
-        candidate_source=candidate_source,
-        train=train,
-        evaluation=evaluation,
-        context=context,
-        remaining_seconds=remaining(),
-        trusted_baseline_name=trusted_baseline_name,
-        admission_check=admission_check,
+    inputs = _prepare_inputs(candidate_source, train, evaluation, context, trusted_baseline_name)
+    candidate = _prepared_fit_score(
+        runner, inputs, deadline=deadline, admission_check=admission_check
     )
-    determinism = check_determinism(
-        runner,
-        candidate_source=candidate_source,
-        train=train,
-        evaluation=evaluation,
-        context=context,
-        remaining_seconds=remaining(),
-        trusted_baseline_name=trusted_baseline_name,
-        admission_check=admission_check,
+    repeated = _prepared_fit_score(
+        runner, inputs, deadline=deadline, admission_check=admission_check
     )
+    determinism = _compare_determinism(candidate, repeated)
     if not determinism.passed:
         raise CandidateGuardReject(determinism.code)
-    causality = check_causality(
-        runner,
-        candidate_source=candidate_source,
-        train=train,
-        evaluation=evaluation,
-        context=context,
-        remaining_seconds=remaining(),
-        trusted_baseline_name=trusted_baseline_name,
-        admission_check=admission_check,
+
+    # Reuse only this call's validated reference, never a supplied/cache result.
+    _assert_inputs(inputs)
+    if hashlib.sha256(candidate.fit_artifact).hexdigest() != candidate.fit_artifact_sha256:
+        raise CandidateGuardReject("guard_fit_provenance_changed")
+    reference = _score_artifact(
+        candidate.score_document,
+        inputs.evaluation_rows,
+        allow_constant_scores=inputs.trusted_baseline_name is not None,
+        expected_policy=candidate.policy,
+    )
+    if tuple(reference.scores) != candidate.scores:
+        raise CandidateGuardReject("guard_score_provenance_changed")
+
+    def score(data: bytes) -> np.ndarray:
+        remaining()
+        _result, artifact = _prepared_score(
+            runner,
+            inputs,
+            arrow_input=data,
+            fit_artifact=candidate.fit_artifact,
+            policy=candidate.policy,
+            deadline=deadline,
+            admission_check=admission_check,
+        )
+        return np.asarray(artifact.scores)
+
+    # Reconstruct only trusted sanitized Arrow, not a candidate pickle. The
+    # caller's mutable DataFrame cannot alter the original reference inputs.
+    frozen_evaluation = ipc.open_stream(inputs.eval_bytes).read_all().to_pandas()
+    causality = _causality_against_reference(
+        np.asarray(reference.scores),
+        score,
+        evaluation=frozen_evaluation,
+        context=inputs.context,
+        cuts=(0.50, 0.70, 0.85),
     )
     if not causality.passed:
         raise CandidateGuardReject(causality.code)
     remaining()
+    _assert_inputs(inputs)
     return GuardedCandidateEvaluation(
         evaluation=candidate,
         determinism=determinism,
         causality=causality,
         hardcoding=hardcoding,
+        guarded_wall_seconds=time.monotonic() - started,
     )

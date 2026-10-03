@@ -246,7 +246,7 @@ def _verify_score_evidence(
                 output_digest = row.get("candidate_output_sha256")
                 if output_digest != expected_outputs[index]:
                     raise ValueError("Scorer output receipt differs from immutable replay input")
-                output_payload = read_artifact_bytes(output_digest)
+                output_payload = read_artifact_bytes(output_digest, artifact_root=artifact_root)
                 if hashlib.sha256(output_payload).hexdigest() != output_digest:
                     raise ValueError("Scorer output blob failed its SHA-256 check")
                 raw_scores.append(raw_score)
@@ -297,7 +297,7 @@ def _verify_score_evidence(
             if task.family != "NRM":
                 continue
             digest = output_group[index]
-            payload = read_artifact_bytes(digest)
+            payload = read_artifact_bytes(digest, artifact_root=artifact_root)
             if hashlib.sha256(payload).hexdigest() != digest:
                 raise ValueError("NRM position-guard output blob failed its SHA-256 check")
             artifact = parse_candidate_score(payload)

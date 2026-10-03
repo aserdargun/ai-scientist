@@ -220,6 +220,10 @@ def _loop(
     loop.lease = lease
     loop.artifact_root = object()
     loop.provider = SimpleNamespace(provider_id=provider_id)
+    loop.field_context = None
+    loop.field_context_sha256 = None
+    loop.prior_findings = None
+    loop.prior_findings_sha256 = None
     loop._next_checkpoint_sequence = lambda: lease.append_count + 1
     return cast(DirectorLoop, loop)
 

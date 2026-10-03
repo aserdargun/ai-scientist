@@ -139,7 +139,10 @@ def evaluate_and_score_seed(
     if hashlib.sha256(candidate_source).hexdigest() != candidate_sha256:
         raise ValueError("candidate source bytes differ from their preregistered digest")
     verify_execution_identity(runner, harness_sha256=harness_sha256, image_sha256=image_sha256)
-    from lab.director.evaluation_recovery import recover_evaluation_measurement
+    from lab.director.evaluation_recovery import (
+        recover_evaluation_measurement,
+        validated_evaluation_timings,
+    )
 
     replayed = recover_evaluation_measurement(
         director_engine,
@@ -181,6 +184,13 @@ def evaluate_and_score_seed(
         )
     except CandidateGuardReject as exc:
         raise CandidateExecutionRejected(exc.code) from exc
+    timings = validated_evaluation_timings(
+        {
+            "fit_seconds": guarded.evaluation.fit_seconds,
+            "score_seconds": guarded.evaluation.score_seconds,
+            "guarded_wall_seconds": guarded.guarded_wall_seconds,
+        }
+    )
     score_artifact = guarded.evaluation.score_document
     scorer_remaining = int(deadline - time.monotonic())
     if scorer_remaining < 1:
@@ -208,8 +218,7 @@ def evaluate_and_score_seed(
             "task_family": task.family,
             "sample_count": len(guarded.evaluation.scores),
             "candidate_output_sha256": hashlib.sha256(score_artifact).hexdigest(),
-            "fit_seconds": guarded.evaluation.fit_seconds,
-            "score_seconds": guarded.evaluation.score_seconds,
+            **timings,
             "guards": {
                 "hardcoding": guarded.hardcoding.code,
                 "determinism": guarded.determinism.code,
@@ -226,7 +235,7 @@ def evaluate_and_score_seed(
         seed=seed,
         candidate_sha256=candidate_sha256,
         candidate_output=score_artifact,
-        artifact_root=DEFAULT_ARTIFACT_ROOT,
+        artifact_root=artifact_root,
     )
     try:
         lease.require_run_active()
@@ -234,7 +243,12 @@ def evaluate_and_score_seed(
         if str(exc) == "director_run_is_not_active":
             cancel_queued_score_job(planner_engine, job_id=job_id)
         raise
-    result = run_scorer_process(job_id, remaining_seconds=scorer_remaining)
+    scorer_started = time.monotonic()
+    result = run_scorer_process(
+        job_id, remaining_seconds=scorer_remaining, artifact_root=artifact_root
+    )
+    scorer_wall_seconds = time.monotonic() - scorer_started
+    timings = validated_evaluation_timings({**timings, "scorer_wall_seconds": scorer_wall_seconds})
     lease.require_run_active()
     if result.exit_code != 0 or result.result is None:
         raise RuntimeError(f"separate Scorer failed for job {job_id}")
@@ -331,8 +345,7 @@ def evaluate_and_score_seed(
         "task_family": task.family,
         "task_score": task_score,
         **optional_metrics,
-        "fit_seconds": guarded.evaluation.fit_seconds,
-        "score_seconds": guarded.evaluation.score_seconds,
+        **timings,
         "guards": {
             "hardcoding": guarded.hardcoding.code,
             "determinism": guarded.determinism.code,

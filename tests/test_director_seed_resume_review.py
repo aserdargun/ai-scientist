@@ -47,6 +47,9 @@ class MemoryCheckpoints:
         ("candidate_crash", False),
         ("timeout", False),
         ("degenerate_constant_scores", False),
+        ("guard_input_provenance_changed", False),
+        ("guard_fit_provenance_changed", False),
+        ("guard_score_provenance_changed", False),
         ("measured", True),
     ],
 )

@@ -5,11 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from pathlib import Path
 from uuid import UUID
 
 from sqlalchemy import create_engine
 
+from lab.scorer.credential_path import configured_scorer_dsn_file
 from lab.scorer.holdout import evaluate_holdout_reservation
 from lab.scorer.worker import DEFAULT_DSN_FILE, _secret
 
@@ -26,7 +26,10 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     engine = create_engine(
-        _secret(Path(DEFAULT_DSN_FILE)), pool_size=1, max_overflow=0, pool_timeout=20
+        _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)),
+        pool_size=1,
+        max_overflow=0,
+        pool_timeout=20,
     )
     try:
         result = evaluate_holdout_reservation(

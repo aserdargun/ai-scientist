@@ -16,7 +16,7 @@ import time
 from collections.abc import Callable
 from dataclasses import asdict
 from pathlib import Path
-from typing import Literal, cast
+from typing import Literal, TypedDict, cast
 from uuid import UUID, uuid5
 
 from pydantic import ValidationError
@@ -34,6 +34,18 @@ from lab.director.fake_llm import (
     prompt_messages_sha256,
 )
 from lab.director.journal import canonical_bytes
+from lab.director.mode_proposals import (
+    MODE_COMPILER_SHA256,
+    MODE_PROMPT_TEMPLATE,
+    MODE_PROPOSAL_SCHEMA,
+    MODE_SCHEMA_NAME,
+    MODE_SCHEMA_SHA256,
+    MODE_SYSTEM_PROMPT,
+    OperatingModeProposal,
+    ProposalContract,
+    compile_mode_proposal,
+    validate_proposal_contract,
+)
 from lab.llm.gpu_scheduler import PrincipalResolver
 from lab.llm.native_runtime import (
     LOCAL_RESEARCH_S1_PROFILE,
@@ -51,12 +63,36 @@ from lab.llm.native_runtime import (
 )
 
 _RECEIPT_NAMESPACE = UUID("65c75b81-e98b-480f-a608-5389bb6bf8bf")
-_PROMPT_TEMPLATE: Literal["director.candidate-contract.metadata-only.v5"] = (
-    "director.candidate-contract.metadata-only.v5"
+_PROMPT_TEMPLATE: Literal["director.candidate-contract.metadata-only.v6"] = (
+    "director.candidate-contract.metadata-only.v6"
 )
 _PROVIDER_ID: Literal["local-qwen.v1"] = "local-qwen.v1"
+_CANDIDATE_CONTRACT_EXAMPLE = """import numpy as np
+import pandas as pd
+from harness.contracts import ADPipeline, FitContext, AlarmPolicy
+
+class Candidate:
+    def fit(self, train: pd.DataFrame, ctx: FitContext) -> None:
+        self.signals = list(ctx.signals)
+        values = train.loc[:, self.signals].to_numpy(dtype=float)
+        self.center = values.mean(axis=0)
+        self.scale = np.maximum(values.std(axis=0), 1e-8)
+
+    def score(self, data: pd.DataFrame) -> np.ndarray:
+        values = data.loc[:, self.signals].to_numpy(dtype=float)
+        residuals = np.abs((values - self.center) / self.scale)
+        return residuals.mean(axis=1)
+
+    def alarm_policy(self, train_scores: np.ndarray) -> AlarmPolicy:
+        threshold = float(np.percentile(train_scores, 95))
+        return AlarmPolicy(threshold, threshold * 0.8, 1)
+
+def build_candidate() -> ADPipeline:
+    return Candidate()
+"""
 _SYSTEM_PROMPT = (
-    "You propose source code only; trusted Docker and Scorer code measures it, and the "
+    # Static model instructions; the text below is never passed to a SQL engine.
+    "You propose source code only; trusted Docker and Scorer code measures it, and the "  # nosec B608
     "Referee decides. Return exactly one compact JSON object with hypothesis (1..384 "
     "characters), move_type (the preselected move), candidate_source (complete runnable "
     "Python source, 1..6000 characters), and predicted_delta (finite number in [-4,4]). "
@@ -82,7 +118,22 @@ _SYSTEM_PROMPT = (
     "return one finite float per input row in order; larger means more anomalous, and a "
     "prefix's scores must not depend on future rows. alarm_policy uses training scores "
     "only and returns AlarmPolicy(threshold:float, release:float, dwell:int), with "
-    "release<=threshold and dwell>=1. Use only supplied signal columns and installed "
+    "release<=threshold and dwell>=1. Inputs can contain multiple sensor columns: "
+    "select them with train.loc[:, list(ctx.signals)], not train[ctx.signals]. "
+    "ctx exists only as fit's argument; store required settings and learned parameters "
+    "on self in fit, then use that fitted state in score. DataFrame.mean()/std() return "
+    "per-column Series, not scalar floats. Convert sensor values to an array, learn "
+    "per-column parameters in fit, and reduce sensor residuals across axis=1 to return "
+    "shape (len(data),), never (len(data), number_of_signals). Never calculate batch "
+    "mean, std, quantiles, or normalization from evaluation data in score: that makes "
+    "earlier scores depend on future rows. score must work repeatedly from the same "
+    "frozen fitted state and never rely on a module-global ctx. "
+    "The following complete example illustrates the interface, fitted state, row "
+    "reduction, and causality only; it is not a required detector or research method. "
+    "Choose and implement the preselected move using the trusted context; preserve "
+    "these interface properties for any method you choose:\n"
+    + _CANDIDATE_CONTRACT_EXAMPLE
+    + "\nUse only supplied signal columns and installed "
     "numpy/pandas plus harness.contracts. Do not access files, network, labels, or hidden "
     "evaluation values. Use only supplied metadata, development feedback, and champion. "
     "If a complete implementation cannot fit the source limit, choose a smaller valid "
@@ -167,6 +218,10 @@ sys.stdout.write(json.dumps({"counts": counts}, separators=(",", ":")))
 """
 
 
+class _RuntimeCancellationOptions(TypedDict, total=False):
+    cancellation_observer: Callable[[], None]
+
+
 class ProviderOutputError(ValueError):
     """Invalid provider output with durable host-measured model usage attached."""
 
@@ -249,8 +304,10 @@ class _AttemptRuntimeView:
 
 def provider_profile_config(
     profile_set: Literal["smoke", "research"] = "smoke",
+    proposal_contract: ProposalContract = "candidate-python.v1",
 ) -> dict[str, object]:
     """Canonical trusted provider configuration selected by immutable registry digest."""
+    validate_proposal_contract(proposal_contract)
     pin = ModelPin.from_repository()
     profiles = (
         (LOCAL_SMOKE_S1_PROFILE, LOCAL_SMOKE_S2_PROFILE)
@@ -296,25 +353,64 @@ def provider_profile_config(
         )
     elif profile_set != "smoke":
         raise ValueError("unknown trusted local Qwen profile set")
+    if proposal_contract == "operating-mode-config.v1":
+        config.update(
+            {
+                "proposal_contract": proposal_contract,
+                "prompt_template": MODE_PROMPT_TEMPLATE,
+                "output_schema": MODE_SCHEMA_NAME,
+                "output_schema_sha256": MODE_SCHEMA_SHA256,
+                "output_limits": {"hypothesis_characters": 384},
+                "repair_policy": "one-tokenizer-bounded-mode-config-repair.v1",
+                "candidate_compiler": "lab.operating_modes.candidate.candidate_source.v1",
+                "candidate_compiler_sha256": MODE_COMPILER_SHA256,
+                "system_prompt_sha256": hashlib.sha256(MODE_SYSTEM_PROMPT.encode()).hexdigest(),
+            }
+        )
     return config
 
 
-def provider_config_sha256(profile_set: Literal["smoke", "research"] = "smoke") -> str:
-    return hashlib.sha256(canonical_bytes(provider_profile_config(profile_set))).hexdigest()
+def provider_config_sha256(
+    profile_set: Literal["smoke", "research"] = "smoke",
+    proposal_contract: ProposalContract = "candidate-python.v1",
+) -> str:
+    return hashlib.sha256(
+        canonical_bytes(provider_profile_config(profile_set, proposal_contract))
+    ).hexdigest()
 
 
 def provider_profile_set_for_sha256(
     expected_sha256: str,
+    proposal_contract: ProposalContract = "candidate-python.v1",
 ) -> Literal["smoke", "research"]:
     """Resolve only the exact registered provider config; never accept a caller profile name."""
+    validate_proposal_contract(proposal_contract)
     if re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None:
         raise ValueError("trusted provider configuration digest is malformed")
     profile_sets: tuple[Literal["smoke", "research"], ...] = ("smoke", "research")
     matches = tuple(
         profile_set
         for profile_set in profile_sets
-        if provider_config_sha256(profile_set) == expected_sha256
+        if provider_config_sha256(profile_set, proposal_contract) == expected_sha256
     )
+    if len(matches) != 1:
+        raise ValueError("trusted provider configuration digest is unknown or ambiguous")
+    return matches[0]
+
+
+def provider_proposal_contract_for_sha256(expected_sha256: str) -> ProposalContract:
+    """Resolve an immutable registry digest across the two finite output contracts."""
+    matches: list[ProposalContract] = []
+    contracts: tuple[ProposalContract, ...] = (
+        "candidate-python.v1",
+        "operating-mode-config.v1",
+    )
+    for proposal_contract in contracts:
+        try:
+            provider_profile_set_for_sha256(expected_sha256, proposal_contract)
+        except ValueError:
+            continue
+        matches.append(proposal_contract)
     if len(matches) != 1:
         raise ValueError("trusted provider configuration digest is unknown or ambiguous")
     return matches[0]
@@ -343,10 +439,13 @@ class LocalQwenProposalProvider:
         runtime_database: Path,
         registry_entry_sha256: str,
         profile_set: Literal["smoke", "research"] = "smoke",
+        proposal_contract: ProposalContract = "candidate-python.v1",
+        cancellation_observer: Callable[[], None] | None = None,
     ) -> None:
         if owner != "lab":
             raise ValueError("local Director model calls must use the Lab GPU lane")
         self.run_id = run_id
+        self.cancellation_observer = cancellation_observer
         self.owner = owner
         self.principal_resolver = principal_resolver
         self.runtime_database = runtime_database
@@ -357,7 +456,23 @@ class LocalQwenProposalProvider:
             raise ValueError("provider registry entry receipt must be a lowercase SHA-256")
         self.registry_entry_sha256 = registry_entry_sha256
         self.profile_set = profile_set
-        self.configuration_sha256 = provider_config_sha256(profile_set)
+        self.proposal_contract = validate_proposal_contract(proposal_contract)
+        self.configuration_sha256 = provider_config_sha256(profile_set, proposal_contract)
+        self.response_schema = (
+            MODE_PROPOSAL_SCHEMA
+            if proposal_contract == "operating-mode-config.v1"
+            else _CANDIDATE_PROPOSAL_SCHEMA
+        )
+        self.response_schema_sha256 = (
+            MODE_SCHEMA_SHA256
+            if proposal_contract == "operating-mode-config.v1"
+            else _CANDIDATE_SCHEMA_SHA256
+        )
+        self.response_schema_name = (
+            MODE_SCHEMA_NAME
+            if proposal_contract == "operating-mode-config.v1"
+            else _CANDIDATE_SCHEMA_NAME
+        )
 
     def _profile_for_system(self, system: Literal["S1", "S2"]) -> ModelTurnProfile:
         if self.profile_set == "smoke":
@@ -370,11 +485,19 @@ class LocalQwenProposalProvider:
 
     @staticmethod
     def _message_variants(
-        context: AgentContext, profile: ModelTurnProfile
+        context: AgentContext,
+        profile: ModelTurnProfile,
+        proposal_contract: ProposalContract = "candidate-python.v1",
     ) -> tuple[tuple[dict[str, str], ...], ...]:
         # Keep all task metadata and the full champion source. If necessary,
         # discard the oldest feedback first; never trim candidate contract or
         # trusted task identities to make a prompt fit.
+        validate_proposal_contract(proposal_contract)
+        system_prompt = (
+            MODE_SYSTEM_PROMPT
+            if proposal_contract == "operating-mode-config.v1"
+            else _SYSTEM_PROMPT
+        )
         variants: list[tuple[dict[str, str], ...]] = []
         for feedback_count in range(len(context.recent_feedback), -1, -1):
             selected_feedback = context.recent_feedback[-feedback_count:] if feedback_count else ()
@@ -393,7 +516,7 @@ class LocalQwenProposalProvider:
                 )
 
             messages = (
-                {"role": "system", "content": _SYSTEM_PROMPT},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user},
             )
             prompt_bytes = sum(len(item["content"].encode("utf-8")) for item in messages)
@@ -407,9 +530,13 @@ class LocalQwenProposalProvider:
         raise ValueError("required task metadata and champion exceed the bounded prompt collector")
 
     @staticmethod
-    def _messages(context: AgentContext, profile: ModelTurnProfile) -> tuple[dict[str, str], ...]:
+    def _messages(
+        context: AgentContext,
+        profile: ModelTurnProfile,
+        proposal_contract: ProposalContract = "candidate-python.v1",
+    ) -> tuple[dict[str, str], ...]:
         """Return the fullest bounded variant for display and unit fixtures."""
-        return LocalQwenProposalProvider._message_variants(context, profile)[0]
+        return LocalQwenProposalProvider._message_variants(context, profile, proposal_contract)[0]
 
     def _verify_tokenizer_files(self) -> None:
         expected = {name: (size, digest) for name, size, digest in self.model_pin.files}
@@ -517,7 +644,9 @@ class LocalQwenProposalProvider:
         *,
         timeout_seconds: float,
     ) -> tuple[tuple[dict[str, str], ...], int]:
-        variants = self._message_variants(context, profile)
+        variants = self._message_variants(
+            context, profile, proposal_contract=self.proposal_contract
+        )
         counts = self._count_prompt_variants(variants, profile, timeout_seconds=timeout_seconds)
         for messages, token_count in zip(variants, counts, strict=True):
             if (
@@ -574,7 +703,11 @@ class LocalQwenProposalProvider:
             if (
                 saved.get("profile_id") != profile.profile_id
                 or saved.get("prompt_sha256") != prompt_messages_sha256(messages)
-                or saved.get("response_schema_sha256") != _CANDIDATE_SCHEMA_SHA256
+                or saved.get("response_schema_sha256") != self.response_schema_sha256
+                or (
+                    self.proposal_contract == "operating-mode-config.v1"
+                    and saved.get("proposal_contract") != self.proposal_contract
+                )
                 or saved.get("context_sha256") != prompt_context_sha256(context)
                 or saved.get("request_id") != request_id
                 or saved.get("provider_config_sha256") != self.configuration_sha256
@@ -704,6 +837,9 @@ class LocalQwenProposalProvider:
         activation_seconds = profile.activation_seconds
         inference_seconds = min(profile.inference_seconds, remaining - activation_seconds)
         total_seconds = activation_seconds + inference_seconds
+        cancellation_options: _RuntimeCancellationOptions = {}
+        if self.cancellation_observer is not None:
+            cancellation_options["cancellation_observer"] = self.cancellation_observer
         runtime = OwnedVllmRuntime(
             self.runtime_database,
             principal_resolver=self.principal_resolver,
@@ -712,13 +848,14 @@ class LocalQwenProposalProvider:
             activation_seconds=activation_seconds,
             inference_seconds=inference_seconds,
             total_seconds=total_seconds,
+            **cancellation_options,
         )
         started_payload = {
             "state": "started",
             "profile_id": profile.profile_id,
             "attempt_kind": attempt_kind,
             "prompt_sha256": prompt_messages_sha256(messages),
-            "response_schema_sha256": _CANDIDATE_SCHEMA_SHA256,
+            "response_schema_sha256": self.response_schema_sha256,
             "output_token_limit": bounded_output,
             "preflight_prompt_tokens": preflight_prompt_tokens,
             "request_id": request_id,
@@ -729,6 +866,8 @@ class LocalQwenProposalProvider:
             "model_sha256": self.model_pin.digest,
             "profile_sha256": hashlib.sha256(canonical_bytes(asdict(profile))).hexdigest(),
         }
+        if self.proposal_contract == "operating-mode-config.v1":
+            started_payload["proposal_contract"] = self.proposal_contract
         started_payload["receipt"] = self._attempt_receipt(
             runtime,
             request_id,
@@ -740,6 +879,7 @@ class LocalQwenProposalProvider:
             attempt_kind=attempt_kind,
             output_token_limit=bounded_output,
             failure_type="AttemptOutcomeUnknown",
+            proposal_contract=self.proposal_contract,
         ).model_dump(mode="json")
         if attempt_save is not None:
             attempt_save(attempt_index, "started", started_payload)
@@ -751,8 +891,8 @@ class LocalQwenProposalProvider:
                 messages,
                 enable_thinking=profile.enable_thinking,
                 profile=profile,
-                response_schema_name=_CANDIDATE_SCHEMA_NAME,
-                response_schema=_CANDIDATE_PROPOSAL_SCHEMA,
+                response_schema_name=self.response_schema_name,
+                response_schema=self.response_schema,
                 output_token_limit=bounded_output,
             )
         except ModelOutputBudgetExceeded:
@@ -767,6 +907,7 @@ class LocalQwenProposalProvider:
                 preflight_prompt_tokens=preflight_prompt_tokens,
                 attempt_kind=attempt_kind,
                 output_token_limit=bounded_output,
+                proposal_contract=self.proposal_contract,
             )
             if attempt_save is not None:
                 attempt_save(
@@ -801,6 +942,7 @@ class LocalQwenProposalProvider:
                 attempt_kind=attempt_kind,
                 output_token_limit=bounded_output,
                 failure_type=type(exc).__name__,
+                proposal_contract=self.proposal_contract,
             )
             if attempt_save is not None:
                 attempt_save(
@@ -835,6 +977,7 @@ class LocalQwenProposalProvider:
             preflight_prompt_tokens=preflight_prompt_tokens,
             attempt_kind=attempt_kind,
             output_token_limit=bounded_output,
+            proposal_contract=self.proposal_contract,
         )
         if attempt_save is not None:
             attempt_save(
@@ -875,7 +1018,14 @@ class LocalQwenProposalProvider:
         output_token_limit: int,
         response_text: str | None = None,
         failure_type: str | None = None,
+        proposal_contract: ProposalContract = "candidate-python.v1",
     ) -> ProviderRuntimeReceipt:
+        validate_proposal_contract(proposal_contract)
+        schema_sha256 = (
+            MODE_SCHEMA_SHA256
+            if proposal_contract == "operating-mode-config.v1"
+            else _CANDIDATE_SCHEMA_SHA256
+        )
         identity: dict[str, object]
         try:
             identity = runtime.unit_identity_receipt("lab", request_id)
@@ -902,7 +1052,7 @@ class LocalQwenProposalProvider:
                 attempt_kind=attempt_kind,
                 sampling_top_k=profile.top_k,
                 prompt_sha256=prompt_messages_sha256(messages),
-                response_schema_sha256=_CANDIDATE_SCHEMA_SHA256,
+                response_schema_sha256=schema_sha256,
                 response_sha256=(
                     hashlib.sha256(response_text.encode("utf-8")).hexdigest()
                     if response_text is not None
@@ -937,7 +1087,7 @@ class LocalQwenProposalProvider:
                 attempt_kind=attempt_kind,
                 sampling_top_k=profile.top_k,
                 prompt_sha256=prompt_messages_sha256(messages),
-                response_schema_sha256=_CANDIDATE_SCHEMA_SHA256,
+                response_schema_sha256=schema_sha256,
                 response_sha256=None,
                 prompt_utf8_bytes=len(prompt_bytes),
                 preflight_prompt_tokens=preflight_prompt_tokens,
@@ -957,7 +1107,7 @@ class LocalQwenProposalProvider:
             attempt_kind=attempt_kind,
             sampling_top_k=profile.top_k,
             prompt_sha256=prompt_messages_sha256(messages),
-            response_schema_sha256=_CANDIDATE_SCHEMA_SHA256,
+            response_schema_sha256=schema_sha256,
             response_sha256=hashlib.sha256(reply.text.encode("utf-8")).hexdigest(),
             prompt_utf8_bytes=len(prompt_bytes),
             preflight_prompt_tokens=preflight_prompt_tokens,
@@ -993,7 +1143,11 @@ class LocalQwenProposalProvider:
             requested_system=context.system,
             actual_system=profile.system,
             fallback_from=cast(Literal["S2"] | None, fallback_from),
-            context_template=_PROMPT_TEMPLATE,
+            context_template=(
+                "director.operating-mode-contract.metadata-only.v1"
+                if self.proposal_contract == "operating-mode-config.v1"
+                else _PROMPT_TEMPLATE
+            ),
             context_sha256=prompt_context_sha256(context),
             prompt_sha256=attempts[-1].prompt_sha256,
             input_tokens=sum(item.prompt_tokens or 0 for item in attempts),
@@ -1017,7 +1171,9 @@ class LocalQwenProposalProvider:
         *,
         attempt_kind: Literal["proposal", "repair"],
         preflight_prompt_tokens: int,
+        proposal_contract: ProposalContract = "candidate-python.v1",
     ) -> ProviderAttemptTranscript:
+        validate_proposal_contract(proposal_contract)
         response_bytes = reply.text.encode("utf-8")
         if len(response_bytes) > 256 * 1024:
             raise ValueError("model final content exceeds its transcript bound")
@@ -1028,17 +1184,30 @@ class LocalQwenProposalProvider:
                 ProviderPromptMessage.model_validate(item, strict=True) for item in messages
             ),
             prompt_sha256=prompt_messages_sha256(messages),
-            response_schema_sha256=_CANDIDATE_SCHEMA_SHA256,
+            response_schema_sha256=(
+                MODE_SCHEMA_SHA256
+                if proposal_contract == "operating-mode-config.v1"
+                else _CANDIDATE_SCHEMA_SHA256
+            ),
             response_sha256=hashlib.sha256(response_bytes).hexdigest(),
             response_text=reply.text,
             preflight_prompt_tokens=preflight_prompt_tokens,
         )
 
     @staticmethod
-    def _parse_proposal(raw_text: str, expected_move: str | None) -> CandidateProposal:
+    def _parse_proposal(
+        raw_text: str,
+        expected_move: str | None,
+        proposal_contract: ProposalContract = "candidate-python.v1",
+    ) -> CandidateProposal:
+        validate_proposal_contract(proposal_contract)
         decoded = json.loads(raw_text.strip(), object_pairs_hook=_reject_duplicate_keys)
         if not isinstance(decoded, dict):
             raise ValueError("proposal must be one JSON object")
+        if proposal_contract == "operating-mode-config.v1":
+            return compile_mode_proposal(
+                OperatingModeProposal.model_validate(decoded, strict=True), expected_move
+            )
         hypothesis = decoded.get("hypothesis")
         candidate_source = decoded.get("candidate_source")
         if not isinstance(hypothesis, str) or not (
@@ -1100,7 +1269,7 @@ class LocalQwenProposalProvider:
             + validation_code
             + ". Return one complete, corrected proposal JSON object."
         )
-        bases = self._message_variants(context, profile)
+        bases = self._message_variants(context, profile, proposal_contract=self.proposal_contract)
         compact_variants = tuple(
             (
                 base[0],
@@ -1220,6 +1389,7 @@ class LocalQwenProposalProvider:
                     preflight_prompt_tokens=failure.preflight_prompt_tokens,
                     output_token_limit=failure.output_token_limit,
                     failure_type=type(failure.cause).__name__,
+                    proposal_contract=self.proposal_contract,
                 )
             )
             receipt = self._provider_receipt(
@@ -1246,6 +1416,7 @@ class LocalQwenProposalProvider:
                     messages=messages,
                     preflight_prompt_tokens=preflight_tokens,
                     output_token_limit=output_limit,
+                    proposal_contract=self.proposal_contract,
                 )
             )
             if context.system != "S2" or context.explore_intent is not None:
@@ -1324,6 +1495,7 @@ class LocalQwenProposalProvider:
                         attempt_kind="proposal",
                         output_token_limit=failure.output_token_limit,
                         failure_type=type(failure.cause).__name__,
+                        proposal_contract=self.proposal_contract,
                     )
                 )
                 receipt = self._provider_receipt(
@@ -1369,6 +1541,7 @@ class LocalQwenProposalProvider:
                         messages=messages,
                         preflight_prompt_tokens=preflight_tokens,
                         output_token_limit=output_limit,
+                        proposal_contract=self.proposal_contract,
                     )
                 )
                 receipt = self._provider_receipt(
@@ -1396,6 +1569,7 @@ class LocalQwenProposalProvider:
                 messages=messages,
                 preflight_prompt_tokens=preflight_tokens,
                 output_token_limit=output_limit,
+                proposal_contract=self.proposal_contract,
             )
         )
         receipt = self._provider_receipt(
@@ -1419,10 +1593,13 @@ class LocalQwenProposalProvider:
                 reply,
                 attempt_kind="proposal",
                 preflight_prompt_tokens=preflight_tokens,
+                proposal_contract=self.proposal_contract,
             )
         ]
         try:
-            parsed = self._parse_proposal(raw, context.move_type)
+            parsed = self._parse_proposal(
+                raw, context.move_type, proposal_contract=self.proposal_contract
+            )
         except (json.JSONDecodeError, ValidationError, ValueError) as first_error:
             # One repair is allowed. Include full untrusted output only when the
             # pinned tokenizer admits the whole repair prompt; otherwise use the
@@ -1511,6 +1688,7 @@ class LocalQwenProposalProvider:
                         attempt_kind="repair",
                         output_token_limit=failure.output_token_limit,
                         failure_type=type(failure.cause).__name__,
+                        proposal_contract=self.proposal_contract,
                     )
                 )
                 failure_receipt = self._provider_receipt(
@@ -1552,6 +1730,7 @@ class LocalQwenProposalProvider:
                         preflight_prompt_tokens=repair_tokens,
                         attempt_kind="repair",
                         output_token_limit=repair_output_limit,
+                        proposal_contract=self.proposal_contract,
                     )
                 )
                 failure_receipt = self._provider_receipt(
@@ -1575,6 +1754,7 @@ class LocalQwenProposalProvider:
                     preflight_prompt_tokens=repair_tokens,
                     attempt_kind="repair",
                     output_token_limit=repair_output_limit,
+                    proposal_contract=self.proposal_contract,
                 )
             )
             profiles_attempted.append(actual.profile_id)
@@ -1585,6 +1765,7 @@ class LocalQwenProposalProvider:
                     repair_reply,
                     attempt_kind="repair",
                     preflight_prompt_tokens=repair_tokens,
+                    proposal_contract=self.proposal_contract,
                 )
             )
             if repair_reply.prompt_tokens != repair_tokens:
@@ -1602,7 +1783,9 @@ class LocalQwenProposalProvider:
                 context, actual, attempts, profiles_attempted, fallback_from
             )
             try:
-                parsed = self._parse_proposal(raw, context.move_type)
+                parsed = self._parse_proposal(
+                    raw, context.move_type, proposal_contract=self.proposal_contract
+                )
             except (json.JSONDecodeError, ValidationError, ValueError) as repair_error:
                 raise ProviderOutputError(
                     "one schema-constrained repair did not produce a strict CandidateProposal",

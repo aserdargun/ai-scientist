@@ -1,0 +1,386 @@
+{
+  "schema": "field-lab-prior-findings-context-evidence.v1",
+  "captured_at": "2026-10-03T09:00:11.500942+00:00",
+  "scope": {
+    "new_experiments": 1,
+    "dataset_kind": "synthetic step, seed 4103",
+    "train_rows": 192,
+    "evaluation_rows": 96,
+    "wall_budget_seconds": 600,
+    "model_calls": 0,
+    "model_tokens": 0,
+    "gpu_jobs": 0,
+    "training_started": false,
+    "measured_learning": false,
+    "automatic_history_scan": false,
+    "aos_runtime_acceptance": false
+  },
+  "source": {
+    "scientist_main_head": "55c5300600112ab823f76ec434029d6dc23e513c",
+    "feature_head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+    "aos_head_read_only": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+    "dirty_worktrees": true,
+    "feature_source_sha256": {
+      "harness/VERSION": "2e67466499d10d356b662dee575193faed47851ad2cd230d762d2d5b4231118f",
+      "lab/director/history_context.py": "35424cb64efaa23358be70beb4e77b8ea841e447ac9f70fed03baf2c91fea39f",
+      "lab/director/fake_llm.py": "d829455808bc75af66d8a7018d1d7ec9fb47cf5a0b7420f0846c6373949489ac",
+      "lab/director/loop.py": "b211f902dd580d501dd16c1f2ef96ef277d93dae2ff1ed70e190316e86a2c6da",
+      "lab/api/app.py": "abdbcee9130d6e53db3fa629b3b0e5dfa6a2d886e3f9d0e4d58a4a4350abf3e2",
+      "lab/api/contracts.py": "067c7dcabc8736a86301d7c12bf7948aa9343b0b171a195b217d23a9ba85f088",
+      "lab/api/mode_experiments.py": "62b9706e043496345a23fc110e431e8e5f49fe76e549d6cc68028eebf43667d7",
+      "lab/api/experience.py": "329c7edad4b739bbbeb593f6c82cdcace115c20b6010c133fed8a990cabf5fcc",
+      "lab/reporting.py": "26a16204deb1bfb3eb2a69b6948b72dd8d8225f7878d7d3d97e1d9364b00169c",
+      "lab/cli.py": "1df2d77d3bfc59a87a32fa9b6d362bbd9cb4f73e886acc39f224cdfa09962892",
+      "lab/training/sft_export.py": "f8bfeab9fcd7156cf8c8f8b3867d20008246fc4503677da05978b0006d96cff4",
+      "console/app.py": "3e26111d7fe69ed91360f22d5745e55328fa1c4c2b5ce812b89c3b35a0a0a145",
+      "console/web/src/ui/ExperiencePanel.tsx": "f9105e7dcbc1a02819be546be32c417db64397c47de18530bd3fd24baf01eaea",
+      "console/web/src/ui/AgentWorkspace.tsx": "36506f48aad093968f1042d40842157bde310c7c98b28180a25420ad4db5013c",
+      "console/web/src/ui/App.tsx": "0e0200ff1f575b2b342c89c110a6ca2e9653d2cbd25928c345764db22faef69d",
+      "console/web/src/ui/OperatingModesPage.tsx": "4f59bbfbceaacefb535d6d927ecfde0d56cc601e1fed1edc9cebd6190858beff",
+      "console/web/src/ui/types.ts": "4cb23e95670249408106dcf5777fa5a07b5f5ce49dab870a392a49e58dfd4f7c",
+      "console/web/src/ui/styles.css": "69a5002d0177bead54ab18526a3eddb7c0c21c41781688336b02494bc35f4b03",
+      "tests/test_prior_findings.py": "159be39bdce225317bec99c4ae90a973cdb577be2546cecd84db537937fac3d2",
+      "tests/test_experience_api.py": "6b24dee4d8f1ff84295dbd2a5d80c9f65bd8702caac288b9486e9e986234cbf4",
+      "tests/test_training_export059.py": "e5c3bd57c196d7655c86ce04b5c8f70876d91a7f960953fc6d26b83382621894",
+      "tests/test_director_loop_strategy.py": "521c4f2dcad15d74f117c608b3e5cc3127a6873ce8af0d8391e857d1f41fbfa0"
+    },
+    "scientist_main_delivery_files_sha256": {
+      "scripts/aos_native_launch.py": "c18efb89584946975f3740b071d2c2a3eca106ea44ae07b6a83060a267a03495",
+      "tests/test_aos_shared_native_launch.py": "2e44213b4a2a355722137c2329389a1cf9f468279d46a0a696a3f803ac4a3339",
+      "tests/test_aos_shared_scope_preflight.py": "7366add39fb9c2d5d4272aa8d7e7a29ff0aa3b89a2f618e72dff3c8b2c8b6cb6"
+    },
+    "final_worktree_capture": {
+      "captured_at": "2026-10-03T09:34:32.137135+00:00",
+      "worktrees": {
+        "scientist_main": {
+          "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+          "branch": "feat/luna-m0-core",
+          "tracked_diff_head_binary_sha256": "6e4b067b4a508afd9856e22717f99efde329afdcecc1b397bccbffc6b34ae223",
+          "tracked_diff_bytes": 166746,
+          "porcelain_status_sha256": "6f11a29294873decbd023c233b24c3e7c6b23317d4dc7b28dcf2be20e4263f86",
+          "dirty": true,
+          "untracked_code_sha256": {
+            "tests/test_aos_shared_native_launch.py": "2e44213b4a2a355722137c2329389a1cf9f468279d46a0a696a3f803ac4a3339",
+            "tests/test_aos_shared_scope_preflight.py": "7366add39fb9c2d5d4272aa8d7e7a29ff0aa3b89a2f618e72dff3c8b2c8b6cb6"
+          }
+        },
+        "scientist_feature": {
+          "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+          "branch": "feat/omr-stream-v1",
+          "tracked_diff_head_binary_sha256": "ecd7ca7ec7ceea4e92c7e04f287acb83ebeb6e06957cffb0d31140535716dc2d",
+          "tracked_diff_bytes": 843656,
+          "porcelain_status_sha256": "4f681b8a25bb50f70a602c2483ee80c419bbe9fa6c8966b09e864a3da8101e98",
+          "dirty": true,
+          "untracked_code_sha256": {
+            "console/web/src/ui/AgentWorkspace.tsx": "36506f48aad093968f1042d40842157bde310c7c98b28180a25420ad4db5013c",
+            "console/web/src/ui/ExperiencePanel.tsx": "f9105e7dcbc1a02819be546be32c417db64397c47de18530bd3fd24baf01eaea",
+            "lab/api/experience.py": "329c7edad4b739bbbeb593f6c82cdcace115c20b6010c133fed8a990cabf5fcc",
+            "lab/director/history_context.py": "35424cb64efaa23358be70beb4e77b8ea841e447ac9f70fed03baf2c91fea39f",
+            "ops/lab_profile.py": "bcd969214fa04052d962c9086009748a38a46321d7fb2d2d8d11c80430833bfa",
+            "tests/test_experience_api.py": "6b24dee4d8f1ff84295dbd2a5d80c9f65bd8702caac288b9486e9e986234cbf4",
+            "tests/test_lab_profile.py": "c9908910142269111e84522cd3d8b260b40d46e6c46343bfdce79bf86aa58f46",
+            "tests/test_mode_diagnostics_api_root.py": "c63d9ff8164978ca2b5a6bf02b3f075815634794fd41d0ac5633e4089a3d9154",
+            "tests/test_prior_findings.py": "159be39bdce225317bec99c4ae90a973cdb577be2546cecd84db537937fac3d2"
+          }
+        },
+        "aos_read_only": {
+          "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+          "branch": "main",
+          "tracked_diff_head_binary_sha256": "402c6083eff61a899e944d9a97de456fcec4825cc9e081c7884e8bb4cfaaab48",
+          "tracked_diff_bytes": 1024718,
+          "porcelain_status_sha256": "28957a11aaa92eabf09dae924fd956222f0ba098cc4341ef0b587cc600c5d573",
+          "dirty": true
+        }
+      },
+      "scope_note": "Point-in-time read-only git diff HEAD --binary for tracked changes; untracked code separately hashed. Concurrent AOS checkout is not an atomic source authorization. No commit, push, merge or deploy."
+    }
+  },
+  "runtime": {
+    "harness_version": "0.44.0",
+    "harness_sha256": "b711142b7f8a5620da6bbe3ae34ca29510d1ac55b0a09b6bb5d62c63145c555f",
+    "harness_file_count": 166,
+    "sandbox_image": "sha256:185628a623424a43314f3fe5004dfb8771614c8ef9202c2865a2db3537eb6bb9",
+    "image_source_files": 208,
+    "image_byte_parity": true,
+    "build_exit_code": 0,
+    "image_parity_exit_code": 0,
+    "model": null,
+    "quantization": null,
+    "context_tokens": null,
+    "peak_vram_mib": null,
+    "gpu_wait_seconds": null,
+    "gpu_handoff_seconds": null,
+    "measurement_note": "No model/GPU execution. Null timings and VRAM are unmeasured, not zero-cost training."
+  },
+  "actual_cpu_workflow": {
+    "run_id": "3873c13b-66fb-475c-916e-d2f28633bc2c",
+    "report_sha256": "11bc05689ffb9d5798a3ae155aef543dd4748b47c132129cc76553f46cc67598",
+    "status": "completed",
+    "target_snapshot_sha256": "5a395781ed1f4eef5d1597fea881686d104187ecc337359c967fbd5bf0c5e9c0",
+    "admission_to_terminal_readback_seconds": 222.86763274700024,
+    "score_count": 10,
+    "score_kinds": {
+      "baseline": 9,
+      "primary": 1
+    },
+    "decisions": [
+      {
+        "method": "lsh",
+        "decision": "DISCARD"
+      }
+    ],
+    "idempotent_retry_reused_same_run": true,
+    "prior_findings_usage": {
+      "context_bound_proposal_count": 1,
+      "record_count": 3,
+      "scope": "historical-advisory-only",
+      "snapshot_sha256": "595f16dbbbe38b3112527f0e77ac8ca9c674db845bfdce749a3a4bd2b07d1111",
+      "source_report_sha256": "c261dec63d162cb2f9d667e488dd614a95333ea8a9a6cec5db279cf73c873159",
+      "source_run_id": "89dc9a5c-007d-480e-8594-6e14c035a0b9",
+      "status": "context-bound"
+    },
+    "old_reports_unchanged": true,
+    "private_workflow_receipt_sha256": "6f61a9c5a9126f5bae06800c428ded511517347c153d2078fb52a5c1dab1b47e"
+  },
+  "contract": {
+    "selection": "prior_experience; exact source run/report and 1..8 experiment/trajectory hash references",
+    "snapshot_schema": "prior-dev-findings.v1",
+    "snapshot_max_bytes": 16384,
+    "explicit_source_selection": true,
+    "same_principal_terminal_source": true,
+    "dev_coverage_and_guards_required": true,
+    "historical_harness_may_differ": true,
+    "historical_scores_do_not_enter_current_calibration": true,
+    "immutable_request_and_context_bound": true,
+    "resume_does_not_rescan_source": true,
+    "new_scoring_independent": true,
+    "cpu_parameter_plan_adapts_to_history": false
+  },
+  "sft": {
+    "selection_rules": "local-sft-reviewed.v2",
+    "history_source_permission_chain_unreviewed_exclusion": "prior_findings_permission_not_reviewed",
+    "original_observed_prompt_checked_before_redaction": true,
+    "training_permission_granted": false
+  },
+  "quality_gate": {
+    "overall_exit_code": 0,
+    "created_at": "2026-10-03T08:49:30.481114+00:00",
+    "receipt_sha256": "b0c4b1fb22074066ce9e2fe84064346eb7778c883895aece4ca2e72d1fef085d",
+    "commands": [
+      {
+        "command": "ruff",
+        "exit_code": 0
+      },
+      {
+        "command": "pylint",
+        "exit_code": 0
+      },
+      {
+        "command": "bandit",
+        "exit_code": 0
+      },
+      {
+        "command": "pytest",
+        "exit_code": 0
+      },
+      {
+        "command": "mypy",
+        "exit_code": 0
+      },
+      {
+        "command": "uv",
+        "exit_code": 0
+      },
+      {
+        "command": "python",
+        "exit_code": 0
+      }
+    ],
+    "pytest_passed": 3305,
+    "pytest_skipped": 7,
+    "gpu_live_deselected": 177,
+    "pytest_seconds": 214.7,
+    "earlier_failed_attempts_retained": [
+      {
+        "sha256": "7c8f5f266ffae9f78483a44cbe3dc1b5de990c7ecebb43638dc44371d9d62f65",
+        "reason": "type annotations, fixed SQL lint, old object fixture; seven temporary RAM disk reserve failures"
+      },
+      {
+        "sha256": "5f3e8f8dbae2c8a1100eed6dec1a4d56699c9839399b9b7fdaf713035990fb99",
+        "reason": "27 Unix socket path-length failures in long test directory; same final source as successful gate"
+      }
+    ]
+  },
+  "actual_browser": {
+    "private_receipt_sha256": "ab003eb1a52293f6dfba741cbb4561f1196591589947f7a911bd79c18248865e",
+    "source_eligible_records": 3,
+    "target_record_count": 4,
+    "target_context_bound_label": true,
+    "target_prior_records": 3,
+    "target_bound_proposals": 1,
+    "references_rendered_from_actual_api": true,
+    "mobile_overflow": false,
+    "javascript_errors": 0,
+    "post_requests": 0,
+    "intercept_fixtures": false,
+    "served_assets_match_frozen_ui": true
+  },
+  "separate_browser_fixtures": {
+    "scope": "selection limits, stale response, malformed metadata, refs-only request and idempotency retry; not an actual run",
+    "request_flow_sha256": "0dbd2d5128f329f37cd30fbcdb4cb0accb9f8f7a37c714154440adc21314b934",
+    "boundary_checks_sha256": "de3cef0db7b1338df0d9eca32bafc6ac5e4106397bc16366e680d1d408975eb1"
+  },
+  "cleanup": {
+    "private_receipt_sha256": "e11792fa9ba3ebe1e4ca5dfdeaf05459941a87723f417bed774a56896df67a3b",
+    "director_original_process_absent": true,
+    "director_cgroup_empty_or_absent": true,
+    "completed_scorer_jobs_with_absent_units_and_empty_cgroups": 10,
+    "sandbox_labelled_containers": 0,
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "database_and_reports_retained": true,
+    "gpu_release_claim": false
+  },
+  "owned_preview_refresh": {
+    "private_receipt_sha256": "b74bbf1703fbbec0773ed368a03dd33527b4b7fb017b8677c6750a32a58d1d6d",
+    "services": [
+      "api",
+      "director-drain",
+      "console"
+    ],
+    "elapsed_seconds": 6.089437007904053,
+    "admission_closed_before_worker_refresh": true,
+    "old_processes_absent": true,
+    "old_cgroups_empty_or_absent": true,
+    "queue_before": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "queue_after_admission_closed": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "queue_after": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "old_reports_unchanged": true,
+    "aos_processes_changed": false
+  },
+  "aos_coordination": {
+    "control_contract_version": 2,
+    "template_version": "1, nullable unobserved broker identity",
+    "activation_version": "1",
+    "provision_version": "1",
+    "manager_state_version": "2",
+    "latest_read_source_candidate_sha256": "f004bdce68e000b784d91c61d76b1b3711c9b332dcb7f470372001725a309054",
+    "selected_aos_files": 156,
+    "selected_source_hash_mismatches": [],
+    "joint_runtime_authorized": false,
+    "new_source_is_not_old_141_file_ack": true,
+    "shared_caller_preflight": "Exact Astra/high-reviewed caller and tests applied locally to Scientist MAIN; no runtime authority or service start",
+    "remaining": "Generation-bound admission/drain covering native and Lab service, fresh finite shared-launch grant, current caller/broker binding, independent cleanup and one coordinated GPU handoff/cancellation acceptance",
+    "btrfs_preparation_fix_reported_by_peer": true,
+    "scientist_main_caller_sha256": "c18efb89584946975f3740b071d2c2a3eca106ea44ae07b6a83060a267a03495",
+    "previous_v3_source_candidate_sha256": "e955194e47e14416797aa58eaf632159c7d4e503e7f394e09053f493115f84c6",
+    "v3_to_v4_changed": [
+      "src/aos/local_app.py"
+    ],
+    "shared_scope_preparation": {
+      "real_public_cli_by_aos_peer": true,
+      "independent_scientist_readback": true,
+      "readback_receipt_sha256": "1aa7da6c2cbab6dbdbf076d0b55a59a5f7ba119544a409bd50cfed6726f21f9f",
+      "source_pins": 227,
+      "config_pins": 3,
+      "workspace_identity_and_pristine_contents_verified": true,
+      "template_sha256": "8318bee3d666c0c62f77bd74236d669b186fd7720d0db3ba0a7bc9f6d8fc65cc",
+      "plan_sha256": "fbced4bb609b2efdeade898231c8287db9238ab91836f5eea2c8159eca536c45",
+      "provision_sha256": "07270c77f5b1c9cf7d6207638273746713f8dcfe134b07372cde9d78a3054f24",
+      "runtime_started": false,
+      "runtime_authority": false
+    },
+    "focused_tests": {
+      "default_scientist_312": {
+        "passed": 17,
+        "opt_in_skipped": 42,
+        "exit_code": 0,
+        "receipt_sha256": "4065695e510a93ac99af6ad43ee70b0f64fda4897d6e1bc4c815415c093b65b7"
+      },
+      "source_v4_aos_314": {
+        "passed": 59,
+        "skipped": 0,
+        "seconds": 2.03,
+        "exit_code": 0,
+        "receipt_sha256": "4f2005d9ce078ffb6108e8d9793b1a28777eb09b71f5a034db448db1e9d5f5d2"
+      },
+      "historical_v3_117_receipt_sha256": "02b32f967dd62d578cf6d4091448d1a14f34086939a06d813bfadc688d68613b",
+      "native_authority_calls_mocked": true,
+      "main_full_quality_gate_run": false
+    },
+    "peer_final_handoff": {
+      "manifest_sha256": "730bb91acc4cf6d75d7ff7175c6d4b18c4b8b2a2b2a395fd28b1beab99c3fe83",
+      "root_receipt_sha256": "78dec70198a596eb94db458af51a8647ba93ea022446cc2d5f39932e19c94de3",
+      "raw_file_hashes_verified": true,
+      "runtime_authority": false
+    }
+  },
+  "passed": [
+    "explicit same-principal dev history selection and frozen request/context binding",
+    "actual independent CPU run with 9 baseline and 1 primary scores",
+    "idempotent retry and unchanged historical reports",
+    "actual desktop/mobile history-use readback",
+    "owned Director/Scorer/container cleanup and final full quality gate",
+    "Scientist shared caller and exact AOS v4 inert plan/provision compatibility; real runtime authority remains open"
+  ],
+  "remaining": [
+    "goal-driven automatic knowledge/skill selection",
+    "local-model study showing benefit from selected history",
+    "permitted teacher dataset and bounded teacher/adaptor training",
+    "independent model/skill promotion and rollback",
+    "AOS real shared-GPU handoff, report verification and controlled cancellation"
+  ],
+  "not_run": [
+    "GPU or model calls in this delivery",
+    "real field/public-data research acceptance",
+    "training or learned adapter",
+    "new stop/crash acceptance in this slice",
+    "actual aserdargun client browser"
+  ],
+  "separate_followups": [
+    "license decision",
+    "general CI and portable clean install"
+  ],
+  "development_metrics": {
+    "captured_at": "2026-10-03T09:33:39.013183+00:00",
+    "main_and_feature_synced": true,
+    "source": "Codex get_goal and session metadata",
+    "goal_status": "active",
+    "goal_tokens_used": 27997999,
+    "goal_active_seconds": 107675,
+    "recorded_goal_period_tokens": 130199817,
+    "recorded_goal_period_active_hours": 101.74583333333334,
+    "model_evidence_complete": true,
+    "scope_note": "Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor."
+  },
+  "final_readback": {
+    "captured_at": "2026-10-03T09:33:05.418844+00:00",
+    "feature_source_hashes_match": true,
+    "harness_sha256": "b711142b7f8a5620da6bbe3ae34ca29510d1ac55b0a09b6bb5d62c63145c555f",
+    "image_available_by_exact_id": true,
+    "live_progress_matches_disk": true,
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "owned_preview_and_bridge_active": true,
+    "aserdargun_browser_exercised": false,
+    "new_runtime_or_gpu_started_by_this_readback": false
+  }
+}

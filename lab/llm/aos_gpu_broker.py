@@ -13,8 +13,11 @@ import json
 import socket
 import struct
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Protocol
+
+from lab.llm.aos_gpu_control_store import AdmissionGrant
 
 MAX_FRAME_BYTES = 128 * 1024
 MAX_TURN_SECONDS = 720
@@ -84,6 +87,7 @@ class OwnedTurnExecutor(Protocol):
         deployment_digest: str,
         payload: dict[str, object],
         deadline: float,
+        admission: AdmissionGrant | None = None,
     ) -> TurnReceipt: ...
 
 
@@ -191,9 +195,16 @@ def _encode_receipt(request_id: str, profile_id: str, digest: str, receipt: Turn
 class LabAOSBroker:
     """Authenticate one AOS peer and hand it to a trusted Lab turn executor."""
 
-    def __init__(self, authenticator: PeerAuthenticator, executor: OwnedTurnExecutor) -> None:
+    def __init__(
+        self,
+        authenticator: PeerAuthenticator,
+        executor: OwnedTurnExecutor,
+        *,
+        admission: Callable[[PeerGeneration, str, str], AdmissionGrant] | None = None,
+    ) -> None:
         self._authenticator = authenticator
         self._executor = executor
+        self._admission = admission
 
     def serve_connection(self, connection: socket.socket) -> None:
         credentials = connection.getsockopt(
@@ -209,6 +220,9 @@ class LabAOSBroker:
         request_id, profile, digest, payload, canonical, payload_hash = _decode_request(line)
         if not self._authenticator.still_current(peer):
             raise BrokerProtocolError("AOS service generation changed before admission")
+        authority = {}
+        if self._admission is not None:
+            authority["admission"] = self._admission(peer, profile, digest)
         receipt = self._executor.run_turn(
             peer=peer,
             request_id=request_id,
@@ -218,6 +232,7 @@ class LabAOSBroker:
             deployment_digest=digest,
             payload=payload,
             deadline=deadline,
+            **authority,
         )
         if not self._authenticator.still_current(peer):
             raise BrokerProtocolError("AOS service generation changed during its turn")

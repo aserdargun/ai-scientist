@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "deployment_digest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "broker_activation_load_ms": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "inference_ms": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "input_tokens": {
+          "maximum": 1536,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "latency_ms": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "load_ms": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "peak_vram_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "prepared_cpu": {
+          "type": "boolean"
+        },
+        "reused": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "latency_ms",
+        "load_ms",
+        "inference_ms",
+        "broker_activation_load_ms",
+        "reused",
+        "prepared_cpu",
+        "input_tokens",
+        "peak_vram_bytes"
+      ],
+      "type": "object"
+    },
+    "prediction": {
+      "additionalProperties": false,
+      "properties": {
+        "probabilities": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "maxProperties": 10,
+          "minProperties": 2,
+          "type": "object"
+        },
+        "selected_option": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected_option",
+        "probabilities"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "deployment_digest",
+    "prediction",
+    "metrics"
+  ],
+  "type": "object"
+}

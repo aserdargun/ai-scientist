@@ -10,12 +10,22 @@ import subprocess
 from contextlib import contextmanager
 from pathlib import Path
 from subprocess import CompletedProcess
+from unittest.mock import Mock
 from uuid import uuid4
 
 import pytest
 from sqlalchemy import create_engine, text
 
 from lab import cli
+from lab.llm.native_runtime import ModelRuntimeError
+
+
+@pytest.fixture(autouse=True)
+def slice_limits(monkeypatch):
+    """Unit tests must not provision or inspect actual user services."""
+    check = Mock()
+    monkeypatch.setattr(cli.SystemdUnitManager, "ensure_slice", check)
+    return check
 
 
 class _Result:
@@ -72,7 +82,7 @@ def test_direct_dispatch_executes_inline_only_in_trusted_owner_unit(monkeypatch)
     assert cli._dispatch_director_run_owned(run_id) == expected
 
 
-def test_direct_dispatch_launches_bounded_run_bound_service(monkeypatch) -> None:
+def test_direct_dispatch_launches_bounded_run_bound_service(monkeypatch, slice_limits) -> None:
     run_id = uuid4()
     engine = _engine()
     monkeypatch.setattr(cli, "is_current_dispatch_owner", lambda _requested: False)
@@ -82,6 +92,7 @@ def test_direct_dispatch_launches_bounded_run_bound_service(monkeypatch) -> None
     captured: list[str] = []
 
     def fake_run(command, **kwargs):
+        slice_limits.assert_called_once_with()
         captured.extend(command)
         assert kwargs["timeout"] == 60 + cli.DIRECTOR_DISPATCH_OVERHEAD_SECONDS + 60
         return CompletedProcess(
@@ -107,6 +118,38 @@ def test_direct_dispatch_launches_bounded_run_bound_service(monkeypatch) -> None
     assert "--setenv=SWAPP_LAB_GPU_UNIT=swapp-lab-gpu.service" in captured
     assert "--setenv=LAB_SUITE_REGISTRY_FILE=/trusted/registry.json" in captured
     assert "--setenv=PATH=" + os.environ.get("PATH", "") not in captured
+
+
+@pytest.mark.parametrize("resume", [False, True])
+def test_incompatible_slice_prevents_dispatch_and_resume_launch(monkeypatch, slice_limits, resume):
+    slice_limits.side_effect = ModelRuntimeError(
+        "shared GPU cgroup has an unexpected memory.max limit"
+    )
+    launch = Mock()
+    monkeypatch.setattr(cli.subprocess, "run", launch)
+    with pytest.raises(ModelRuntimeError, match="memory.max"):
+        cli._launch_director_unit(uuid4(), unit_runtime=60, restart_id=uuid4() if resume else None)
+    slice_limits.assert_called_once_with()
+    launch.assert_not_called()
+
+
+@pytest.mark.parametrize("invalid", ["run", "restart", "bool", "fraction", "zero", "large", "env"])
+def test_invalid_launch_input_cannot_provision_slice(monkeypatch, slice_limits, invalid):
+    run_id, restart_id, budget = uuid4(), None, 60
+    if invalid == "run":
+        run_id = str(run_id)
+    elif invalid == "restart":
+        restart_id = "not-a-uuid"
+    elif invalid in {"bool", "fraction", "zero", "large"}:
+        budget = {"bool": True, "fraction": 1.5, "zero": 0, "large": 999_999}[invalid]
+    else:
+        monkeypatch.setenv("LAB_SUITE_REGISTRY_FILE", "/private/registry\nextra")
+    launch = Mock()
+    monkeypatch.setattr(cli.subprocess, "run", launch)
+    with pytest.raises((TypeError, ValueError)):
+        cli._launch_director_unit(run_id, unit_runtime=budget, restart_id=restart_id)
+    slice_limits.assert_not_called()
+    launch.assert_not_called()
 
 
 def test_direct_local_qwen_requires_matching_gpu_principal_before_launch(monkeypatch) -> None:
@@ -274,13 +317,17 @@ def test_production_dispatch_claim_persists_actual_run_bound_owner() -> None:
                 ),
                 {"id": run_id},
             ).one()
-            events = connection.execute(
-                text(
-                    "SELECT event_type FROM lab.run_events WHERE run_id=:id "
-                    "ORDER BY created_at,event_id"
-                ),
-                {"id": run_id},
-            ).scalars().all()
+            events = (
+                connection.execute(
+                    text(
+                        "SELECT event_type FROM lab.run_events WHERE run_id=:id "
+                        "ORDER BY created_at,event_id"
+                    ),
+                    {"id": run_id},
+                )
+                .scalars()
+                .all()
+            )
             experiment_count = connection.execute(
                 text("SELECT count(*) FROM lab.experiments WHERE run_id=:id"),
                 {"id": run_id},

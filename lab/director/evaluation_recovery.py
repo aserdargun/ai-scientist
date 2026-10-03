@@ -3,19 +3,41 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 from sqlalchemy import Engine, text
 
 from lab.director.journal import DirectorRunLease
 from lab.director.ownership import active_execution_owner
-from lab.scorer.jobs import DEFAULT_ARTIFACT_ROOT, store_candidate_artifact
+from lab.scorer.jobs import store_candidate_artifact
 
 
 class RecoveredInfrastructureFailure(RuntimeError):
     """Previously consumed evaluation work has no complete independently scored result."""
+
+
+def validated_evaluation_timings(payload: Mapping[str, Any]) -> dict[str, float]:
+    """Keep measured timing fields finite/nonnegative without inventing old fields."""
+    fields = ("fit_seconds", "score_seconds") + tuple(
+        field for field in ("guarded_wall_seconds", "scorer_wall_seconds") if field in payload
+    )
+    timings: dict[str, float] = {}
+    for field in fields:
+        value = payload.get(field)
+        if type(value) not in (int, float):
+            raise ValueError("evaluation timing must be a finite nonnegative number: " + field)
+        numeric = cast(float, value)
+        try:
+            valid = math.isfinite(numeric) and numeric >= 0
+        except OverflowError:
+            valid = False
+        if not valid:
+            raise ValueError("evaluation timing must be a finite nonnegative number: " + field)
+        timings[field] = numeric
+    return timings
 
 
 def evidence_key(experiment_id: str, kind: str, task_id: str, seed: int) -> str:
@@ -38,7 +60,8 @@ def persist_evaluation_evidence(
     owner = active_execution_owner()
     if owner is None or payload.get("run_id") != str(owner.run_id):
         raise ValueError("evaluation evidence requires captured run ownership")
-    digest = store_candidate_artifact(score_artifact, artifact_root=DEFAULT_ARTIFACT_ROOT)
+    validated_evaluation_timings(payload)
+    digest = store_candidate_artifact(score_artifact, artifact_root=artifact_root)
     if digest != payload.get("candidate_output_sha256"):
         raise ValueError("evaluation evidence output digest changed")
     document = {
@@ -99,6 +122,10 @@ def recover_evaluation_measurement(
         or any(evidence.get(key) != value for key, value in expected.items())
     ):
         raise ValueError("evaluation evidence identity changed")
+    timings = validated_evaluation_timings(evidence)
+    # This checkpoint predates Scorer dispatch. It cannot establish how long
+    # the later process took, even when a completed job can be read back.
+    timings.pop("scorer_wall_seconds", None)
     from lab.director.resume import assert_historical_receipt
 
     assert_historical_receipt(
@@ -145,9 +172,7 @@ def recover_evaluation_measurement(
         raise ValueError("Scorer result does not match immutable pre-dispatch evidence")
     from lab.scorer.jobs import read_candidate_artifact
 
-    read_candidate_artifact(
-        evidence["candidate_output_sha256"], artifact_root=DEFAULT_ARTIFACT_ROOT
-    )
+    read_candidate_artifact(evidence["candidate_output_sha256"], artifact_root=artifact_root)
     metrics = {
         key: (float(row[key]) if row[key] is not None else None)
         for key in (
@@ -169,8 +194,7 @@ def recover_evaluation_measurement(
         **expected,
         "candidate_output_sha256": evidence["candidate_output_sha256"],
         **metrics,
-        "fit_seconds": evidence["fit_seconds"],
-        "score_seconds": evidence["score_seconds"],
+        **timings,
         "guards": evidence["guards"],
         "systemd_unit": row["claim_unit"],
         "scorer_process_exit_code": None,

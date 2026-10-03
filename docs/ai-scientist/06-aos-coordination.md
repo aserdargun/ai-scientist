@@ -4,6 +4,284 @@ Tarih: 2026-09-24. Kullanıcı AOS üzerinde başka geliştirme oturumunun paral
 
 Amaç: mevcut CachyOS, RTX 4070 Ti SUPER 16 GB VRAM ve 32 GB RAM host üzerinde AOS kullanılmaya devam ederken AI Scientist uzun araştırma koşularını ilerletebilmeli. Aynı anda bütün modellerin VRAM'de tutulacağı varsayılmıyor. Bağımlılık, port, süreç, RAM ve GPU çatışması engellenmeli.
 
+## Güncel doğrudan koordinasyon — 2026-10-02
+
+### Gerçek paylaşım için süre düzeltmesi
+
+Önceki yaklaşık 300 saniyelik CPU baseline ölçümleri, 300 saniyelik native
+belgeyle çekişmeli GPU testinin başlayamadığını gösteriyor. Yeni launch
+girdisinde açık 1–900 saniye seçimi, varsayılan 300 ve mevcut pinli özgün
+yetkiye kırpma uygulanıyor. İkinci ayrı Lab deneyi kontrollü iptal içindir;
+tamamlanmış ilk deney yeniden açılmaz. [Süreler ve kabul planı](116-coordinated-acceptance-window.md).
+Bu değişiklik nedeniyle aşağıdaki v1 hazırlık paketi tarihsel kalır;
+yeni kaynak/config hash'leriyle v2 aktarımı hazırlanır. AOS'tan eski
+paketi onaylaması veya runtime başlatması istenmez.
+
+### Yeni v8 alanı ve kalan yaşam döngüsü düzeltmesi
+
+AOS'un `native-coordinated-review-v8/scope-preparation.private.json` kaydı
+SHA-256 `e99a9fa9c805171aabcc28adb42222a529c0346a41bb94efe8237faca68e5f0f`
+ile doğrulandı: 11 boş özel dizin, iki henüz oluşturulmamış DB yolu ve 74
+güncel AOS kaynak dosyası eşleşiyor. Scientist bu alanı yazmadı. APIv6'nın
+tek önerili süiti hazır; eski v5/v7 saatleri ve hakları kullanılmaz.
+
+İlk control düzeltmesinden sonra provider hazırlığı ve bütün resolution
+zincirinin de süreyi aştığı CPU bileşiminde görüldü. Düzeltme tamamlandı:
+özgün 3/3/30 saniye sınırları korunarak 106 doğrulama / 636 taze snapshot /
+16 native Codec, gerçek AOS interpreteri üzerinde 23,916 saniyede geçti.
+88 odaklı test ve tam kapıda 3002 test/yedi komut exit0 geçti;
+canlı SQLite/IPC/GPU kabulü henüz çalıştırılmadı.
+[Dondurulmuş kaynak ve tam kapı kaydı](review-evidence/native-retained-lifecycle-scope-20261002.json).
+
+Güncel gerçek checkout'ta `services/decider/broker_worker.py` ve
+`services/bonsai/broker_worker.py` vardır. Tarihsel `--shared-gpu-turns` ve
+`--lab-external-*` bayrakları runtime kaynaklarında yoktur; mevcut native
+`--engine scientist`, configured factory/retained hook ve canonical broker
+yolu kullanılır. İzole eski yamalı kopya uyumluluk kanıtı sayılmaz.
+
+Doğrudan Codex MCP mesaj kanalı `127.0.0.1:37321/mcp` adresinde erişilemiyor.
+AOS'un v8 hazırlığı yeni Scientist kaynaklarına son onay vermemiştir;
+dosya hazırlığı runtime/config anlaşması veya yürütme yetkisi olarak sunulmaz.
+Yeni kaynak/config paketi bu proje içindeki dosya aktarımıyla paylaşılır.
+GPU yürütücüsü yalnız Scientist'tir; AOS kaynak yazımı ve karşı oturumun
+süreçlerine müdahale yoktur.
+
+**Önceki v1 paket:** Scientist kaynak commit'i `4a71c6c`; APIv6 hazırlığı ve
+native-v8 şablonları gerçek exit0 ile üretildi. 136 API / 141 native kaynak
+pini ve bağımlı dosya hash'leri
+[hazırlık kaydındadır](review-evidence/api-v6-native-v8-inert-preparation-20261002.json).
+Kısa karşı inceleme notu yerelde
+`data/runtime/aos-native-coordinated-20261002-v1/AOS_V8_HANDOFF.private.md`
+içindedir. Doğrudan gönderim yine bağlantı hatası verdi; kullanıcıdan bu notun
+AOS oturumuna aktarılması istendi. Yeni native/API servisi veya GPU işi
+başlatılmadı; karşı kaynak/config incelemesi henüz alınmadı.
+
+### Son v7 sonucu ve devam eden düzeltme
+
+Gerçek fence25 AOS çıkarımı geçti; retained sonuç kabulü başarısız olduğu
+için ilk dosya görevi tamamlanmadı ve Scientist v5 deneyi başlamadı.
+[Sonuç, süreler ve fiziksel kapanış](115-native-retained-resolution-wiring.md)
+kayıtlıdır. Scientist'in model/native/API/clone kapsamı temiz kapandı;
+arayüz ve tünel açıktır. Eski intent veya özgün süre yeniden kullanılmaz.
+
+AOS'un `native-diagnostic-handoff.private.json` teslimi salt okunur alındı
+(06:04:19 UTC; SHA-256
+`4435dfd2c95f15d928d32f22ee60a78d6c1eb05ce6386aa5f10053165fa9e989`).
+Gerçek checkout'taki tek runtime değişikliği `scientist_evidence_client.py`
+hata konumlarını dıştan dört/içten dört frame olarak kaydeder; kaynak hash'i
+`8b0d974c8b97b31cce5d7ea923c21b8f9c3e7df97a48377c4238842cfa218e01`
+eşleşti. AOS bağımsız startup/cleanup dosyalarının hash'leri de doğrulandı;
+AOS bu teslimde bağımsız GPU sorgusu yaptığını iddia etmiyor. 34 odaklı ve
+5304 paket testi AOS'un kendi raporudur, Scientist test sayısına eklenmez.
+
+Scientist yalnız kendi native artifact/retained factory kodunu düzeltti.
+Tek üç saniyelik control içinde tekrar edilen doğrulayıcı açılışları ve
+Codec derlemesi azaltıldı; güncel yetki/iptal/fencing kontrolleri korunur.
+Tam CPU fixture zinciri 2,729 saniye/exit0; 83 odaklı test ve son tam kapı
+2997 test/yedi komut exit0 geçti.
+[Dört dosyanın hash'i ve CPU kanıtı](review-evidence/native-retained-control-scope-20261002.json)
+yeni kaynak eşleştirmesinin Scientist teslimidir; runtime izni veya ortak
+GPU kabulü değildir. Model/imaj/harness değişmedi. Son mesaj
+girişiminde Codex oturumlar arası MCP bağlantısı erişilemedi; cleanup
+bildiriminin mesaj teslimi teyitli değildir. Bu dosya ve 115'teki kısa aktarım
+güncel ortak devir kaydıdır. Yeni runtime için düzeltilen kaynak pinlerinin
+aynı paket üzerinde eşleşmesi gerekir; GPU yürütücüsü yalnız Scientist'tir.
+
+### Tekrarlı çağrı bağlantısının görev paylaşımı
+
+İki oturum doğrudan mesajlaşıyor; AOS, mevcut control socket üzerinden
+sürümlü FD aktarımını koşullu uyumlu buldu. Scientist kendi broker/client ve
+configured factory bağlantısını, AOS kendi typed owner-loop hook'unu geliştirir.
+Bir tarafın CPU geliştirmesi diğerinin runtime teyidini beklemez. Kaynak
+sahipliği korunur; Scientist AOS dosyalarını değiştirmez.
+
+Yeni `aos-scientist-retained-channel.v1` yalnız mevcut `read_budget` ve
+`verify_physical` işlemlerine kanal taşır. Descriptor SHA-256:
+`cd61387214a62ddf8fbac9f063ee2154035d9848d2c15412531f850f2ddf2600`.
+Yeni listener veya GPU tahsis otoritesi yoktur. Tam bir CLOEXEC FD,
+her mesajda SCM_CREDENTIALS, özgün PID/start/invocation/cgroup,
+sınırlı tek kanal ve özgün üç saniyelik çağrı süresi doğrulanır.
+Belirsiz aktarımda FD'ler kapatılır; kanal kendi başına control,
+resolution veya release yetkisi vermez.
+
+AOS bağlantısı: trusted `resolver_factory(binding, current_binding)` ile
+oluşturulan resolver'ın `resolve_successful(request_id)` işlemi, durable
+receipt sonrası ve sonraki admission öncesinde özgün owner thread'de çalışır.
+Successful receipt için client rearm yapılmaz. Bağımsız budget ve fiziksel
+kanıt, exact durable capability/reconcile ACK'lerinden sonra trusted
+`prepare_resolution` ile bağlanır; ACK, idle veya canonical done tek başına
+release kanıtı değildir.
+
+Scientist factory ve AOS hook kaynak teslimi tamamlandı;
+[güncel teslim](115-native-retained-resolution-wiring.md) exact aktif request,
+özgün deadline ve bağımsız proof bağlantısını kaydeder. AOS kaynak incelemesi
+uyumlu; final imajla yedi kalite komutu exit0/2959 test geçti. Bu sonuç gerçek
+native tekrar kabulü değildir. APIv4 özgün süre sonunda MainPID0; APIv5
+ve önce disabled, sonra karşı incelemeyle enabled yapılan v7 paketinin
+denemesi yukarıdaki sonuçla kapandı. AOS kendi izole v7 alanını sağlamıştı.
+Entegre GPU yürütücüsü yalnız Scientist'tir. Tekrarlı adil ilerleme ve
+ayrı kontrollü iptal/toparlanma henüz kabul edilmiş değildir.
+
+
+### İlk terminal araştırma ve sonraki ortak iş
+
+[2026-10-02 gerçek koşu raporu](114-first-native-research-report.md): AOS
+hello, Scientist tek sentetik snapshot araştırması, bağımsız puanlama,
+AOS rapor kaydı/readback ve model/işçi fiziksel kapanışı geçti. AOS karşı
+readback ayrıca doğruladı. İkinci çağrı, ilk intent için bağımsız resolution
+bağlanmadığı için admission kapısında engellendi; tekrar POST yapılmadı.
+
+Sahip olunan native servisler/broker/desktop kapatıldıktan sonra AOS kaynak
+freeze'i kendi CPU geliştirmesi için kaldırıldı; eski kanıt dosyaları immutable
+korunur. AOS kendi HTTP denial handling ve owner-loop retained-host arayüzünü;
+Scientist kendi native factory/channel ve bağımsız fiziksel verifier bağlantısını
+ilerletir. Yeni pin anlaşmasından önce GPU koşusu yapılmaz. Kuyrukta fairness,
+tekrarlı iki taraflı ilerleme ve kontrollü iptal/toparlanma açık kalır.
+
+### Son pin eşleştirmesi — APIv4 hazırlığı
+
+APIv4 hazırlığı gerçek exit0: 0042 migration uygulandı; beş eski run ve bağlı
+satırlar birebir değişmeden kaldı. Kaynak039 kapalı ve değişmeden korundu,
+geçici migrator kimliği kaldırıldı. AOS canlı PID/start/invocation/cgroup ve
+GET capability eşliğini bağımsız doğruladı; özgün 3600s süre değişmedi.
+Karşı readback SHA: `c9b517b73e8003c30ab1777e81378390d44d4c5600ee2038e93d027862331eeb`.
+Bu adım broker, model, GPU veya deney başlatmadı. Tam disabled native
+paket üretildi ve karşı incelemeye gönderildi; ortak sözleşme sürümleri
+korundu, yeni GPU tahsis otoritesi oluşturulmadı.
+
+
+AOS oturumuna final imaj, harness ve yeni immutable suite pinleri doğrudan
+iletildi. AOS `native-coordinated-review-v6` alanını CPU hazırlığı olarak
+korur; bağımsız CPU/ürün işleri dondurulmuş kaynak ve bu alan dışında
+sürebilir. GPU yürütücüsü yalnız Scientist'tir.
+
+- Scientist kaynak commit: `0ae8677c6875ce10e48ef8e1e958d8f80c2e7de3`.
+- Final imaj: `sha256:a14f144867d75a71f95861e48a3a075eecca445b73ccd541003a35c4e82bc3c1`.
+- Harness: `b9d3890b35f341ac5ffe47f12a31d61934977b882497b0399e196dc86687ed42`.
+- Yeni suite: `mode-agent-de75c37b05ca73430995a6c2639349877aa68b782cfdb007`.
+- Registry: `99dec1c37aa04bfaafccc59bb1a0619675ba0796df2c2a478b727f6f140f9083`.
+- Beklenen capability: `d01d4a114c61f4f8673b7165acd3787f8cfae0b1709a9bc208e3ef1ca3f27791`.
+
+[İmaj kanıtı](review-evidence/current042-image-parity.json): varsayılan
+kısıtlı kullanıcıyla 197 kaynak dosyası birebir eşleşir; CPU importları
+exit0. Offline build, ağsız/pull olmadan yapılmıştır. Özel kaynak izinlerini
+aynen kopyalayan ara imaj reddedildi; bu imajda GPU koşusu yapılmadı.
+Yalnız yazılım kopyasının izinleri normalize edildi, repo ve özel kayıt
+izinleri değişmedi.
+
+Native paket hâlâ disabled; yeni APIv4 principal/generation üretildi,
+GPU kabulü başlatılmadı. APIv2 ve sahip olunan eski clone
+kapatıldı; eski araştırma ve scheduler kayıtları değiştirilmedi. Eski
+başarılı hello araştırma raporu değildir. Final imajı bağlayan kalite kapısı tamamlandı: 2854pass/7skip/149deselected;
+yedi komut exit0. Receipt SHA-256: `a9c2c8293ea5b567ddd66c13107fe4ddd494da0e89baf0897b1c9fdb151cc9fd`.
+
+
+Scientist ve AOS oturumları doğrudan mesajlaşıyor. Scientist yalnız kendi
+kaynaklarını ve sahipliği doğrulanmış izole hazırlığı yönetir; AOS kendi
+kaynak/config, adaptör ve typed Lab akışının sorumlusudur. Entegre GPU kabul
+koşusunun tek yürütücüsü Scientist'tir. Bağımsız CPU/kaynak işleri ortak
+runtime incelemesini beklemeden sürer.
+
+AOS yanıtı: yeni sözleşme veya kaynak/config farkı yok; tracked diff SHA-256
+`27385fc37e117a2a100a3d5deb1842f1c6d9cd6313857f5eecdaa93a241a1b78`
+sabit. AOS kendi özel handoff kaydında aday incelemesini ve typed
+`propose → approve → execute → report` beklentilerini tutuyor; yeni API
+generation/capability kanıtını inceleyecek. Scientist mevcut AOS kaynak,
+veritabanı veya süreçlerini değiştirmedi.
+
+Mevcut ortak `swapp-gpu.slice` üzerinde RAM 16 GiB, swap 0, CPU %200 ve
+128 task sınırları gerçek kernel değerleriyle doğrulandı. Bu işlem GPU
+rezervasyonu, model yürütmesi veya release kanıtı değildir. Yeni izole API
+18602 hazırlığının ilk denemesi Director'ın şema okuma yetkisi olmamasıyla
+durdu; yetki genişletilmedi, sahip olunan clone PID0 olarak kapatıldı.
+Yeni yardımcı schema sürümünü clone üzerinden okur ve belirsiz servis
+açılışında sahiplik/retirement kanıtını korur. Bağımsız incelemenin ardından
+yeni yardımcı gerçek **exit 0** ile izole API'yi başlattı. Üretim capability
+GET yanıtı, yeni principal/generation ve dar Scorer RPC üzerinden sentetik
+mode kaydı doğrulandı; eski koşular değişmedi. API'nin süre sınırı 3600
+saniyedir; önerilen ortak deney bütçesi 1 deney / 900 saniye / 30000 model
+tokenıdır. Bu hazırlık model, broker, GPU veya deney başlatmadı.
+
+Canlı API generation/capability kanıtı AOS oturumuna doğrudan iletildi.
+AOS PID/generation/cgroup eşliğini ve 1 deney / 900 saniye / 30000 token
+bütçesini bağımsız doğruladığını bildirdi. Tam native yapılandırma paketi
+incelemesi ve native kabul koşusu açık kalır. Özel kanıt SHA-256'ları:
+
+- API hazırlığı: `c46e1dfc6e7eb460334d2de1ce008177afd829e10183445268b09a0de78d5461`.
+- API generation/capability: `f84c1c38846b9fb8a32238501a43b83a04acfeed1d3f612c76c9e809f9ace991`.
+- Scorer mode kaydı: `688b5927ce6d4621b0f78eb534a8a075924d22524f9630d4cb35bf1bb3a0df84`.
+
+Token, DSN ve özel runtime dosyaları yayımlanmaz. Sentetik kaynak
+bağlaması gerçek endüstriyel ölçüm veya GPU kabulü olarak sunulmaz.
+
+### Canlı API'ye bağlı tamamlanmış paket
+
+Tamamlanmış disabled paket hazırlığı exit0: 135 kaynak/config pini
+(2.115.961 bayt), gerçek API generation, principal kimliği ve yenilenmiş
+clone bağlantısı üretim DTO'larıyla doğrulandı. AOS aynı paketi bağımsız
+inceleyerek eşliği doğruladı. Ayrı promotion kopyası yalnız `enabled`,
+onay bayrakları ve bağlı dosya pointer/hash değerlerini değiştirir;
+özgün disabled kanıtlar korunur. Üretim `JointLabCapability` oluşturma ve
+current-rights denetimi gerçek exit0 ile geçti (0,027 saniye).
+
+Bu aşamada broker/AOS native servisleri ve modeller başlatılmadı. Yürütücü
+masaüstü manifest/source/imaj pinlerini, tek konsol açılış deadline'ını
+ve AOS cgroup dışında çalışan Docker konteynerinin ayrı cleanup kanıtını
+sağlamalıdır. Promotion hash eşliği ve güncel API süresi yürütmede yeniden
+kontrol edilir; GPU edinimi yalnız mevcut canonical scheduler üzerinden olur.
+
+Aşağıdaki tarihli bölümler geçmiş incelemeleri anlatır; eski pinler ve
+kapanış izinleri yeni inference yetkisi olarak kullanılmaz.
+
+## Native devam için güncel beklenti — 2026-10-01
+
+### Doğrudan oturum koordinasyonu: belirsiz, admission almamış istek
+
+Güncel engel `3ccf93764f4c4f389864cc2edbdbcbfe` isteğinin AOS'ta pending
+kalmasıdır. Önceki source52/63 gözlemleri tarihsel referanstır; gerçek kaynak
+pinleri yeniden doğrulanmadan native işi açmaz.
+
+Oturumlar doğrudan haberleşerek `no-admission-observation.v1` anlamsal
+sözleşmesinde uzlaştı. Scientist şema/doğrulayıcı, canonical observational
+tombstone ve mevcut admission transaction'daki geç kabul engelini; AOS kendi
+tüketicisi, migration ve yeni source profilini yönetir. İki taraf CPU
+uygulamalarını bağımsız ilerletir ve son şema hash'ini/gerçek test çıkışlarını
+paylaşır. Sözleşme ve kapanış şartları:
+[güncel ortak öneri](108-no-admission-observation-proposal.md).
+
+Özgün istek/kayıt silinmez veya yeni runtime ile atlanmaz. Güncel lease ve
+stopped/PAUSED generation yalnız cleanup yetkisi taşır. Şema eşliği, boş GPU
+veya kapanmış süreç gözlemi tek başına terminal/release kanıtı değildir.
+Yeni gerçek GPU koşusu ancak iki taraf da bağımsız gerçek kapanışı kabul
+ettikten sonra Scientist tarafından yürütülür. AOS kaynakları bu oturum için
+salt okunurdur; mevcut kullanıcı süreçlerine müdahale edilmez.
+
+[Source52 ve durable resolution gereksinimi](91-aos-native-resolution-coordination.md):
+güncel AOS v3 source52 exact snapshot uyumu geçti. Mevcut source'da original
+inference intent'i append-only çözen API yok; ACK/receipt_recorded sonraki native
+turu açmıyor. AOS oturumunun original identity + current rights + bağımsız
+physical proof'a bağlı durable resolution ve buna bağlı admission gate sağlaması
+gerekiyor. Scientist tarafı mevcut v3 authenticated budget/evidence export'unu
+sağlıyor; intent silme/session reset/gate bypass uygulanmaz. AOS dosyası/süreci
+bu oturumda değiştirilmedi; GPU testini tek Scientist koordinatörü yürütecek.
+
+## Güncel Scientist bağlantısı — 2026-10-01
+
+[Review edilmiş source snapshot](89-aos-reviewed-source-snapshot.md) ve
+[authenticated retained-budget v3 candidate](90-aos-authenticated-retained-budget.md)
+eski izole patch gözlemlerinden daha günceldir. Mevcut socket/target capability/
+reconcile kotası üzerinde aynı transaction'dan evidence + bağımsız özgün budget
+witness taşınır; v2 default korunur. Tam v3 schema canonical SHA
+`cbbfa1e109cf28bac8143c01975eb575b6fcfb44970d84d1c50828ca60ac1070`.
+Bu kaynak teslimidir; AOS v3 adoption ve production provider/proof/resolution
+henüz kabul edilmedi. Gerçek AOS paralel olarak yeni `release_proof_candidate_v1`
+48 kaynak profilini istedi; eski journal44 pinleri güncel değişiklikle ret veriyor.
+Sonraki AOS v3 codec/migration0025 sürümü `retained_evidence_candidate_v3`
+52 kaynak profili istiyor; full v3 schema eşliği salt okunur doğrulandı. Yeni52
+kaynak review'ü ve exact config, tek scheduler rezervasyonu sonraki kapıdır.
+GPU kabulünü yalnız Scientist oturumu koordine eder. AOS dosyası/süreci değişmedi;
+push/merge/deploy yapılmadı.
+
 ## Güncel izole rebase — 2026-09-29
 
 Canlı AOS'tan 1082 public dosya, 11.185.537 baytlık yeni kaynak kopyası
@@ -512,3 +790,422 @@ durumunu ve rapor hash
 `18f12a5d2d5efa712eb324d06f7bfe38d711152fd351f9724198b5f760ae0825`
 eşliğini doğruladı. Önceki dispatcher exit 1 korunur; otomatik tek stop
 isteğiyle terminal kapanış ve Scorer inflight drain hâlâ kanıtlanmadı.
+
+## 2026-10-02 — doğrudan oturum koordinasyonu
+
+Scientist oturumu AOS oturumuna doğrudan mesaj gönderip yanıtlarını okuyabiliyor.
+Dosya sahipliği korunuyor: Scientist kendi kodunu ve yapılandırma çıktılarını;
+AOS kendi kaynaklarını, statik kontrollerini ve izole çalışma alanını hazırlıyor.
+Ortak GPU kabul koşusunun tek yürütücüsü Scientist oturumudur. AOS'un kendi
+aktif kullanıcı işleri ve süreçleri bu oturum tarafından değiştirilmez.
+
+- Scientist kaynak referansı `d8bc847c7a12140ab96597d886f9608b0e3af630`;
+  AOS kaynak referansı `ed6e857b0e61e9c19c8ba63933e2cc9f318fe444`.
+  Bunlar inceleme referanslarıdır; sonraki kaynak değişiklikleri yeniden pinlenir.
+- Gerçek V5 eski belirsiz istek kapanışı iki oturumca doğrulandı.
+  Ayrı immutable closure kullanır; eski intent satırını yeniden yazmaz.
+  Bu sonuç GPU release veya yeni inference yetkisi değildir.
+- Scientist `0041` boş baseline stop dalını uygular ve bağımsız SQL incelemesi
+  yürütür. İlk odaklı CPU doğrulaması 154 test, exit 0; yeni gerçek PostgreSQL
+  ve native worker kapanış kabulü henüz çalıştırılmadı.
+- AOS güncel native factory/policy karşılığını ve statik model kontrollerini
+  paralel hazırlar. Scientist'in yeni ortak paketi `enabled=false` durumundadır;
+  eski runtime yetkileri yeniden kullanılmaz.
+- Doğru mevcut Decider Python ortamında model dosyaları ve bağımlılık sürümleri
+  CPU kontrolü exit 0 verdi. Bu, tüm bağımlılık dosyalarının byte kabulü veya
+  Bonsai projection kabulü değildir. Model yüklenmedi ve GPU tahsisi yapılmadı.
+
+Karşılıklı aktarım: kaynak/manifest/yapılandırma hash'leri, sözleşme ve capability
+uyumu, mevcut principal ve süre sınırları, ardından tek scheduler rezervasyonu.
+Teyit beklerken bağımsız CPU/stop işleri sürer. Yeni inference yetkisi, karşılıklı
+pin incelemesi ve aktif kullanıcı işi kontrolü tamamlanmadan açılmaz.
+
+### Güncel görev paylaşımı — 2026-10-02
+
+Scientist, kullanıcının doğrudan haberleşme talebini AOS oturumuna iletti;
+AOS'un candidate-v2 inceleme sonucu okundu: **PASS**. Bu paket için aynı
+incelemenin tekrar tamamlanması beklenmiyor. Scientist HEAD
+`279e33ba2a7a192f1392618d21d904aeb6c2140f`, AOS inceleme referansı
+`ed6e857b0e61e9c19c8ba63933e2cc9f318fe444`.
+
+| Taraf | Devam ettiği iş | Karşı taraftan beklediği |
+| --- | --- | --- |
+| Scientist | Tam sahiplik denetimli foreground yürütme/onay hazırlığı; ardından sınırlı araştırma, bağımsız puanlama ve cleanup kanıtı | Yalnız sözleşmeyi veya pinli runtime kaynaklarını etkileyen değişiklik bildirimi |
+| AOS | Kendi ürün/adaptör ve CPU işleri; kendi kaynaklarının sahipliği | Scientist'in gerçek koşu kimlikleri, sonuç ve cleanup kayıtları |
+
+Pin dışındaki bağımsız işler diğer oturumun onayını beklemez. Pinli bir
+kaynak değişirse yalnız etkilenen ortak kabul paketi yeniden doğrulanır.
+GPU koşusunu Scientist tek başına yönetir; AOS bağımsız GPU kabul koşusu
+başlatmaz. Diğer oturumun dosyaları veya süreçleri değiştirilmez.
+
+Genel Operator eylemi **10 saniye** son tarih kullanır; hello görevi
+yazmada **70**, okuma/doğrulamada **60 saniye** son tarih verir. Konsol
+onay süresi ve eylem son tarihi birlikte geçerlidir. Lab onayı **60 saniye**
+geçerlidir; bunlar native artifact veya araştırma bütçesi süreleriyle aynı
+değildir. Operatör hazırlığı bu süreler başlamadan tamamlanır. Bir onay
+süresinin dolması yeni yetki üretmez ve aynı belirsiz isteğin kör tekrarına
+izin vermez. Gerçek model/GPU kabulü hâlâ açıktır.
+
+AOS bu paylaşımı aldı ve yeni ortak engel bulmadığını bildirdi. Süresi
+dolmuş veya owner/generation bilgisi değişmiş Lab onayları için iki CPU
+regresyonu exit 0 verdi. İlk foreground özetindeki 10 saniye genellemesi hello için yanlıştı:
+`operator.py:291` yazma/doğrulama eylemini 70/60 saniyeye, satır296 okuma
+eylemini 60 saniyeye ayarlar. Gerçek pending envelope bu ayrı süreyi
+doğruladı; operatör bu mevcut süreyi kullanır, yenilemez. Bu CPU sonuçları gerçek GPU
+kabulünün yerine geçmez.
+
+### 2026-10-02 — doğrudan oturum koordinasyonu ve ilk native ilerleme
+
+AOS oturumuna gerçek koşu kimlikleri, aktif pinleri koruma beklentisi ve
+Scientist'in tek GPU kabul yürütücüsü olduğu doğrudan iletildi. AOS kendi
+CPU/ürün işlerini bağımsız sürdürebilir; ortak runtime kaynak değişiklikleri
+önce haberleştirilir. AOS, ilk başarılı hello görevini ve dosya içeriğini
+kendi kayıtlarından salt okunur doğruladı.
+
+- İlk native hello: gerçek model çağrısı, başarılı terminal trace ve tam
+  dosya içeriği doğrulandı. Bu tek görev tam birlikte çalışma kabulü değildir.
+- Typed Lab araştırması: `6dd84567-09f7-4fd1-b427-e80c9d17bb28`, bir öneri,
+  600 saniye ve 30000 token bütçesi. `proposal:1`, tamamlanmış provider
+  denemesi ve `primary_measured` checkpointları mevcut; sentetik mod verisi.
+- Koşu `execution_exception` / `RuntimeError` sonrasında `stop_requested`
+  kaldı. Yaklaşık 360 saniyelik gözlem bütçe aşımı diye sunulmaz.
+  Otomatik recovery `first_stop_deadline_unavailable` ile bekliyor;
+  terminal rapor ve AOS rapor readback kabulü henüz yok.
+- Director inactive/MainPID 0. Koşuya bağlı model child inactive/MainPID 0;
+  eski PID ve cgroup kaybolmuş. Canonical Lab tahsisi `done`, fencing token
+  22; bağlanan VRAM tepe gözlemi 12760 MiB. Bunlar stop SQL kapanışının
+  tamamlandığı anlamına gelmez.
+- İkinci AOS okuma görevi preflight reddiyle başlatılmadı. Bu senaryo
+  eşzamanlı adil ilerleme veya kontrollü iptal kabulü diye sayılmaz.
+
+Eksik stop event/deadline incelemesi yalnız Scientist tarafında yürür.
+Mevcut yetkiler veya deadline yenilenmez; aynı araştırma yeniden başlatılmaz.
+
+### Kalıcı ortak masaüstü için hazırlık sırası — 2026-10-03
+
+AOS oturumuyla tek çağıran servis adı
+`swapp-aos-gpu-shared-desktop-default.service` üzerinde uzlaşıldı. Scientist
+launcher değişikliği yalnız ayrı inceleme ağacında hazırdır; MAIN desteği
+veya çalışan shared servis sayılmaz. Eski 136/141 kaynak teyidi yeni
+manager/host dosyalarını kapsamaz.
+
+Sıra: inert plan → açık, ayrı scope provisioning → taze ortak kaynak/config
+incelemesi ve sınırlı runtime bağlama → exact shared start. Provisioning
+yalnız yeni app-session/workspace dizinlerini oluşturur; DB, token, socket,
+servis, capability veya süre yetkisi üretmez. Mevcut AOS kullanıcı oturumu
+bu hazırlıktan etkilenmez.
+
+Scope kaydı plan/template hash'ini, app-session ve exact yolları, dizinlerin
+device/inode/UID/0700 kimliğini ve mevcut `descriptor-workspace-v1`
+kimliğini taşır. Scientist incelemesi actual canonical/nofollow dizinleri
+ve başlangıç boşluğunu yeniden doğrular. Fresh activation öncesinde native
+admission kapanışı ve fiziksel GPU dışlama ayrıca gerekir. Salt idle veya
+quiesce yeterli değildir.
+
+Yeni nested manager kapsamı eski flat 11-dizinli özel v8 binder'ının
+yerine geçirilemez; ayrı, tutarlı kaynak/config bağlaması hazırlanmalıdır.
+Start hazırlanmış inode'u doğrular; yeniden mkdir/adoption yapmaz. Kalıcı
+kimlik mutable dizin mtime/ctime değerine bağlanmaz. Bu kayıt koordinasyon
+kararıdır; gerçek shared başlangıç, GPU paylaşımı ve iptal kabulü açıktır.
+
+### Ortak çalışma alanı yolu incelemesi — 2026-10-03
+
+Gerçek AOS checkout incelemesinde workspace ve ana DB yolunun tek başına
+izolasyon sağlamadığı görüldü. Üzerinde uzlaşılan kapsam 19 yoldur:
+workspace, iki ayrı DB yolu, web-applications, knowledge, web-tasks,
+form-plans, form-values, form-states, routes, static, readonly-data,
+console-assets, site-knowledge, site-skills, site-page-seeds,
+remote-route-reviews, remote-json-reviews ve json-page-seeds.
+`console-assets` çalışma sırasında yazılan bir dizindir. Ek altı store için
+entrypoint argümanlarının mevcut console parametrelerine aktarılması gerekir.
+AOS oturumu bu kaynak değişikliklerini uyguluyor; Scientist AOS dosyalarını
+veya süreçlerini değiştirmiyor.
+
+Provisioning yalnız session/workspace ve kimlik makbuzunu oluşturur;
+diğer yollar ortak inceleme sonrası çalışma sırasında oluşturulabilir.
+Makbuz activation, factory ve retained config pinlerinin üçünde de yer
+almalıdır. Scientist başlangıcı da workspace device/inode/UID kimliğini
+`module.main` öncesinde bağımsız doğrulamalıdır; eksik dizinin yeniden
+oluşturulması kabul değildir. Bu yeni kaynaklar için eski 141-dosyalı ACK
+historik kalır; yeni closure karşılıklı eşleştirilecektir.
+
+İnert template'te broker kimliği gözlenmemiş olarak boş bırakılabilir;
+bu bir çalışma yetkisi değildir. Aktifleştirme gerçek socket peer kimliği,
+güncel broker generation ve taze capability gerektirir; broker yoksa
+başlatma reddedilir. Aynı canonical GPU scheduler kullanılır. Önerilen
+ayrı proje `scientist-shared-v1` ve loopback portu `18866` henüz başlatılmış
+ortak çalışma kanıtı değildir. Varsayılan native AOS yolu GPU admission'ı
+atlayabildiği sürece gerçek GPU kabulü bekler.
+
+### Transitive kaynak ve Btrfs hazırlık düzeltmesi — 2026-10-03
+
+AOS'un yeni ortak masaüstü seçimi önce 86, entrypoint/host import zinciri
+incelenince 156 dosya olarak eşlendi. Son v3 adayının özel kayıt hash'i
+`e955194e47e14416797aa58eaf632159c7d4e503e7f394e09053f493115f84c6`;
+156 gerçek kaynak hash'i Scientist tarafından tekrar okundu, fark yok.
+Bu kaynak eşleşmesi çalışma yetkisi veya eski 141-dosyalı ACK'nin yenilenmesi değildir.
+
+Gerçek Python 3.14/Btrfs kontrolü, parent FD açıldıktan sonra oluşturulan
+workspace'in `listdir(fd)` ile ilk okumada görünmediğini yakaladı. AOS
+sahibi retained FD üzerinde her dizin sayımı öncesi seek(0) ile düzeltti;
+kimlik/nofollow sınırları korunur. V2→V3 yalnız bu dosyanın hash değişimidir;
+AOS oturumu Btrfs ve tmpfs üzerinde 20'şer odaklı kontrol bildirdi. Actual
+named session/workspace provisioning bu kayıt anında yapılmış sayılmaz.
+
+Çağırıcı için beş alanlı `shared_scope` sözleşmesi kararlaştırıldı:
+plan path/hash, provision path/hash ve activation path. Activation hash'i
+launch girdisine geri yazılmaz; sabit session launch-intent kaydından
+okunur ve activation'ın çağrılan launch path/hash bağı doğrulanır. İlk
+kontrol ve `module.main` öncesi tekrar, aynı workspace device/inode/UID'yi,
+boş workspace'i, exact session içeriğini ve mevcut AOS builder'ının ürettiği
+19-yollu desktop argümanlarını doğrular. Eski acceptance caller korunur.
+
+Provision hash'i activation ve factory config map'lerinde zorunludur.
+Retained review path/hash çifti varsa üçüncü config map'e de bağlanır;
+kısmi çift reddedilir. Gerçek ortak kabul profilinde retained çifti ayrıca
+zorunludur. Başlatma öncesi sonlu izin, başlatma sonrası gerçek caller
+PID/Invocation/GPU admission binding'i yerine geçmez. Üretim native dışlama,
+activation/cleanup bileşimi ve gerçek GPU devir/iptal kabulü hâlâ açıktır.
+
+### Scientist gerçek MAIN çağırıcı — 2026-10-03
+
+Astra/high üretim kod incelemesi ardından yalnız Scientist MAIN
+`scripts/aos_native_launch.py` dosyasına aynı baytlar taşındı. HEAD
+`55c5300600112ab823f76ec434029d6dc23e513c` değişmedi; yerel fark vardır.
+Yeni çağırıcı SHA-256:
+`c18efb89584946975f3740b071d2c2a3eca106ea44ae07b6a83060a267a03495`.
+Eski `436516d2…` çağırıcı pini bu çalışma için kullanılamaz. AOS oturumuna
+actual pin verildi; inert template/plan/provision bu pinle hazırlanabilir.
+
+İzole kaynakta 117 odaklı kontrol, gerçek AOS Python 3.14 interpreteri ve
+Btrfs üzerindeki plan/provision/claim yardımcılarıyla geçti. GPU/native
+çağrıları testte başlatılmadı; authority geçişleri CPU fixture'larıdır.
+Kullanılan küçük pytest bağımlılık alanı özel ve cache'ten hazırlanmıştır;
+çalışan AOS veya Scientist ortamlarına paket kurulmadı. Standart AOS'suz
+Scientist testleri için bu harici entegrasyon kontrolleri ayrı opt-in'dir.
+Native AOS policy, authority, service ve GPU başlatılmadı; pinli kaynak
+hazırlığı gerçek GPU kabulü değildir.
+
+
+### V4 gerçek ayrı çalışma alanı ve son çağırıcı kontrolü — 2026-10-03
+
+Public `python -m aos.local_app` hazırlığında named instance'ın canonical
+modüldeki default instance ile karıştığı yakalandı. AOS oturumu `__main__`
+girişini canonical `main` fonksiyonuna bağladı. V3→V4 yalnız
+`src/aos/local_app.py` değişir; SHA-256
+`5ec835173c6a0bd773713e13b4282eb80386935f893d80f5d7e8ef007ec0559d`.
+V4 seçili 156 kaynak kaydı SHA-256:
+`f004bdce68e000b784d91c61d76b1b3711c9b332dcb7f470372001725a309054`.
+Scientist tüm hash'leri tekrar okudu; fark yok.
+
+AOS oturumu `scientist-shared-v1` / loopback `18866` için gerçek public CLI
+ile yalnız hazırlık yaptı. Scientist `load_plan`, `verify_template_files`
+ve `load_provision` ile bağımsız doğruladı: 227 kaynak / 3 config pini,
+0700 boş workspace, doğru device/inode/UID ve yalnız receipt+workspace
+içeren session. Servis, runtime, token, activation ve GPU işi başlatılmadı.
+Özel template / plan / provision hash'leri sırasıyla:
+
+- `8318bee3d666c0c62f77bd74236d669b186fd7720d0db3ba0a7bc9f6d8fc65cc`
+- `fbced4bb609b2efdeade898231c8287db9238ab91836f5eea2c8159eca536c45`
+- `07270c77f5b1c9cf7d6207638273746713f8dcfe134b07372cde9d78a3054f24`
+
+Scientist bağımsız hazırlık okuması kanıt hash'i:
+`1aa7da6c2cbab6dbdbf076d0b55a59a5f7ba119544a409bd50cfed6726f21f9f`.
+Astra/high onaylı iki çağırıcı testi MAIN'e tam baytlarla taşındı.
+Standart Scientist 3.12/AOS'suz koşu: **17 geçti / 42 açık opt-in skip**;
+son V4/AOS 3.14 gerçek yardımcı koşusu: **59 geçti / sıfır skip**, exit 0.
+Özel kanıt hash'leri sırasıyla `4065695e510a93ac99af6ad43ee70b0f64fda4897d6e1bc4c815415c093b65b7`
+ve `4f2005d9ce078ffb6108e8d9793b1a28777eb09b71f5a034db448db1e9d5f5d2`.
+Önceki V3/117 sonucu değiştirilmedi. Bu odaklı kontroller MAIN için yeni
+tam kalite kapısı sayılmaz. FEATURE 0.44.0 tam kapısı ayrı teslim kanıtıdır.
+
+AOS'a beklenti: default native yolu ve Lab service dahil tüm admission
+kapılarını kapsayan, özgün generation'a bağlı drain/dışlama; sonlu taze
+shared launch yetkisi; başlatma sonrası gerçek caller/broker binding'i;
+ayrı önce/sonra cleanup kanıtı. Mevcut scheduler tek tahsis otoritesidir.
+Idle/quiesce GPU bırakma kanıtı değildir. Hazırlık uyumu yeni runtime yetkisi
+veya gerçek birlikte çalışma kabulü olarak sunulmaz.
+
+
+### Ortak admission drain sonrası Scientist adaptörü — planlanan dilim
+
+AOS oturumu Console/scheduler/Lab yeni iş kabulünü aynı generation'a bağlı
+latch ile kapatan değişikliği açtı. V4/227 kaynak hazırlığı tarihsel kalır;
+mevcut workspace yeni kaynak için yeniden benimsenmez. AOS süreçlerine
+Scientist müdahale etmez.
+
+Astra/high kararı: `scripts/aos_shared_desktop_host.py` mevcut
+`SharedDesktopHost` activation/cleanup callback'lerini ve mevcut review
+sözleşmelerini bağlayacak; tek Sol 6.1/high sahibi ve odaklı test dosyası.
+Bu dosya henüz uygulanmış değildir. Uygulamadan önce AOS'un somut drain
+DTO/API'si gerekir: exact `SharedServiceBinding` ve runtime/session'a bağlı,
+yeniden okunabilir canonical receipt/SHA; üç admission kapısının kapalı
+kalması ve pending/reserved/active/unresolved sayımları. Makbuz after_stop'ta
+da okunabilir olmalıdır. Bool idle veya kullanıcı JSON'u yeterli kanıt değildir.
+
+API context'in native inference/GPU release izinleri false kalır; shared
+servis start/stop hakkı API erişiminden türetilmez. Sonlu ayrı yetki ve
+native dışlama bağımsız doğrulanır. Gelecek caller PID'si başlatma öncesi
+uydurulmaz; mevcut launcher gerçek caller doğrulamasını korur. Before/after
+cleanup aynı generation/state'e bağlanır, özgün timeout yenilenmez.
+
+
+### Scientist özgün API yetki süresi — uygulandı, 2026-10-03
+
+`JointLabCapability` API/token/kaynak canlılığını doğrularken pinli context'in
+özgün boot ve bitiş zamanını her çağrıda kontrol etmiyordu. İzole regresyon
+bu eksikliği önce `DID NOT RAISE` ile yakaladı. Mevcut
+`scientist.joint-api-authorization-context.v1` için public verifier ve
+callback bağlantısı uygulandı; Astra/high incelemesinden geçen dört dosya
+Scientist MAIN'e tam baytlarla taşındı. Yeni yetki türü oluşturulmadı.
+
+- `scripts/aos_joint_api_authority.py`:
+  `a8d9185ffc7b06d0458197f1450897bbe3e0ef131a7badb6f6a5987b9a5f184a`
+- `scripts/aos_joint_lab_hooks.py`:
+  `3ca32027a48c71e7670d58fc9f3849f250104d10eca43e952be2e2f8010aaa74`
+
+Yeni helper kaynak pinlerine eklenmelidir; önceki 67 Scientist dosyası
+bu seçimde 68 olur. Launcher `c18efb89…` değişmedi. Context hash'ine bağlı
+tek dosya, özgün boot ve en fazla 3600 saniyelik finite süre, owner/origin/
+URL/suite/program/unit/token ve bütçe eşleşmesi zorunludur. Constructor
+client hazırlamadan önce, her canlılık kontrolünün iki yanında ve callback'in
+GET çağrıları öncesinde doğrulanır. HTTP deadline kalan özgün süreyle kısılır;
+IO sırasında expiry/revoke son kontrolde reddedilir. Eski süresiz belgeye
+zaman alanı uydurulmaz, retry yetki süresini yenilemez.
+
+94 odaklı kontrol (37 yeni + 57 mevcut), Ruff/Bandit/compile/diff exit 0.
+API kimliği ve AOS istemcisi testlerde inert fixture'dır; gerçek kaynak ve
+context dosyalarının doğrulaması çalışır. [Seçilmiş kanıt](review-evidence/joint-api-original-context-fix-20261003.json).
+Bu sonuç yeni tam MAIN kalite kapısı veya gerçek runtime/GPU kabulü değildir.
+
+Kapsam callback'in oracle GET yoludur. Ayrı AOS POST istemcisinin bütün
+çağrıları veya gerçek API sunucusunun süresi bu teslimle denetlenmiş sayılmaz.
+Süre dolması start/status/stop/report iznini yenilemez; cleanup/GPU hakkı
+üretmez. Mevcut bütçeli Director durdurması ve ayrı original-target cleanup
+sınırları korunur. Servis, FEATURE ürün kodu ve GPU çalışma durumu değiştirilmedi.
+
+AOS tarafındaki final-seal adımı henüz adaydır: normal drain sonrası izinli
+status/report/stop çağrıları yeni local control başlatabildiği için anlık
+`local_controls_drained=true` destructive kapanış kanıtı değildir. Tüm yeni
+control kabulünü kapatan seal ve bağımsız native GPU dışlama kanıtı gerekir.
+
+
+### AOS V5 final-seal sözleşmesi — salt okunur eşleşti
+
+AOS oturumu drain/seal kaynaklarını dondurdu. Seçilmiş 161 dosyalı V5
+paketinin hash'i `9ea15d364611ce26e1e55afe9f88ebba11c6cd38364f332a5a86f7843ccd15a4`;
+Scientist tüm dosya hash'lerini tekrar okudu, fark yok. V4'ten dört kaynak
+değişti, `shared_drain.py` ve dört şema eklendi; kaynak silinmedi.
+
+`POST /api/shared/drain` ve `/api/shared/drain/seal` aynı altı alanı alır:
+request_id, session_id, runtime_id, owner=AGENT, lease_id, generation.
+`SavedSharedDrainObservation` event id/SHA ve canonical process-bound
+receipt taşır. Before-stop yeni alınan sealed receipt'in
+`admission_closed`, `local_controls_drained`, `cleanup_controls_closed`
+alanlarının üçü true, blocker listesi boş olmalıdır. Gerçek process,
+SharedServiceBinding unit/Invocation/cgroup ve runtime/controller kimliği
+ayrıca doğrulanır. Normal drain cleanup kontrollerini açık bırakır; seal
+bunları da process için geri açılamaz biçimde kapatır.
+
+Tarihsel GET ve `read_shared_drain_receipt` helper'ı exact session/event/SHA
+ile salt okunur scoped SQLite okuması sağlar. After-stop aynı kayıt tekrar
+okunabilir; bu GPU veya remote-job cleanup kanıtı değildir. Makbuzda GPU,
+native exclusion ve remote-job-stopped alanları false kalır. Değişmemiş
+default native UI'nin broker dışında gelecekte yeni iş kabul etmesini
+engelleyen kanıt hâlâ yoktur; mevcut kullanıcı servisine müdahale edilmedi.
+Yeni birleşik source/config paketi ve sonlu yetki gerekir; önceki V4/227
+hazırlığı bu yeni kaynaklara yetki sağlamaz.
+
+
+### Gerçek native dışlama için kalan producer
+
+AOS oturumu mevcut default native process çalışmayı sürdürürken kalıcı
+dışlamanın kanıtlanamayacağını teyit etti. Geçiş hazırlığı exact hedefler,
+aktif iş varsa ret, admission kapanışı, owned süreç/worker cleanup ve geri
+dönüş/UI etkisini kapsayacak; canlı geçiş henüz onaylı veya yürütülmüş değildir.
+
+Astra/high incelemesine göre production host adaptörü için eksik parça,
+exact handover/shared-plan pinlerini alıp güncel native admission fence'ini,
+aynı boot ve özgün süreç/servis kimliklerini, source/config/maintenance
+bağlarını ve bağımsız fiziksel cleanup gözlemlerini döndüren salt okunur
+kanıt producer'ıdır. Yeni native start/restart yolları da bu fence'e uymalı;
+fence cleanup ve ayrıca yetkili release bitmeden otomatik açılmamalıdır.
+Expiry start/model hakkını bitirir; ayrıca yetkili bounded cleanup eski
+çalışma iznini yenilemez. İsim/sözleşme karşı tarafta henüz son hâline gelmedi.
+SessionInspection, final seal veya eski PID'nin yokluğu bu kanıtın yerine
+geçmez. Yalnız boolean döndüren geçici adaptör tamamlanmış iş olarak yazılmadı.
+
+
+### AOS native devir ön incelemesi — salt okunur doğrulandı
+
+AOS v2 preview (`27f1b790…`) ve aktarım kaydı (`85b3fdc9…`)
+Scientist tarafından bağımsız dosya hash okumasıyla eşleşti. Anlık yerel
+idle gözlemi var; execution, native exclusion, GPU release ve Scientist
+reservation alanları false. Ortak SSH cgroup sahip olunan shutdown hedefi
+değildir. Kullanıcı geçiş onayı, sürdürülebilir native admission engeli,
+fiziksel cleanup ve canonical rezervasyon açık kalır. Canlı servis değişmedi.
+
+AOS sonraki kaynak diliminde native worker ömrü boyunca tutulan kilit ve
+yeni native start/restart yollarını kapsayan inhibit hazırlıyor; broker
+worker mevcut TurnGate yolunda kalır. Bu ikinci GPU allocator değildir.
+Yeni source map ve gerçek exclusion producer olmadan host adaptörü veya
+GPU kabulü hazır sayılmaz. [Hash ve kapsam kaydı](review-evidence/joint-api-original-context-fix-20261003.json).
+
+## 2026-10-03 — Public DEV CPU teslimi ve sonraki native adım
+
+Scientist 0.45.0 gerçek SKAB DEV UI koşusu `92ae603c-e367-422b-92fa-4fd567f80548`
+283,41 saniyede tamamlandı; 9 baseline + 3 OPTICS skoru, LSH guard reddi.
+OPTICS KEEP, en iyi baseline ham skorunun geçildiği anlamına gelmez. Director,
+12 Scorer işi/cgroup ve sandbox temiz; kuyruk boş. AOS supervisor/backend
+42512/42513 özgün kimlikleri korundu. Model/GPU çağrısı sıfır.
+
+AOS oturumu staging alanında broker dışı tüm repo-managed native girişleri
+(legacy başlatma, worker ve probe dahil) reddeden ortak profil yaması
+hazırladığını bildirdi; broker S1/S2 korunacak. Bu bildirim uygulanmış host
+dışlama kanıtı değildir. Tam envanter, executable maintenance, sahipli fiziksel
+cleanup ve sonlu özgün yetki/config pinleri Scientist çağırıcısına bağlanmalı.
+Canlı AOS değişmedi; kontrollü eski oturum kapanışı için somut paket ve
+kullanıcı onayı gerekir. İkinci GPU otoritesi oluşturulmaz. Ortak gerçek
+GPU kabulünün tek yürütücüsü Scientist; GPU HOLD devam ediyor.
+
+[CPU teslim kanıtı](120-public-dev-cpu-study.md). Bu CPU sonucu native
+GPU başlatma izni veya birlikte çalışma kabulü değildir.
+
+### Native exclusion tüketicisi: mevcut durum ve öneri
+
+2026-10-03: `read_native_exclusion` host tüketicisi henüz uygulanmadı;
+onaylanmış wire şeması veya hazır endpoint yok. AOS oturumuna bu durum açıkça
+iletildi. Önerilen salt okunur imza:
+`read_native_exclusion(expected_handover_sha256, expected_shared_plan_sha256, *, deadline)`
+→ canonical kanıt + SHA. Zorunlu öneri alanları: schema/version, aynı boot,
+özgün issued/expires ve çağrı deadline sınırı; handover/plan/source/config/
+maintenance SHA; exact unit/InvocationID ve PID/start_ticks; envanterli
+native girişlerde halen etkili yeni start/restart engeli; bağımsız sahipli
+worker fiziksel yokluk kanıtı. Eksik, süresi geçmiş veya değişmiş kanıt
+kabul edilmez. Tarihsel receipt/idle yeterli değildir. Süre bitimi native
+çalışmayı otomatik açmaz. Bu arayüz acquire/release/yetki üretmez; canonical
+scheduler tek tahsis otoritesi kalır. AOS tam profilinden somut producer
+şeması önerildikten sonra Scientist tüketicisi aynı sürüme bağlanacak.
+
+### Ortak şema için süreç rolleri ayrımı
+
+AOS ile teyit edildi: emekliye ayrılacak eski oturum dedicated service
+değildir; paylaşılan SSH `session-3.scope` içindedir. Bu cgroup sinyal/stop
+hedefi olmaz ve ona InvocationID uydurulmaz. Eski oturum kapanış kanıtı
+özgün manager session, supervisor/backend ProcessIdentity (PID/start_ticks/
+boot ve sahiplik) ve bağımsız sahipli worker yokluğuna bağlanır. Yeni ortak
+çağırıcı ise gerçek dedicated unit/InvocationID, süreç kimliği ve pinli
+plan/source/config ile doğrulanır. Producer önerisi bu rolleri ayrı tutacak.
+Bu teyit canlı kapanış veya GPU yürütme izni değildir; kanıt tahsis yetkisi
+üretmez, özgün sonlu sürenin bitişi native çalışmayı yeniden açmaz.
+
+### Shared-only aday kaynak incelemesi
+
+Astra/high salt okunur incelemesinde manifest `d52a57e8…`, patch `a0cbf60e…`
+ve handoff `0704012f…` eşleşti; bellekte patch rekonstrüksiyonuyla 41 önce/sonra
+ve 13 korunmuş dosya pini, 86 politika doğrulandı. Somut bypass veya broker
+uyumsuzluğu bulunmadı. Yeni promoted kaynak/factory closure tüm 41 ret dosyasını
+ve brokerın import ettiği `services/decider/worker.py` dosyasını kapsamalı;
+eski 161 kaynak pini yeterli değildir. Bu koşul AOS oturumuna aktarıldı.
+Aday canlı sisteme uygulanmadı. Exact maintenance, gerçek producer DTO/uygulaması
+ve aynı sürüme bağlı Scientist consumer henüz açık; GPU HOLD sürüyor.

@@ -14,6 +14,14 @@ import pytest
 from lab import cli
 
 
+@pytest.fixture(autouse=True)
+def slice_limits(monkeypatch):
+    """Keep the shared slice provisioning boundary inert in these CLI tests."""
+    check = MagicMock()
+    monkeypatch.setattr(cli.SystemdUnitManager, "ensure_slice", check)
+    return check
+
+
 def validated_target(monkeypatch, tmp_path):
     suite = tmp_path / "suite.json"
     suite.write_bytes(b"{}")
@@ -26,6 +34,8 @@ def validated_target(monkeypatch, tmp_path):
         suite_manifest_sha256=digest,
         scenario_sha256="a" * 64,
         provider_config_sha256=None,
+        proposal_contract="candidate-python.v1",
+        snapshot_sha256=None,
         proposal_limit=1,
     )
     registry = MagicMock()
@@ -96,13 +106,16 @@ def test_changed_request_digest_rejected(monkeypatch, tmp_path):
         cli._validate_dispatch_target(uuid4(), row, registry)
 
 
-def test_resume_launcher_uses_exact_uuid_unit_and_allowlisted_environment(monkeypatch):
+def test_resume_launcher_uses_exact_uuid_unit_and_allowlisted_environment(
+    monkeypatch, slice_limits
+):
     run, restart = uuid4(), uuid4()
     monkeypatch.setenv("LAB_SUITE_REGISTRY_FILE", "/private/registry.json")
     monkeypatch.setenv("UNTRUSTED_COMMAND", "do-not-copy")
     command = []
 
     def launch(argv, **kwargs):
+        slice_limits.assert_called_once_with()
         command.extend(argv)
         assert kwargs["timeout"] == 660
         return CompletedProcess(
@@ -362,8 +375,9 @@ def test_expired_entrypoint_retains_budget_and_never_constructs_model_or_baselin
     assert finalize.call_args.kwargs["artifact_root"] == tmp_path
 
 
+@pytest.mark.parametrize("outcome", ["completed", "stop_requested", "exception_stop"])
 def test_coordinator_validates_and_captures_before_claim_then_binds_execution(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, outcome
 ):
     from datetime import UTC, datetime, timedelta
 
@@ -421,11 +435,40 @@ def test_coordinator_validates_and_captures_before_claim_then_binds_execution(
     def execute(args):
         assert active_execution_owner() == owner and args.resume_receipt is receipt
         events.append("execute")
+        if outcome == "exception_stop":
+            raise RuntimeError("stop interrupted resumed execution")
         return {}
 
+    def record_failure(*args, **kwargs):
+        assert kwargs["owner"] is owner
+        return {"state": "stop_requested"}
+
     monkeypatch.setattr(cli, "_run_director", execute)
-    monkeypatch.setattr(cli, "_completed_dispatch_result", lambda *a: {"state": "completed"})
+    monkeypatch.setattr(cli, "_record_claimed_dispatch_failure", record_failure)
+    monkeypatch.setattr(cli, "_completed_dispatch_result", lambda *a: {"state": outcome})
     response = cli._resume_director_run(run, restart)
     assert events == ["validate", "capture", "drain_CAS", "execute"]
-    assert response["generation"] == 2
+    assert response["admitted_owner"] == {
+        "generation": 2,
+        "invocation_id": owner.invocation_id,
+        "execution_sha256": owner.execution_sha256,
+    }
+    if outcome != "exception_stop":
+        assert response["generation"] == 2
+        assert response["original_deadline_at"] == receipt.deadline_at.isoformat()
+    assert receipt.started_at == now - timedelta(seconds=20)
+    assert receipt.deadline_at == now + timedelta(seconds=40)
     assert active_execution_owner() is None
+
+    if outcome != "completed":
+        child_result = {**response, "run_id": str(run)}
+        monkeypatch.setattr(
+            cli.subprocess,
+            "run",
+            lambda *a, **kw: CompletedProcess([], 1, stdout=json.dumps(child_result) + "\n"),
+        )
+        recovery = MagicMock(return_value={"state": "stopped"})
+        monkeypatch.setattr(cli, "_automatic_stopped_baseline_recovery", recovery)
+        launched = cli._launch_director_unit(run, restart_id=restart, unit_runtime=60)
+        recovery.assert_called_once_with(run, response["admitted_owner"])
+        assert launched["state"] == "stopped" and launched["owner_exit_code"] == 1

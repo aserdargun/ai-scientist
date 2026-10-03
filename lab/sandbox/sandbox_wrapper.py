@@ -118,7 +118,10 @@ def main() -> int:
     phase = sys.argv[2]
     timeout = int(sys.argv[3])
     output_limit = int(sys.argv[4])
-    if phase not in {"fit", "score", "guard"} or not 1 <= timeout <= 600:
+    if (
+        phase not in {"fit", "score", "guard", "mode_stream_fit", "mode_stream_predict"}
+        or not 1 <= timeout <= 600
+    ):
         print("invalid trusted sandbox phase/limits", file=sys.stderr)
         return 64
     try:

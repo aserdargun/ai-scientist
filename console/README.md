@@ -1,10 +1,14 @@
 # AI Scientist yerel konsol
 
+> **Güncel 0.46 field-lab:** konsol `127.0.0.1:8789`, API `127.0.0.1:8767`.
+> Aşağıdaki varsayılan 8788/8766 adımları eski kuruluma aittir. Güncel
+> başlatma ve ilk deney için [README](../README.md) kullanın.
+
 Tarayıcı adresi: **http://127.0.0.1:8788**.
 
 ## Kullanım
 
-- **Genel bakış:** M0 kabul kaydından güncel geçti/kısmi/açık sayıları ve canlı host ölçümleri.
+- **Genel bakış:** M0 kabul kaydından güncel geçti/kısmi/açık sayıları, geliştirme ilerlemesi ve canlı host ölçümleri.
 - **Kabul maddeleri:** 22 maddeyi duruma göre süzme, açıklama ve kayıtlı kanıtları inceleme.
 - **Kontrolü çalıştır:** sınırlı bir CPU test grubunu gerçekten çalıştırır. Sonuç, çıkış kodu ve çıktı Sistem ekranında görünür. Bu kontrol GPU/model kabulü değildir ve kabul kaydını değiştirmez.
 - **Deneyler:** yapılandırılmış Lab API üzerinden kayıtlı süitle başlatma, UUID ile izleme, durdurma ve doğrulanmış rapor okuma.
@@ -129,3 +133,16 @@ hazır olmalıdır. Süre bütçesi rapor hazırlama süresini de kapsar.
 Baseline sonucu tam M0, gerçek LLM veya AOS birlikte çalışma kabulü değildir.
 İşlem türü bu konsoldan başlatılan koşular için saklanır; dışarıdan UUID ile
 izlenen ve türü bilinmeyen koşular açıkça böyle gösterilir.
+
+## Geliştirme ilerlemesini güncelleme
+
+`docs/ai-scientist/development-progress.json` yalnız yayımlanabilir kısa durum bilgisi
+barındırır. Konsol bu dosyayı her genel bakış isteğinde okur; açık ekran 5 saniyede
+bir yenilenir. Güncelleme kabul maddelerini veya deney durumlarını değiştirmez.
+
+`updated_at` saat dilimli ISO tarihidir. `current_work`, `latest_result` ve
+`next_step` en fazla 600 karakterdir. CPU/GPU durumları `pending`, `running`,
+`passed`, `blocked` veya `quarantined` olabilir. Dosya 8 KiB sınırındadır;
+eksik/geçersiz dosya güncelleme bekleniyor olarak görünür. 10 dakikadan eski kayıt
+son güncelleme zamanı ile belirtilir. Güncellemeyi geçici dosyaya yazıp atomik
+olarak değiştirin; token, DSN, özel veri veya ham oturum çıktısı eklemeyin.

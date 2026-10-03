@@ -1,4 +1,4 @@
-import type { Check, Checks, EvidenceResponse, Overview, Run, Runs, StartRun, StartBaseline } from './types';
+import type { Check, Checks, EvidenceResponse, Overview, Run, Runs, RunExperience, StartRun, StartBaseline } from './types';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status?: number) { super(message); this.name = 'ApiError'; }
@@ -50,4 +50,5 @@ export const api = {
   run: (id: string, signal?: AbortSignal) => request<Run>(`/runs/${encodeURIComponent(id)}`, {}, signal),
   stopRun: (id: string) => request<Run>(`/runs/${encodeURIComponent(id)}/stop`, json({})),
   report: (id: string, signal?: AbortSignal) => request<unknown>(`/runs/${encodeURIComponent(id)}/report`, {}, signal),
+  experience: (id: string, signal?: AbortSignal) => request<RunExperience>(`/runs/${encodeURIComponent(id)}/experience`, {}, signal),
 };

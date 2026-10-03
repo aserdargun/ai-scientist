@@ -8,6 +8,7 @@ import os
 import re
 import sys
 
+from lab.scorer.credential_path import configured_scorer_dsn_file
 from lab.scorer.worker import (
     DEFAULT_DSN_FILE,
     PROJECT_ROOT,
@@ -37,7 +38,9 @@ def main(argv: list[str] | None = None) -> int:
         from lab.api.mode_experiments import ModeSnapshotStore
         from lab.scorer.mode_snapshot import install_snapshot
 
-        engine = create_engine(_secret(DEFAULT_DSN_FILE), pool_size=1, max_overflow=0)
+        engine = create_engine(
+            _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)), pool_size=1, max_overflow=0
+        )
         store = ModeSnapshotStore(PROJECT_ROOT / "data/runtime/mode-snapshots")
         result = install_snapshot(engine, store, digest)
         print(json.dumps({"state": "installed", "snapshot_sha256": result["snapshot_sha256"]}))

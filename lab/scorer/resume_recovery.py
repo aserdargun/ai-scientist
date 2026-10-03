@@ -6,12 +6,12 @@ import argparse
 import json
 import sys
 import time
-from pathlib import Path
 from uuid import UUID
 
 from sqlalchemy import Engine, create_engine, text
 
 from lab.director.recovery import _owner_is_proven_dead, _stored_owner
+from lab.scorer.credential_path import configured_scorer_dsn_file
 from lab.scorer.holdout import recover_holdout_run
 from lab.scorer.supervisor import _job_lifecycle_lock
 from lab.scorer.worker import DEFAULT_DSN_FILE, _secret, verify_systemd_invocation
@@ -129,7 +129,10 @@ def main(argv: list[str] | None = None) -> int:
         f"swapp-ai-scientist-scorer-{args.recovery_unit_id.hex}.service"
     )
     engine = create_engine(
-        _secret(Path(DEFAULT_DSN_FILE)), pool_size=1, max_overflow=0, pool_timeout=5
+        _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)),
+        pool_size=1,
+        max_overflow=0,
+        pool_timeout=5,
     )
     try:
         state = reconcile_restart_children(

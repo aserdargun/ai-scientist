@@ -32,7 +32,7 @@ from lab.reporting import read_run_pairs
 
 Digest = Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
 License = Annotated[StrictStr, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9.+-]{0,127}$")]
-RULES_VERSION = "local-sft-reviewed.v1"
+RULES_VERSION = "local-sft-reviewed.v2"
 MAX_RECORDS = 10_000
 MAX_PACKAGE_BYTES = 64 * 1024**2
 
@@ -209,6 +209,23 @@ def _clean_text(content: str, private_values: set[str]) -> bool:
     )
 
 
+def _unreviewed_context(transcript: ProviderAttemptTranscript, fields: tuple[str, ...]) -> bool:
+    """Inspect observed context before redaction; target permissions do not cover history."""
+    prefix = "Trusted metadata-only run context (no labels or raw series):\n"
+    for message in transcript.prompt_messages:
+        if message.role != "user" or not message.content.startswith(prefix):
+            continue
+        payload = message.content[len(prefix) :]
+        context, end = json.JSONDecoder().raw_decode(payload)
+        # The provider emits canonical JSON, followed optionally by EXPLORE/repair text.
+        # This also rejects duplicate keys that could otherwise hide a prior snapshot.
+        if not isinstance(context, dict) or canonical(context) != payload[:end].encode():
+            raise ValueError("observed trusted context is not canonical")
+        if any(context.get(field) is not None for field in fields):
+            return True
+    return False
+
+
 def _eligible(record: VerifiedRecord, policy: ExportPolicy) -> tuple[dict[str, Any] | None, str]:
     exp, trajectory = record.experiment, record.trajectory
     if exp.kind != "proposal":
@@ -325,6 +342,10 @@ def _eligible(record: VerifiedRecord, policy: ExportPolicy) -> tuple[dict[str, A
             or final.response_schema_sha256 != completed.response_schema_sha256
         ):
             return None, "transcript_provider_hash_mismatch"
+        if _unreviewed_context(final, ("field_context", "field_context_sha256")):
+            return None, "field_intent_permission_not_reviewed"
+        if _unreviewed_context(final, ("prior_findings", "prior_findings_sha256")):
+            return None, "prior_findings_permission_not_reviewed"
         original = LocalQwenProposalProvider._parse_proposal(final.response_text, exp.move_type)
         if digest(original.candidate_source.encode()) != exp.candidate_sha256:
             return None, "response_candidate_mismatch"

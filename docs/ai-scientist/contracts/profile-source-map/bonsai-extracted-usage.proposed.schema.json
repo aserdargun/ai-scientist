@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completion_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "prompt_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "prompt_tokens",
+    "completion_tokens"
+  ],
+  "type": "object"
+}

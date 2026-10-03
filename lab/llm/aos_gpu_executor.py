@@ -26,10 +26,39 @@ from collections.abc import Callable, Iterator, Mapping
 from contextlib import closing
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Protocol, cast
+from types import MappingProxyType
+from typing import Any, Protocol, cast
 from uuid import uuid4
 
 from lab.llm.aos_gpu_broker import BrokerProtocolError, PeerGeneration, TurnReceipt
+from lab.llm.aos_gpu_control_store import (
+    AdmissionGrant,
+    ControlCanceled,
+    ControlStore,
+    ControlStoreError,
+    control_deadline,
+)
+from lab.llm.aos_profile_output import (
+    NAME as OUTPUT_CONTRACT_NAME,
+)
+from lab.llm.aos_profile_output import (
+    VERSION as OUTPUT_CONTRACT_VERSION,
+)
+from lab.llm.aos_profile_output import (
+    OutputContract,
+    ProfileOutputError,
+    instantiate_decider_schema,
+    instantiate_result_schema,
+    load_contract,
+    project_profile_output,
+    validate_result,
+)
+from lab.llm.aos_profile_output import (
+    canonical as output_canonical,
+)
+from lab.llm.aos_profile_output import (
+    decode as decode_output,
+)
 from lab.llm.gpu_scheduler import (
     MAX_DRAIN_SECONDS,
     GpuLease,
@@ -64,6 +93,7 @@ MODEL_ROOT = Path("/home/cachyos/aos/models")
 MAX_REQUEST_BYTES = 128 * 1024
 MAX_RESULT_BYTES = 128 * 1024
 MAX_LOG_BYTES = 2 * 1024 * 1024
+OUTPUT_CONTRACT_DIRECTORY = Path(__file__).resolve().parent / "contracts/profile_output_v2"
 OWNER_PRINCIPAL = "aos"
 _active_peer: contextvars.ContextVar[PeerGeneration | None] = contextvars.ContextVar(
     "swapp_aos_gpu_peer", default=None
@@ -117,8 +147,12 @@ class AOSProfile:
     temperature: float = 0.0
     max_output_tokens: int = 512
     context_tokens: int = 16_384
+    output_contract: Mapping[str, object] | None = None
 
     def __post_init__(self) -> None:
+        if self.output_contract is not None:
+            pin = _validate_output_pin(self.output_contract)
+            object.__setattr__(self, "output_contract", MappingProxyType(pin))
         expected_kind = {
             "aos.decider.turn.v1": "decider",
             "aos.bonsai.recovery.v1": "bonsai-recovery",
@@ -171,6 +205,8 @@ class AOSProfile:
             "max_output_tokens": self.max_output_tokens,
             "context_tokens": self.context_tokens,
         }
+        if self.output_contract is not None:
+            value["output_contract"] = dict(self.output_contract)
         return hashlib.sha256(_canonical_json(value).encode()).hexdigest()
 
 
@@ -204,7 +240,38 @@ class ProfileRegistry:
         if profile.deployment_digest != deployment_digest:
             raise BrokerExecutionError("AOS deployment identity differs from the pinned profile")
         _verify_profile_manifest(profile)
+        _profile_output_contract(profile)
         return profile
+
+
+def _validate_output_pin(value: Mapping[str, object]) -> dict[str, object]:
+    if (
+        not isinstance(value, Mapping)
+        or set(value) != {"name", "version", "bundle_sha256"}
+        or value["name"] != OUTPUT_CONTRACT_NAME
+        or type(value["version"]) is not int
+        or value["version"] != OUTPUT_CONTRACT_VERSION
+        or not isinstance(value["bundle_sha256"], str)
+        or re.fullmatch(r"[a-f0-9]{64}", value["bundle_sha256"]) is None
+    ):
+        raise ValueError("profile output contract must be the closed pinned v2 contract")
+    return dict(value)
+
+
+def _profile_output_contract(profile: AOSProfile) -> OutputContract | None:
+    pin = getattr(profile, "output_contract", None)
+    if pin is None:
+        return None
+    try:
+        pin = _validate_output_pin(pin)
+        contract = load_contract(OUTPUT_CONTRACT_DIRECTORY, str(pin["bundle_sha256"]))
+        if contract.content_pin(profile.profile_id) != profile.response_schema_sha256:
+            raise ProfileOutputError("profile content schema differs from output bundle")
+        return contract
+    except (OSError, ValueError, TypeError) as exc:
+        raise BrokerExecutionError(
+            "pinned profile output contract is unavailable or changed"
+        ) from exc
 
 
 def _verify_profile_manifest(profile: AOSProfile) -> bytes:
@@ -416,6 +483,10 @@ class SystemdSocketPeerAuthenticator:
         self.units = units or SystemdUnitManager()
 
     def _parent(self) -> tuple[str, str, int, int]:
+        limit = control_deadline.get()
+        remaining = 5.0 if limit is None else min(5.0, limit - time.monotonic())
+        if remaining <= 0:
+            raise BrokerProtocolError("control identity deadline expired")
         result = subprocess.run(  # nosec B603 -- fixed systemctl argv and validated service name
             [
                 SYSTEMCTL,
@@ -431,7 +502,7 @@ class SystemdSocketPeerAuthenticator:
             ],
             capture_output=True,
             text=True,
-            timeout=5,
+            timeout=remaining,
             check=False,
         )
         if result.returncode != 0:
@@ -576,8 +647,10 @@ class SystemdAOSProfileRuntime:
         memory_bytes: int = MODEL_UNIT_MEMORY_BYTES,
         cpu_percent: int = MODEL_UNIT_CPU_PERCENT,
         task_limit: int = MODEL_UNIT_TASKS,
+        control_store: ControlStore | None = None,
     ) -> None:
         self.database = database
+        self.control_store = control_store
         self.units = units or SystemdUnitManager(memory_bytes=memory_bytes)
         self.gpu = gpu or NvidiaSmiObserver()
         self.clock = clock
@@ -685,6 +758,8 @@ class SystemdAOSProfileRuntime:
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
             try:
+                if self.control_store is not None:
+                    self.control_store.launch_handoff(connection, asdict(lease), stage="plan")
                 connection.execute(
                     "INSERT INTO aos_gpu_child_bindings(owner,request_id,fencing_token,profile_id,"
                     "deployment_digest,request_sha256,unit,nonce,workdir,launch_state,"
@@ -707,6 +782,10 @@ class SystemdAOSProfileRuntime:
                 connection.rollback()
                 shutil.rmtree(workdir)
                 raise LeaseConflict("AOS child launch intent already exists") from exc
+            except ControlStoreError:
+                connection.rollback()
+                shutil.rmtree(workdir)
+                raise
             row = connection.execute(
                 "SELECT * FROM aos_gpu_child_bindings WHERE owner='aos' AND request_id=? "
                 "AND fencing_token=?",
@@ -815,6 +894,9 @@ class SystemdAOSProfileRuntime:
             ]
         )
         with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            if self.control_store is not None:
+                self.control_store.launch_handoff(connection, asdict(lease), stage="start")
             cursor = connection.execute(
                 "UPDATE aos_gpu_child_bindings SET launch_state='starting' "
                 "WHERE owner='aos' AND request_id=? AND fencing_token=? AND launch_state='planned'",
@@ -822,11 +904,14 @@ class SystemdAOSProfileRuntime:
             )
             if cursor.rowcount != 1:
                 raise LeaseConflict("AOS child intent no longer admits a launch")
+            connection.commit()
         remaining = min(
             20.0, lease.activation_deadline - self.clock(), lease.total_deadline - self.clock()
         )
         if remaining <= 0:
             raise BrokerExecutionError("AOS startup budget expired before systemd launch")
+        if self.control_store is not None:
+            self.control_store.check_running(asdict(lease))
         # The argv contains only fixed executables and the validated pinned profile.
         result = subprocess.run(  # nosec B603
             command,
@@ -929,6 +1014,8 @@ class SystemdAOSProfileRuntime:
             bound = False
             ready = False
             while self.clock() < activation_deadline:
+                if self.control_store is not None:
+                    self.control_store.check_running(asdict(lease))
                 fresh = scheduler.heartbeat(current)
                 if fresh is None:
                     raise BrokerExecutionError("AOS GPU activation lease expired")
@@ -952,17 +1039,22 @@ class SystemdAOSProfileRuntime:
                     if activated is None:
                         raise BrokerExecutionError("AOS GPU inference phase was not admitted")
                     current = activated
-                    _write_private(
-                        intent.go_path,
-                        _canonical_json(
-                            {
-                                "request_id": lease.request_id,
-                                "profile_id": profile.profile_id,
-                                "deployment_digest": profile.deployment_digest,
-                                "nonce": intent.nonce,
-                            }
-                        ).encode(),
-                    )
+                    go = _canonical_json(
+                        {
+                            "request_id": lease.request_id,
+                            "profile_id": profile.profile_id,
+                            "deployment_digest": profile.deployment_digest,
+                            "nonce": intent.nonce,
+                        }
+                    ).encode()
+                    # Serialize durable cancel with the bounded go-file handoff.
+                    # The write lock never covers startup, model work or drain.
+                    with closing(self._connect()) as connection:
+                        connection.execute("BEGIN IMMEDIATE")
+                        if self.control_store is not None:
+                            self.control_store.launch_handoff(connection, asdict(lease), stage="go")
+                        _write_private(intent.go_path, go)
+                        connection.commit()
                     ready = True
                     break
                 if snapshot.active_state not in {"active", "activating"}:
@@ -972,7 +1064,11 @@ class SystemdAOSProfileRuntime:
                 raise BrokerExecutionError("AOS model activation deadline expired")
             self._wait_child_exit(current, row, intent, scheduler, deadline)
             response_bytes = _read_private(intent.output_path, MAX_RESULT_BYTES)
-            response = _strict_object(response_bytes)
+            response = (
+                decode_output(response_bytes, limit=MAX_RESULT_BYTES)
+                if _profile_output_contract(profile) is not None
+                else _strict_object(response_bytes)
+            )
             usage = _extract_usage(profile, response)
             row = self._binding(lease) or row
             if not row["invocation_id"]:
@@ -999,6 +1095,8 @@ class SystemdAOSProfileRuntime:
         deadline: float,
     ) -> None:
         while self.clock() < min(lease.inference_deadline, lease.total_deadline, deadline):
+            if self.control_store is not None:
+                self.control_store.check_running(asdict(lease))
             fresh = scheduler.heartbeat(lease)
             if fresh is None:
                 raise BrokerExecutionError("AOS GPU inference lease expired")
@@ -1039,16 +1137,45 @@ class SystemdAOSProfileRuntime:
             return False
         row = self._binding(lease)
         if row is None:
+            if self.control_store is not None:
+                gpu_now = self.gpu.snapshot()
+                if set(gpu_now.process_memory_mib) - set(gpu_now.exempt_display_pids):
+                    return False
+                self.control_store.record_drain(
+                    asdict(lease),
+                    {
+                        "kind": "no_child_intent",
+                        "boot_id": _boot_id(),
+                        "no_child_intent": True,
+                        "observed_boottime": self.clock(),
+                        "child_generation": None,
+                        "late_start_fenced": True,
+                        "cgroup_empty": True,
+                        "gpu_absent": True,
+                        "observed_gpu_pids": [],
+                        "remaining_owned_gpu_pids": [],
+                        "remaining_foreign_gpu_pids": [],
+                    },
+                )
             return True
         started = self.clock()
         try:
             observed = {int(item) for item in json.loads(row["observed_gpu_pids_json"])}
             snapshot = self.units.inspect(row["unit"])
             expected_group = row["control_group"] or ""
-            # systemd-run can time out while the user manager still has a
-            # start job queued.  An unbound intent is not proof that no child
-            # can appear later; retain the shared GPU lease through the
-            # profile's hard runtime plus bounded drain window.
+            if (
+                self.control_store is not None
+                and row["invocation_id"] is None
+                and snapshot.load_state == "not-found"
+                and self.control_store.requires_bound_child(asdict(lease))
+            ):
+                # A stopped/delayed launch issuer may still submit this start.
+                # Time alone is not physical proof of child nonexistence.
+                return False
+            # systemd-run or its caller can be delayed after start preparation.
+            # An unbound planned/starting intent is not proof that no child can
+            # appear later. Retain the lease regardless of elapsed time, also
+            # on the legacy runtime path without a control store.
             late_start_fence = (
                 float(row["created_boottime"]) + int(row["total_seconds"]) + MAX_DRAIN_SECONDS
             )
@@ -1056,12 +1183,20 @@ class SystemdAOSProfileRuntime:
                 snapshot.load_state == "not-found"
                 and row["launch_state"] in {"planned", "starting"}
                 and row["invocation_id"] is None
-                and self.clock() < late_start_fence
             ):
                 return False
             if snapshot.load_state != "not-found":
                 if not self._snapshot_matches(row, snapshot, allow_unbound=True):
                     return False
+                if self.control_store is not None and not row["invocation_id"]:
+                    # Capture the actual process generation before stop erases
+                    # MainPID. An unbound inactive unit is not enough evidence.
+                    if snapshot.main_pid <= 1:
+                        return False
+                    self._bind(lease, snapshot)
+                    row = self._binding(lease)
+                    if row is None:
+                        return False
                 if row["invocation_id"] and snapshot.invocation_id != row["invocation_id"]:
                     return False
                 expected_group = expected_group or snapshot.control_group
@@ -1099,7 +1234,58 @@ class SystemdAOSProfileRuntime:
                 ):
                     self.sleep(0.1)
                     continue
+                if (
+                    self.control_store is not None
+                    and row["invocation_id"] is None
+                    and self.control_store.requires_bound_child(asdict(lease))
+                ):
+                    return False
                 self._mark_drained(lease)
+                if self.control_store is not None:
+                    actual = self._binding(lease)
+                    if actual is None:
+                        return False
+                    child = (
+                        None
+                        if not actual["invocation_id"]
+                        else {
+                            "unit": actual["unit"],
+                            "invocation_id": actual["invocation_id"],
+                            "pid": actual["main_pid"],
+                            "start_ticks": actual["main_start_ticks"],
+                            "boot_id": actual["boot_id"],
+                            "control_group": actual["control_group"],
+                        }
+                    )
+                    if child is None and (
+                        now.load_state != "not-found" or self.clock() < late_start_fence
+                    ):
+                        return False
+                    self.control_store.record_drain(
+                        asdict(lease),
+                        {
+                            "kind": "physical_drain",
+                            "boot_id": _boot_id(),
+                            "observed_boottime": self.clock(),
+                            "child_generation": child,
+                            "never_started": child is None,
+                            "child_intent": {
+                                "unit": actual["unit"],
+                                "nonce": actual["nonce"],
+                                "created_boottime": actual["created_boottime"],
+                                "total_seconds": actual["total_seconds"],
+                            },
+                            "late_start_fenced": True,
+                            "gpu_absent": True,
+                            "cgroup_empty": True,
+                            "observed_gpu_pids": sorted(observed),
+                            "remaining_owned_gpu_pids": [],
+                            "remaining_foreign_gpu_pids": [],
+                            "late_start_fence": late_start_fence,
+                            "final_unit_state": now.active_state,
+                            "final_main_pid": now.main_pid,
+                        },
+                    )
                 return True
             return False
         except (OSError, ValueError, sqlite3.Error, ModelRuntimeError, subprocess.SubprocessError):
@@ -1137,7 +1323,26 @@ class SystemdAOSProfileRuntime:
         workdir = Path(row["workdir"])
         if workdir.parent != self.work_root or workdir.is_symlink():
             raise BrokerExecutionError("refusing to clean an unowned AOS turn directory")
-        shutil.rmtree(workdir)
+        try:
+            info = workdir.lstat()
+        except FileNotFoundError:
+            return
+        if (
+            not stat.S_ISDIR(info.st_mode)
+            or info.st_uid != os.getuid()
+            or stat.S_IMODE(info.st_mode) & 0o077
+        ):
+            raise BrokerExecutionError("refusing to clean a non-private AOS turn directory")
+        try:
+            shutil.rmtree(workdir)
+        except FileNotFoundError:
+            # Duplicate completion/cleanup may observe the same released turn.
+            # Keep its immutable drain/terminal evidence; no work is relaunched.
+            try:
+                workdir.lstat()
+            except FileNotFoundError:
+                return
+            raise
 
     def failure_diagnostics(self, lease: GpuLease) -> str:
         row = self._binding(lease)
@@ -1178,8 +1383,10 @@ class BrokerOwnedTurnExecutor:
         runtime: OwnedProfileRuntime,
         sleep: Callable[[float], None] = time.sleep,
         clock: Callable[[], float] = boottime,
+        control_store: ControlStore | None = None,
     ) -> None:
         self.database = database
+        self.control_store = control_store
         self._authenticator = authenticator
         self._profiles = profiles
         self._runtime = runtime
@@ -1198,6 +1405,7 @@ class BrokerOwnedTurnExecutor:
             max_total_seconds=720,
             queue_timeout_seconds=900,
             clock=clock,
+            control_store=control_store,
         )
 
     def _connect(self) -> sqlite3.Connection:
@@ -1206,6 +1414,30 @@ class BrokerOwnedTurnExecutor:
         connection.execute("PRAGMA busy_timeout=5000")
         os.chmod(self.database, 0o600)
         return connection
+
+    def cleanup_terminal_workdirs(self, *, limit: int = 8) -> int:
+        """Retry bounded private cleanup after already committed exact releases."""
+        if self.control_store is None:
+            return 0
+        cleaned = 0
+        for saved, receipt_sha256 in self.control_store.pending_cleanup_leases(limit=limit):
+            try:
+                terms = dict(saved)
+                identity = terms.pop("owner_identity")
+                lease = GpuLease(owner_identity=ProcessIdentity(**identity), **terms)
+                self._runtime.after_release(lease)
+                self.control_store.complete_cleanup(lease.request_id, receipt_sha256)
+            except (
+                ControlStoreError,
+                LeaseConflict,
+                BrokerExecutionError,
+                OSError,
+                TypeError,
+                ValueError,
+            ):
+                continue
+            cleaned += 1
+        return cleaned
 
     def _ensure_tables(self) -> None:
         parent = self.database.parent
@@ -1218,12 +1450,27 @@ class BrokerOwnedTurnExecutor:
             raise BrokerExecutionError("shared GPU database path is a symlink")
         with closing(self._connect()) as connection:
             connection.execute(
+                """CREATE TABLE IF NOT EXISTS aos_gpu_output_bindings (
+                    request_id TEXT PRIMARY KEY CHECK(length(request_id)=32),
+                    request_sha256 TEXT NOT NULL CHECK(length(request_sha256)=64),
+                    request_json TEXT NOT NULL,
+                    principal_json TEXT NOT NULL,
+                    profile_id TEXT NOT NULL,
+                    deployment_digest TEXT NOT NULL,
+                    profile_config_sha256 TEXT NOT NULL,
+                    bundle_sha256 TEXT NOT NULL,
+                    derived_response_schema_sha256 TEXT NOT NULL,
+                    derived_result_schema_sha256 TEXT NOT NULL
+                )"""
+            )
+            connection.execute(
                 """CREATE TABLE IF NOT EXISTS aos_gpu_turn_results (
                     request_id TEXT PRIMARY KEY CHECK(length(request_id)=32),
                     request_sha256 TEXT NOT NULL CHECK(length(request_sha256)=64),
                     profile_id TEXT NOT NULL,
                     deployment_digest TEXT NOT NULL CHECK(length(deployment_digest)=64),
                     profile_config_sha256 TEXT NOT NULL CHECK(length(profile_config_sha256)=64),
+                    principal_json TEXT,
                     state TEXT NOT NULL CHECK(
                         state IN ('intent','queued','running','result_ready','completed','failed')
                     ),
@@ -1247,20 +1494,263 @@ class BrokerOwnedTurnExecutor:
                 connection.execute(
                     "ALTER TABLE aos_gpu_turn_results ADD COLUMN failure_detail_json TEXT"
                 )
+            if "principal_json" not in columns:
+                # Historical rows have no authenticated generation receipt.
+                # Leave them unbound; a retry must never adopt that history.
+                connection.execute(
+                    "ALTER TABLE aos_gpu_turn_results ADD COLUMN principal_json TEXT"
+                )
+
+    def _bind_output_request(
+        self, request_bytes: bytes, profile: AOSProfile, peer: PeerGeneration
+    ) -> None:
+        """Persist request-specialized validation after admission, before scheduling."""
+        contract = _profile_output_contract(profile)
+        if contract is None:
+            if self.control_store is not None:
+                raise BrokerExecutionError("controlled inference requires profile-output.v2")
+            return
+        request = decode_output(request_bytes, limit=MAX_REQUEST_BYTES - 1, canonical_required=True)
+        result_schema = instantiate_result_schema(request_bytes, contract)
+        response_schema = (
+            instantiate_decider_schema(request_bytes, contract)
+            if profile.kind == "decider"
+            else contract.schemas["bonsai-response.schema.json"]
+        )
+        if (
+            request["profile_id"] != profile.profile_id
+            or request["deployment_digest"] != profile.deployment_digest
+        ):
+            raise BrokerExecutionError("request output profile differs")
+        fields = {
+            "request_id": request["request_id"],
+            "request_sha256": hashlib.sha256(request_bytes).hexdigest(),
+            "request_json": request_bytes.decode("utf-8"),
+            "principal_json": _canonical_json(asdict(peer)),
+            "profile_id": profile.profile_id,
+            "deployment_digest": profile.deployment_digest,
+            "profile_config_sha256": profile.config_sha256,
+            "bundle_sha256": contract.bundle_sha256,
+            "derived_response_schema_sha256": hashlib.sha256(
+                output_canonical(response_schema)
+            ).hexdigest(),
+            "derived_result_schema_sha256": hashlib.sha256(
+                output_canonical(result_schema)
+            ).hexdigest(),
+        }
+        with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            original = None
+            if self.control_store is not None:
+                original = connection.execute(
+                    "SELECT * FROM aos_control_requests WHERE request_id=?",
+                    (request["request_id"],),
+                ).fetchone()
+                if original is None:
+                    raise BrokerExecutionError("output binding has no authorized intent")
+                if original["cancel_requested"]:
+                    raise ControlCanceled()
+                stable = self.control_store._saved_binding(original, require_output_contract=True)
+                if any(
+                    original[key] != fields[key]
+                    for key in (
+                        "request_sha256",
+                        "principal_json",
+                        "profile_id",
+                        "deployment_digest",
+                        "profile_config_sha256",
+                    )
+                ) or stable["profile_pin"]["output_contract"] != dict(
+                    cast(Mapping[str, object], profile.output_contract)
+                ):
+                    raise BrokerExecutionError("output binding differs from original admission")
+            existing = connection.execute(
+                "SELECT * FROM aos_gpu_output_bindings WHERE request_id=?", (request["request_id"],)
+            ).fetchone()
+            if existing is not None:
+                if any(existing[key] != value for key, value in fields.items()):
+                    raise LeaseConflict("immutable request output binding changed")
+            else:
+                if (original is not None and original["state"] != "intent") or connection.execute(
+                    "SELECT 1 FROM aos_gpu_turn_results WHERE request_id=?",
+                    (request["request_id"],),
+                ).fetchone() is not None:
+                    raise BrokerExecutionError("unbound legacy output cannot be adopted")
+                connection.execute(
+                    "INSERT INTO aos_gpu_output_bindings VALUES(?,?,?,?,?,?,?,?,?,?)",
+                    tuple(fields.values()),
+                )
+            connection.commit()
+
+    def _expected_output_generation(
+        self,
+        connection: sqlite3.Connection,
+        row: sqlite3.Row,
+        *,
+        expected_payload_sha256: str,
+    ) -> dict[str, Any]:
+        if (
+            connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='aos_gpu_child_bindings'"
+            ).fetchone()
+            is None
+        ):
+            raise BrokerExecutionError("v2 result lacks an independently bound worker")
+        parameters: list[object] = [row["request_id"]]
+        query = "SELECT * FROM aos_gpu_child_bindings WHERE owner='aos' AND request_id=?"
+        if self.control_store is not None:
+            original = connection.execute(
+                "SELECT * FROM aos_control_requests WHERE request_id=?", (row["request_id"],)
+            ).fetchone()
+            if original is None or original["allocation_json"] is None:
+                raise BrokerExecutionError("v2 result lacks its original allocation")
+            allocation = json.loads(original["allocation_json"])
+            if (
+                hashlib.sha256(output_canonical(allocation)).hexdigest()
+                != original["allocation_sha256"]
+            ):
+                raise BrokerExecutionError("v2 original allocation digest differs")
+            lease = allocation["lease"]
+            if lease["owner"] != "aos" or lease["request_id"] != row["request_id"]:
+                raise BrokerExecutionError("v2 original allocation target differs")
+            query += " AND fencing_token=?"
+            parameters.append(lease["fencing_token"])
+        matches = connection.execute(query, parameters).fetchall()
+        if len(matches) != 1:
+            raise BrokerExecutionError("v2 result worker binding is missing or ambiguous")
+        child = matches[0]
+        if (
+            child["launch_state"] not in {"bound", "drained"}
+            or child["request_sha256"] != expected_payload_sha256
+            or any(
+                child[key] != row[key]
+                for key in ("profile_id", "deployment_digest")
+            )
+            or type(child["main_start_ticks"]) is not int
+            or child["main_start_ticks"] <= 0
+            or not isinstance(child["boot_id"], str)
+            or not child["boot_id"]
+        ):
+            raise BrokerExecutionError("v2 result worker identity is unbound")
+        return {
+            "unit": child["unit"],
+            "invocation_id": child["invocation_id"],
+            "main_pid": child["main_pid"],
+            "control_group": child["control_group"],
+        }
+
+    def _validate_output_receipt(
+        self, connection: sqlite3.Connection, row: sqlite3.Row, receipt: TurnReceipt
+    ) -> None:
+        profile = self._profiles.get(row["profile_id"], row["deployment_digest"])
+        contract = _profile_output_contract(profile)
+        if contract is None:
+            if self.control_store is not None:
+                raise BrokerExecutionError("controlled cached output lacks v2 contract")
+            return
+        saved = connection.execute(
+            "SELECT * FROM aos_gpu_output_bindings WHERE request_id=?", (row["request_id"],)
+        ).fetchone()
+        if (
+            saved is None
+            or saved["bundle_sha256"] != contract.bundle_sha256
+            or saved["profile_config_sha256"] != profile.config_sha256
+            or any(
+                saved[key] != row[key]
+                for key in (
+                    "request_sha256",
+                    "principal_json",
+                    "profile_id",
+                    "deployment_digest",
+                    "profile_config_sha256",
+                )
+            )
+        ):
+            raise BrokerExecutionError("cached output has no exact original schema binding")
+        request_bytes = saved["request_json"].encode("utf-8")
+        if hashlib.sha256(request_bytes).hexdigest() != row["request_sha256"]:
+            raise BrokerExecutionError("original request bytes changed")
+        request = decode_output(request_bytes, limit=MAX_REQUEST_BYTES - 1, canonical_required=True)
+        if (
+            request["request_id"] != row["request_id"]
+            or request["profile_id"] != row["profile_id"]
+            or request["deployment_digest"] != row["deployment_digest"]
+        ):
+            raise BrokerExecutionError("persisted request identity differs")
+        result_schema = instantiate_result_schema(request_bytes, contract)
+        response_schema = (
+            instantiate_decider_schema(request_bytes, contract)
+            if profile.kind == "decider"
+            else contract.schemas["bonsai-response.schema.json"]
+        )
+        if (
+            saved["derived_response_schema_sha256"]
+            != hashlib.sha256(output_canonical(response_schema)).hexdigest()
+            or saved["derived_result_schema_sha256"]
+            != hashlib.sha256(output_canonical(result_schema)).hexdigest()
+        ):
+            raise BrokerExecutionError("request-derived output schema changed")
+        validate_result(
+            request_bytes,
+            output_canonical(_result_wrapper(receipt)),
+            contract,
+            context_tokens=profile.context_tokens,
+            max_output_tokens=profile.max_output_tokens,
+            expected_generation=self._expected_output_generation(
+                connection,
+                row,
+                # The child consumes the validated payload; the durable output
+                # binding above authenticates the full original broker frame.
+                expected_payload_sha256=hashlib.sha256(
+                    _profile_payload(profile, request["payload"])
+                ).hexdigest(),
+            ),
+        )
+
+    def _project_output_receipt(
+        self, request_bytes: bytes, profile: AOSProfile, receipt: TurnReceipt
+    ) -> TurnReceipt:
+        contract = _profile_output_contract(profile)
+        if contract is None:
+            return receipt
+        wrapper = _result_wrapper(receipt)
+        result = project_profile_output(
+            request_bytes,
+            output_canonical(receipt.response),
+            wrapper["generation"],
+            contract,
+            context_tokens=profile.context_tokens,
+            max_output_tokens=profile.max_output_tokens,
+        )
+        if output_canonical(result["usage"]) != output_canonical(receipt.usage):
+            raise BrokerExecutionError("runtime usage differs from validated producer usage")
+        return TurnReceipt(
+            result["response"],
+            result["usage"],
+            receipt.unit,
+            receipt.invocation_id,
+            receipt.main_pid,
+            receipt.control_group,
+        )
 
     def _intent(
         self,
         request_id: str,
         request_sha256: str,
         profile: AOSProfile,
+        peer: PeerGeneration,
     ) -> TurnReceipt | None:
         timestamp = self._clock()
+        principal_json = _canonical_json(asdict(peer))
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
                 "SELECT * FROM aos_gpu_turn_results WHERE request_id=?", (request_id,)
             ).fetchone()
             if row is not None:
+                if row["principal_json"] != principal_json:
+                    connection.rollback()
+                    raise LeaseConflict("AOS request principal generation differs or is unbound")
                 if (
                     row["request_sha256"] != request_sha256
                     or row["profile_id"] != profile.profile_id
@@ -1270,26 +1760,14 @@ class BrokerOwnedTurnExecutor:
                     connection.rollback()
                     raise LeaseConflict("AOS request id was reused with different immutable input")
                 if row["state"] == "completed":
+                    result = self._publish_cached_result(connection, row)
                     connection.commit()
-                    return _receipt_from_row(row)
+                    return result
                 if row["state"] == "result_ready":
-                    ticket = connection.execute(
-                        "SELECT state FROM gpu_turn_requests WHERE owner='aos' AND request_id=?",
-                        (request_id,),
-                    ).fetchone()
-                    if ticket is not None and ticket["state"] == "done":
-                        connection.execute(
-                            "UPDATE aos_gpu_turn_results SET state='completed',updated_boottime=? "
-                            "WHERE request_id=? AND state='result_ready'",
-                            (timestamp, request_id),
-                        )
-                        current = connection.execute(
-                            "SELECT * FROM aos_gpu_turn_results WHERE request_id=?", (request_id,)
-                        ).fetchone()
+                    result = self._publish_cached_result(connection, row)
+                    if result is not None:
                         connection.commit()
-                        if current is None:
-                            raise BrokerExecutionError("durable result disappeared during replay")
-                        return _receipt_from_row(current)
+                        return result
                 if row["state"] == "intent":
                     # No scheduler side effect is required to adopt this
                     # pre-submit crash window; submit() has exact idempotency.
@@ -1307,14 +1785,15 @@ class BrokerOwnedTurnExecutor:
                 raise BrokerExecutionError("previous AOS request attempt is durably failed")
             connection.execute(
                 "INSERT INTO aos_gpu_turn_results(request_id,request_sha256,profile_id,"
-                "deployment_digest,profile_config_sha256,state,created_boottime,updated_boottime) "
-                "VALUES(?,?,?,?,?,?,?,?)",
+                "deployment_digest,profile_config_sha256,principal_json,state,"
+                "created_boottime,updated_boottime) VALUES(?,?,?,?,?,?,?,?,?)",
                 (
                     request_id,
                     request_sha256,
                     profile.profile_id,
                     profile.deployment_digest,
                     profile.config_sha256,
+                    principal_json,
                     "intent",
                     timestamp,
                     timestamp,
@@ -1398,6 +1877,12 @@ class BrokerOwnedTurnExecutor:
             raise BrokerExecutionError("bounded AOS model result is too large")
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
+            row = connection.execute(
+                "SELECT * FROM aos_gpu_turn_results WHERE request_id=?", (request_id,)
+            ).fetchone()
+            if row is None:
+                raise BrokerExecutionError("output persistence has no intent")
+            self._validate_output_receipt(connection, row, receipt)
             cursor = connection.execute(
                 "UPDATE aos_gpu_turn_results SET state='result_ready',response_json=?,usage_json=?,"
                 "generation_json=?,failure_code=NULL,updated_boottime=? "
@@ -1409,42 +1894,67 @@ class BrokerOwnedTurnExecutor:
                 raise LeaseConflict("AOS result could not be durably bound to its request")
             connection.commit()
 
-    def _complete(self, request_id: str) -> None:
-        with closing(self._connect()) as connection:
+    def _publish_cached_result(
+        self,
+        connection: sqlite3.Connection,
+        row: sqlite3.Row,
+    ) -> TurnReceipt | None:
+        if not connection.in_transaction or row["state"] not in {"result_ready", "completed"}:
+            raise BrokerExecutionError("AOS result publication has no transaction or result")
+        if self.control_store is not None:
+            result = self.control_store.authorize_cached_result(connection, row)
+            if result is None:
+                if row["state"] == "completed":
+                    raise BrokerExecutionError("AOS completed cache has no terminal authority")
+                return None
+        elif row["state"] == "result_ready":
+            ticket = connection.execute(
+                "SELECT state FROM gpu_turn_requests WHERE owner='aos' AND request_id=?",
+                (row["request_id"],),
+            ).fetchone()
+            if ticket is None or ticket["state"] != "done":
+                return None
+        self._validate_output_receipt(connection, row, _receipt_from_row(row))
+        if row["state"] == "result_ready":
             cursor = connection.execute(
                 "UPDATE aos_gpu_turn_results SET state='completed',updated_boottime=? "
                 "WHERE request_id=? AND state='result_ready'",
-                (self._clock(), request_id),
+                (self._clock(), row["request_id"]),
             )
             if cursor.rowcount != 1:
                 raise LeaseConflict("AOS completed result receipt changed during drain")
+        return _receipt_from_row(row)
+
+    def _complete(self, request_id: str) -> TurnReceipt:
+        with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            row = connection.execute(
+                "SELECT * FROM aos_gpu_turn_results WHERE request_id=?",
+                (request_id,),
+            ).fetchone()
+            if row is None:
+                raise BrokerExecutionError("AOS completion cache disappeared")
+            result = self._publish_cached_result(connection, row)
+            if result is None:
+                raise BrokerExecutionError("AOS result has no completed terminal receipt")
+            connection.commit()
+            return result
 
     def _completed_result(self, request_id: str) -> TurnReceipt | None:
         with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
                 "SELECT * FROM aos_gpu_turn_results WHERE request_id=?", (request_id,)
             ).fetchone()
             if row is None:
                 raise BrokerExecutionError("AOS request state disappeared")
-            if row["state"] == "completed":
-                return _receipt_from_row(row)
+            if row["state"] in {"completed", "result_ready"}:
+                result = self._publish_cached_result(connection, row)
+                connection.commit()
+                return result
             if row["state"] == "failed":
                 raise BrokerExecutionError("matching AOS request failed in another handler")
-            if row["state"] == "result_ready":
-                ticket = connection.execute(
-                    "SELECT state FROM gpu_turn_requests WHERE owner='aos' AND request_id=?",
-                    (request_id,),
-                ).fetchone()
-                if ticket is not None and ticket["state"] == "done":
-                    connection.execute(
-                        "UPDATE aos_gpu_turn_results SET state='completed',updated_boottime=? "
-                        "WHERE request_id=? AND state='result_ready'",
-                        (self._clock(), request_id),
-                    )
-                    fresh = connection.execute(
-                        "SELECT * FROM aos_gpu_turn_results WHERE request_id=?", (request_id,)
-                    ).fetchone()
-                    return None if fresh is None else _receipt_from_row(fresh)
+            connection.commit()
             return None
 
     def run_turn(
@@ -1458,6 +1968,7 @@ class BrokerOwnedTurnExecutor:
         deployment_digest: str,
         payload: dict[str, object],
         deadline: float,
+        admission: AdmissionGrant | None = None,
     ) -> TurnReceipt:
         """Idempotently queue, run, drain and retain one fixed-profile turn."""
         if (
@@ -1485,6 +1996,8 @@ class BrokerOwnedTurnExecutor:
         ):
             raise BrokerExecutionError("broker arguments differ from their hashed wire request")
         profile = self._profiles.get(profile_id, deployment_digest)
+        if self.control_store is not None and _profile_output_contract(profile) is None:
+            raise BrokerExecutionError("controlled inference requires profile-output.v2")
         # Translate the protocol's monotonic deadline to the scheduler's
         # boottime clock; suspend must consume the same remaining turn budget.
         deadline = self._clock() + max(0.0, deadline - time.monotonic())
@@ -1493,8 +2006,31 @@ class BrokerOwnedTurnExecutor:
         # the server-validated model input catches malformed handler plumbing.
         if not canonical_payload:
             raise BrokerExecutionError("empty model input is not allowed")
-        replay = self._intent(request_id, request_sha256, profile)
+        if self.control_store is not None:
+            response_schema_sha256 = profile.response_schema_sha256
+            if response_schema_sha256 is None:
+                raise BrokerExecutionError("controlled profile requires a pinned response schema")
+            deadline = self.control_store.register_intent(
+                peer=asdict(peer),
+                request_id=request_id,
+                request_sha256=request_sha256,
+                profile_id=profile_id,
+                deployment_digest=deployment_digest,
+                profile_config_sha256=profile.config_sha256,
+                response_schema_sha256=response_schema_sha256,
+                deadline=deadline,
+                budget={
+                    **asdict(profile.budgets),
+                    "max_output_tokens": profile.max_output_tokens,
+                    "context_tokens": profile.context_tokens,
+                },
+                admission=admission,
+            )
+        self._bind_output_request(request_bytes, profile, peer)
+        replay = self._intent(request_id, request_sha256, profile, peer)
         if replay is not None:
+            if not self._authenticator.still_current(peer):
+                raise BrokerExecutionError("AOS authenticated peer changed before result replay")
             return replay
         budgets = profile.budgets
         with authenticated_peer(peer):
@@ -1532,13 +2068,26 @@ class BrokerOwnedTurnExecutor:
                             raise BrokerExecutionError(
                                 "AOS service generation changed during its turn"
                             )
+                        result = self._project_output_receipt(request_bytes, profile, result)
                         self._store_result_ready(request_id, result)
+                        if self.control_store is not None:
+                            self.control_store.record_result(
+                                request_id,
+                                result.response,
+                                result.usage,
+                                {
+                                    "unit": result.unit,
+                                    "invocation_id": result.invocation_id,
+                                    "main_pid": result.main_pid,
+                                    "control_group": result.control_group,
+                                },
+                            )
                         result_ready = True
                         self.scheduler.release(lease)
                         drained = True
-                        self._complete(request_id)
+                        published = self._complete(request_id)
                         self._runtime.after_release(lease)
-                        return result
+                        return published
                     cached = self._completed_result(request_id)
                     if cached is not None:
                         return cached
@@ -1556,7 +2105,7 @@ class BrokerOwnedTurnExecutor:
                     try:
                         self.scheduler.release(lease)
                         drained = True
-                    except (LeaseConflict, BrokerExecutionError, OSError):
+                    except (LeaseConflict, BrokerExecutionError, ControlStoreError, OSError):
                         pass
                 if drained and not result_ready:
                     diagnostic["worker_stderr"] = (
@@ -1569,9 +2118,9 @@ class BrokerOwnedTurnExecutor:
                             type(exc).__name__[:64],
                             diagnostic,
                         )
-                    if lease is not None:
-                        with contextlib.suppress(LeaseConflict, BrokerExecutionError, OSError):
-                            self._runtime.after_release(lease)
+                if drained and lease is not None:
+                    with contextlib.suppress(LeaseConflict, BrokerExecutionError, OSError):
+                        self._runtime.after_release(lease)
                 raise
 
 
@@ -1591,6 +2140,19 @@ def _failure_detail(error: BaseException) -> dict[str, object]:
         "message": message[:512],
         "model_response": "not stored",
         "request_body": "not stored",
+    }
+
+
+def _result_wrapper(receipt: TurnReceipt) -> dict[str, Any]:
+    return {
+        "response": receipt.response,
+        "usage": receipt.usage,
+        "generation": {
+            "unit": receipt.unit,
+            "invocation_id": receipt.invocation_id,
+            "main_pid": receipt.main_pid,
+            "control_group": receipt.control_group,
+        },
     }
 
 

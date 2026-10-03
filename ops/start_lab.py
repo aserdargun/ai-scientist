@@ -19,6 +19,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 PYTHON = str(ROOT / ".venv/bin/python")
 CONFIG = Path.home() / ".config/swapp-ai-scientist"
 RUNTIME = ROOT / "data/runtime/console-bootstrap-034"
@@ -62,7 +63,8 @@ def inspect_unit(unit: str) -> dict[str, str]:
             "show",
             unit,
             "--property=LoadState,ActiveState,WorkingDirectory,ExecStart,MainPID,"
-            "MemoryMax,MemorySwapMax,CPUQuotaPerSecUSec,TasksMax",
+            "MemoryMax,MemorySwapMax,CPUQuotaPerSecUSec,TasksMax,Restart,RestartUSec,"
+            "EnvironmentFiles,Environment,DropInPaths,FragmentPath,UnitFileState",
         ]
     )
     return dict(line.split("=", 1) for line in output.splitlines() if "=" in line)
@@ -182,6 +184,12 @@ def start() -> None:
         if not path.is_file():
             raise RuntimeError(f"Kurulum dosyası eksik: {path}")
 
+    from ops.research_configuration import assert_service_configuration, installed_configuration
+
+    research = installed_configuration()
+    if research is not None:
+        assert_service_configuration(research)
+
     # Validate all service identities before starting any component.
     for name, _, _, _, _, port, args in SERVICES:
         check_unit(f"swapp-ai-scientist-{name}.service", args[0], port)
@@ -228,6 +236,8 @@ def start() -> None:
                 raise RuntimeError("PostgreSQL hazır olmadı.") from None
             time.sleep(0.5)
     print("Veritabanı hazır.", flush=True)
+    if research is not None:
+        installed_configuration(verify_database=True)
 
     for name, memory, cpu, tasks, env_file, port, args in SERVICES:
         unit = f"swapp-ai-scientist-{name}.service"
@@ -255,7 +265,7 @@ def start() -> None:
                     "--setenv=OPENBLAS_NUM_THREADS=1",
                     "--setenv=MKL_NUM_THREADS=1",
                     # UI control only; Director resource/admission policy is independent.
-                    "--setenv=MODEL_RUNS_ENABLED=false",
+                    f"--setenv=MODEL_RUNS_ENABLED={str(research is not None).lower()}",
                 ]
                 if env_file:
                     invocation.append(f"--property=EnvironmentFile={CONFIG / env_file}")
@@ -288,8 +298,11 @@ def start() -> None:
 
 
 def main() -> int:
-    if len(sys.argv) > 1:
-        print("Kullanım: bash ops/start-lab.sh")
+    if "--profile" in sys.argv[1:]:
+        return profile_main(sys.argv[1:])
+    activate = sys.argv[1:] == ["--activate-research"]
+    if len(sys.argv) > 1 and not activate:
+        print("Kullanım: bash ops/start-lab.sh [--activate-research]")
         return 0 if sys.argv[1:] in (["--help"], ["-h"]) else 2
     try:
         lock_path = ROOT / "data/runtime/start-lab.lock"
@@ -300,10 +313,78 @@ def main() -> int:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 raise RuntimeError("Başka bir başlatma işlemi sürüyor.") from None
+            if activate:
+                from ops.research_configuration import activate_pending_configuration
+
+                activate_pending_configuration()
             start()
         return 0
     except (RuntimeError, OSError, subprocess.TimeoutExpired, ValueError, KeyError) as exc:
         print(f"Başlatılamadı: {exc}", file=sys.stderr)
+        return 1
+    except Exception as exc:
+        print(
+            f"Başlatılamadı: özel yapılandırma doğrulanamadı ({type(exc).__name__}).",
+            file=sys.stderr,
+        )
+        return 1
+
+
+def profile_main(arguments: list[str]) -> int:
+    """Extend the existing launcher with an explicitly selected isolated installation."""
+    import argparse
+
+    from ops.lab_profile import LabProfile
+
+    parser = argparse.ArgumentParser(description="Persistent opt-in CPU Lab profile")
+    parser.add_argument("--profile", required=True)
+    action = parser.add_mutually_exclusive_group()
+    action.add_argument("--prepare", action="store_true", help="write private profile only")
+    action.add_argument("--check", action="store_true", help="read-only profile/resource check")
+    action.add_argument("--stop", action="store_true", help="stop only the idle owned profile")
+    args = parser.parse_args(arguments)
+    try:
+        profile = LabProfile(args.profile)
+        if args.prepare:
+            profile.prepare()
+            print(json.dumps(profile.document(), sort_keys=True))
+            return 0
+        profile.validate()
+        if args.check:
+            database = profile.inspect_database()
+            report = {
+                **profile.document(),
+                "container": profile.container,
+                "volume": profile.volume,
+                "database_state": database["State"]["Status"] if database else "absent",
+                "services": {
+                    component: profile.inspect_unit(component).get("ActiveState")
+                    for component in ("api", "director-drain", "console")
+                },
+            }
+            report["resource_admission"] = profile.resource_admission()
+            if database is not None and database["State"]["Status"] == "running":
+                report["queue"] = profile.check_queue()
+            print(json.dumps(report, sort_keys=True))
+            return 0
+        lock_path = profile.directory / "start.lock"
+        if lock_path.is_symlink():
+            raise ValueError("profile lock cannot be a symlink")
+        with lock_path.open("a") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise ValueError("another profile startup is in progress") from None
+            if args.stop:
+                profile.stop()
+            else:
+                profile.start()
+        return 0
+    except (RuntimeError, OSError, subprocess.TimeoutExpired, ValueError, KeyError) as exc:
+        print(f"Profile start failed: {exc}", file=sys.stderr)
+        return 1
+    except Exception as exc:
+        print(f"Private profile validation failed ({type(exc).__name__}).", file=sys.stderr)
         return 1
 
 

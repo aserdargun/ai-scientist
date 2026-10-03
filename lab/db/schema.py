@@ -746,6 +746,29 @@ director_stop_closures = Table(
     schema="lab",
 )
 
+director_empty_baseline_stop_evidence = Table(
+    "director_empty_baseline_stop_evidence",
+    metadata,
+    Column(
+        "recovery_id",
+        Uuid(as_uuid=True),
+        ForeignKey("lab.director_stop_closures.recovery_id"),
+        primary_key=True,
+    ),
+    Column("phase", Text, primary_key=True),
+    Column("evidence_json", JSON_DOCUMENT, nullable=False),
+    Column("evidence_sha256", Text, nullable=False),
+    Column(
+        "created_at", DateTime(timezone=True), nullable=False, server_default=func.clock_timestamp()
+    ),
+    CheckConstraint("phase in ('register','seal','retire')"),
+    CheckConstraint(
+        "evidence_sha256=encode(sha256(convert_to(evidence_json::text,'UTF8')),'hex')"
+    ).ddl_if(dialect="postgresql"),
+    schema="lab",
+)
+
+
 director_stopped_proposals = Table(
     "director_stopped_proposals",
     metadata,

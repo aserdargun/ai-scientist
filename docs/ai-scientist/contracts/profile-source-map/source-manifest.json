@@ -1,0 +1,71 @@
+{
+  "aos_checkout": "dirty with required untracked runtime source; HEAD alone does not identify these bytes",
+  "aos_head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+  "aos_source_sha256": {
+    "models/bonsai-manifest.json": "3773305ac067780330124b658081835e88895dec3c7068dfa12e771d7a4351b1",
+    "models/decider-manifest.json": "7bd3135317a406a9be02e05dbc220935ada7c4f1db2ab1cf878114005bef0624",
+    "schemas/supervisor_plan.schema.json": "b4da97a7d1780294cc46d63c8dbaded426539fb1058668f9d5120e9166c1143f",
+    "schemas/vision_scene.schema.json": "e833ecdd38b53aada3e4e70377b5619c11fed32058e7c42d31b7b8f87331fbda",
+    "scripts/serve_desktop.py": "d5e40828f59398a61982d7eac629ff90014b6cb4be1fd57ec7e6dac70efde477",
+    "services/bonsai/broker_worker.py": "69caf47c1beee4cae9c6c3170c0107acd8d8b80f45b60b5ba72d313ecbc2f528",
+    "services/decider/broker_worker.py": "af04fab479d9d5326fd5456dd1592c9a444ee478831b50ef9070ee0b73d4cb8a",
+    "services/decider/worker.py": "a1e817ba1b099a0f12d20ecf4ad532ee86a21dba212b3cacf66e0437fa02318e",
+    "src/aos/contracts.py": "866ab8356324b32a6a3743f7b7c36d256ed416fd58925254381c8022dbf127db",
+    "src/aos/scientist_decision.py": "3ff77a16bfa0efba1a7b9feb210f8c42cae96626b3c49cd131cbe8235bb27407",
+    "src/aos/scientist_protocol.py": "ef522f8759e7fb00b87a5b1a1ed7e922d5f6a7d1b0f1095dbcf38de68d3b5c60",
+    "src/aos/scientist_supervisor.py": "f9d46e83ea7dde3454fce32a1fd7b4daa5a521b1b333b614413fd5f53d506e4b",
+    "src/aos/supervisor.py": "95ab0758e111b01b9b2a27c24faa223b2a73dab83bc929736ecc2cb9d86b1a42",
+    "src/aos/vision.py": "2964820c6648ab06094d2eb84741e08e2564d75c602508dec1bbca2c330a094b",
+    "tests/test_recovery.py": "bf77400ba794ba89cfb328ee24a83f23313304c1ebb1b80b7ccc69c1d707632c",
+    "tests/test_vision.py": "87f47eccd9d99f00d2754cf1096fcf910503fd52572fe0196b53e5106a25c5c3"
+  },
+  "artifacts": {
+    "bonsai-extracted-usage.proposed.schema.json": {
+      "canonical_json_sha256": "5e9bb9ba1eb7c338004c81435b904439de8d8f6a3ee3f165351f40a7e4cefa46",
+      "file_sha256": "ac33b2e2a28312a9861e0ab353451a1923870a987c38edbdfa15a41d77ac322f",
+      "kind": "source-derived proposed validator; not runtime-installed or counterpart-agreed"
+    },
+    "bonsai-recovery-content.request-schema.json": {
+      "canonical_json_sha256": "9ffa7f82a17dbfd248143bfbaab59caa75d0fd29cbd0468addf799c0e161891c",
+      "file_sha256": "124b9b306f3c94c0f89a3a183039d731b18df095bd9c03f184aa66f53ea8ad19",
+      "kind": "source-derived model_json_schema candidate; parity not executed",
+      "transformation": "remove only top-level $schema, canonical JSON plus one LF"
+    },
+    "bonsai-recovery-content.source.schema.json": {
+      "file_sha256": "b4da97a7d1780294cc46d63c8dbaded426539fb1058668f9d5120e9166c1143f",
+      "kind": "verbatim AOS checked-in schema",
+      "source": "schemas/supervisor_plan.schema.json"
+    },
+    "bonsai-vision-content.request-schema.json": {
+      "canonical_json_sha256": "23c46cafd0f9a9d67b2413065006a2bce0196e20e39ead6e8de3030741ffee13",
+      "file_sha256": "d7b95b99671336d3a36a8a22a87ea43f99cb1898f9825a314ac31790addc31c2",
+      "kind": "source-derived model_json_schema candidate; parity not executed",
+      "transformation": "remove only top-level $schema, canonical JSON plus one LF"
+    },
+    "bonsai-vision-content.source.schema.json": {
+      "file_sha256": "e833ecdd38b53aada3e4e70377b5619c11fed32058e7c42d31b7b8f87331fbda",
+      "kind": "verbatim AOS checked-in schema",
+      "source": "schemas/vision_scene.schema.json"
+    },
+    "bonsai-wire-projection.proposed.schema.json": {
+      "canonical_json_sha256": "c07e0f14089840858b6a1d688fac81ba0dc9ae07870ef2c6a501ab110080467d",
+      "file_sha256": "09e301a8430aff4164bc63a4489456de8aa819de1ed55c642632d7f4d1012efd",
+      "kind": "new adapter projection proposal; absent from current worker; AOS decision required"
+    },
+    "decider-metrics.proposed.schema.json": {
+      "canonical_json_sha256": "5d541844fab7b839e6a585e6c216ff994c8c643b77813bd2fbc2db84aea2770b",
+      "file_sha256": "97a885c87f8b21968242fc04e10fe74b648a1e564612435493af88c1fe6462d1",
+      "kind": "source-derived proposed validator; not runtime-installed or counterpart-agreed"
+    },
+    "decider-response.proposed.schema.json": {
+      "canonical_json_sha256": "1f603cfdf268ce59c41e3694d7a2e01aadea08527da2edd97b57833035db98de",
+      "file_sha256": "7427fcea8cb39a0ed17e8e3d7efc86e1e8c560f13f1769b6c12706cfa7017cf4",
+      "kind": "source-derived proposed validator; not runtime-installed or counterpart-agreed"
+    }
+  },
+  "scientist_source_sha256": {
+    "lab/llm/aos_gpu_executor.py": "25557a5655e6f265440566f4d0f329bb9e434282ac64ce56da9e17dfc14ba001",
+    "lab/llm/aos_gpu_service.py": "497f2da59289499efdc17f3869caba6df845a268b24bf40f6064b615f42d9adc"
+  },
+  "status": "readonly source observation; no AOS imports, tests, native inference or admission"
+}

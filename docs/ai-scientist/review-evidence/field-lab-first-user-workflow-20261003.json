@@ -1,0 +1,218 @@
+{
+  "schema": "field-lab-user-workflow-evidence.v1",
+  "captured_at": "2026-10-03T06:11:25.621873+00:00",
+  "scope": {
+    "profile": "field-lab",
+    "source_kind": "synthetic",
+    "model_calls": 0,
+    "gpu_jobs": 0,
+    "training_started": false,
+    "aos_joint_runtime_acceptance": false,
+    "independent_field_evidence": false
+  },
+  "owner": {
+    "service_owner": "Scientist-owned local profile",
+    "owner_uid": 1000
+  },
+  "source": {
+    "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+    "dirty_worktree": true,
+    "tracked_runtime_diff_sha256": "aaf7f93b3c71bdf5050052a112c4183893166e10bf8adf3cdf13136ef10b8587",
+    "tracked_runtime_diff_scope": [
+      "harness",
+      "lab",
+      "ops",
+      "console/app.py",
+      "console/cli.py"
+    ],
+    "runtime_source_files": 206,
+    "runtime_source_hashes_sha256": "e86e2d49fcd0cbbe10cc775a5d524f9f031fd537d62e582362507966342a11c9",
+    "runtime_still_matches_built_image": true,
+    "selected_ui_and_launcher_hashes": {
+      "ops/start_lab.py": "214d4c070542a309407f481f50cb4c4868fd551d9eb5899169811baa43cbf5da",
+      "ops/lab_profile.py": "bcd969214fa04052d962c9086009748a38a46321d7fb2d2d8d11c80430833bfa",
+      "console/web/src/ui/App.tsx": "05c1675cd158c83905dc7b93b744f1a7a7440f2bd4e69bced6511da841cf222d",
+      "console/web/src/ui/AgentWorkspace.tsx": "0132c70a54d466c8d4edbc3c9a0e9a0fef7c7744214302fb604f00abc586940b",
+      "console/web/src/ui/styles.css": "c2a495d58f40bc1b8c2bac9062e616e51632f7997089f4ae756e51f868c18c3d"
+    },
+    "snapshot_stage": "initial workflow before diagnostics API root fix"
+  },
+  "runtime": {
+    "harness_version": "0.43.2",
+    "sandbox_image": "sha256:e56defcb12891ee5898a5c093507beda0319bb108e7c7df7525d313aed54ee31",
+    "build_exit_code": 0,
+    "image_parity_exit_code": 0,
+    "image_byte_parity": true
+  },
+  "workflow_elapsed_seconds": 302.055394599,
+  "grid": {
+    "run_id": "89dc9a5c-007d-480e-8594-6e14c035a0b9",
+    "state": "completed",
+    "independent_scores": 12,
+    "baseline_scores": 9,
+    "method_scores": 3,
+    "methods": [
+      "lsh",
+      "optics",
+      "som"
+    ],
+    "elapsed_seconds": 276.259,
+    "elapsed_source": "root independently verified execution observation",
+    "report_sha256": "c261dec63d162cb2f9d667e488dd614a95333ea8a9a6cec5db279cf73c873159"
+  },
+  "stream": {
+    "run_id": "507458fd-72d7-4bc4-a8ae-68b4bf24191e",
+    "state": "stopped",
+    "committed_chunks_before_stop": 1,
+    "committed_rows_before_stop": 64,
+    "scoring_available": false,
+    "report_sha256": "930173a3be39a1569462fba9fbbf9d744e5e3b76ff0c648e11ff3f42e943cced"
+  },
+  "restart": {
+    "idle_stop_exit_code": 0,
+    "start_exit_code": 0,
+    "reports_equal": true,
+    "watched_runs_retained": true,
+    "connected_after_restart": true
+  },
+  "limits": [
+    "single synthetic snapshot; no industrial accuracy claim",
+    "OMR stream is an unscored diagnosis",
+    "teacher JSON is a draft; no trained adapter or skill promotion",
+    "real AOS/GPU coexistence and public research/holdout remain open"
+  ],
+  "ui_readback": {
+    "read_only": true,
+    "new_jobs": 0,
+    "report_get_statuses": [
+      200,
+      200
+    ],
+    "report_sha256_matches": true,
+    "reports_visible": true,
+    "javascript_errors": 0,
+    "grid_diagnostic_refs": 3,
+    "grid_diagnostic_get_statuses": [
+      200,
+      200,
+      200
+    ],
+    "grid_diagnostic_error": null,
+    "diagnostic_artifacts": [
+      {
+        "artifact_sha256": "ef23aa1d625a79ffed3c39442c8306be1b8885c29aa4c8d8174c06d1ae73dec4",
+        "get_status": 200,
+        "report_sha256_match": true,
+        "candidate_derived": true,
+        "method": "lsh",
+        "rows": 86,
+        "omr_chart_points": 86,
+        "sensor_rows": 4,
+        "nn_actual_predicted_residual_table_visible": true,
+        "rendered_model_sha256_matches": true
+      },
+      {
+        "artifact_sha256": "e5794148ea63740e7f7980edfa76fba9b85706bbf2d2c74d8e0acd055fdbd520",
+        "get_status": 200,
+        "report_sha256_match": true,
+        "candidate_derived": true,
+        "method": "som",
+        "rows": 86,
+        "omr_chart_points": 86,
+        "sensor_rows": 4,
+        "nn_actual_predicted_residual_table_visible": true,
+        "rendered_model_sha256_matches": true
+      },
+      {
+        "artifact_sha256": "4d27313adab0a5dfbbe58edbf8c2f89a80e1f210ff2c0a6912887ec81d1c2ee0",
+        "get_status": 200,
+        "report_sha256_match": true,
+        "candidate_derived": true,
+        "method": "optics",
+        "rows": 86,
+        "omr_chart_points": 86,
+        "sensor_rows": 4,
+        "nn_actual_predicted_residual_table_visible": true,
+        "rendered_model_sha256_matches": true
+      }
+    ],
+    "http_errors": 0
+  },
+  "source_quality_gate": {
+    "captured_at": "2026-10-03T06:13:28.196972+00:00",
+    "before_diagnostic_backend_fix": true,
+    "steps_passed": 7,
+    "steps_total": 7,
+    "exit_code": 0,
+    "pytest_passed": 3244,
+    "pytest_skipped": 7,
+    "pytest_deselected": 177,
+    "warnings": 467,
+    "pytest_seconds": 226.26,
+    "elapsed_seconds": 299.446,
+    "evidence_sha256": "655e16ec13d8aea69ca4885cf0b1596597d3270401456ddc5e02e21c7b1a3d0c"
+  },
+  "updated_at": "2026-10-03T06:34:59.777948+00:00",
+  "aos_status": {
+    "boot_scope_ack": "passed",
+    "os_dependency_manifest_delta_count": 8,
+    "new_configuration_ack": "pending",
+    "native_bootstrap": "open",
+    "joint_gpu_runtime_acceptance": "open",
+    "source_packet_sha256": "9ff29ed542cfad0a014784b29fc86723967f1758796bddd61348cb2164c02479",
+    "new_configuration_preparation_sha256": "4f10d36b2c595471e6bb36c3de0f0edd8740e7abd071bb70d4479f801e687aae",
+    "source_review_schema": "aos.api-v5-source-review.v1",
+    "control_version": 2
+  },
+  "diagnostic_backend_delta": {
+    "api_source_sha256": "1f0ee3d4281d3f2cf2602383ab6a2d177796df72a2037735194cea92644cdd98",
+    "focused_validation": {
+      "full_gate_repeated": false,
+      "pylint_exit_code": 0,
+      "pylint_score": 9.09,
+      "pytest_exit_code": 0,
+      "pytest_passed": 17,
+      "ruff_exit_code": 0
+    },
+    "existing_report_unchanged": true,
+    "existing_report_sha256": "c261dec63d162cb2f9d667e488dd614a95333ea8a9a6cec5db279cf73c873159",
+    "safe_api_refresh_queue_empty": true,
+    "new_jobs": 0
+  },
+  "current_sandbox_after_diagnostic_fix": {
+    "image": "sha256:8a4709db2a4960b03590711fc52379e62b69f9d7cdc3dbc19799b8552ca31f08",
+    "historical_workflow_image": "sha256:e56defcb12891ee5898a5c093507beda0319bb108e7c7df7525d313aed54ee31",
+    "historical_report_unchanged": true,
+    "build_exit_code": 0,
+    "image_parity_exit_code": 0,
+    "image_byte_parity": true,
+    "runtime_source_files": 206,
+    "runtime_source_hashes_sha256": "421b19077acb61c4b0666831dae1b2c48c4432463c739bc785ab3972500b5de8",
+    "runtime_source_matches_receipt_now": true
+  },
+  "final_worktree_provenance": {
+    "captured_at": "2026-10-03T06:34:59.777948+00:00",
+    "tracked_diff_definition": "git diff HEAD --binary; tracked index and working tree; untracked proof excluded",
+    "main": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "1fa473df7ba4087ca448e86e01696c797099c9b9b66bfbb8de6112ecea6b8ade"
+    },
+    "feature": {
+      "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "63657b0e3fc1856dea5b5c7f14f962be097c883e59f8a744b9bc5b7da326d0f9",
+      "untracked_source_hashes": {
+        "console/web/src/ui/AgentWorkspace.tsx": "0132c70a54d466c8d4edbc3c9a0e9a0fef7c7744214302fb604f00abc586940b",
+        "ops/lab_profile.py": "bcd969214fa04052d962c9086009748a38a46321d7fb2d2d8d11c80430833bfa",
+        "tests/test_lab_profile.py": "c9908910142269111e84522cd3d8b260b40d46e6c46343bfdce79bf86aa58f46",
+        "tests/test_mode_diagnostics_api_root.py": "c63d9ff8164978ca2b5a6bf02b3f075815634794fd41d0ac5633e4089a3d9154"
+      }
+    },
+    "aos_read_only": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "e60284a9feecb29900841169a03b23dd5afc7022a524370c8e91a92604c0d9dc"
+    }
+  }
+}

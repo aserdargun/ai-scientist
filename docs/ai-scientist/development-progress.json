@@ -1,0 +1,9 @@
+{
+  "schema": "development-progress.v1",
+  "updated_at": "2026-10-03T12:16:22.767640+00:00",
+  "current_work": "0.46 teslimi hazırlanıyor: çalışan CPU araştırma akışı donduruldu; README, bilinen eksikler, kullanım raporu ve güvenli yayın tamamlanıyor.",
+  "latest_result": "279,61 saniye; 9 baseline + 3 OPTICS skoru; bir önerinin saha amacı ve snapshot bağı doğrulandı. Aynı istek aynı koşuya döndü. Masaüstü/mobil geçti; Director/12 Scorer/sandbox temiz. Kalite kapısı 3328 test, 7 komut exit 0.",
+  "next_step": "Mevcut sürümü kanıtları ve eksikleriyle teslim et. Gerçek AOS/GPU birlikte çalışma ve uygulama adaptörleri sonraki aşama; yeni ürün özelliği eklenmiyor.",
+  "cpu_status": "passed",
+  "gpu_status": "blocked"
+}

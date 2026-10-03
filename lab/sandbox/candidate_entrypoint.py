@@ -15,6 +15,7 @@ from typing import Any, cast
 
 import numpy as np
 import pandas as pd
+import pyarrow as pa
 import pyarrow.ipc as ipc
 
 sys.path.insert(0, "/opt/swapp-ai-scientist")
@@ -183,9 +184,141 @@ def _score(module: Any) -> int:
     return 0
 
 
+def _stream_phase(phase: str) -> int:
+    """Separate unscored mode contract; ordinary score/diagnostic v1 stays strict."""
+    from lab.operating_modes import OperatingModeCandidate, candidate_source
+    from lab.operating_modes.model import OperatingModeModel
+    from lab.operating_modes.stream import (
+        MAX_CHUNK_BYTES,
+        MAX_CHUNK_ROWS,
+        MAX_STREAM_OUTPUT_BYTES,
+        MAX_TRAIN_BYTES,
+        MAX_TRAIN_ROWS,
+        canonical_json,
+        strict_json,
+        validate_sensors,
+    )
+    from lab.sandbox.mode_stream import MAX_FIT_ARTIFACT_BYTES, StreamFit, StreamPhaseContext
+
+    context = _context()
+    validate_sensors(context.signals)
+    request = StreamPhaseContext.model_validate_json(
+        canonical_json(strict_json(os.environ["SWAPP_STREAM_CONTEXT"].encode(), limit=16384))
+    )
+    training = phase == "mode_stream_fit"
+    if (
+        context.seed >= 2**32
+        or context.regime_signals
+        or (request.fit_artifact_sha256 is None) != training
+        or Path("/candidate/candidate.py").read_bytes() != candidate_source(request.configuration)
+    ):
+        raise ValueError("stream sandbox source/context mismatch")
+    random.seed(context.seed)
+    np.random.seed(context.seed)
+    byte_limit = MAX_TRAIN_BYTES if training else MAX_CHUNK_BYTES
+    payload = sys.stdin.buffer.read(byte_limit + 1)
+    if len(payload) > byte_limit:
+        raise ValueError("stream Arrow byte limit exceeded")
+    reader = ipc.open_stream(payload)
+    if tuple(reader.schema.names) != context.signals or any(
+        not pa.types.is_float64(field.type) for field in reader.schema
+    ):
+        raise ValueError("stream Arrow requires only approved float64 sensors")
+    batches = []
+    rows = 0
+    for batch in reader:
+        rows += batch.num_rows
+        if rows > (MAX_TRAIN_ROWS if training else MAX_CHUNK_ROWS):
+            raise ValueError("stream Arrow row limit exceeded")
+        batches.append(batch)
+    if rows < (16 if training else 1) or not training and request.row_offset + rows > 65536:
+        raise ValueError("invalid stream row count")
+    frame = cast(pd.DataFrame, pa.Table.from_batches(batches, reader.schema).to_pandas())
+    if np.isinf(frame.to_numpy(dtype=float)).any():
+        raise ValueError("infinite stream input")
+    if training:
+        module = _candidate_module()
+        pipeline = module.build_candidate()
+        if type(pipeline) is not OperatingModeCandidate:
+            raise ValueError("stream fit requires exact OperatingModeCandidate")
+        pipeline.fit(frame, context)
+        if type(pipeline.model) is not OperatingModeModel:
+            raise ValueError("stream fit did not produce the exact operating mode model")
+        artifact = pickle.dumps(pipeline, protocol=5)
+        document = canonical_json(
+            {
+                "schema_version": "mode-stream-fit.v1",
+                "scoring_available": False,
+                "input_sha256": request.input_sha256,
+                "candidate_sha256": request.candidate_sha256,
+                "configuration": request.configuration.model_dump(mode="json"),
+                "configuration_sha256": request.configuration_sha256,
+                "repetition_seed": context.seed,
+                "sampling_seconds": context.sampling_s,
+                "fit_artifact_sha256": hashlib.sha256(artifact).hexdigest(),
+                "model": pipeline.model.summary(),
+            }
+        )
+        StreamFit(artifact, document)
+        Path("/output/model.bin").write_bytes(artifact)
+        Path("/output/stream-fit.json").write_bytes(document)
+        return 0
+    with Path("/fit-artifact/model.bin").open("rb") as handle:
+        artifact = handle.read(MAX_FIT_ARTIFACT_BYTES + 1)
+    if (
+        len(artifact) > MAX_FIT_ARTIFACT_BYTES
+        or hashlib.sha256(artifact).hexdigest() != request.fit_artifact_sha256
+    ):
+        raise ValueError("stream frozen artifact identity mismatch")
+    # This function runs only in the candidate container, never on the host.
+    pipeline = pickle.loads(artifact)  # nosec B301
+    if (
+        type(pipeline) is not OperatingModeCandidate
+        or type(pipeline.model) is not OperatingModeModel
+        or pipeline.config != request.configuration
+        or pipeline.model.model_sha256 != request.model_sha256
+        or pipeline.model.sensors != context.signals
+        or pipeline.model.config
+        != request.configuration.model_copy(
+            update={"seed": (request.configuration.seed + context.seed) % 2**32}
+        )
+    ):
+        raise ValueError("stream frozen model identity mismatch")
+    prediction = pipeline.model.predict(
+        frame, alarm_state=request.alarm_state, row_offset=request.row_offset
+    )
+    if pipeline.model.model_sha256 != request.model_sha256:
+        raise ValueError("stream model changed during prediction")
+    document = canonical_json(
+        {
+            "schema": "mode-stream-prediction.v1",
+            "scoring_available": False,
+            "input_sha256": request.input_sha256,
+            "candidate_sha256": request.candidate_sha256,
+            "configuration_sha256": request.configuration_sha256,
+            "fit_artifact_sha256": request.fit_artifact_sha256,
+            "model_sha256": request.model_sha256,
+            "row_offset": request.row_offset,
+            "alarm_in": request.alarm_state.model_dump(mode="json"),
+            "prediction": prediction.to_dict(),
+        }
+    )
+    if len(document) > MAX_STREAM_OUTPUT_BYTES:
+        raise ValueError("stream prediction exceeds 2 MiB encoded output")
+    Path("/output/stream-prediction.json").write_bytes(document)
+    return 0
+
+
 def main() -> int:
-    if len(sys.argv) != 2 or sys.argv[1] not in {"fit", "score"}:
+    if len(sys.argv) != 2 or sys.argv[1] not in {
+        "fit",
+        "score",
+        "mode_stream_fit",
+        "mode_stream_predict",
+    }:
         return 64
+    if sys.argv[1] in {"mode_stream_fit", "mode_stream_predict"}:
+        return _stream_phase(sys.argv[1])
     module = _candidate_module()
     return _fit(module) if sys.argv[1] == "fit" else _score(module)
 

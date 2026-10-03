@@ -1,0 +1,272 @@
+{
+  "schema": "field-lab-public-dev-delivery.v1",
+  "observed_at": "2026-10-03T11:19:59.041853+00:00",
+  "version": "0.45.0",
+  "repositories": {
+    "scientist_main": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "tracked_worktree_diff_sha256": "f1af90df95c99b395c76aa11e9bdca606550e159ca71923d17325724abb05aec",
+      "scope": "point-in-time tracked diff before this documentation update; excludes untracked files"
+    },
+    "scientist_feature": {
+      "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+      "tracked_worktree_diff_sha256": "40cbbbc5f8982ec9a136679bcc6e17af9ccd5b4ad5f4ad1111b2665ffcec8199",
+      "scope": "point-in-time tracked diff before this documentation update; excludes untracked files"
+    },
+    "aos": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "tracked_worktree_diff_sha256": "f8e9a0b5f791964519a6abc3b4088bc32000b70eeec62f15742a0ed71a5a02cc",
+      "scope": "point-in-time tracked diff before this documentation update; excludes untracked files"
+    }
+  },
+  "contracts": [
+    "mode-public-task-binding.v1",
+    "public-task-snapshot.v1"
+  ],
+  "source": {
+    "binding_sha256": "166cd44896785c0c18d0c55fa77415440a231278d7848b35af72ea509722aa3a",
+    "evaluation_rows": 470,
+    "first_utc": null,
+    "fit_policy": "label_blind_source_order;normal_fit_not_guaranteed",
+    "last_utc": null,
+    "original_task_sha256": "e8c1b1481e22d1bd733ac84c81a67753411fbac7218fd53524152896ea79c468",
+    "profile_sha256": "d70d9430df95df86426129452dd05229b096f737f0a13f46f23493d34d081296",
+    "provenance": {
+      "access_terms": "GPL-3.0; noncommercial research profile",
+      "attribution": "Gavriil et al., SKAB: A Benchmark for Anomaly Detection in Time Series",
+      "dataset_id": "SKAB",
+      "license_id": "GPL-3.0",
+      "session_id": "b2c0d46c2971dcbfe71e26087b6d231998bb91c2:data/public/skab/b2c0d46c2971dcbfe71e26087b6d231998bb91c2/data/valve1/0.csv",
+      "source_manifest_sha256": "dee7e595dfc9f6fe6c243ad2b4f0cf87154dc28cedd1d9e693f2e4bed79d1995",
+      "source_revision": "b2c0d46c2971dcbfe71e26087b6d231998bb91c2",
+      "split_id": "public-benchmark-fixed-source-prefix.v1",
+      "usage_profile": "noncommercial_research"
+    },
+    "readiness": "ready",
+    "rows": 496,
+    "scoring_available": true,
+    "semantics_sha256": "d263f62d290cad07182901d0f283015da6d63d5c193a69d043fbbd5d22f02c94",
+    "sensors": [
+      "Accelerometer1RMS",
+      "Accelerometer2RMS",
+      "Current",
+      "Pressure",
+      "Temperature",
+      "Thermocouple",
+      "Voltage",
+      "Volume Flow RateRMS"
+    ],
+    "snapshot_sha256": "964641ae824487aca2a83890bbec794a1eb8a19afed114b13b20b803660e0101",
+    "source": {
+      "dataset_id": "SKAB",
+      "license_id": "GPL-3.0",
+      "source_id": "SKAB:valve1-0-fixed-source-session",
+      "source_manifest_sha256": "dee7e595dfc9f6fe6c243ad2b4f0cf87154dc28cedd1d9e693f2e4bed79d1995",
+      "source_version": "b2c0d46c2971dcbfe71e26087b6d231998bb91c2",
+      "task_id": "valve1-0-fixed-source-session",
+      "usage_profile": "noncommercial_research"
+    },
+    "source_kind": "public_dev",
+    "source_ranges": {
+      "evaluation": [
+        730,
+        1200
+      ],
+      "train": [
+        89,
+        115
+      ]
+    },
+    "source_suite_manifest_sha256": "a183c276742b35593866d99d743f83dec37f0f59079a70fa72e3627c48e0053c",
+    "source_time_kind": "naive",
+    "time_axis": "source_order_index",
+    "train_rows": 26
+  },
+  "run": {
+    "run_id": "92ae603c-e367-422b-92fa-4fd567f80548",
+    "origin": "local",
+    "purpose": "mode-grid",
+    "state": "completed",
+    "created_at": "2026-10-03T11:00:16.638318+00:00",
+    "updated_at": "2026-10-03T11:05:00.048192+00:00",
+    "stop_requested": false,
+    "report_sha256": "439bfef2e6f880838fe3d99b88299a30ea03fd0b285856d7c92446984e418a6e"
+  },
+  "elapsed_seconds": 283.409874,
+  "budget_seconds": 600,
+  "configurations": [
+    {
+      "min_support": 4,
+      "tolerance_quantile": 0.99,
+      "tolerance_multiplier": 1.25,
+      "alarm_quantile": 0.99,
+      "release_ratio": 0.8,
+      "dwell": 1,
+      "calibration_fraction": 0.2,
+      "lsh_tables": 4,
+      "lsh_projections": 3,
+      "lsh_width": 0.35,
+      "lsh_merge_tables": 2,
+      "optics_min_samples": 8,
+      "optics_max_eps": 2,
+      "optics_xi": 0.05,
+      "optics_min_cluster_size": 8,
+      "som_rows": 3,
+      "som_columns": 3,
+      "som_iterations": 400,
+      "som_learning_rate": 0.3,
+      "som_sigma": 1.5,
+      "weighting": "distance",
+      "metric": "euclidean",
+      "calibration": "leave_one_out",
+      "method": "lsh",
+      "k": 3,
+      "seed": 0
+    },
+    {
+      "min_support": 4,
+      "tolerance_quantile": 0.99,
+      "tolerance_multiplier": 1.25,
+      "alarm_quantile": 0.99,
+      "release_ratio": 0.8,
+      "dwell": 1,
+      "calibration_fraction": 0.2,
+      "lsh_tables": 4,
+      "lsh_projections": 3,
+      "lsh_width": 0.35,
+      "lsh_merge_tables": 2,
+      "optics_min_samples": 8,
+      "optics_max_eps": 2,
+      "optics_xi": 0.05,
+      "optics_min_cluster_size": 8,
+      "som_rows": 3,
+      "som_columns": 3,
+      "som_iterations": 400,
+      "som_learning_rate": 0.3,
+      "som_sigma": 1.5,
+      "weighting": "distance",
+      "metric": "euclidean",
+      "calibration": "leave_one_out",
+      "method": "optics",
+      "k": 3,
+      "seed": 0
+    }
+  ],
+  "scores": {
+    "total": 12,
+    "baseline": 9,
+    "optics": 3,
+    "masked_evaluation_rows": 20,
+    "scored_rows": 450,
+    "lsh": "guard_rejected; no score",
+    "optics_decision": "KEEP",
+    "optics_dev_composite": 0.048717313705232135,
+    "optics_raw_vus_pr": 0.5905116220683974,
+    "best_baseline_raw_vus_pr": 0.5954360146097041,
+    "improvement_claimed": false
+  },
+  "runtime": {
+    "harness_sha256": "321e1e22989efa4e53b2dcbaffd89d06dc041f381157b827b7df34160b59bdc9",
+    "image_id": "sha256:5cff6ce77457f31626e7d7162adc2bb9e094df0b9c4ba7711e7aa105b3a9b8ca",
+    "image_parity_files": 209,
+    "model": null,
+    "quantization": null,
+    "context": null,
+    "gpu_jobs": 0,
+    "model_calls": 0,
+    "vram_peak": null,
+    "gpu_wait_handoff_latency": null,
+    "reason": "CPU-only study; GPU metrics not measured"
+  },
+  "resources": {
+    "profile_conservative_cpu_ceiling": 5.5,
+    "director_cpu_cap": 1,
+    "director_memory_cap_bytes": 2147483648,
+    "scorer_slice_cpu_cap": 1,
+    "scorer_slice_memory_cap_bytes": 2147483648,
+    "docker_cpu_cap": 2,
+    "docker_memory_cap_bytes": 4294967296,
+    "director_cgroup_peak_memory_bytes_observed": 226717696,
+    "host_available_min_bytes_observed": 17632763904,
+    "sampling_started_at": "2026-10-03T11:03:41.298779+00:00",
+    "note": "Retained existing admission limits; host sample minimum covers observation interval, not full-run absolute peak."
+  },
+  "cleanup": {
+    "director_original_process_absent": true,
+    "director_cgroup_empty_or_absent": true,
+    "scorer_jobs_completed": 12,
+    "all_scorer_cgroups_empty_or_absent": true,
+    "all_scorer_terminal_claims_cleared": true,
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "database_retained": true,
+    "aos_native_preview_processes_unchanged": true,
+    "gpu_release_claim": false
+  },
+  "ui": {
+    "real_admission_post_count": 1,
+    "terminal_readback_non_read_requests": [],
+    "page_errors": [],
+    "console_errors": [],
+    "mobile_overflow": false,
+    "served_assets_byte_equal": {
+      "/assets/index-B7kHFB3W.js": "30fef5d3b3bb42902162918e79d8b9dd12c5312a4cb0e588de3efeebfeae4537",
+      "/assets/index-CsIpjamX.css": "fe0bd986e124cd35eece23814f8840ed46877d00946533914cded8b2df07446c"
+    },
+    "diagnostic": {
+      "artifact_sha256": "9e94fbeff495d5aec87926904e67abe427e171546e50adee89d47b4edc471b04",
+      "response_sha256": "abb2ad82436d0cb20b5cf055131c563840c221f0e1e6a5dc1a7a42a29e954d36",
+      "candidate_derived": true,
+      "method": "optics",
+      "model_sha256": "ab4f1760821433243648421fa86f709a4bbf3a7ec1b95f5e3fa4b5ab30c9b97a",
+      "row_count": 470,
+      "omr_circle_count": 470,
+      "selected_row_index": 0,
+      "sensor_count": 8
+    },
+    "screenshot_sha256": {
+      "actual-optics-diagnostics-desktop.png": "ffe2b6eae4fcbcda2ee86a3434d720da2b5123a7ef67dbb91da5a2918a6d0c4e",
+      "actual-optics-diagnostics-mobile.png": "f7b01d365687ef3955a2900e004352a8d763f93635fca8cfa6d27d955335a374",
+      "actual-terminal-experience-desktop.png": "87b318a4fb926b30365b6cff8ebded51183ede312de2ff4f9d2767310c9e8cbc",
+      "actual-terminal-experience-mobile.png": "7c721fb68e985ce8c6462b86026cbc3d17eb112e2f70e833da2083290d9eb61b"
+    }
+  },
+  "quality_gate": {
+    "passed": 3314,
+    "skipped": 7,
+    "deselected": 177,
+    "commands_exit_zero": 7,
+    "receipt_sha256": "2b16afbbe65b441fb87395e73ce6b462547ee4bdc175b3a99b75291ab797f1cd"
+  },
+  "evidence_sha256": {
+    "workflow-receipt.private.json": "0797432b0a3c14422308b298a9becdfeb936425b51aeba9879c9dc3682b28ca9",
+    "cleanup.private.json": "f5f6563cf40673869009e89321d384940226863f97be91940c61532af0ce1d02",
+    "runtime-refresh.private.json": "958daa9565fbceecb06131edd199e218ae24300b7de5a3f867a00efe8bd5ab9a",
+    "actual-ui-admission.private.json": "1d1cd0c8e5e8437ad7e4ed1b87b2b16de2575eaa28b827af520e95260ef02d7d",
+    "actual-ui-readback-TJAXxp/receipt.private.json": "4019de1dee8fee46d46bd2fdbb837003a6f371d0ff20c9569a87748c0dafefd5",
+    "actual-terminal-ui-9bggxJ/receipt.private.json": "10682bdf86fba3174a4e94083723e648f46851442b591ce90ecdff604cdac6fb"
+  },
+  "not_run": [
+    "shared AOS native GPU acceptance",
+    "holdout",
+    "Public27 local-model research",
+    "teacher training",
+    "LoRA/QLoRA",
+    "learned improvement",
+    "GPU cancellation in this study"
+  ],
+  "remaining": [
+    "complete AOS managed-native admission/exclusion and original finite authority composition",
+    "one coordinated real GPU handoff and cancellation acceptance",
+    "measure usefulness of history-driven local-model research",
+    "teacher data permissions and independent promotion/rollback"
+  ],
+  "separate_work": [
+    "project license",
+    "general CI",
+    "portable clean installation"
+  ]
+}

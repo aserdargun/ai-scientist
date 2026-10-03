@@ -49,6 +49,8 @@ def test_default_registry_digest_preserves_existing_admitted_runs(tmp_path):
     configured = entry(tmp_path)
     legacy = configured.model_dump(mode="json")
     legacy.pop("allowed_purposes")
+    legacy.pop("proposal_contract")
+    legacy.pop("snapshot_sha256")
     expected = hashlib.sha256(
         json.dumps(
             legacy, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False

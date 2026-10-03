@@ -1,0 +1,352 @@
+{
+  "$comment": "Static consistency only. This context does not authenticate its principal or authorize closure, inference, GPU release, or observation reissue. Canonical SHA-256 covers this entire context; there is no embedded self-hash.",
+  "$defs": {
+    "ScientistServerGeneration": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "control_group": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^/",
+          "title": "Control Group",
+          "type": "string"
+        },
+        "invocation_id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "pid": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Pid",
+          "type": "integer"
+        },
+        "start_ticks": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Start Ticks",
+          "type": "integer"
+        },
+        "uid": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uid",
+          "type": "integer"
+        },
+        "unit": {
+          "maxLength": 255,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.@-]+\\.service$",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uid",
+        "pid",
+        "start_ticks",
+        "boot_id",
+        "unit",
+        "invocation_id",
+        "control_group"
+      ],
+      "title": "ScientistServerGeneration",
+      "type": "object"
+    },
+    "cleanup_scope": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization_context_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "current_generation": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "current_owner": {
+          "const": "PAUSED",
+          "type": "string"
+        },
+        "current_status": {
+          "const": "stopped",
+          "type": "string"
+        },
+        "lease_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "original_generation": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "purpose": {
+          "const": "observe_no_admission",
+          "type": "string"
+        },
+        "runtime_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "session_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "store": {
+          "$ref": "#/$defs/store"
+        }
+      },
+      "required": [
+        "store",
+        "session_id",
+        "runtime_id",
+        "original_generation",
+        "current_generation",
+        "current_status",
+        "current_owner",
+        "authorization_context_sha256",
+        "purpose",
+        "lease_id"
+      ],
+      "type": "object"
+    },
+    "freshness": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "clock": {
+          "const": "CLOCK_BOOTTIME",
+          "type": "string"
+        },
+        "expires_boottime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "issued_boottime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "max_age_us": {
+          "const": 60000000,
+          "type": "integer"
+        },
+        "unit": {
+          "const": "microseconds",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clock",
+        "unit",
+        "boot_id",
+        "issued_boottime_us",
+        "expires_boottime_us",
+        "max_age_us"
+      ],
+      "type": "object"
+    },
+    "hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-f0-9]{32}$",
+      "type": "string"
+    },
+    "principal": {
+      "additionalProperties": false,
+      "properties": {
+        "config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "generation",
+        "generation_sha256",
+        "source_sha256",
+        "config_sha256"
+      ],
+      "type": "object"
+    },
+    "retained": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_schema_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "canonical_store": {
+          "$ref": "#/$defs/store"
+        },
+        "cleanup_scope_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "observation_raw_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "observation_schema_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "observation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "observer_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "producer_config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "producer_source_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "observation_raw_sha256",
+        "observation_sha256",
+        "observation_schema_sha256",
+        "canonical_store",
+        "canonical_schema_sha256",
+        "cleanup_scope_sha256",
+        "observer_generation_sha256",
+        "producer_source_sha256",
+        "producer_config_sha256"
+      ],
+      "type": "object"
+    },
+    "store": {
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "inode": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "uid": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path_sha256",
+        "device",
+        "inode",
+        "uid"
+      ],
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "original_caller_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "request_id": {
+          "$ref": "#/$defs/id"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "request_id",
+        "request_sha256",
+        "original_caller_generation_sha256"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cleanup_scope": {
+      "$ref": "#/$defs/cleanup_scope"
+    },
+    "freshness": {
+      "$ref": "#/$defs/freshness"
+    },
+    "gpu_release_allowed": {
+      "const": false,
+      "type": "boolean"
+    },
+    "inference_allowed": {
+      "const": false,
+      "type": "boolean"
+    },
+    "observation_reissue_allowed": {
+      "const": false,
+      "type": "boolean"
+    },
+    "principal": {
+      "$ref": "#/$defs/principal"
+    },
+    "purpose": {
+      "const": "close_retained_no_admission",
+      "type": "string"
+    },
+    "recovery_request_id": {
+      "$ref": "#/$defs/id"
+    },
+    "retained": {
+      "$ref": "#/$defs/retained"
+    },
+    "schema": {
+      "const": "aos-scientist-no-admission-observation-recovery.v1",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "version": {
+      "const": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "version",
+    "purpose",
+    "recovery_request_id",
+    "target",
+    "retained",
+    "principal",
+    "cleanup_scope",
+    "freshness",
+    "inference_allowed",
+    "gpu_release_allowed",
+    "observation_reissue_allowed"
+  ],
+  "type": "object"
+}

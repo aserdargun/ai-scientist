@@ -321,6 +321,30 @@ def test_reviewed_redactions_remove_person_and_secret_from_observed_turn():
     assert private.encode() not in b"".join(files.values())
 
 
+@pytest.mark.parametrize("field", ["prior_findings", "prior_findings_sha256"])
+def test_target_permissions_and_redaction_cannot_authorize_prior_findings(field):
+    payload = canonical({field: {"source_run_id": "historical-source"}}).decode()
+    record = fixture_record(
+        user="Trusted metadata-only run context (no labels or raw series):\n" + payload
+    )
+    # Even a reviewed redaction of the complete historical context cannot grant
+    # permissions for the sources that influenced the observed model response.
+    policy = reviewed_policy([record], redactions=(payload,))
+    assert manifest([record], policy)["exclusion_counts"] == {
+        "prior_findings_permission_not_reviewed": 1
+    }
+
+
+def test_history_guard_uses_context_fields_and_fails_closed_on_duplicate_keys():
+    prefix = "Trusted metadata-only run context (no labels or raw series):\n"
+    record = fixture_record(user=prefix + canonical({"champion_source": "prior_findings"}).decode())
+    assert manifest([record], reviewed_policy([record]))["included_records"] == 1
+    duplicate = fixture_record(user=prefix + '{"prior_findings":{},"prior_findings":null}')
+    assert manifest([duplicate], reviewed_policy([duplicate]))["exclusion_counts"] == {
+        "missing_or_invalid_attempt_transcript": 1
+    }
+
+
 def test_protected_split_is_not_relabelled_for_training():
     record = fixture_record()
     source = record.trajectory.source_provenance[0].model_copy(update={"split_id": "holdout"})
@@ -734,3 +758,15 @@ def test_unknown_artifact_layout_fails_before_ledger_access(monkeypatch, tmp_pat
     with pytest.raises(ValueError, match="unsupported artifact layout"):
         sft_export.export_runs(engine, run_ids, artifact_layout="unknown", **options)
     engine.connect.assert_not_called()
+
+
+@pytest.mark.parametrize("field", ["field_context", "field_context_sha256"])
+def test_cleaning_and_source_permissions_do_not_cover_field_intent(field):
+    payload = canonical({field: {"intent": {"objective": "user asset objective"}}}).decode()
+    record = fixture_record(
+        user="Trusted metadata-only run context (no labels or raw series):\n" + payload
+    )
+    policy = reviewed_policy([record], redactions=(payload,))
+    assert manifest([record], policy)["exclusion_counts"] == {
+        "field_intent_permission_not_reviewed": 1
+    }

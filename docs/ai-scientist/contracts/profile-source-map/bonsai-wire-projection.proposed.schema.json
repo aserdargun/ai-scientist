@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "choices": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "finish_reason": {
+            "const": "stop",
+            "type": "string"
+          },
+          "message": {
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "maxLength": 65536,
+                "type": "string"
+              },
+              "role": {
+                "const": "assistant",
+                "type": "string"
+              }
+            },
+            "required": [
+              "content"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "finish_reason",
+          "message"
+        ],
+        "type": "object"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
+    },
+    "model": {
+      "pattern": "^bonsai-[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "usage": {
+      "additionalProperties": false,
+      "properties": {
+        "completion_tokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "prompt_tokens",
+        "completion_tokens"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "choices",
+    "usage"
+  ],
+  "type": "object"
+}

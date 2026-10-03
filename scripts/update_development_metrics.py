@@ -18,6 +18,7 @@ END = "<!-- development-metrics:end -->"
 ROLES = {
     ("gpt-6-astra", "xhigh"): "Ana Codex oturumu",
     ("gpt-6-astra", "high"): "Teknik orkestrasyon ve mimari inceleme",
+    ("gpt-6-astra", "max"): "Teknik orkestrasyon ve zorlu görevler",
     ("gpt-6-luna", "high"): "İlk uygulama ve odaklı doğrulama işleri",
     ("gpt-6-sol", "high"): "Kodlama, entegrasyon ve inceleme işleri",
 }
@@ -81,12 +82,16 @@ def _models(root: Path, thread: str, previous: dict[str, Any]) -> tuple[list[dic
                 raise ValueError(f"Invalid session metadata: {path.name}")
             identity = payload.get("id")
             source = payload.get("source")
-            parent = None
+            parent = payload.get("parent_thread_id")
             if isinstance(source, dict):
                 subagent = source.get("subagent", {})
                 spawn = subagent.get("thread_spawn") if isinstance(subagent, dict) else None
                 if isinstance(spawn, dict):
-                    parent = spawn.get("parent_thread_id")
+                    nested_parent = spawn.get("parent_thread_id")
+                    if parent is not None and nested_parent is not None and parent != nested_parent:
+                        raise ValueError(f"Conflicting parent metadata: {path.name}")
+                    if nested_parent is not None:
+                        parent = nested_parent
             if not isinstance(identity, str) or (
                 parent is not None and not isinstance(parent, str)
             ):
@@ -159,8 +164,45 @@ def _models(root: Path, thread: str, previous: dict[str, Any]) -> tuple[list[dic
 def _identity(record: dict[str, Any]) -> tuple:
     return tuple(
         record.get(key)
-        for key in ("goal_thread_id", "goal_updated_at_epoch", "tokens_used", "active_seconds")
+        for key in (
+            "goal_thread_id",
+            "goal_created_at_epoch",
+            "goal_updated_at_epoch",
+            "tokens_used",
+            "active_seconds",
+        )
     )
+
+
+def _period_totals(records: list[dict[str, Any]], thread: str) -> dict[str, Any]:
+    """Sum latest observations per goal epoch; never sum snapshots or repair counters."""
+    periods: dict[tuple[str, int], dict[str, Any]] = {}
+    limitations = {"historical_observations_only", "unobserved_periods_or_later_usage_unknown"}
+    for record in records:
+        if record.get("goal_thread_id") != thread:
+            limitations.add("unattributed_or_foreign_thread_history_excluded")
+            continue
+        fields = ("goal_created_at_epoch", "goal_updated_at_epoch", "tokens_used", "active_seconds")
+        if any(type(record.get(key)) is not int or record[key] < 0 for key in fields):
+            raise ValueError("Invalid metrics history period counters")
+        if record["goal_updated_at_epoch"] < record["goal_created_at_epoch"]:
+            raise ValueError("Invalid metrics history period timestamps")
+        key = (thread, record["goal_created_at_epoch"])
+        prior = periods.get(key)
+        if prior is None or record["goal_updated_at_epoch"] >= prior["goal_updated_at_epoch"]:
+            periods[key] = {field: record[field] for field in ("goal_thread_id", *fields)}
+    latest = [periods[key] for key in sorted(periods)]
+    seconds = sum(record["active_seconds"] for record in latest)
+    return {
+        "source": "latest observed counters per (goal_thread_id, goal_created_at_epoch)",
+        "observed_periods": len(latest),
+        "tokens_used": sum(record["tokens_used"] for record in latest),
+        "active_seconds": seconds,
+        "active_hours": seconds / 3600,
+        "periods": latest,
+        "complete": False,
+        "limitations": sorted(limitations),
+    }
 
 
 def _cell(value: str) -> str:
@@ -168,6 +210,7 @@ def _cell(value: str) -> str:
 
 
 def _render(data: dict[str, Any]) -> str:
+    totals = data["recorded_goal_period_totals"]
     seconds = data["active_seconds"]
     hours, rest = divmod(seconds, 3600)
     minutes, seconds = divmod(rest, 60)
@@ -178,12 +221,19 @@ def _render(data: dict[str, Any]) -> str:
         "",
         "| Ölçüm | Değer |",
         "|---|---:|",
-        f"| Aktif süre | {hours} saat {minutes} dakika {seconds} saniye |",
-        f"| Aktif süre (saniye) | {data['active_seconds']} |",
-        f"| Token | {data['tokens_used']} |",
-        f"| Takvim süresi | {data['calendar_hours']:.6f} saat |",
+        f"| Güncel goal dönemi aktif süre | {hours} saat {minutes} dakika {seconds} saniye |",
+        f"| Güncel goal dönemi aktif süre (saniye) | {data['active_seconds']} |",
+        f"| Güncel goal dönemi token | {data['tokens_used']} |",
+        f"| Güncel goal dönemi takvim süresi | {data['calendar_hours']:.6f} saat |",
+        f"| Kaydedilen dönem sayısı | {totals['observed_periods']} |",
+        f"| Kaydedilen dönemlerin toplam aktif süresi | {totals['active_hours']:.6f} saat |",
+        f"| Kaydedilen dönemlerin toplam aktif süresi (saniye) | {totals['active_seconds']} |",
+        f"| Kaydedilen dönemlerin toplam tokenı | {totals['tokens_used']} |",
         "",
         SCOPE,
+        "Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplamıdır; "
+        "ardışık snapshot'lar ve tekrarlar toplanmaz. Tarihsel gözlemlerin kapsamı eksiktir; "
+        "gözlenmeyen dönemler veya son gözlemden sonraki kullanım bilinmez.",
         "",
         "| Model | Ayar | Rol | Gözlenen oturum |",
         "|---|---|---|---:|",
@@ -207,6 +257,11 @@ def _render(data: dict[str, Any]) -> str:
             + ", ".join(data["counter_decreases"])
             + "."
         )
+    if (
+        "unattributed_or_foreign_thread_history_excluded"
+        in data["recorded_goal_period_totals"]["limitations"]
+    ):
+        lines.append("Oturum kimliği eksik veya başka oturuma ait tarihçe toplamdan çıkarıldı.")
     lines += ["", "[Sayaç ve köken kaydı](docs/development-metrics.json).", ""]
     return "\n".join(lines)
 
@@ -260,10 +315,13 @@ def update(repository: Path, snapshot: Path, sessions: Path) -> dict[str, Any]:
                 ("tokens_used", goal["tokensUsed"]),
                 ("active_seconds", goal["timeUsedSeconds"]),
             )
-            if key in previous and value < previous[key]
+            if previous.get("goal_created_at_epoch") == goal["createdAt"]
+            and key in previous
+            and value < previous[key]
         ],
     }
     duplicate = False
+    records = []
     if _identity(previous) == _identity(data):
         data["counter_decreases"] = previous.get("counter_decreases", [])
     if history.exists():
@@ -275,6 +333,12 @@ def update(repository: Path, snapshot: Path, sessions: Path) -> dict[str, Any]:
                     raise ValueError("Metrics history requires a complete final JSON line")
         for record in _records(history, []):
             duplicate |= _identity(record) == _identity(data)
+            records.append(record)
+    # Preserve the previous public observation even if absent from history, and put the
+    # fresh snapshot last so retries at an equal timestamp keep its raw counters.
+    if previous:
+        records.append(previous)
+    data["recorded_goal_period_totals"] = _period_totals([*records, data], goal["threadId"])
     encoded = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
     rendered = (
         readme[: readme.index(START) + len(START)] + _render(data) + readme[readme.index(END) :]

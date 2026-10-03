@@ -9,7 +9,7 @@ import os
 import stat
 import tempfile
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 
 import numpy as np
 import pandas as pd
@@ -29,6 +29,9 @@ from lab.director.contracts import SourceProvenance
 from lab.director.suite import SuiteTask
 from lab.director.suite_weights import SuiteWeightInput, suite_weight_task_key, suite_weights
 from lab.suite_limits import MAX_SUITE_MANIFEST_BYTES
+
+if TYPE_CHECKING:
+    from lab.operating_modes.public_snapshot import PublicTaskBinding
 
 MAX_SUITE_MATRIX_BYTES = 64 * 1024**2
 
@@ -203,7 +206,11 @@ def write_suite_manifest(
 
 
 def load_suite_manifest(
-    path: Path, planner_engine: Engine, *, study_snapshot_sha256: str | None = None
+    path: Path,
+    planner_engine: Engine,
+    *,
+    study_snapshot_sha256: str | None = None,
+    public_task_binding: PublicTaskBinding | None = None,
 ) -> tuple[SuiteManifest, tuple[SuiteTask, ...], str]:
     """Read, hash, strictly parse, and Planner-verify a private suite manifest.
 
@@ -231,9 +238,23 @@ def load_suite_manifest(
             study_snapshot_sha256 is None
             or len(document.tasks) != 1
             or document.family_cap != 1.0
-            or document.tasks[0].provenance.source_manifest_sha256 != study_snapshot_sha256
+            or (
+                public_task_binding is None
+                and document.tasks[0].provenance.source_manifest_sha256 != study_snapshot_sha256
+            )
         ):
             raise ValueError("single snapshot study requires verified mode-grid snapshot authority")
+        if public_task_binding is not None:
+            from lab.operating_modes.public_snapshot import PublicTaskSnapshot
+
+            bound = PublicTaskSnapshot(
+                schema="public-task-snapshot.v1", binding=public_task_binding
+            )
+            if bound.sha256 != study_snapshot_sha256:
+                raise ValueError("public study snapshot differs from its original task binding")
+            public_task_binding.verify_study_task(document.tasks[0])
+    elif public_task_binding is not None:
+        raise ValueError("public task authority requires a single development study")
     elif document.family_cap != 0.25:
         raise ValueError("benchmark suite requires the fixed independent-family cap")
     computed_weights = suite_weights(

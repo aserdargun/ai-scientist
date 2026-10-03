@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api, ApiError } from './api';
+import { requestId } from './requestId';
+import { ModeStreamProgress } from './ModeStreamProgress';
 import { ModeDiagnostics } from './ModeDiagnostics';
 import { OperatingModesPage } from './OperatingModesPage';
-import type { AcceptanceItem, AcceptanceStatus, Check, EvidenceResponse, Overview, Run, Suite } from './types';
+import { AgentWorkspace } from './AgentWorkspace';
+import type { AcceptanceItem, AcceptanceStatus, Check, EvidenceResponse, FieldIntent, Overview, PriorExperience, Run, Suite } from './types';
 
 type RunForm = { purpose: 'baseline' | 'research'; suite: string; experiments: number; wall_seconds: number; model_tokens: number };
-const purposeText = (purpose: Run['purpose']) => purpose === 'baseline' ? 'CPU baseline' : purpose === 'mode-grid' ? 'Parametre taraması · 0 token' : purpose === 'research' ? 'Araştırma' : 'Tür bilinmiyor';
-type Page = 'overview' | 'acceptance' | 'experiments' | 'system' | 'modes';
+const purposeText = (purpose: Run['purpose']) => purpose === 'baseline' ? 'CPU baseline' : purpose === 'mode-stream' ? 'CPU OMR akışı · puanlanmaz' : purpose === 'mode-grid' ? 'Parametre taraması · 0 token' : purpose === 'research' ? 'Araştırma' : 'Tür bilinmiyor';
+type Page = 'agent' | 'overview' | 'acceptance' | 'experiments' | 'system' | 'modes';
 type Notice = { kind: 'error' | 'success'; text: string } | null;
 const statusText: Record<AcceptanceStatus, string> = { passed: 'Geçti', partial: 'Kısmi', open: 'Açık' };
 const stateText: Record<string, string> = { queued: 'Kuyrukta', running: 'Çalışıyor', stop_requested: 'Durdurma bekleniyor', passed: 'Başarılı', failed: 'Başarısız', completed: 'Tamamlandı', stopped: 'Durduruldu', cancelled: 'İptal edildi', error: 'Hata' };
@@ -26,6 +29,7 @@ const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}
 
 function Icon({ name }: { name: string }) {
   const paths: Record<string, React.ReactNode> = {
+    agent: <><rect x="4" y="6" width="16" height="14" rx="3"/><path d="M12 2v4M8 12h.01M16 12h.01M8 16h8M2 10h2M20 10h2"/></>,
     home: <><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-7h6v7"/></>,
     check: <><path d="M9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>,
     flask: <><path d="M9 3h6M10 3v7l-5.5 9.2A1.8 1.8 0 0 0 6.1 22h11.8a1.8 1.8 0 0 0 1.6-2.8L14 10V3M8 16h8"/></>,
@@ -39,7 +43,12 @@ function Icon({ name }: { name: string }) {
 }
 
 function App() {
-  const [page, setPage] = useState<Page>('overview');
+  const [page, setPage] = useState<Page>('agent');
+  const [modesMounted, setModesMounted] = useState(false);
+  const [fieldIntentDraft, setFieldIntentDraft] = useState<FieldIntent>({ asset_id: '', goal_kind: 'digital_twin', objective: '' });
+  const [fieldIntent, setFieldIntent] = useState<FieldIntent | null>(null);
+  const clearFieldIntent = () => { setFieldIntent(null); setFieldIntentDraft({ asset_id: '', goal_kind: 'digital_twin', objective: '' }); };
+  const [priorExperience, setPriorExperience] = useState<PriorExperience | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [runs, setRuns] = useState<Run[]>([]);
   const [checks, setChecks] = useState<Check[]>([]);
@@ -56,6 +65,12 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<RunForm>({ purpose: 'baseline', suite: '', experiments: 1, wall_seconds: 300, model_tokens: 0 });
   const [formError, setFormError] = useState<string | null>(null);
+
+  useEffect(() => { if (page === 'modes') setModesMounted(true); }, [page]);
+  const currentPrior = priorExperience && overview?.lab.connected && runs.some(run => !run.stale && !run.unavailable
+    && ['completed', 'stopped', 'failed'].includes(run.state) && run.run_id === priorExperience.source_run_id
+    && run.report_sha256 === priorExperience.source_report_sha256) ? priorExperience : null;
+  useEffect(() => { if (priorExperience && !currentPrior) setPriorExperience(null); }, [priorExperience, currentPrior]);
 
   const refresh = useCallback(async (signal?: AbortSignal) => {
     const results = await Promise.allSettled([api.overview(signal), api.runs(signal), api.checks(signal)]);
@@ -143,7 +158,7 @@ function App() {
     const serializedRequest = JSON.stringify({ purpose: form.purpose, ...withoutKey });
     let retry: { request: string; key: string } | null = null;
     try { retry = JSON.parse(window.sessionStorage.getItem('lab-console-start-retry') || 'null') as { request: string; key: string } | null; } catch { retry = null; }
-    const key = retry?.request === serializedRequest ? retry.key : crypto.randomUUID();
+    const key = retry?.request === serializedRequest ? retry.key : requestId();
     window.sessionStorage.setItem('lab-console-start-retry', JSON.stringify({ request: serializedRequest, key }));
     setBusy(true);
     try {
@@ -178,6 +193,7 @@ function App() {
     <aside className="sidebar">
       <div className="brand"><div className="brand-name">AI Scientist</div><div className="brand-subtitle">Yerel araştırma</div></div>
       <nav className="side-nav" aria-label="Ana gezinme">
+        <NavButton name="agent" label="Eylemci" active={page === 'agent'} onClick={() => setPage('agent')} />
         <NavButton name="home" label="Genel bakış" active={page === 'overview'} onClick={() => setPage('overview')} />
         <NavButton name="check" label="Kabul maddeleri" active={page === 'acceptance'} onClick={() => setPage('acceptance')} />
         <NavButton name="flask" label="Çalışma modları" active={page === 'modes'} onClick={() => setPage('modes')} />
@@ -189,17 +205,20 @@ function App() {
     <main className="main">
       <header className="page-header">
         <div><h1>Araştırma kontrol merkezi</h1><p>Tamamlanmayı izle, deneyleri çalıştır, kanıtları incele.</p></div>
-        <button className="button primary header-action" onClick={startCheck} disabled={busy || !!activeCheck} title={activeCheck ? 'CPU kontrolü zaten çalışıyor' : undefined}>{busy && !activeCheck ? 'Başlatılıyor…' : activeCheck ? 'Kontrol çalışıyor' : 'Kontrolü çalıştır'}</button>
+        {page === 'system' || page === 'acceptance'
+          ? <button className="button primary header-action" onClick={startCheck} disabled={busy || !!activeCheck} title={activeCheck ? 'CPU kontrolü zaten çalışıyor' : undefined}>{busy && !activeCheck ? 'Başlatılıyor…' : activeCheck ? 'Kontrol çalışıyor' : 'Kontrolü çalıştır'}</button>
+          : <button className="button primary header-action" onClick={() => setPage('modes')}>Deney tasarla</button>}
       </header>
       {notice && <div className={`notice ${notice.kind}`} role="status"><span>{notice.text}</span><button className="icon-button" aria-label="Bildirimi kapat" onClick={() => setNotice(null)}><Icon name="close" /></button></div>}
       {apiError && <div className="connection-banner" role="alert"><span className="connection-dot"/><div><strong>Yerel API’ye ulaşılamıyor</strong><p>{apiError} Kabul maddeleri ve sistem ölçümleri ancak API yanıt verdiğinde gösterilir; kaydedilmiş son değerler güncelmiş gibi sunulmaz.</p></div><button className="button secondary small" onClick={() => void refresh()}><Icon name="refresh"/>Yeniden dene</button></div>}
+      {page === 'agent' && <AgentWorkspace fieldIntentDraft={fieldIntentDraft} onFieldIntentDraftChange={intent => { setFieldIntentDraft(intent); setFieldIntent(null); }} onClearFieldIntent={clearFieldIntent} onDesignWithFieldIntent={intent => { setFieldIntentDraft(intent); setFieldIntent(intent); setPage('modes'); }} onDesignWithHistory={prior => { setPriorExperience(prior); setPage('modes'); }} overview={overview} runs={runs} onModes={() => setPage('modes')} onExperiments={() => setPage('experiments')} onEvidence={setSelected} onRun={id => { setRunId(id); setRunDetail(runs.find(run => run.run_id === id) ?? null); setReport(null); }} onReport={openReport} onAnomaly={() => { const suite = overview?.lab.suites.find(item => item.track === 'anomaly'); if (suite) setForm(current => ({ ...current, suite: suite.suite_id, purpose: 'baseline' })); setShowForm(true); }}/ >}
       {page === 'overview' && <OverviewPage overview={overview} runs={runs} checks={checks} apiError={apiError} onOpenItem={setSelected} onGo={setPage} onWatch={watchRun} watchId={watchId} setWatchId={setWatchId} busy={busy} onRunClick={id => { setRunId(id); setRunDetail(runs.find(run => run.run_id === id) ?? null); setReport(null); }} onNewRun={() => setShowForm(true)} />}
       {page === 'acceptance' && <section className="panel acceptance-page"><div className="panel-heading"><div><h2>Kabul maddeleri</h2><p>{overview?.acceptance.source ?? 'Kaynak bilgisi API yanıtından alınır.'}</p></div><select aria-label="Duruma göre filtrele" value={filter} onChange={event => setFilter(event.target.value as typeof filter)}><option value="all">Tüm durumlar</option><option value="passed">Geçti</option><option value="partial">Kısmi</option><option value="open">Açık</option></select></div>
         {!overview && <EmptyState title="Kabul verisi yok" text="Gerçek kabul maddeleri için yerel API bağlantısı gerekli."/>}
         {overview && <><AcceptanceCounts overview={overview}/><div className="acceptance-list">{filteredItems.map(item => <button className="acceptance-row" key={item.id} onClick={() => setSelected(item)}><span className="item-id">{item.id}</span><span className="item-title">{item.title}</span><StatusPill status={item.status}/><span className="row-chevron">›</span></button>)}</div><div className="source-line">Kaynak: {overview.acceptance.source} · SHA-256 {overview.acceptance.source_sha256}</div></>}
       </section>}
       {page === 'experiments' && <ExperimentsPage overview={overview} runs={runs} apiError={apiError} busy={busy} onNew={() => setShowForm(true)} onWatch={watchRun} watchId={watchId} setWatchId={setWatchId} onSelect={id => { setRunId(id); setRunDetail(runs.find(run => run.run_id === id) ?? null); setReport(null); }} onReport={openReport} onStop={stopRun} />}
-      {page === 'modes' && <OperatingModesPage connected={!!overview?.lab.connected} onStarted={() => { void refresh(); setPage('experiments'); }} />}
+      {(page === 'modes' || modesMounted) && <div hidden={page !== 'modes'}><OperatingModesPage fieldIntent={fieldIntent} onClearFieldIntent={clearFieldIntent} onEditFieldIntent={() => { setPage('agent'); window.location.hash = 'agent-field-intent'; }} priorExperience={currentPrior} onClearPrior={() => setPriorExperience(null)} connected={!!overview?.lab.connected} modelRunsEnabled={!!overview?.lab.model_runs_enabled} onStarted={() => { setPriorExperience(null); clearFieldIntent(); void refresh(); setPage('experiments'); }} /></div>}
       {page === 'system' && <SystemPage overview={overview} apiError={apiError} checks={checks} onStartCheck={startCheck} busy={busy} />}
       <footer className="page-footer"><span>{overview ? `Ölçüm zamanı: ${fmtTime(overview.generated_at)}` : 'Canlı veri bekleniyor'}</span><button className="button secondary small" onClick={() => void refresh()}><Icon name="refresh"/>Yenile</button></footer>
     </main>
@@ -224,7 +243,9 @@ function OverviewPage({ overview, runs, checks, apiError, onOpenItem, onGo, onWa
 }) {
   const priorityIds = ['M0.13', 'M0.10', 'M0.AOS.7', 'M0.14'];
   const priorities = priorityIds.map(id => overview?.acceptance.items.find(item => item.id === id)).filter((item): item is AcceptanceItem => !!item);
+  const recentRuns = [...runs].sort((left, right) => Number(activeRunStates.has(right.state)) - Number(activeRunStates.has(left.state)) || Date.parse(right.updated_at ?? right.created_at ?? '') - Date.parse(left.updated_at ?? left.created_at ?? ''));
   return <div className="overview-content">
+    <DevelopmentProgressPanel progress={overview?.development_progress} runs={runs} onRunClick={onRunClick}/>
     <section className="panel acceptance-summary"><div className="panel-title-row"><div><h2>M0 kabul durumu</h2></div></div>
       {overview ? <AcceptanceCounts overview={overview}/> : <EmptyState title="Kabul verisi henüz alınmadı" text={apiError ? 'Bağlantı geri geldiğinde güncel sayımlar burada görünür.' : 'API’den veri bekleniyor.'}/ >}
     </section>
@@ -235,12 +256,58 @@ function OverviewPage({ overview, runs, checks, apiError, onOpenItem, onGo, onWa
       <SystemSummary overview={overview}/>
     </div>
     <section className="panel experiment-panel" data-testid="run-list"><div className="panel-heading"><h2>Deneyler</h2><button className="button outline" onClick={onNewRun} disabled={!canRunAnySuite(overview?.lab)} title={!overview?.lab.connected ? reasonText(overview?.lab.reason) ?? 'Lab API bağlı değil' : undefined}>Yeni deney</button></div>
-      {!runs.length ? <div className="run-empty"><strong>{apiError ? 'Koşu listesi alınamadı' : 'Henüz bağlı bir deney yok'}</strong><span>{apiError ? 'API bağlantısı düzeldiğinde kayıtlı koşular yüklenir.' : reasonText(overview?.lab.reason) || 'Bir koşu kimliği ekleyin veya kayıtlı bir suite ile başlatın.'}</span></div> : <div className="run-list">{runs.slice(0, 5).map(run => <RunRow key={run.run_id} run={run} onSelect={onRunClick}/>)}</div>}
+      {!runs.length ? <div className="run-empty"><strong>{apiError ? 'Koşu listesi alınamadı' : 'Henüz bağlı bir deney yok'}</strong><span>{apiError ? 'API bağlantısı düzeldiğinde kayıtlı koşular yüklenir.' : reasonText(overview?.lab.reason) || 'Bir koşu kimliği ekleyin veya kayıtlı bir suite ile başlatın.'}</span></div> : <div className="run-list">{recentRuns.slice(0, 5).map(run => <RunRow key={run.run_id} run={run} onSelect={onRunClick}/>)}</div>}
       <form className="watch-form" onSubmit={onWatch}><label htmlFor="watch-id">Koşu kimliğini izle</label><input id="watch-id" value={watchId} onChange={event => setWatchId(event.target.value)} placeholder="Koşu kimliği (UUID)" inputMode="text" autoComplete="off"/><button className="button primary" disabled={busy || !watchId.trim()} type="submit">İzle</button></form>
       <div className="panel-footer"><span>Kaynak: {overview?.acceptance.source ?? 'API yanıtı bekleniyor'}</span>{checks.find(check => check.state === 'running' || check.state === 'queued') && <span className="check-live">CPU kontrolü {readableState(checks.find(check => check.state === 'running' || check.state === 'queued')!.state).toLocaleLowerCase('tr-TR')}</span>}</div>
     </section>
   </div>;
 }
+function DevelopmentProgressPanel({ progress, runs, onRunClick }: { progress: Overview['development_progress']; runs: Run[]; onRunClick: (id: string) => void }) {
+  const labels = { pending: 'Bekliyor', running: 'Sürüyor', passed: 'Doğrulandı', blocked: 'Engelli', quarantined: 'Karantinada' };
+  const activeRun = runs.find(run => run.purpose === 'research' && activeRunStates.has(run.state) && !run.stale && !run.unavailable);
+  const progressRunId = progress?.current_work.match(/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i)?.[0];
+  const baselineCount = progress?.latest_result.match(/Tamamlanan başlangıç CPU ölçümü:\s*(\d+)\s*\/\s*(\d+)/);
+  const proposalCount = progress?.latest_result.match(/kayıtlı gerçek model önerisi:\s*(\d+|UNKNOWN)\s*\/\s*(\d+)/);
+  const research = progress?.research ?? (progress && baselineCount ? {
+    run_id: progressRunId ?? activeRun?.run_id ?? '',
+    state: progress.latest_result.match(/Durum:\s*(\w+)/)?.[1] ?? activeRun?.state ?? 'unknown',
+    phase: progress.current_work.replace(progressRunId ?? '', '').replace(/:\s*$/, '').trim(),
+    baseline_completed: Number(baselineCount[1]), baseline_target: Number(baselineCount[2]),
+    model_proposals: proposalCount && proposalCount[1] !== 'UNKNOWN' ? Number(proposalCount[1]) : null,
+    model_proposal_limit: proposalCount ? Number(proposalCount[2]) : 0,
+  } : undefined);
+  const currentRun = research?.run_id && uuidPattern.test(research.run_id) ? research.run_id : activeRun?.run_id;
+  const old = progress && Date.now() - Date.parse(progress.updated_at) > 2 * 60 * 1000;
+  const baselineDone = !!research && research.baseline_target > 0 && research.baseline_completed >= research.baseline_target;
+  const terminal = !!research && !activeRunStates.has(research.state);
+  const candidateScores = progress?.latest_result.match(/Aday Scorer ölçümü:\s*(\d+)/)?.[1];
+  const readableCopy = (value: string) => value.split(/([0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/gi).map(part => uuidPattern.test(part) ? part : part.replace(/:(?=\S)/g, ': ').replace(/(\d)(?=[A-Za-zÇĞİÖŞÜçğıöşü])/g, '$1 ')).join('');
+  return <section className="panel development-progress" data-testid="development-progress">
+    <div className="panel-heading"><div><span className="work-eyebrow">GÜNCEL ÇALIŞMA</span><h2>Şu anda neredeyiz?</h2></div><span className={`work-live ${old || !progress ? 'waiting' : ''}`}><i/>{old ? 'Güncelleme gecikti' : progress ? 'Canlı takip' : 'Veri bekleniyor'}</span></div>
+    {progress ? <>
+      <h3 className="current-phase">{research?.state === 'failed' ? 'Son araştırma koşusu başarısız — uçtan uca teslim henüz tamamlanmadı' : research?.phase ?? readableCopy(progress.current_work)}</h3>
+      {research && <p className="work-description">{readableCopy(progress.current_work)}</p>}
+      {research && <div className="work-metrics">
+        <div className={`work-metric ${baselineDone ? 'done' : ''}`}><span>CPU başlangıç ölçümleri</span><strong>{research.baseline_completed} <small>/ {research.baseline_target}</small></strong><span>{baselineDone ? 'Tamamlandı' : 'Ölçümler sürüyor'}</span><progress max={Math.max(1, research.baseline_target)} value={research.baseline_completed} aria-label="CPU başlangıç ölçümlerinin ilerlemesi"/></div>
+        <div className="work-metric model"><span>Gerçek yerel model önerileri</span><strong>{research.model_proposals ?? '—'} {research.model_proposal_limit > 0 && <small>/ en fazla {research.model_proposal_limit}</small>}</strong><span>{research.model_proposals === null ? 'Henüz doğrulanmadı' : research.model_proposals > 0 ? 'Doğrulanmış model önerisi' : 'Henüz kaydedilmiş model önerisi yok'}</span><p>Başlangıç ölçümleri ve aday deney sayısı bu sayıya dahil değildir.</p></div>
+        <div className="work-metric"><span>Bağımsız puanlanan aday ölçümü</span><strong>{candidateScores ?? '—'}</strong><span>{candidateScores === '0' ? 'Henüz bağımsız aday puanı yok' : 'Aday puanlama kaydı'}</span><p>Modelin öneri üretmesi, deneyin başarıyla çalıştığını göstermez.</p></div>
+      </div>}
+      <div className="delivery-map" aria-label="Projenin teslim durumu">
+        <div><strong>Yapılanlar</strong><p>Deney kayıtları, bütçe ve sahiplik denetimleri, CPU başlangıç ölçümleri ve canlı kontrol arayüzü kuruldu. Yerel modelden gerçek öneriler alındı.</p></div>
+        <div><strong>Şu anki engel</strong><p>{research?.state === 'failed' && candidateScores === '0' ? 'Son koşudaki adaylar bağımsız puanlamaya ulaşmadı. Başarısızlık nedeni ve güvenli kapanış incelenmeli.' : 'İlk gerçek araştırmanın aday deney → bağımsız puan → sonuç raporu zinciri ve güvenli kapanışı doğrulanmalı.'}</p></div>
+        <div><strong>Kalan teslimler</strong><p>Gerçek AOS ile GPU devri ve iptal/toparlanma; kamu verisi ve holdout kabulü; uzun deneyler ve eğitim kayıtlarının kabulü. Ayrıntılı kanıtlar “Kabul durumu” ekranında.</p></div>
+      </div>
+      <div className="work-result"><span className="work-label">SON ELDE EDİLEN SONUÇ</span><p>{readableCopy(progress.latest_result)}</p></div>
+      {research && <ol className="work-stages" aria-label="Araştırma aşamaları"><li className={baselineDone ? 'done' : 'current'}><span>{baselineDone ? '✓' : '1'}</span><div><strong>CPU başlangıç ölçümleri</strong><small>{baselineDone ? 'Tamamlandı' : 'Devam ediyor'}</small></div></li><li className={baselineDone && !terminal ? 'current' : ''}><span>2</span><div><strong>Yerel model ve aday deneyleri</strong><small>{terminal ? readableState(research.state) : baselineDone ? 'Güncel aşama' : 'Sırada'}</small></div></li><li><span>3</span><div><strong>Sonuç ve kabul doğrulaması</strong><small>Kanıt bekleniyor</small></div></li></ol>}
+      <div className="work-next"><span className="work-label">SIRADAKİ ADIM</span><p>{readableCopy(progress.next_step)}</p></div>
+      {currentRun && <button className="current-run-link" onClick={() => onRunClick(currentRun)}><span>Güncel koşuyu aç <Icon name="arrow"/></span><code>{currentRun}</code></button>}
+      <div className="progress-statuses"><span>CPU durdurma denemesi: <strong>{labels[progress.cpu_status]}</strong></span><span>Gerçek GPU birlikte çalışma: <strong>{labels[progress.gpu_status]}</strong></span></div>
+      <div className="progress-updated">Son çalışma güncellemesi: <time dateTime={progress.updated_at}>{new Date(progress.updated_at).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'medium' })}</time>{old && ' · Yeni güncelleme bekleniyor'}</div>
+      <small>Ekran 5 saniyede bir yenilenir. Araştırma sonucu ve M0 kabulü ayrıca kanıtla doğrulanır.</small>
+    </> : <p>Güncel geliştirme kaydı henüz alınamadı.</p>}
+  </section>;
+}
+
 function SystemSummary({ overview }: { overview: Overview | null }) {
   const m = overview?.system.memory; const gpu = overview?.system.gpu;
   const rows = [
@@ -248,7 +315,7 @@ function SystemSummary({ overview }: { overview: Overview | null }) {
     ['GPU', gpu?.available ? `${gpu.name ?? 'GPU'} · ${gpu.used_mib ?? '—'} / ${gpu.total_mib ?? '—'} MiB` : gpu?.reason ?? 'Canlı ölçüm bekleniyor', gpu?.available ? 'ready' : 'unknown'],
     ['Lab API', overview?.lab.connected ? 'Bağlı' : reasonText(overview?.lab.reason) ?? 'Bağlı değil', overview?.lab.connected ? 'ready' : 'offline'],
   ] as const;
-  return <section className="panel system-summary"><div className="panel-heading"><h2>Yerel sistem</h2></div>{rows.map(([label, value, state]) => <div className="system-row" key={label}><strong>{label}</strong><span className={`dot ${state}`}/><span>{value}</span></div>)}{overview && !overview.lab.model_runs_enabled && <div className="warning-note"><span className="warning-mark">!</span>GPU denemeleri AOS koordinasyonunu bekliyor.</div>}</section>;
+  return <section className="panel system-summary"><div className="panel-heading"><h2>Yerel sistem</h2></div>{rows.map(([label, value, state]) => <div className="system-row" key={label}><strong>{label}</strong><span className={`dot ${state}`}/><span>{value}</span></div>)}{overview && !overview.lab.model_runs_enabled && <div className="warning-note"><span className="warning-mark">!</span>Konsoldan yeni model koşusu başlatma kapalı. Mevcut koşuları izleyebilirsiniz.</div>}</section>;
 }
 function RunRow({ run, onSelect }: { run: Run; onSelect: (id: string) => void }) { return <button className="run-row" onClick={() => onSelect(run.run_id)}><span className={`run-state ${activeRunStates.has(run.state) ? 'active' : ''}`}>{purposeText(run.purpose)} · {readableState(run.state)}{run.stale || run.unavailable ? ' · Eski durum' : ''}</span><code>{run.run_id}</code><span>{fmtTime(run.updated_at ?? run.created_at)}</span><span className="row-chevron">›</span></button>; }
 function SystemPage({ overview, apiError, checks, onStartCheck, busy }: { overview: Overview | null; apiError: string | null; checks: Check[]; onStartCheck: () => void; busy: boolean }) {
@@ -284,7 +351,7 @@ function RunDialog({ overview, form, setForm, error, busy, onSubmit, onClose }: 
 }
 function RunDrawer({ id, detail, report, onClose, onStop, busy }: { id: string; detail: Run | null; report: unknown; onClose: () => void; onStop: (id: string) => void; busy: boolean }) {
   useEscape(onClose);
-  return <div className="overlay drawer-overlay" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}><aside className="run-drawer" role="dialog" aria-modal="true" aria-labelledby="run-drawer-title" tabIndex={-1}><div className="dialog-header"><div><span className="eyebrow">KOŞU DURUMU</span><h2 id="run-drawer-title">Deney ayrıntısı</h2></div><button className="icon-button" aria-label="Kapat" onClick={onClose}><Icon name="close"/></button></div><div className="dialog-body"><span className={`run-state ${detail && activeRunStates.has(detail.state) ? 'active' : ''}`}>{detail ? readableState(detail.state) : 'Durum yükleniyor…'}</span><label className="field-label">Koşu UUID</label><code className="uuid-box">{id}</code>{detail && <dl className="run-meta"><dt>İşlem</dt><dd>{purposeText(detail.purpose)}</dd><dt>Oluşturulma</dt><dd>{fmtTime(detail.created_at)}</dd><dt>Güncelleme</dt><dd>{fmtTime(detail.updated_at)}</dd><dt>Kaynak</dt><dd>{detail.origin ?? '—'}</dd><dt>Durdurma isteği</dt><dd>{detail.stop_requested ? 'İletildi' : 'Yok'}</dd><dt>Rapor SHA-256</dt><dd>{detail.report_sha256 ?? 'Henüz yok'}</dd></dl>}{detail && activeRunStates.has(detail.state) && <button className="button danger" onClick={() => onStop(id)} disabled={busy || !stoppableRunStates.has(detail.state)}>{detail.state === 'stop_requested' ? 'Durdurma bekleniyor…' : 'Deneyi durdur'}</button>}{report !== null && <div className="report-view"><h3>Doğrulanmış rapor</h3><button className="button secondary" onClick={() => { const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = `lab-report-${id}.json`; link.click(); URL.revokeObjectURL(url); }}>Rapor JSON indir</button><ModeDiagnostics runId={id} report={report}/><pre>{JSON.stringify(report, null, 2)}</pre></div>}</div></aside></div>;
+  return <div className="overlay drawer-overlay" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}><aside className="run-drawer" role="dialog" aria-modal="true" aria-labelledby="run-drawer-title" tabIndex={-1}><div className="dialog-header"><div><span className="eyebrow">KOŞU DURUMU</span><h2 id="run-drawer-title">Deney ayrıntısı</h2></div><button className="icon-button" aria-label="Kapat" onClick={onClose}><Icon name="close"/></button></div><div className="dialog-body"><span className={`run-state ${detail && activeRunStates.has(detail.state) ? 'active' : ''}`}>{detail ? readableState(detail.state) : 'Durum yükleniyor…'}</span><label className="field-label">Koşu UUID</label><code className="uuid-box">{id}</code>{detail && <dl className="run-meta"><dt>İşlem</dt><dd>{purposeText(detail.purpose)}</dd><dt>Oluşturulma</dt><dd>{fmtTime(detail.created_at)}</dd><dt>Güncelleme</dt><dd>{fmtTime(detail.updated_at)}</dd><dt>Kaynak</dt><dd>{detail.origin ?? '—'}</dd><dt>Durdurma isteği</dt><dd>{detail.stop_requested ? 'İletildi' : 'Yok'}</dd><dt>Rapor SHA-256</dt><dd>{detail.report_sha256 ?? 'Henüz yok'}</dd></dl>}{detail && activeRunStates.has(detail.state) && <button className="button danger" onClick={() => onStop(id)} disabled={busy || !stoppableRunStates.has(detail.state)}>{detail.state === 'stop_requested' ? 'Durdurma bekleniyor…' : 'Deneyi durdur'}</button>}{detail?.purpose === 'mode-stream' && <ModeStreamProgress key={id} runId={id}/>} {report !== null && <div className="report-view"><h3>Doğrulanmış rapor</h3><button className="button secondary" onClick={() => { const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = `lab-report-${id}.json`; link.click(); URL.revokeObjectURL(url); }}>Rapor JSON indir</button><ModeDiagnostics runId={id} report={report}/><pre>{JSON.stringify(report, null, 2)}</pre></div>}</div></aside></div>;
 }
 function useEscape(onClose: () => void) {
   const closeRef = useRef(onClose);

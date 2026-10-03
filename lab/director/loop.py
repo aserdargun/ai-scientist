@@ -37,6 +37,8 @@ from lab.director.budget import (
 from lab.director.contracts import CandidateProposal, ExperimentDocument, MoveType
 from lab.director.explore import ExploreEpisode, ExploreResolution, begin_explore, family_directive
 from lab.director.fake_llm import AgentContext, FakeLLM, ProposalProvider, ProposalTurn
+from lab.director.field_context import FieldContext
+from lab.director.history_context import PriorFindingsSnapshot, snapshot_bytes
 from lab.director.journal import DirectorRunLease, canonical_bytes
 from lab.director.local_llm import ProviderOutputError
 from lab.director.runner import (
@@ -335,6 +337,8 @@ class DirectorLoop:
         holdout_evaluator: Callable[[str, Literal["keep_interval", "run_end"], int, int], object]
         | None = None,
         holdout_enabled: bool = False,
+        prior_findings: PriorFindingsSnapshot | None = None,
+        field_context: FieldContext | None = None,
     ) -> None:
         if not 1 <= proposal_limit <= MAX_PROPOSALS:
             raise ValueError("proposal limit must be in 1..35")
@@ -356,6 +360,14 @@ class DirectorLoop:
         self.seed_wall_seconds = seed_wall_seconds
         self.holdout_evaluator = holdout_evaluator
         self.holdout_enabled = holdout_enabled or holdout_evaluator is not None
+        self.field_context = field_context
+        self.field_context_sha256 = field_context.sha256 if field_context is not None else None
+        self.prior_findings = prior_findings
+        self.prior_findings_sha256 = (
+            hashlib.sha256(snapshot_bytes(prior_findings)).hexdigest()
+            if prior_findings is not None
+            else None
+        )
 
     def run(self) -> DirectorLoopResult:
         self.lease.heartbeat()
@@ -509,6 +521,10 @@ class DirectorLoop:
                 task_cards=cards,
                 champion_source=self._champion_source(state).decode("utf-8"),
                 recent_feedback=state.recent_feedback,
+                field_context=self.field_context,
+                field_context_sha256=self.field_context_sha256,
+                prior_findings=self.prior_findings,
+                prior_findings_sha256=self.prior_findings_sha256,
                 explore_intent=state.explore_episode.intent
                 if is_explore and state.explore_episode
                 else None,
@@ -932,7 +948,13 @@ class DirectorLoop:
             raise
         elapsed = max(0.0, time.monotonic() - started)
         self._reconcile_holdout_budget(
-            reservation, elapsed, trigger_kind="run_end", trigger_index=1
+            reservation,
+            elapsed,
+            trigger_kind="run_end",
+            trigger_index=1,
+            closure=isinstance(receipt, HoldoutReceipt)
+            and receipt.state == "failed"
+            and receipt.bit is None,
         )
         reconciled_state = state.model_copy(
             update={"budget": _budget_to_json(self.budget.snapshot())}
@@ -2222,6 +2244,11 @@ class DirectorLoop:
 
         source = baseline_candidate_source("robust_z")
         blob = store_director_artifact(source, artifact_root=self.artifact_root)
+        if self.holdout_enabled:
+            from lab.scorer.jobs import store_artifact_bytes
+
+            if store_artifact_bytes(source) != blob:
+                raise RuntimeError("holdout baseline source differs from its Director artifact")
         strategy = initial_strategy_state(_strategy_seed_for_run(self.run_id))
         return DirectorLoopState.model_validate(
             {
@@ -3762,6 +3789,11 @@ class DirectorLoop:
             from lab.director.artifacts import store_director_artifact
 
             blob = store_director_artifact(source, artifact_root=self.artifact_root)
+            if self.holdout_enabled:
+                from lab.scorer.jobs import store_artifact_bytes
+
+                if store_artifact_bytes(source) != blob:
+                    raise RuntimeError("holdout proposal source differs from its Director artifact")
             if blob != source_blob:
                 raise RuntimeError("promoted candidate source blob hash mismatch")
             champ_id = proposal.experiment_id

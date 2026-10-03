@@ -41,6 +41,43 @@ MAX_CANDIDATE_SCORE_BYTES = 32 * 1024 * 1024
 MAX_SCORE_ROWS = 1_000_000
 
 
+def _mode_study_report_fields(request: dict[str, Any]) -> dict[str, object]:
+    """Identify the explicit study without claiming independent benchmark acceptance."""
+    if request.get("provider") == "mode-grid":
+        return {
+            "study_kind": "single_snapshot_study",
+            "provider": "mode-grid",
+            "benchmark_acceptance": False,
+        }
+    if request.get("proposal_contract") != "operating-mode-config.v1":
+        return {}
+    fields = (
+        "snapshot_sha256",
+        "provider_config_sha256",
+        "provider_registry_entry_sha256",
+        "suite_manifest_sha256",
+    )
+    if (
+        request.get("provider") != "local-qwen"
+        or request.get("track") != "mode"
+        or request.get("study_kind") != "single_snapshot_study"
+        or any(
+            not isinstance(request.get(key), str)
+            or len(request[key]) != 64
+            or any(char not in "0123456789abcdef" for char in request[key])
+            for key in fields
+        )
+    ):
+        raise ValueError("mode agent report requires complete immutable study pins")
+    return {
+        "study_kind": "single_snapshot_study",
+        "provider": "local-qwen",
+        "proposal_contract": "operating-mode-config.v1",
+        **{key: request[key] for key in fields},
+        "benchmark_acceptance": False,
+    }
+
+
 def _assert_scorer_run_execution(
     connection: Any,
     *,
@@ -1266,15 +1303,7 @@ class IndependentScorer:
             else:
                 report = {
                     "schema": "lab.report.v1",
-                    **(
-                        {
-                            "study_kind": "single_snapshot_study",
-                            "provider": "mode-grid",
-                            "benchmark_acceptance": False,
-                        }
-                        if run.request_json.get("provider") == "mode-grid"
-                        else {}
-                    ),
+                    **_mode_study_report_fields(run.request_json),
                     "run_id": str(run_id),
                     "status": outcome_state,
                     "admitted_generation": report_generation,
@@ -1355,6 +1384,21 @@ class IndependentScorer:
                     runs.c.task_plan_count,
                 ).where(runs.c.run_id == run_id)
             ).one_or_none()
+        if (
+            candidate is not None
+            and isinstance(candidate.request_json, dict)
+            and candidate.request_json.get("purpose") == "mode-stream"
+        ):
+            from lab.scorer.mode_stream_report import finalize_mode_stream
+
+            return finalize_mode_stream(
+                self.engine,
+                run_id=run_id,
+                artifact_root=self.artifact_root,
+                admitted_generation=admitted_generation,
+                execution_sha256=execution_sha256,
+                empty_stop=empty_baseline_stop,
+            )
         if candidate is not None and candidate.state in {"completed", "failed", "stopped"}:
             return self.complete_run(
                 run_id=run_id,

@@ -293,6 +293,24 @@ class InfrastructureStopReceipt(BaseModel):
     calibration_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
 
 
+class AttemptedProposalStopReceipt(BaseModel):
+    """Exact admitted and terminal inventories for an interrupted primary evaluation."""
+
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+    reason: Literal["stopped_during_primary_evaluation"]
+    recovery_id: UUID
+    run_id: UUID
+    experiment_id: Annotated[StrictStr, Field(pattern=r"^exp_[0-9a-f]{32}$")]
+    generation: Annotated[StrictInt, Field(ge=1)]
+    execution_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+    proposal_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+    reservation_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+    reconciled_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")] | None
+    calibration_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+    admitted_inventory_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+    terminal_inventory_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")]
+
+
 class ExperimentDocument(BaseModel):
     """Final immutable experiment.v1 record, derived by trusted Director code."""
 
@@ -333,7 +351,7 @@ class ExperimentDocument(BaseModel):
     wall_seconds: Annotated[StrictFloat, Field(allow_inf_nan=False, ge=0.0)] | None
     provider_receipt_sha256: Annotated[StrictStr, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
 
-    infrastructure_stop: InfrastructureStopReceipt | None = None
+    infrastructure_stop: InfrastructureStopReceipt | AttemptedProposalStopReceipt | None = None
 
     @model_serializer(mode="wrap")
     def preserve_historical_bytes(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
@@ -427,7 +445,7 @@ class TrajectoryDocument(BaseModel):
     replay_manifests: tuple[ReplayManifestDocument, ...] = ()
     terminal_replay: TerminalReplayDisposition | None = None
 
-    infrastructure_stop: InfrastructureStopReceipt | None = None
+    infrastructure_stop: InfrastructureStopReceipt | AttemptedProposalStopReceipt | None = None
 
     @model_serializer(mode="wrap")
     def preserve_historical_bytes(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:

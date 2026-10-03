@@ -12,6 +12,8 @@ from collections.abc import Callable
 from pathlib import Path
 from uuid import UUID
 
+from lab.scorer.credential_path import configured_scorer_dsn_file
+
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run one reserved Farm B baseline cell")
@@ -99,7 +101,10 @@ def main(argv: list[str] | None = None) -> int:
         )
 
         engine = create_engine(
-            _secret(Path(DEFAULT_DSN_FILE)), pool_size=1, max_overflow=0, pool_timeout=5
+            _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)),
+            pool_size=1,
+            max_overflow=0,
+            pool_timeout=5,
         )
         bind_care_baseline_worker(
             engine,

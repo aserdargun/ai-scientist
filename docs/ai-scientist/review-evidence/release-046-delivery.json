@@ -1,0 +1,176 @@
+{
+  "schema": "release-046-delivery.v1",
+  "recorded_at": "2026-10-03T12:43:44.108089+00:00",
+  "release": "0.46.0",
+  "status": "tested_source_delivery_with_known_gaps",
+  "source_references": {
+    "scientist_native": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "tracked_diff_sha256": "ad00666b7ae557ae1538409079ffc6e270d84537e22eb08369761299739cdbb9",
+      "untracked_included": false
+    },
+    "scientist_field_lab": {
+      "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+      "tracked_diff_sha256": "5446147f5d8cb85762334c1c13bd48c03cc4c5532f01e255734f789c892bcdbc",
+      "untracked_included": false
+    },
+    "aos_readonly": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "tracked_diff_sha256": "c14900ebbc1bb9bb5b8b672666cee4c124f6fb374e6af2028aeec3b32eca282d",
+      "untracked_included": false
+    }
+  },
+  "public_base_commit": "67258cdef33032c9a49eeae31c2e2ba26a98ca17",
+  "pre_gate_source_filemap_sha256": "35728cb50db08c8afee14a3b8cbd96418af958aac868a98a9bdc245817ec8c06",
+  "pre_gate_source_files": 1918,
+  "quality_gate": {
+    "overall_exit_code": 0,
+    "commands": [
+      {
+        "command": [
+          "ruff",
+          "check",
+          "."
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit",
+          "-q",
+          "-r",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pytest",
+          "-m",
+          "not gpu and not live"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "mypy",
+          "--strict",
+          "harness",
+          "lab/referee",
+          "lab/analytics",
+          "lab/operating_modes",
+          "lab/llm",
+          "lab/sandbox",
+          "lab/api",
+          "lab/db",
+          "lab/director",
+          "lab/scorer",
+          "lab/training",
+          "lab/cli.py",
+          "lab/reporting.py",
+          "lab/replay.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv",
+          "build",
+          "--wheel",
+          "--out-dir",
+          "<temporary-wheel-directory>"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "python"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "passed": 3439,
+    "skipped": 49,
+    "deselected": 177,
+    "warnings": 517,
+    "pytest_seconds": 266.25,
+    "initial_invocation_exit_code": 1,
+    "initial_environment_failure": "uv unavailable in systemd PATH after five checks passed",
+    "completion": "same source hashes; fixed PATH; wheel build and import smoke exit 0; no repeated pytest",
+    "private_combined_receipt_sha256": "0bc72fe25b42b8be217d32545402ff92a5c3c9247030b7ec6fd6e902d8c52abf",
+    "source_code_unchanged": true,
+    "skip_scope": "opt-in or host-dependent checks not admitted; GPU/live markers deselected"
+  },
+  "tooling_review": {
+    "schema": "release-046-tooling-review.v1",
+    "source_sha256": {
+      "scripts/collect_project_usage.py": "b3ac12f59f9970cfcdfbf8fab43410a14c5a54d9773445a64154181df98022f4",
+      "scripts/publish_reviewed_snapshot.py": "4d4f0416a1106c22eee5e3727a55a609516a0b0bf888ae18a1901f7471f85d21",
+      "scripts/hourly_project_usage.py": "878c1e5ee88080ef12ed69a3068c75a57eb70f270f2ea7393bc36b70f798bc67",
+      "tests/test_project_usage.py": "a0190fbb3141cb983d5b06fe019abc51af801dc2c731740bd5e85987b8280206",
+      "tests/test_reviewed_publication.py": "7afbbf824e65700e3df0201194c3156c7178fcf37439bb0983e95dc305f66831",
+      "tests/test_hourly_project_usage.py": "01d4e77128567198b84740a3c99f3650e3a99ff72d14c029129660b4d9969d13",
+      "scripts/update_development_metrics.py": "9496d7b1bd93de9339af3b06eaed3b1faf2bdd8c4f4879fe9c33c078658e9cc8",
+      "tests/test_development_metrics.py": "7356982db01235b3450065d2f26176b32fd401fc6caa57f1a1dcf6d220b96add"
+    },
+    "reviews": {
+      "collector": "Astra high approved",
+      "publisher_and_hourly": "Astra high approved",
+      "metrics_direct_parent": "root reviewed and 14 focused tests passed"
+    },
+    "focused_tests": {
+      "collector": 11,
+      "publisher_hourly": 49,
+      "metrics": 14
+    },
+    "actual_remote_mutation": false
+  },
+  "privacy": {
+    "new_payload_known_credentials_checked": 6,
+    "known_credential_matches": 0,
+    "strong_secret_matches": 0,
+    "raw_codex_sessions_published": false,
+    "raw_product_database_published": false,
+    "private_source_ancestry_published": false,
+    "old_public_history_logs_retained_unchanged": 14,
+    "new_synthetic_protocol_jsonl_fixtures_reviewed": 35
+  },
+  "product_acceptance": {
+    "run_id": "50ea6463-4589-4213-a2fe-817287f3a323",
+    "state": "completed",
+    "elapsed_seconds": 279.614549,
+    "scores": 12,
+    "model_calls": 0,
+    "gpu_calls": 0,
+    "report_sha256": "3d50f90bfa9767d6e5f76f0f8df65f812ff410d6035e12efdb1dfb9b750bf0fb",
+    "source_proof": "field-lab-field-intent-20261003.json",
+    "cleanup": "Director and 12 Scorer process/cgroup absent; sandbox empty; queue idle"
+  },
+  "not_accepted": [
+    "real_aos_gpu_coexistence",
+    "native_exclusion_producer_consumer",
+    "teacher_training_and_learned_adapter",
+    "automatic_skill_or_model_promotion",
+    "clean_machine_full_install",
+    "positive_remote_mac_browser_readback",
+    "full_original_m0_om_capacity_acceptance"
+  ],
+  "aos_handoff": {
+    "peer_reported_only": true,
+    "live_runtime_changed": false,
+    "native_exclusion_schema": "aos.native-exclusion.v1",
+    "producer_consumer": "open",
+    "next_stage": "approved source/config closure and separately coordinated GPU acceptance"
+  },
+  "usage_coverage": "development observed session counters and three selected product runtime receipts; actual billing/subscription unknown",
+  "publication": "reviewed snapshot from clean public history; actual push/readback retained separately"
+}

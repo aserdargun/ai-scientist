@@ -1,5 +1,384 @@
 # M0 kabul kaydı
 
+## Son CPU teslimi — 2026-10-03, koşular arası seçilmiş bulgu aktarımı
+
+`3873c13b-66fb-475c-916e-d2f28633bc2c` completed: önceki üç LSH/OPTICS/SOM
+bulgusu yeni öneri bağlamına taşındı; 9 baseline + 1 bağımsız LSH ölçümü,
+222,87 saniye. Yeni aday DISCARD; iyileşme veya eğitim iddiası yok.
+İdempotent tekrar, eski raporların korunması, gerçek masaüstü/mobil okuma ve
+Director/10 Scorer/sandbox kapanışı doğrulandı. **3305 test geçti, yedi
+kalite komutu exit 0**. [Kullanım ve kanıt](119-prior-findings-context.md).
+Bu, açık seçimle bağlam aktarımıdır; otomatik öğrenme/skill terfisi, gerçek
+öğretmen ve AOS GPU paylaşım/iptal kabulü açık kalır. Native MAIN değişikliği
+ve AOS birlikte çalışma ayrı inceleme yolundadır; merge/push/deploy yapılmadı.
+
+## Son gerçek yerel araştırma — 2026-10-02
+
+`e5ec820a-8abb-4100-ba89-3f210209c6ed`: **6/6 öneri, S1×2/S2×4,
+LSH×3/SOM×2/OPTICS×1**, 9 başlangıç + 6 bağımsız aday ölçümü, SQL completed.
+Admission→terminal **934,062 s**, gerçek **8278 token**, tepe VRAM **12890 MiB**.
+Altı karar DISCARD; bu sentetik snapshot'ta iyileşme yok. 109 checkpoint,
+15 Scorer artefaktı ve altı kararın replay'i doğrulandı; altı GPU tahsisi ve
+geçici süreç/DB temiz. Replay'in özel artefakt kökü hatası ayrı ürün dalında
+düzeltildi; ana native kaynak `55c5300` korunur. AOS, public araştırma,
+holdout ve tüm M0 kabulü hâlâ açıktır. [Rapor ve sınırlar](118-six-proposal-local-research.md).
+
+## Son CPU ürün teslimi — 2026-10-02, PostgreSQL OMR akışı
+
+Ayrı `feat/omr-stream-v1` dalında owner kapsamlı PostgreSQL seçimi uzun CPU
+akışına bağlandı. **192 eğitim + 4224 izleme satırı / 66 parça / 227,58 s**;
+gerçek UTC, kesirli örnekler, zaman boşlukları ve aynı fit korunarak
+bağımsız `completed` tanı raporu üretildi. Gerçek HTTP iptali sonrası etkin
+kaynak sorgusu/bağlantısı **0,174 s** içinde kapandı. Özgün timeout, yabancı
+owner, idempotency, eş zaman/fazla satır reddi geçti; geçici işçiler ve DB temiz.
+
+Veri PostgreSQL'de üretilmiş fixture'dır; endüstriyel araştırma doğruluğu
+veya öğrenilmiş adaptör değildir. Son kalite kapısı: **3198 passed, 7 skipped,
+177 GPU/live deselected; yedi komut exit 0**.
+[Kapsam ve kanıt](117-bounded-omr-stream.md).
+Ana `55c5300` ve AOS kaynak/config pinleri korunur; yeni özellik ayrı yerel
+daldadır, merge/push/deploy yapılmadı. Tarayıcıda görsel kabul, gerçek
+crash/resume, endüstriyel kaynak ve native AOS/GPU kabulü açık.
+
+## Son ek — 2026-10-02, gerçek kabul için belge süresi
+
+Yaklaşık 300 saniyelik CPU baseline'ın ikinci AOS GPU çağrısından önce
+belgeyi tüketmesi düzeltildi. Yeni launch girdisi tam sayı 1–900 saniye
+seçebilir; varsayılan 300, üst sınır özgün pinli yetkinin bitişidir.
+Eski belge/yetki yenilenmez. **61 hedefli kontrol ve tam kapıda 3033 test
+geçti; yedi komut exit 0.** [Kanıt](review-evidence/native-artifact-window-20261002.json).
+Yeni kaynak/config paketiyle başarılı araştırma sırasında gerçek queued
+GPU devri, ardından ayrı deneyde inflight iptal ve fiziksel cleanup
+[planı](116-coordinated-acceptance-window.md) hazırdır. AOS karşı incelemesi
+ve yeni gerçek GPU koşusu hâlâ açıktır; aşağıdaki 3002 testlik kayıt önceki
+kaynak sürümünün tarihsel kanıtıdır.
+
+## Güncel sonuç — 2026-10-02, retained yaşam döngüsü düzeltmesi
+
+İlk control düzeltmesinden sonra provider hazırlığı ve tüm resolution
+zincirinin de özgün süreyi aştığı bulundu ve düzeltildi. Gerçek AOS
+interpreteri üzerinde **CPU fixture** bileşimi: 106 doğrulama, 636 taze
+snapshot ve 16 native Codec; **23,916 saniye / 30 saniye sınırı**, exit0.
+İç control/provider sınırları 3 saniye, metadata isteği 2 saniye kalır;
+yetki, fencing, iptal ve cleanup denetimleri korunur. **88 odaklı kontrol
+ve tam kalite kapısında 3002 test geçti; yedi komut exit0.**
+[Son kaynak, ölçüm ve kapı kanıtı](review-evidence/native-retained-lifecycle-scope-20261002.json).
+
+Yeni APIv6 süiti ve AOS v8'in boş alanı dosya düzeyinde hazırdır. Son inceleme,
+300 saniyelik artifact belgesinin yaklaşık 300 saniyelik CPU baseline'dan
+sonra çekişmeli GPU kabulüne yetmediğini gösterdi. Açıkça seçilen, özgün
+yetkiye kırpılan yeni belge süresi ve iki ayrı deney için
+[kabul koşusu planı](116-coordinated-acceptance-window.md) hazırdır;
+bu değişiklik yukarıdaki yeni 3033 testlik kapıyla doğrulandı. Yeni
+servis/token/generation/yetki saati veya GPU koşusu başlatılmadı. Kaynak/config
+eşleşmesi, gerçek retained resolution ve ikinci AOS görevi, çekişmeli adil
+GPU ilerlemesi, ayrı kontrollü iptal/toparlanma ve aynı koşunun bağımsız
+rapor/kapanış kanıtı **açıktır**. Doğrudan oturum mesaj kanalı erişilemiyor;
+yeni kaynaklara AOS onayı varmış gibi davranılmaz. Lisans ve genel CI
+işleri bu runtime kabulünden ayrıdır.
+
+### Son gerçek koşu ve önceki control düzeltmesi
+
+[Son gerçek v7 denemesi](review-evidence/native-v7-retained-acceptance-failed-20261002.json):
+native açılış ve fence25 gerçek AOS çıkarımı geçti; ilk AOS görevi retained
+`post_intent_authorization` aşamasında başarısız oldu, pipeline exit1.
+Scientist v5 deneyi, ikinci AOS görevi ve rapor doğrulaması başlamadı.
+Modelin fiziksel drain/release kanıtı, kendi native servislerinin ve
+masaüstünün kapanışı, API MainPID0 ve korunan clone DB'nin exit0 durması
+doğrulandı. Arayüz/tünel açık. Tek control içindeki tekrarlı doğrulamaların
+maliyeti azaltıldı: tam CPU fixture zinciri özgün üç saniyelik sınırda
+2,729 saniyede tamamlandı. 83 odaklı kontrol ve son tam kalite kapısı
+2997 test/yedi komut exit0 geçti. Bu kaynak ve CPU teslimidir; yeni gerçek
+retained resolution, adil birlikte çalışma ve kontrollü iptal açıktır.
+[Son kaynak/CPU teslimi](review-evidence/native-retained-control-scope-20261002.json).
+[Ayrıntı, ölçümler ve AOS aktarımı](115-native-retained-resolution-wiring.md).
+
+### Bu denemeden önce tamamlanan kaynak ve hazırlık
+
+[Tekrarlı çağrı için kaynak teslimi](115-native-retained-resolution-wiring.md):
+retained factory, özgün aktif request/deadline ve bağımsız proof bağlantısı
+kaynakta hazır; AOS kaynak incelemesi uyumlu. Final imajla yedi kalite komutu
+exit0/2959 test geçti. Bu tarihsel kapı son performans düzeltmesinin kabulü
+değildir. Eski APIv4 süresi uzatılmadı. Yeni APIv5 gerçek exit0 ile
+başladı; generation/capability ve altı eski deneyin değişmediği doğrulandı.
+Native paket önce disabled olarak üretildi, karşı inceleme ardından 141
+kaynak piniyle enabled yapıldı ve yukarıdaki gerçek v7 denemesinde kullanıldı.
+[CPU hazırlığı ve açık sınırlar](review-evidence/api-v5-native-preparation-20261002.json).
+
+[İlk uçtan uca rapor](114-first-native-research-report.md): gerçek AOS model
+çağrısı ve Scientist tek sentetik snapshot araştırması completed;
+AOS rapor save/readback eşliği, canonical23/24done ve fiziksel model/işçi
+kapanışı doğrulandı. İkinci AOS admission bağımsız resolution eksikliğiyle
+engellendi; fairness ve kontrollü iptal açık. Bu koşu aşağıdaki geniş M0,
+public veri, çok önerili araştırma ve eğitim kabullerini tamamlamaz.
+
+
+**2026-10-02 önceki native kabul gözlemi:** İlk AOS hello görevi gerçek model,
+başarılı trace ve tam dosya içeriğiyle geçti; AOS oturumu bağımsız doğruladı.
+AOS kontrol sözleşmesiyle açılan `6dd84567` Scientist araştırması bir öneri ve
+bağımsız primary seed0 ölçümü üretti. Veri sentetik çalışma modlarıdır;
+bu sonuç Public27 araştırma veya tamamlanmış rapor değildir.
+Exception kapanışı `stop_requested` yazmış fakat ilk stop event kaydı eksik
+kalmıştır; recovery `first_stop_deadline_unavailable` nedeniyle ilerlemedi.
+Özgün süre doldu, eski run/deadline yenilenmedi. Director ve model child
+MainPID0; eski PID/cgroup yok, canonical Lab request done/token22;
+model child gözlem tepesi12760MiB. Terminal araştırma raporu/AOS readback,
+adil eşzamanlı ilerleme ve ayrı kontrollü iptal kabulü açıktır.
+İleriye dönük artifact yolu ve atomik/fenced stop-event düzeltmesi uygulandı;
+11 artifact regresyonu ve14 gerçek PostgreSQL rol kontrolü geçti. Son
+kaynak kapısı2854test/tüm7komut exit0; AOS salt okunur karşı incelemesi geçti. Yeni
+GPU/araştırma kabulü henüz çalıştırılmadı.
+[Düzeltme ve sıradaki kabul](113-native-research-closure-fix.md).
+[İlk native başarı ve eksik araştırma kapanışı](review-evidence/native-aos-partial-acceptance-20261002.json).
+
+**2026-10-02 gerçek native AOS model çağrısı, başarısız foreground görevi:**
+Gerçek Decider `system1` çağrısı `ok`; trace gecikmesi52,750s (kuyruk/yükleme
+dahil, saf inference süresi değil). Aynı hello işi POST observer timeout
+sonrası salt okunur gözlemle bulundu; ikinci POST veya restart yapılmadı.
+Root operatör hatası ve özgün hello onay süresinin kaçırılması nedeniyle görev
+`failed`; başarılı foreground veya araştırma kabulü verilmez. Ortak scheduler
+tek AOS isteğini fiziksel drain kanıtıyla tamamladı: cgroup boş/GPU yok,
+late-start fencing, `release_outcome=released`. Root aynı model worker'ın
+MainPID0/cgroup yok/original PID yok durumunu ayrıca doğruladı. Canonical18done,
+VRAM46MiB; worker PyTorch allocated tepesi3635,337MiB, tüm cihaz tepesi
+ölçülmedi. Worker yükleme19,559s/inference1,054s ölçtü. Kendi AOS/broker servisleri ve masaüstü normal
+cleanup exit0 ile kapandı. Scientist araştırması, AOS rapor doğrulaması ve
+ayrı kontrollü iptal çalıştırılmadı. Bir sonraki kapsam için POST belirsizliğini
+aynı işe bağlayan ve onayı polling süreci içinde yetiştiren operatör hazırlanıyor.
+[Gerçek çağrı, başarısızlık ve fiziksel cleanup kanıtı](review-evidence/native-aos-foreground-failed-20261002.json).
+
+**2026-10-02 gerçek native AOS CPU açılış/kapanışı:** Gerçek checkout ve mevcut
+factory ile izole broker, AOS konsolu ve pinned Docker masaüstü açıldı. AOS
+süreç doğumundan hazır journal kaydına11,395s; CPU artifact doğrulaması7,342s.
+Güncel generation/namespace/cgroup, imaj/mount/lifecycle ve HTML byte eşliği
+bağımsız doğrulandı; journal özgün240s startup sınırı içindedir. Stale socket,
+geçici exec kimlik okuması ve root302 observer hataları korundu; aynı canlı
+generation yeniden gözlendi. Model çağrısı öncesinde gerçek300s artifact
+freshness dolduğu için sahip olunan iki servis normal kapatıldı; MainPID0,
+boş cgroup ve masaüstü kaldırımı geçti. Canonical17done değişmedi; yeni GPU
+isteği0. Bu gerçek CPU entegrasyonudur; model/GPU kabulü ve araştırma açık.
+[Açılış, hatalar ve bağımsız cleanup kanıtı](review-evidence/native-aos-cpu-startup-cleanup-20261002.json).
+
+**2026-10-02 güncel ortak runtime hazırlığı:** Mevcut ortak GPU slice'ın RAM
+16 GiB/swap0/CPU200%/128 task limitleri kernel üzerinde doğrulandı. Yeni izole
+API18602 gerçek exit0 ile açıldı; taze principal/generation, üretim capability
+GET eşliği ve sentetik mode kaydının dar Scorer RPC/Planner bağlantısı geçti.
+AOS gerçek PID/generation/cgroup ve 1 deney/900s/30000token bütçesini bağımsız
+doğruladı. Scheduler salt okunur kontrolde17done/0active/0queued; rezervasyon
+alınmadı. Model/broker/GPU/deney/dispatcher başlamadı. Tam native yapılandırma
+incelemesi, gerçek birlikte çalışma ve kontrollü iptal kabulü açık. Aşağıdaki
+tarihli kayıtların henüz çalıştırılmadı ifadeleri kendi gözlem anına aittir.
+[Doğrudan koordinasyon ve kanıt hash'leri](06-aos-coordination.md).
+
+**2026-10-02 gerçek native boş envanter toparlanması:** Yeni `c960933b` koşusu
+gerçek owner/27profil/81plan ile stop istedi. Hazırlık observer'ı yanlış Director
+rolüyle sayım yaptığı için exit1 verdi; hata korundu, yetkiler genişletilmedi.
+Normal recovery özgün120s içinde exit0 ile `stopped` ve hash-doğrulanmış rapor
+üretti:81unattempted/0score/0job/0drain, aynı native worker için gerçek
+register→seal→retire. Root üç unit MainPID0/cgroup boşluğunu bağımsız doğruladı.
+ClonePID0 ve eski iki expired run değişmedi. Bu gerçek CPU cleanup kanıtıdır;
+public veri ölçümü veya ortak GPU kabulü değildir.
+[Native kanıt](review-evidence/empty-baseline-stop041-native.json).
+
+**2026-10-02 güncel boş deney stop düzeltmesi:** 0041 additive
+register/seal/retire kanıt yolu uygulandı ve bağımsız incelendi. 163 odaklı CPU
+testi ve ayrı PostgreSQL veritabanında 14 gerçek rol kontrolü geçti. Original
+deadline, owner/generation, nonempty plan ve mevcut job kapanış yolu korunur.
+Offline güncel image build/parity exit0; yeni kaynak kapısı2853test/tüm7komutexit0.
+SQL fixture'ları gerçek süreç temizliği değildir: yeni native stop/recovery,
+Public27 ölçümü ve ortak GPU kabulü henüz çalıştırılmadı. Eski iki expired run
+değiştirilmedi. AOS yeni disabled paketin 118 kaynak hash'ini doğruladı ve kendi
+izole workspace'ini hazırladı; eski yetkiler yeni koşuda kullanılmayacak.
+[SQL kanıtı](review-evidence/empty-baseline-stop041-sql.json).
+
+**2026-10-02 güncel gerçek kapanış:** V5 tek consumer exit0 ile immutable
+retained no-admission closure kaydı oluşturdu; Scientist witness exit0 ve iki
+oturumun bağımsız schema28/readback/süreç temizliği kontrolleri geçti. Eski
+intent/kanıt/deadline değişmedi. Bu kapanış engeli çözüldü; gerçek GPU devri,
+adil AOS birlikte çalışma ve Public27 araştırma/holdout kabulleri hâlâ açık.
+Son kaynak kapısı2833test/tüm7komutexit0. İlk score job öncesi duran81planlı
+native baseline'ın boş iş envanteri kapanış dalı gerçek koşuda reddedildi;
+kanıta dayalı düzeltmesi inceleniyor, CPU ölçümü tamamlanmadı.
+[Kapanış kanıtı](112-aos-retained-closure-coordination.md),
+[Public27 açık iş](110-public-local-qwen-preparation.md).
+
+**2026-10-01 gerçek cleanup envanter düzeltmesi:**
+Tek observer denemesi proof/mint öncesi exit2; eski request/DB27 korundu. Gerçek
+10. gpu_runtime_bindings surface eksikliği atomic/provider/AOS okuyucularında
+düzeltildi;2519CPU/yedi-komut kapı exit0. V3source76 readonly hazırlığı geçti;
+gerçek closure ve GPU/AOS kabulü henüz gerçekleşmedi, sayılar değişmedi.
+[Hata, düzeltme ve kalan gerçek kabul](111-runtime-binding-cleanup-fix.md).
+
+**2026-10-01 gerçek public araştırma hazırlığı:**
+Mevcut research-authorized public27 manifesti, ayrı local-Qwen registry/6 öneri
+ve principal ile hazırlandı; mevcut dosya/schema okuyucuları ve root bağımsız
+kontrolü exit0. DB/Planner/ölçülmüş holdout güncel readback, model/admission
+çalışmadı. Tarihsel135 proof güncel araştırma kabulü değildir; sayılar değişmedi.
+[Tamamlanan hazırlık ve kalan kapılar](110-public-local-qwen-preparation.md).
+
+**2026-10-01 izole Scorer deployment:** Credential pathname bütün alt süreç ve
+consumer'lara taşındı; geçersiz explicit seçim default ledger'a düşmez. Gerçek
+systemd Scorer worker yeni Postgres'e profile yazdı; ana DB unchanged, worker ve
+konteyner cleanup doğrulandı. Bu routing kanıtı model puanlaması/GPU araştırması
+değildir; M0 sayıları değişmedi. [Teslim ve kanıt sınırları](102-scorer-deployment-isolation.md).
+
+**2026-10-01 gerçek araştırma başlangıcı:** Director dispatch/resume, ortak GPU
+slice limitlerini servis başlatmadan doğrulayacak şekilde düzeltildi. Canlı
+slice'ın dört aggregate limiti infinity; mevcut ortak kaynak değiştirilmedi.
+Ana ledger'daki owner kanıtı olmayan running/stop_requested koşulara dokunulmadı.
+Scientist-only local-Qwen yolu AOS desktop engelinden bağımsızdır; gerçek yeni
+araştırma ve AOS birlikte çalışma kabulü henüz gerçekleşmedi.
+[Güncel yürütme yolu ve engeller](101-native-runtime-admission.md).
+
+**2026-10-01 native runtime yetkisi:** Eski readback'i benimsemeyen bounded native
+artifact receipt/current-rights sağlayıcısı ve ACK'ten bağımsız actual service
+binding capture kodu eklendi.54 fixture kontrolü; kalite2057 passed/yedi komut
+exit0. Yeni helper/CLI gerçek runtime ile henüz çalıştırılmadı. Native AOS görevi
+AOS data workspace istiyor; kullanıcı salt okunur sınırı için yanıt bekleniyor.
+Gerçek GPU/araştırma/Scorer/AOS kabulü açık; sayılar değişmedi.
+[Geçen, kalan ve AOS beklentisi](101-native-runtime-admission.md).
+
+**2026-10-01 native60 ve gerçek model dosyaları:** AOS configured-source verifier
+ve native bootstrap factory bağlantısı hazır; dört desktop hook'u ve manifest
+deployment digest uyumu düzeltildi. Yanlış uygulama Python ortamı dependency
+kontrolünde reddedildi; mevcut doğru model ortamıyla Decider/Bonsai artifact ve
+native dependency kontrolleri exit0/8,300 saniyede geçti. Model/GPU başlatılmadı;
+Bonsai projection pin doğrulanmış değil. Güncel protocol/lab baseline ayrımı
+incelendi ve native60 disabled config üretildi.137 odaklı kontrol; zorunlu kalite
+2024 passed/yedi komut exit0. Gerçek launcher/current authority/rezervasyon ve
+uçtan uca GPU araştırma kabulü açık; **11 geçti/7 kısmi/4 açık** değişmedi.
+[Geçen, kalan ve AOS aktarımı](100-configured-source-model-readback.md).
+
+**2026-10-01 AOS native factory/provider:** Actual ayrı AOS servisinde kendi
+native factory durable before-send audit yazdı; Scientist bağımsız SQLite ile
+cevap öncesi doğruladı.3 control/20 native provider isteği, durable resolution,
+pause/generation reddi ve iki original process absence geçti; exit0/12,924 saniye.
+Runtime/profile/clock sentetik CPU; model/GPU/Scorer çalışmadı. Yeni configured
+source/current runtime ve gerçek GPU kabulü açık, kabul sayıları değişmedi.
+[Geçen/kalan/aktarılacaklar](99-native-aos-bootstrap-provider.md).
+
+**2026-10-01 native bootstrap/config bağlantısı:** Actual AOS native58 profili,
+async bootstrap API ve aynı Controller/Store history2.0 factory uygulanıp
+doğrulandı. Üç mevcut yerel çalışma profili ve disabled policy gerçek manifestlerle
+üretildi.133 odaklı kontrol geçti; actual AOS interpreter API kontrolü sentetik
+CPU runtime kullandı. Gerçek expected/current authority, durable writer ve
+native launcher bağlantısı açık; model/GPU/Scorer çalıştırılmadı. Kabul sayısı
+değişmedi. [Uygulama, sınırlar ve AOS aktarımı](98-native-bootstrap-configuration.md).
+
+**2026-10-01 gerçek servis bağlantısı:** FD0 inherited SOCK_SEQPACKET provider
+ayrı actual AOS ve Scientist systemd servisleriyle çalıştı.20 doğrulanmış provider
+isteği, durable resolution/fresh admission, unchanged private Store ve iki özgün
+sürecin yokluğu kanıtlandı; parent exit0/11,206 saniye. Session/admission yetkisi
+sentetik; GPU/model/Scorer çalıştırılmadı. Gerçek config/principal wiring ve GPU
+kabulü açık; kabul sayısı değişmedi.
+[Geçen, kalan ve aktarım](97-real-service-provider-bootstrap.md).
+
+**2026-10-01 iki interpreter arasında bağımsız provider:** AOS açık resolution
+transaction'ı sırasında aynı broker control nesnesinden bağımsız budget ve
+no-admission snapshot okuyabiliyor. Existing v3 socket → durable resolution →
+fresh admission CPU birleşimi actual AOS ortamında exit0/3,318 saniye;81 odaklı
+kontrol geçti. Unit/session authority sentetik, model/GPU/Scorer yok. Canlı
+FD bootstrap ve gerçek current provider/dependency closure hâlâ açık.
+Kabul sayısı değişmedi. [Bağlantı, sınırlar ve aktarım](96-authenticated-retained-provider.md).
+
+**2026-10-01 özgün fiziksel readback:** Mevcut retained authority altında tek
+query-only transaction ve bağımsız süreç/cgroup/GPU gözlemleri public facade'a
+bağlandı. Kaynak pin/drift ve bootstrap yetkisi reddedilir; başka lane ilerleyebilir.
+77 CPU kontrolü geçti; OS/GPU gözlemleri sentetiktir. Authenticated AOS provider
+ve gerçek model/GPU kabulü açık, kabul sayısı değişmedi.
+[Uygulama ve AOS beklentileri](95-original-physical-cleanup-readback.md).
+
+**2026-10-01 gerçek worker payload bağı:** `_prepare()` ürettiği payload hash'i
+ile broker zarfı hash'inin karıştırılması iki regresyonla kanıtlandı ve düzeltildi.
+Zarfın özgün bytes/schema/principal bağı korunur; child kendi canonical payload'ına
+bağlanır.29 birleşik CPU kontrolü geçti. Unit/model gözlemleri sentetiktir; gerçek
+model/GPU kabulü açık. [Hata, düzeltme ve kanıt](94-worker-payload-envelope-binding.md).
+Kabul sayıları değişmedi.
+
+**2026-10-01 trusted source bütçe okuyucu:** Broker retained-target authority
+üzerinden özgün Store intent/allocation/readiness kolonları bağımsız okunabiliyor.
+Yeni socket op/kota/ID/GPU allocator yok.24 CPU kontrolü geçti; bootstrap infer
+capability ve okuma sonrası revoke reddedildi. Ayrı AOS interpreter'a authenticated
+source-provider bağlantısı, fiziksel readback ve gerçek model/GPU kabulü açık.
+Kabul sayısı değişmedi. [API ve sınırlar](93-trusted-retained-budget-reader.md).
+
+**2026-10-01 iki ortamlı AOS bağlantısı:** Actual AOS resolution54 API'si
+Scientist gerçek evidence-v3 socket'ine bağlandı. Ayrı Python ortamlarında
+capability/reconcile → immutable ACK → durable resolution → yeni admission
+CPU koşusu exit0/1,389 saniye verdi. Eski istek replay reddedildi, original
+kayıtlar korundu. Yetki/saat/physical sağlayıcıları sentetiktir; allocation
+öncesi iptal kullanıldı. Model, Scorer ve gerçek GPU kabulü açık; canonical
+broker/scheduler henüz mevcut değil. Kabul sayıları değişmedi.
+[Geçen, kalan ve çalıştırılmayanlar](92-aos-resolution-composition.md).
+
+**2026-10-01 bağımsız özgün bütçe:** Trusted Store read adaptörü terminal
+raporunu kullanmadan özgün intent/queue/allocation/readiness sütunlarından
+budget witness üretiyor. İlk saatler ve assigned deadlines yenilenmiyor;
+quota/ID/DB kaydı değişmiyor. 27 birleşik CPU kontrolü geçti. Ortak evidence
+socket şeması korunuyor; AOS trusted witness retention/injection ve journal
+resolution hâlâ açık. [Kaynak, sınırlar ve aktarım](88-aos-independent-original-budget.md).
+Bu teslim gerçek GPU/AOS kabulünü veya kabul sayısını değiştirmez.
+
+**2026-10-01 authenticated evidence socket:** Özgün v1 target authority'ye
+dayalı ayrı evidence-v2 capability/reconcile akışı mevcut socket'e bağlandı.
+110 birleşik CPU kontrolü geçti; normal/retired policy ve gerçek socketpair
+ile iptal kanıtı okuma/tekrar çalıştı. Üç geç expiry/revoke/ACL hatası önce
+regresyonla yakalandı, sonra düzeltildi. Tam şema AOS artifact'iyle aynı;
+38 üyelik yeni AOS kaynak profili tanınıyor. AOS dirty/untracked nedeniyle
+ön kontrol exit2; native journal resolution ve gerçek GPU kabulü açık.
+[Sözleşme, icra ve aktarım](87-aos-evidence-socket-integration.md).
+Kabul sayıları değişmedi.
+
+**2026-10-01 kapanış kanıtı teslimi:** Mevcut Store özgün terminal,
+allocation/drain/no-admission preimage'larını retained-target authority ve
+özgün budget/child/fence zinciriyle okuyabiliyor. Canceled sonuç yayımlanmaz;
+geç revoke transaction'ı geri alır. 78 birleşik CPU kontrolü geçti.
+Tam v2 şema/bundle adayı paketlendi; v1 socket değiştirilmedi. Gerçek AOS
+admission_v2 ön kontrolü dirty/untracked kaynak nedeniyle exit2 verdi.
+Evidence transport/journal resolution ve gerçek GPU kabulü açık.
+[Kanıt, sınırlar ve AOS aktarımı](86-aos-terminal-evidence-delivery.md).
+Bu kaynak teslimi kabul sayısını değiştirmedi.
+
+**2026-10-01 cleanup kapasitesi:** Yeni kabulde özgün süre bütçesine bağlı
+control/grant rezervleri aynı SQLite transaction içinde ayrılıyor. Dolu ledger
+veya infer cache kabul edilmiş hedefin ayrılan cancel/reconcile payını
+tüketemiyor. Sekiz doluluk ve iki geç policy-revoke hatası önce yakalandı;
+180 birleşik CPU kontrolü ve 1640 testlik yedi-komut kalite kapısı geçti.
+Kota/ID tekrarları süre veya yetki yenilemiyor. Bu kaynak/CPU teslimidir;
+caller restart, ortak sözleşme ve gerçek GPU devri açık kalır.
+[Kanıt ve sınırlar](85-aos-cleanup-capacity.md). Kabul sayıları değişmedi.
+
+**2026-10-01 kaynak entegrasyonu:** Scientist `a60e9e2` kontrollü AOS
+çıktısını gerçek yürütücüye bağladı. Özgün istek/bundle/türetilmiş şema ve
+allocation fence'e bağlı worker kimliği persistence/replay öncesinde denetlenir.
+Bonsai dış şeması AOS note80 ile aynı; yeni admission'ın beşinci çıktı pini
+AOS tarihçe sözleşmesinde henüz kabul edilmedi. 173 birleşik CPU testi;
+zorunlu kapı 1618 passed / 7 opt-in skipped / 120 GPU-live deselected,
+yedi gerçek exit0. Bu kaynak/CPU kanıtı M0.AOS.5/7 veya native release'i
+kapatmaz. [Yürütücü kanıtı](82-aos-profile-output-integration.md),
+[AOS aktarım özeti](83-aos-profile-handoff.md).
+
+2026-09-30 öncelik: [güvenli stop ve tek koordineli AOS kabulü](65-coordinated-lifecycle-acceptance.md).
+Running-only stop yarışı ana runtime'da üç regresyonla yeniden üretildi;
+aday CPU kontrolleri geçti. Genel native SQL kabulü ve gerçek GPU devri
+açık; mevcut kabul sayıları değişmedi. AOS salt okunur, deploy/push yok.
+
+Sonraki ayrı55545 native direct denemesi **18 kontrol/exit0** ile gerçek
+inflight Scorer stop→normal automatic recovery→hash doğrulanmış `stopped`
+raporunu ve CPU süreç/cgroup kapanışını kanıtladı. R5 adayında pozitif native
+SQL yolu geçti; diğer native negatifler, üretim geçişi ve gerçek AOS/GPU
+kabulü açık. [İcra özeti](review-evidence/automatic-stop036-native-direct-proof.json).
+Broker principal replay açığı CPU regresyonuyla düzeltilip42 testle doğrulandı;
+mevcut GPU tahsis otoritesi/quarantine korunur. Kabul sayıları değişmedi.
+
+R5 stop kaynakları0036 migration ve regresyonlarıyla çalışma ağacına alındı;
+startup Restart politikası yalnız ayrı inceleme yamasıdır.24 yeni broker
+protokol/cancellation testi geçti; terminal own fixture üzerinde wrong-role
+native RPC42501 ile reddedildi. Birleşik kapı **1317 passed / 7 skipped /
+120 deselected**, yedi exit0. Üretim schema/services/GPU ve AOS değişmedi;
+pending-row CAS/generation/deadline, ortak capability/cancel ve gerçek
+GPU kabulü açık kalır.
+
 Kanıt satırları yalnız icra edilen komut ve saklanan çıktıyla kapatılır. Fixture, gerçek model/veri ve AOS gerçek çalışma sonuçları birbirinden ayrıdır. Başlangıç durumu 2026-09-24.
 
 Güncel kabul özeti: **22 maddenin 11'i geçti, 7'si kısmi, 4'ü açık**; 11 madde henüz kapanmadı. Maddelerin iş yükü eşit değildir; bu oran kodun tamamlanma yüzdesi veya kalan süre tahmini değildir. Ana kalan işler başarılı S2/tam Qwen araştırması ve QLoRA ölçümleri, AOS ile tam araştırma/desktop birlikte çalışma kabulü, public veri araştırma akışı, holdout, kalan güvenlik/strateji uygulaması ve final kalite/PR kapılarıdır.
@@ -685,7 +1064,7 @@ araştırma/desktop kabulü açık. Kabul sayıları 3/13/6 kalır.
 | M0.10 | Her 10 KEEP ve koşu sonunda holdout, yalnız bit; kanarya sızıntısı yok | Açık: 0.32 ana kodda kalibrasyon 0022/0023, sabit 135 hücre matrisi, ilk deadline, geri ödenmeyen rezervasyon ve tam süreç nesli recovery kontrolleri var. Gerçek PostgreSQL session 70379 / exit 0 ile 1 test geçti: 135 sentetik receipt, freeze/readback, canlı kayıtta NULL generation retleri, değişmeyen bütçe ve ilk hücre deadline sonrası replay. 178 özel kaynak hash’i eş; kendi DB/erişim bilgileri temiz. Ana metadata farkı PostgreSQL DDL’ini değiştirmiyor. Bu gerçek 135 worker/ölçüm değildir. Önceki gerçek Farm B kurulum/Scorer okuması 15 görev/87.248 noktada geçti, normalization sentetik. Ana 0.30 wrapper testi session 51300 / exit 0 ile 2 test +72 kontrol geçti; marker sonrası startup tekrarında yeni iş/kota/sonuç yok. Önceki stop/recovery session 4504 / exit 0 çalışan holdout worker/fit konteynerini durdurdu; bitless failure/kota korunumu gözlendi. Bağımsız drain/CAS sırası, gerçek kalibrasyon ve Farm B skorlama, 10 KEEP/run-end/canary açık. `38-care-calibration-execution-review.md`, `review-evidence/care-calibration-031-pg-r3-execution-binding.json`, `34-lifecycle-and-calibration-review.md`, `review-evidence/holdout-030-lifecycle-r10-execution-binding.json`, `32-holdout-integration-review.md`. Gerçek veri kalibrasyonunun tarihli sayacı: `review-evidence/public056-calibration-progress.json`; ilk pre-sandbox hatalı attempt korunur. Onarılan kaynakla ayrı attempt eski deadline içinde 135/135 gerçek ölçümü tamamladı; son suite registration aşamasında launcher exit1 verdi. Sonraki ayrı registrar recovery session 26008 / exit 0 ile iki suite kaydını bağladı; iki attempt'in tüm ölçüm/süre/bütçe satırları değişmedi. Özgün kaynakla bağımsız proof session 58086 / exit 0 ile 135 hücreyi, 15 özeti ve sabit deadline/rezervasyonu doğruladı. Özgün kalibrasyon launcher exit 1 kaydı korunur. Sonraki gerçek public araştırma 18/243 baseline ölçümünden sonra `stop_requested` oldu; wrapper/driver exit 1, canonical owner exit 0 fakat `recovery_required`. Aday/holdout aşamasına ulaşmadı. Süre ve ölçümlü-baseline kapanış düzeltmesi ayrı kopyada sürüyor; araştırma/gerçek holdout kabulü açık. `61-baseline-duration-and-stop-recovery.md`, `review-evidence/public056-research-dispatch-failure-summary.json`. `46-public-measured-calibration.md`, `review-evidence/public056-measured135-readonly.json`, `review-evidence/public056-calibrate-repair-execution.json`, `review-evidence/public056-registration-readonly-diagnosis.json`. |
 | M0.11 | `lab report` HTML merdiven/ledger parity | Geçti: gerçek `lab report` CLI exit 0; 20 öneri/3 baseline sayıları ve KEEP 1/KEEP_SIMPLER 1/DISCARD 5/REJECT 13 dağılımı immutable ledger ile aynı. HTML hash, 21 gerçek sequence/score noktası ve 20 H/V basamağı eşleşti. `report-replay-twenty-027-v3.html` ve `report-replay-twenty-027-v3-outcome.json` (session 82460 / exit 0, 15/15). Önceki verifier hatası ve özgün 905 sn üretim koşusu korunur. Public/gerçek model raporu ilgili araştırma kapılarında açık. |
 | M0.12 | Replay kararı verdict/delta/ci_low bit parity | Geçti: gerçek `lab replay` CLI, aynı 20 önerinin 22 kaydını fiziksel hash-doğrulamalı bloblardan doğruladı: 7 primary + 2 confirmed karar yeniden hesaplandı; 13 scoreless terminal REJECT immutable neden kaydından kontrol edildi. Verdict ve sonlu delta/ci_low/noise float.hex bit eşliği, null alanlar ve tüm kayıtların kapsanması geçti. Scoreless retlerde guard yeniden çalıştırıldığı iddia edilmez. `report-replay-twenty-027-v3-outcome.json` (session 82460 / exit 0, 15/15); önceki eksik/değişmiş blob negatifleri `report-replay-production-pg-cli-022.json`. Public/model replay kabulü ayrı araştırma kapsamındadır. |
-| M0.13 | Qwen3.5-9B gerçek yerel S1/S2, doctor throughput/capacity/egress raporu | Kısmi: son gerçek öneri denemesi 0.25 session 54140 / exit 1; ortak kuyruğa katılmayan canlı AOS llama-server süreci gözlendiği için yalnız Lab test süreçleri durduruldu. Geçerli öneri veya birlikte çalışma kabulü oluşmadı; kaynaklar değişmedi, sahipli modeller kapandı, ticket private review DB’de active kaldı ve tamamlandı sayılmadı. `review-evidence/local-qwen-provider-025-outcome.json`. 0.25 multiline grammar kontrolü gerçek tokenizer/xgrammar ile geçti; GPU/model açılmadı, üretim önerisi değildir (`review-evidence/qwen-multiline-grammar-check.json`). Önceki 0.21 gerçek S2 önerisi JSON sonrası Python AST hatası verdi; sonraki parser/grammar onarımları ana kodda, gerçek başarılı S2 henüz yok. 0.20 ortak AOS kuyruğundaki dört gerçek S1/Decider/S2/Bonsai aritmetik çağrısı geçti (session 52269 / exit 0, 12/12); bu araştırma önerisi değildir. Önceki 0.17 API→Director koşusunda iki gerçek S1 önerisi dört sentetik görevde puanlandı: üç baseline dahil 44 Scorer sonucu, iki DISCARD ham skorlardan doğrulandı; üçüncü S2 Markdown JSON ile reddedildi ve altı önerilik koşu tamamlanmadı (session 40641 / exit 1). Gerçek ≥6 öneri, S1/S2 en az ikişer, onarım sonrası ≤%10 parse hata oranı, 16k bölüm/32k×2 kapasite, tam egress ve AOS birlikte çalışma ölçümleri açık. Yeni GPU denemesi canlı AOS koordinasyonunu bekliyor. `19-local-qwen-integration-review.md`, `22-parallel-m0-integration-review.md`, `06-aos-coordination.md`. |
+| M0.13 | Qwen3.5-9B gerçek yerel S1/S2, doctor throughput/capacity/egress raporu | Kısmi: 2026-10-02 altı önerili gerçek yerel çalışma modu araştırması completed; S1×2/S2×4, LSH/SOM/OPTICS, 15 Scorer ölçümü, 0 parse/repair/fallback. 934,062 s; 8278 token; 12890 MiB tepe VRAM. Altı DISCARD; sentetik tek snapshot üzerinde iyileşme yok. Ayrı daldaki explicit artifact_root replay düzeltmesiyle altı karar birebir doğrulandı; GPU ve geçici işçi/DB kapanışı geçti. Altı öneri/S1–S2/parse alt eşiği karşılandı; 32k×2 kapasite, tam host egress ve gerçek AOS birlikte çalışma hâlâ açık. `118-six-proposal-local-research.md`, `review-evidence/mode-six-research-20261002.html`, `review-evidence/mode-six-research-20261002.json`; önceki kanıtlar `19-local-qwen-integration-review.md`, `22-parallel-m0-integration-review.md`, `06-aos-coordination.md`. |
 | M0.14 | Ortak GPU lease SERVE↔TRAIN noop ve 24k QLoRA VRAM ölçümü | Açık: gerçek TRAIN/noop→SERVE ve 24k/3 adım QLoRA ölçümü yapılmadı. 0.28 komutları, immutable bakım ledger'ı, exact child generation/gate/drain, kira deadline/heartbeat ve kaynak limitleri entegre. Gerçek CPU parent-context probe ve 24 odaklı test geçti; ana tam gate 359 test/exit 0. `training-maintenance/delivery.json`, `training-runtime-corrections-delivery.json`, `parallel-integration-028-quality-gate-binding.json`; ADR 0014/0015. Pinned Unsloth ortamı metadata ile doğrulanmıştır; bu sonuç kapasite veya gerçek model kabulü değildir. Canlı AOS GPU koordinasyonu beklenir. |
 | M0.15 | Kalite kapısı, CHANGELOG, PR base main, merge yok | Kısmi: ana runtime 0.41.0; tam gate 1247 passed / 7 skipped / 120 deselected, yedi komut exit 0. Dağıtılan 306 runtime dosyası geçen gate ile byte eş; offline imaj eşliği doğrulandı. Gerçek ana DB clone yükseltme/geri alma/yeniden yükseltme ve gerçek tek Scorer işi geçti. Session 86085 / exit 0 ile 13 payload ve 0034/0035 dağıtıldı; 47 tablo / 234.073 satır, bütçe/deadline/generation, rol ve ACL korundu. Üç sahipli CPU servisi aktif, tünel aynı. [Gate/imaj](review-evidence/release041-image-gate-r4-summary.json), [dağıtım](review-evidence/release041-deployment-summary.json), [Scorer](review-evidence/release041-worker-process-r3-summary.json). Önceki başarısızlıklar korundu. Remote/auth yok, PR açılmadı; merge yok. |
 
@@ -717,6 +1096,22 @@ kullanılamaz; yeni kapsam ayrıca kanıtlanır.
 P=1, sandbox ≤4 GiB ve ≤2 CPU; AOS/host rezervleri; servis/DB/dependency/port/cache/output/lock izolasyonu; ≥20 GiB boş disk; GPU doluyken health/status/stop yanıtı ve CPU araştırma; kısa adil model dilimleri ve dönüşümlü hizmet sırası. Bunlar M0.AOS.7 ile ölçülmeden kabul edilmez. Başlangıç keşif: `review-evidence/host-inspection.json`; `nvidia-smi` 16,376 MiB, Docker 29.8.1, boş disk ~103 GiB. 11434 ve diğer mevcut listener'lara dokunulmaz.
 
 ## Kanıt günlüğü
+
+- 2026-09-30 AOS kontrol kaynak teslimi: ayrı authenticated
+  capability/status/cancel/reconcile, aynı tek arbiter DB'sinde kalıcı iptal ve
+  terminal receipt, bounded restart uzlaştırması ve unbound child için
+  fail-closed quarantine eklendi. İzole CPU kontrolü 95 passed; public genel
+  gate 1479 passed / 7 opt-in skipped / 120 GPU-live deselected, yedi komut
+  exit 0. [Kaynak teslimi](77-aos-control-source-delivery.md). AOS ortak wire/
+  endpoint/capability teyidi ve gerçek GPU kabulü açık; toplam değişmedi.
+
+- 2026-09-30 R10: 36 CPU baseline, G1/G2 fencing ve gerçek W1 committed CAS
+  gözlendi. Özel gözlemcideki `timedelta` scope hatası nedeniyle parent exit 1;
+  planlanan W1 crash, W2 retry ve drained ledger retry çalışmadı. Bağımsız
+  fiziksel karantina kontrolü exit 0: 37 Scorer + sahipler/recovery/API/parent
+  kapalı, aktif job 0; expired pencere, `stop_requested`/`pending`/rapor NULL ve
+  snapshot değişmeden korunuyor. Terminal/GPU kabulü yok; toplam artırılmadı.
+  [Kanıt ve sınırlar](76-native-r10-quarantine-proof.md).
 
 - Plan başlangıç incelemesi: `docs/ai-scientist/03-architecture-review.md`, `04-m0-review-addendum.md`, `review-evidence/review-results.json`, `review-evidence/host-inspection.json`.
 - İlk typed contract/Referee dilimi: `harness/contracts.py`, `harness/referee.py`, `harness/guards.py`, `lab/llm/router.py`; olumsuz/replay testleri `tests/test_referee.py`.
@@ -777,3 +1172,318 @@ P=1, sandbox ≤4 GiB ve ≤2 CPU; AOS/host rezervleri; servis/DB/dependency/por
 - 2026-09-30 fresh039 tamamlanmış baseline kanıtı: bağımsız readonly R4 doğrulaması session 88992 / terminal `b532aa` / **exit 0**. 27 görev × 3 yöntem × 3 seed = **243** ölçüm; fiziksel çıktı/checkpoint bağları, kaynak manifestindeki ağırlıklar, 27 kalibrasyon özeti, normalizasyon/noise ve 3 typed deney/trajectory çifti özgün üreticiyle float.hex eşit. [Güvenli özet](review-evidence/public243-failed-run-baseline-proof-r4-summary.json). Önceki üç doğrulama hatası korunur. Araştırma run'ı **failed**, proposal sayısı **0**; eski worker terminal/PID kanıtı, gerçek model/GPU/AOS ve holdout kabulü değildir. Kabul toplamı değişmedi.
 
 - 2026-09-30 izole AOS CPU lifecycle: gerçek child süreçleri/SQLite reopen/typed policy/Lab HTTP/console TCP ile eşzamanlı aynı-key start, eski lease retleri ve yeni açık yetkiyle rebind geçti. R2 barrier timeout exit 1 korunur; aynı run üzerindeki R3 devamı **10/10, exit 0**: yetkili stop tekrarı ve foreground ilerlemesi. Normal recovery apply session 92579 / `19632a` / **exit 0**; bağımsız API rapor readback `8f1b36` / **exit 0**, terminal `stopped` ve hash eşliği. [Yama ve kanıt kapsamı](review-evidence/aos042-cpu-lifecycle-summary.json). Canlı AOS değişmedi, fixture desktop/karar motoru etiketli. Orijinal dispatcher exit 1; otomatik terminal stop, gerçek Scorer inflight drain ve model/GPU birlikte çalışma açık. M0.AOS.2/.3 kısmi kalır; toplam kabul değişmedi.
+
+## Native stopped-job expected-row negatives (source af4864d)
+
+Owned PostgreSQL55545, yeni typed run ve ayrı instrumented source: üç
+expected-row CAS negatif çağrısı P0001 ile reddedildi; sonraki normal
+kapanış21 kontrol/exit0 ve bağımsız READ ONLY readback ile doğrulandı.
+SQL0036/ACL/fencing değişmedi. Beş saniyelik post-claim test beklemesi
+üretim zamanlama kanıtı değildir; completion snapshot'ları negatif probda
+okunmadı. Failed R1–R5 kayıtları ve R5 pending deadline korunur.
+[Kanıt](review-evidence/native-stop036-expected-cas.json).
+Actual control-generation race, doğal expiry, native retry, shared-drain
+successor ve gerçek AOS/GPU kabulü açık kalır. Goal tamamlanmadı.
+
+Native özgün closure-expiry reddi ayrıca actual exit0 ile kanıtlandı:
+doğal expiry, exact current job, gerçek Scorer invocation, diğer CAS
+koşulları geçerli, erişilebilir snapshot'lar aynı. Pending R5 kaydı ve
+deadline korunur; cleanup/terminal durum veya first-stop SQL guard kabulü
+değildir. [Expiry kanıtı](review-evidence/native-stop036-expiry-rejection.json).
+Actual control-generation race, native retry, shared-drain successor ve
+gerçek AOS/GPU kabulü açık. Yeni AOS kütüphanelerinin API/wire kaynak şekli
+uyumlu; authority/approval/durable HTTP effects ve ortak runtime kontrol
+yüzeyi henüz bağlı değil. [İnceleme](review-evidence/aos-new-library-source-review.json).
+
+Native terminal-row retry yeni R7 CPU fixture'ında kanıtlandı: eski running
+expected-row P0001 ile reddedildi, güncel failed expected-row iki tekrarında
+yetkili snapshot değişmedi. Normal commit/otomatik recovery ardından ayrı
+Migrator READ ONLY readback stopped/drained/completed, tek completion/outcome,
+sıfır aktif job ve eş report hash gösterdi. 21 normal kontrol, actual wait
+exit0. [Kanıt](review-evidence/native-stop036-retry-proof.json). Yukarıdaki
+native retry açık kaydını bu dar kanıt günceller; actual control-generation
+yarışı, shared-drain successor ve gerçek AOS/GPU hâlâ açıktır. Test-only
+post-claim barrier ve RPC hook üretim zamanlama kabulü değildir.
+
+Resumed-stop sahiplik aktarımı regresyonu önce üç failure/exit1, gerçek
+receipt.owner tuple'ını iki dönüş yolunda aktarınca 41passed/exit0.
+Generation/deadline/SQL değişmedi; launcher exact G2 tuple'ı recovery'ye
+taşır, özgün worker exit1 kaybolmaz. [Regresyon](review-evidence/resume-owner-stop-regression.json).
+Actual native G1 crash→G2 resume ve etkin runtime kabulü henüz değildir.
+
+Yeni native G1/G2 fixture'ı dar generation fence'i gerçekten kanıtladı:
+exact own G1 pidfd crash, normal deadproof/drain/CAS ile canlı canonical G2,
+aynı deadline/hash, gecikmiş G1 close P0001 ve değişmeyen G2 snapshot.
+20 kontrol geçti; overall exit1. G2 frozen calibration önkoşulu eksik olduğu
+için failed/reportNULL; controlled terminal stop/toparlanma geçmedi.
+[Kapsam ve başarısızlık](review-evidence/native-controlgen036-partial.json).
+Eski koşular reset edilmedi; R2 stop_requested, R3 failed; süreç/cgroup
+ölümü doğrulandı, GPU release ölçülmedi. M0 kabul toplamı değişmedi.
+AOS0019 artık durable HTTP journal ve optional service/UI wiring içeriyor;
+expired unsent stop approval liveness kaygısı kaynakta bulundu, AOS kendi
+regresyonuyla doğrulamalı. [Güncel kaynak incelemesi](review-evidence/aos-http-journal-source-review.json).
+Ortak runtime/version/capability/lost-ACK reconciliation ve gerçek GPU
+kabulü hâlâ açık; AOS kaynaklarına/süreçlerine müdahale edilmedi.
+
+Aktif primary proposal stop için ayrı SQL0037/Director kaynak adayı eklendi;
+SQL0031 zero-admission guard ve SQL0036 producer korunur. Son genel gate
+1360passed/yedi komut exit0. Yeni ayrı PG55546 migration ve 13 native
+role/ACL/guard kontrolü geçti; gerçek admitted run veya inflight cancellation
+çalıştırılmadı. Ana servisler güncellenmedi. İlk gate/fixture observer hataları
+korundu. [Kapsam ve kalan kabul](66-attempted-proposal-stop-candidate.md),
+[Kaynak bağı](review-evidence/attempted-proposal-stop-candidate.json).
+Gerçek post-calibration G1/G2 + primary stop, diğer proposal fazları ve AOS/GPU
+release kabulü açık; M0 kabul toplamı değişmedi.
+
+Yeni native kalibrasyon/primary stop denemesi gerçek süreçlerle başlatıldı;
+kalibrasyon gözlem sınırında tamamlanmadı, overall exit1. Typed stop ACK sonrası
+exact süreç/cgroup quiescence doğrulandı; ledger stop_requested/reportNULL,
+beş partial baseline score ve sıfır aktif job kaldı. Proposal/G1 crash/G2 resume
+aşamaları çalışmadı; deadline reset edilmedi. Test observer hata yolunda launcher
+cleanup'ını beklemedi; R5 kaynak taslağı bunu gideriyor, henüz yürütülmedi.
+[Ayrıntılar](67-native-calibration-stop-and-aos-preflight.md).
+Actual AOS worker dosyaları artık mevcut; runtime_v1 preflight dirty/untracked
+checkout nedeniyle admissionfalse/exit2. Wire boolean-versus-integer regresyonu
+giderildi; kaynak profilleri GPU runtime admission yerine geçmez. Native terminal
+stop/toparlanma, ortak capability ve gerçek GPU kabulü açık kalır.
+
+
+### R5 güvenli gözlemci ve ayrı CPU fixture hazırlığı
+
+R5 hazırlığı üretim kaynak HEAD `01dab7d97a97c4402ce416cebc6506f22834c131`
+üzerinden yapıldı. Gözlemci mevcut launcher handle'larını aynı özgün kapanış
+sınırında bekliyor; observation timeout süreç sonlanması sayılmıyor. Üç bağımsız
+CPU waiter testi geçti. Gerçek, yalnız bu oturumun oluşturduğu systemd parent
+`KillMode=process` ile exit7 verdi; kendi child'ı doğal tamamlandı, PID yokluğu
+ve boş birim kontrol edildi. Bu kontrol native terminal stop veya GPU release
+kanıtı değildir.
+
+Yeni ayrı PG55547 normal dört rol/SQL0037 migration ve boş-run kontrollerini
+exit0 ile geçti; dört sentetik aile kuruldu (256 train / 384 eval). Yeni istek
+bütçesi 1800 saniye / 1 deney / 0 model token; eski R4 run/deadline/results
+korundu. 469 dosyalı kaynak manifesti SHA256
+`c0cce5c394ce5535b2c832b3edc204f89e2f64c88443b080d654587989904e59`;
+izole kopyada yalnız post-calibration ve gerçek nonbaseline score-claim test
+hook'ları var. Global Director P1 lock aynı inode'a bağlı, yeni tahsis otoritesi
+yok. Kurulum sonrası run sayısı sıfır doğrulanarak yalnız bu PG durduruldu,
+verileri korundu. Ana servisler ve AOS değiştirilmedi.
+
+R5 native koşusu henüz başlamadı: uzun parent wrapper incelemesi,
+G1 kalibrasyon → G2 resume → gerçek primary claim → typed stop → terminal
+rapor/physical drain kanıtı kalıyor. AOS/GPU ortak kabul de açık.
+Toplam **11 geçti / 7 kısmi / 4 açık** değişmedi. Ayrıntılı özel makine
+kanıtları `data/runtime/parallel-m0/native-proposal-stop037-r5-prep` ve
+`root-r5-waiter-review` altında; sırlar ve ham kayıtlar yayımlanmaz.
+
+
+R5 CPU native koşusu başladı: `4f4f0112-c450-49d2-86f8-fe94b15e9179`.
+2026-09-30 12:10:16 UTC readonly gözleminde running/gen1/active,
+6 completed Scorer job, sıfır calibration; özgün deadline
+12:36:42.576486 UTC. Parent invocation `eb422a71608c412dbe4811fba2cb9775`,
+2GiB/1CPU/128tasks/swap0/2100s/KillMode=process; gerçek API ve Director
+birimleri active doğrulandı. Başlangıç kapısı ana sistemde queued/current-owned
+run ve queued/running Scorer job bulunmadığını doğruladı. Eski ownerless ana
+satırlar değiştirilmedi. G1→G2/primary-stop/terminal-report aşamaları bu
+ara gözlemde henüz kanıtlanmadı; koşu tamamlanmış sayılmıyor. SQL ölçümünde
+Director rolünün raw calibration okuması 42501 ile reddedildi; mevcut migrator
+rolüyle readonly gözlem yapıldı, GRANT verilmedi. Ana/AOS/GPU runtime değişmedi.
+
+
+R5 son gözlem: actual exit1 / 1296.729585s / sourceunchanged. 36 baseline
+score + gerçek frozen calibration, G1 crash/G2 native resume ve delayedG1
+ret geçerek 22 ara kontrol tamamlandı. FakeLLM için 0 token bütçesi öneri
+başlamadan budget_exhausted yaptı; primary/stop/terminalreport çalışmadı.
+Ledger failed/reportNULL; budget/deadline reset edilmedi. Ayrı cleanup exit0:
+exactowners dead+cgroupempty, allScorers physicallyquiescent, activejobs0;
+parent/API inactive/originalPIDabsent. Yalnız ownPG stopped/storagepreserved.
+Bunlar tam stop/GPU kabulü değildir. Retry invocation ancestry ve planlı
+unadmitted primary completion kaynak sorunları için regresyon/SQL aday planı
+sürüyor. [Ayrıntı](68-native-r5-calibration-and-budget-preflight.md),
+[Makine özeti](review-evidence/native-stop-r5-partial.json). Toplam değişmedi.
+# 2026-09-30 SQL0038 / native R6 güncellemesi
+
+SQL0038 ve Python attempted-stop uygulaması yerel `4e1bb41` commit'inde;
+zorunlu yedi komut exit0, 1440 CPU test geçti. Fresh native SQL0038 kurulumu
+ve 36 baseline hücresi geçti; G1/G2 fencing dahil 22 ara kontrol doğrulandı.
+Eski fake senaryonun `features` önerisi, ilk immutable `hparam` seçimine
+uymadığından primary öncesinde reddedildi. Inflight stop ve stopped rapor
+halen açık; M0 toplamı yükseltilmedi. Fixture süreçleri fiziksel kanıtla
+temiz kapandı, ana runtime/AOS değişmedi. Ayrıntılar:
+[Native R6](69-native-r6-provider-intent-and-cleanup.md).
+# 2026-09-30 native R7 / SQL039 güncellemesi
+
+Gerçek primary claim running iken typed stop ve tekrarlı stop doğrulandı.
+Kapanış, mevcut SQL0037'de olmayan task_scores identity sütunları nedeniyle
+42703 verdi. Ek SQL0039 düzeltmesi aynı gerçek kayıtlarla önce kırmızı,
+sonra yeşil read-only helper kontrolüyle doğrulandı; ledger/deadline değişmedi.
+Tüm işçiler fiziksel olarak kapandı; expired stop kaydı ve running job1
+quarantine'da kaldı. Terminal stopped rapor ve tam lifecycle halen açık.
+Son yedi komut exit0, 1444 test geçti. M0 toplamı artırılmadı.
+[Ayrıntılar](71-native-r7-inflight-stop-sql039.md).
+
+# 2026-09-30 native R8 / SQL0040 güncellemesi
+
+SQL0039 ile 36 baseline hücresi, G1/G2 fencing ve gerçek inflight stop tekrar
+geçti; v2 marker yaratıldı. Terminal kapanış Scorer → Director/Planner-only
+kilit çağrısı nedeniyle reddedildi. Ek SQL0040 iki private yolu onarır; genel
+yetkiler genişletilmez. Gerçek R8 Scorer receipt önce aynı hatayı üretti,
+sonra mevcut özgün expired-stop guard'ına ulaştı; deadline/ledger değişmedi.
+37 Scorer ve G1/G2 fiziksel olarak kapandı; quarantine korundu. Yeni SQL0040
+terminal rapor kabulü henüz çalıştırılmadı; M0 toplamı artırılmadı.
+[Ayrıntılar](72-native-r8-scorer-context-lock.md).
+
+# 2026-09-30 native R9 / SQL0040 terminal kapanış
+
+Yeni izole native CPU koşusu exit0: 36 baseline hücresi, G1 crash/G2 resume,
+gecikmiş G1 retleri, gerçek running primary stop ve tekrarlı stop geçti.
+V2 fullplan4 / admittedjob1 / completion4 / infrastructure_unattempted3;
+recovery actor retirement, child/final seals, terminal stopped rapor ve
+bağımsız fiziksel cleanup doğrulandı. Aktif job0; owned PG kapalı, storage
+korundu. Owner/waiter nonzero çıkışları kayıtta korunuyor. Ana SQL0035
+runtime deploy edilmedi. M0 toplamı artırılmadı; partial-CAS crash/retry,
+AOS ortak admission ve gerçek GPU kabulü açık.
+[Ayrıntılar](73-native-r9-terminal-stop-proof.md).
+
+# 2026-09-30 AOS canceled-result race / broker identity
+
+AOS kaynak incelemesindeki canceled-result yarışı önce üç yayın yolunda
+başarısız regresyonla doğrulandı; dördüncü kontrol result-ready temizliğinin
+atlandığını gösterdi. Çözüm immutable completed terminal/result hash yetkisini
+aynı SQLite transaction içinde doğrular. Tam broker UID/process/systemd
+generation kimliği ve deadline denetimi eklendi. Bounded restart dizin temizliği
+marker/fairness ile çalışır; allocated no-child edge muhafazakâr biçimde açık.
+Son odaklı CPU kapsamı 58 passed / 3.12s, bounded parent exit0 / 3.297917412s,
+source unchanged. Bunlar fiziksel GPU/AOS ortak kabul kanıtı değildir.
+AOS client/journal, tam nested schema, original admission pins ve rotation
+cleanup rights halen açık; M0 toplamı artırılmadı.
+[Ayrıntı](79-aos-canceled-result-publication-fix.md),
+[AOS sözleşme yanıtı](78-aos-control-contract-resolution.md).
+
+Bu düzeltmenin zorunlu kalite kapısı: yedi komut exit0, bounded parent
+81.403258620s/source unchanged, 1506 passed/7 opt-in skipped/120 GPU-live
+deselected, strict mypy148 dosya, wheel build/import başarılı.
+
+# 2026-09-30 original AOS admission identity
+
+Kalıcı stable admission binding control→broker→executor→SQLite zincirinde
+uygulandı; terminal özgün server/caller/policy/source/profile/schema pinlerini
+taşır. Refresh capability hash'ini değiştirebilir; eski kimlik/budget/deadline
+değişmez. Legacy null authority ve değişmiş pinle adoption reddedilir. Son
+peer check sırasında expiry regresyonu önce 1failed sonra fix ile geçti.
+123 odaklı test / 4.19s; root parent exit0 / 4.370273320s source unchanged.
+Zorunlu yedi kapı exit0, 1521 passed/7 opt-in skipped/120 GPU-live deselected;
+parent83.714203130s/source unchanged. Gerçek AOS preflight exit2 dirty/untracked;
+GPU/caller/schema ortak admission halen yok. M0 toplamı artırılmadı.
+[Ayrıntı](81-aos-stable-admission-identity.md), [profil kaynak haritası](80-aos-profile-schema-source-map.md).
+
+## 2026-10-01 — Gerçek AOS client/journal kaynak snapshot'u
+
+[89-aos-reviewed-source-snapshot.md](89-aos-reviewed-source-snapshot.md):
+`reviewed_snapshot` exact HEAD + tracked binary diff + selected44 + selected
+untracked hash ile gerçek `/home/cachyos/aos` checkout'unu kaynak bakımından
+kabul etti; CLI exit3/pending/source_ready=true, admission_allowed=false.
+Temiz/commit edilmiş AOS worktree şartı kullanıcı şartı değildi; eski default
+ret korunarak açık snapshot modu eklendi. External diff/textconv/clean filter
+marker regresyonları önce 3failed sonra düzeltmeyle 58passed; AOS kodu çalışmadı.
+Önceki [evidence socket](87-aos-evidence-socket-integration.md) ve
+[bağımsız özgün bütçe](88-aos-independent-original-budget.md) kaynak teslimleri
+korunur. Bütçe henüz AOS'a authenticated wire ile aktarılmıyor; fiziksel proof,
+current rights/resolver, durable inference resolution, broker config ve mevcut
+scheduler rezervasyonu açık. GPU/model/controlled cancellation acceptance
+çalıştırılmadı; toplam **11 passed / 7 partial / 4 open** değişmedi.
+
+## 2026-10-01 — Authenticated bağımsız bütçe aktarımı
+
+[90-aos-authenticated-retained-budget.md](90-aos-authenticated-retained-budget.md):
+aynı mevcut kontrol socket'i için açık evidence.v3 candidate; reconcile response
+aynı SQLite transaction'ından unchanged evidence.v2 + independent retained-column
+budget witness taşır. Original target capability ve reconcile kotası kullanılır;
+yeni allocator/authority/socket yok. V2 default wire ve terminal-v1 bytes/saatler
+korunur. 75 odaklı CPU kontrolü / exit0 / kaynaklar değişmeden: gerçek owned
+socket+SQLite iptal/reconcile/exact retry, original budget bağları, authority/
+validator rollback, byte kapasitesi ve final-encode timeout. Authentication ve
+physical proof fixture'dır; actual AOS/model/GPU kabulü değildir. Deadline testi
+önce 1failed sonra fix ile geçti. AOS v3 schema teyidi/client/provider/proof ve
+durable resolution, broker config ve mevcut scheduler rezervasyonu bekler.
+Toplam **11 passed / 7 partial / 4 open** değişmedi.
+
+## 2026-10-01 — Actual AOS retained evidence source52
+
+[91-aos-native-resolution-coordination.md](91-aos-native-resolution-coordination.md):
+explicit release-proof48 / retained-v3 52 kaynak profilleri, exact observer
+üyelikleri ve verifier/codec markerları eklendi. Actual AOS source52 immutable
+beklenen HEAD/diff/selected/untracked pinleriyle CLI exit3/pending/source_ready;
+admission_allowed=false. Full v3 ortak schema ve ayrı daha sıkı request schema
+pinleri doğrulandı; reviewed bytes içindeki yanlış schema/duplicate JSON reddedilir.
+73 portable CPU kontrolü / parent exit0 / kaynaklar sabit. Native AOS original
+inference intent'ini durable çözen API yok; ACK ve receipt_recorded gate'i açmıyor.
+AOS tarafında append-only resolution + explicit admission integration, trusted
+physical/resolver/source providers ve ortak broker reservation hâlâ gerekli.
+GPU/model/controlled recovery çalıştırılmadı; toplam11 passed/7 partial/4 open
+artırılmadı.
+
+
+2026-10-01 güncellemesi: `9564b284-d6f8-4297-9f62-1a58383536bd`
+terminal raporlu tek gerçek S1 araştırması tamamlandı;36baseline+4aday,
+model adayı DISCARD, baseline holdout passed, cleanup doğrulandı.
+[Doğrulanmış teslim ve açık kabuller](105-first-completed-local-research.md).
+M0.13, OM ve AOS toplam kabulleri bu sentetik tek-öneri koşusuyla kapanmaz.
+
+
+## 2026-10-01 gerçek OM ve stop sonucu
+
+[Gerçek çalışma modu ve stop kanıtı](106-mode-agent-and-inflight-stop.md):
+947fe42f terminal completed, tek LSH önerisi DISCARD; holdout manual_review.
+7038f5fa stop ACK ve exact fiziksel cleanup geçti, SQL terminal/rapor başarısız.
+Stop kabulü açık; exit0 tamamlanma kanıtı değildir. AOS oturumuyla doğrudan
+mesajlaşma kuruldu; source verifier shared absolute monotonic deadline uyumu
+Scientist66 CPU testiyle doğrulandı. Güncel AOS selected source cc62d495…;
+source_ready=true/admission=false. Eski b56/619b kaynak planları superseded.
+Native staging GPU/admission kapalı; gerçek AOS kabulü çalıştırılmadı.
+
+
+### 2026-10-01 son gerçek stop kanıtı ve AOS koordinasyonu
+
+0ebf382a gerçek repeated inference stop: running→stop_requested→stopped,
+owner/generation bağlı canonical rapor ve fiziksel GPU cleanup **geçti**.
+ACK9,519ms; terminal3,080s sonra; VRAM12680MiB. Tam canceled token/wall
+reconciliation **açık**;18432token/180s rezervasyon korunuyor. Önceki7038/7af
+başarısızlıkları değiştirilmedi. Son mandatory gate2259/7/121 ve tüm7exit0.
+[Ölçüm sınırları](106-mode-agent-and-inflight-stop.md),
+[doğrudan AOS görev paylaşımı](107-aos-direct-coordination.md).
+Native AOS ortak GPU/fairness kabulü **çalıştırılmadı**; actual isolated API
+generation/token/context ve enabled broker rights/runnable manifest hazırlanıyor.
+Bu alt kabul tüm M0/proje tamamlandı anlamına gelmez.
+
+### 2026-10-01 kaydedilmiş kapanış kanıtı ve doğrudan AOS görev paylaşımı
+
+Scientist V3 bir immutable kapanış gözlemi kaydetti; AOS tüketicisi kapanışı
+yazamadan hata aldı. Eski kanıtın süresi doldu, observer kapandı; AOS istek
+kaydı pending ve şema27 olarak korundu. Kapanış/GPU devri kabulü **geçmedi**.
+İki oturum doğrudan haberleşerek ayrı, yalnız kapanışa yetkili toparlanma
+sözleşmesinde uzlaştı. Scientist statik sözleşme ve salt okunur sağlayıcıyı,
+AOS kendi doğrulayıcı ve atomik kapanış yazıcısını paralel hazırlıyor.
+Eski kanıt, süre ve generation yenilenmez; güncel dar yetki ayrı doğrulanır.
+Sonraki V2 toparlanma tanığı bir kez başlatıldı; context yazmadan exit2 verdi.
+Gerçek CPU observer/GPU namespace hatası regresyonla yakalanıp dar salt okunur
+kontrolle düzeltildi; makine üzerindeki before/after yokluk kontrolü geçti.
+AOS tüketim sayısı0; şema27 ve pending kayıt değişmedi. Gerçek toparlanma kabulü
+**geçmedi**, GPU kabul koşusu **çalıştırılmadı**. Yeni kaynak/sonlu yetki eşliği
+gerekir; eski kanıt veya süre yenilenmez.
+[Güncel kanıt ve görev sınırları](112-aos-retained-closure-coordination.md).
+
+V3 gerçek toparlanma tanığı context üretti; AOS tek tüketimde exit2 ile,
+migration öncesinde reddetti. Tanık özgün 60s sonunda exit3 ile kapandı;
+PID/cgroup yokluğu doğrulandı. AOS DB27/pending/no receipt değişmedi.
+**Kapanış geçmedi**; ret nedenini AOS oturumu inceliyor, otomatik tekrar yok.
+Scientist son kaynak kapısı2781 passed ve tüm7exit0. Deney fazı11→7 ve ayrı
+guard/Scorer süre kayıtları kaynak olarak tamamlandı; gerçek hızlanma, Public27
+tam araştırması ve GPU kabulü henüz kanıtlanmadı.
+
+## Ek public DEV CPU kanıtı; genel kabul açık — 2026-10-03
+
+Gerçek arayüzden SKAB DEV çalışması tamamlandı: 283,41 saniye, 9 baseline +
+3 OPTICS skoru; LSH guard reddi. OPTICS KEEP ham VUS-PR üstünlüğü değildir.
+OMR/sensör görünümü ve sahipli süreç kapanışı doğrulandı. AOS gerçek GPU,
+holdout, öğretmen eğitimi ve otomatik öğrenilmiş iyileşme açık kalır.
+[Adımlar ve ölçüm kanıtı](120-public-dev-cpu-study.md).

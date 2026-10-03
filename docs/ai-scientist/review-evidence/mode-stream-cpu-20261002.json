@@ -1,0 +1,200 @@
+{
+  "cancellation_run": {
+    "actual_running_prediction_container_observed": true,
+    "committed_rows": 0,
+    "dispatch_exit_code": 0,
+    "elapsed_seconds": 10.462527309999132,
+    "exact_inflight_container_absent": true,
+    "idempotent_start": true,
+    "observed_stop_requested_to_stopped_seconds": 4.153358849001961,
+    "repeat_stop_same_receipt": true,
+    "report_sha256": "f92985f2c733ca6baa7c63bcb271d1114601b8839c1dae86a02022bf13aea32d",
+    "run_id": "1c845d5e-510a-49a3-bec1-e66f06fa03dd",
+    "state": "stopped",
+    "stop_record_to_report_verified_seconds": 4.531729,
+    "terminal_unit_main_pid": 0
+  },
+  "cleanup": {
+    "cleanup_evidence_sha256": "77f087c1d7d029b2477819d35553634dd56ad75f814a79b66b9711403ae057fe",
+    "director_units_inactive_main_pid_zero": true,
+    "owned_inflight_container_absent": true,
+    "p1_intent_absent": true,
+    "private_postgres_removed": true
+  },
+  "configuration": {
+    "algorithm": {
+      "alarm_quantile": 0.99,
+      "calibration": "leave_one_out",
+      "calibration_fraction": 0.2,
+      "dwell": 3,
+      "k": 3,
+      "lsh_merge_tables": 2,
+      "lsh_projections": 3,
+      "lsh_tables": 4,
+      "lsh_width": 0.35,
+      "method": "lsh",
+      "metric": "euclidean",
+      "min_support": 4,
+      "optics_max_eps": 2.0,
+      "optics_min_cluster_size": 8,
+      "optics_min_samples": 8,
+      "optics_xi": 0.05,
+      "release_ratio": 0.8,
+      "seed": 0,
+      "som_columns": 3,
+      "som_iterations": 400,
+      "som_learning_rate": 0.3,
+      "som_rows": 3,
+      "som_sigma": 1.5,
+      "tolerance_multiplier": 1.25,
+      "tolerance_quantile": 0.99,
+      "weighting": "distance"
+    },
+    "budget_per_run_seconds": 600,
+    "chunk_rows": 64,
+    "context_tokens": null,
+    "data_seed": 702,
+    "evaluation_rows": 4352,
+    "gpu_used": false,
+    "llm_model": null,
+    "original_deadline_finalization_reserve_seconds": 30,
+    "quantization": null,
+    "sandbox_phase_limit_seconds": 60,
+    "scenario": "drift",
+    "source": "synthetic",
+    "train_rows": 192
+  },
+  "contracts": {
+    "aos_control_name": "aos-scientist-control-contract.v2",
+    "aos_control_used_in_this_run": false,
+    "aos_control_version": 2,
+    "report": "lab.mode-stream-report.v1",
+    "stream_program": "mode-stream.v1"
+  },
+  "deployment": "Separate Scientist worktree; not merged, pushed or deployed.",
+  "gpu_metrics": {
+    "handoff_seconds": null,
+    "reason": "No GPU execution in this CPU acceptance.",
+    "vram_peak_mib": null,
+    "wait_seconds": null
+  },
+  "historical_failures_preserved": [
+    "First disposable migration rejected unintended SQLAlchemy :0 bind parameter; fixed with regression.",
+    "Two then one live fixture failed before intent guard due incorrect write path; corrected to actual production RPC.",
+    "Initial general gates exposed isolated PATH/PYTHONPATH, type annotation, socket path and virtualenv setup errors; corrected, final seven commands passed."
+  ],
+  "normal_run": {
+    "chunks": 68,
+    "dispatch_exit_code": 0,
+    "elapsed_seconds": 240.78073181999935,
+    "first_commit_observed_seconds": 9.043747208997956,
+    "fit_artifact_sha256": "49cd229bd22b5e7ddd20b0e5493dbb09e69289c6fe24dc3ce01b876f3e8d2e59",
+    "model_sha256": "95a2529d82415bc405dfdc10b7e15b83043ba5df5aa3855b8d3921adbec0df86",
+    "report_sha256": "7668643eba1ec5cf083cf269e7ac14b0b8c1e31a77096b2e73996914cfc4e1ff",
+    "rows": 4352,
+    "run_id": "3b785f3a-fbb2-41c1-91c3-0d5b2c16ae04",
+    "same_frozen_fit_across_first_and_last_chunk": true,
+    "scoring_available": false,
+    "state": "completed"
+  },
+  "not_run": [
+    "browser visual acceptance",
+    "real AOS model task and GPU handoff",
+    "independent anomaly accuracy scoring for this stream",
+    "database-backed long stream",
+    "real crash/resume for this stream",
+    "model adaptation/LoRA/QLoRA training"
+  ],
+  "recorded_at": "2026-10-02T10:56:09.143699+00:00",
+  "schema": "mode-stream-cpu-acceptance.v1",
+  "scope": "Finite synthetic CPU monitoring and actual inflight cancellation; unscored; not AOS/GPU acceptance.",
+  "source": {
+    "aos_observed_head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+    "aos_tracked_diff_sha256": "16daf7d7dde92119fdda287b0d2b28c7ee30a0e8825f6461ed0ea13b8d011b45",
+    "aos_worktree_modified": false,
+    "changed_runtime_files": {
+      "console/app.py": "cc89acec2f6ff07a7a8cffa6e5b9ac67dce8fbcd5a1f35b5800838972fb95712",
+      "console/upstream.py": "e982f67223091dd9e4e1b5e82a8c1c578f096d9ab01274612c7c109452055281",
+      "console/web/src/ui/App.tsx": "9648a128008cf920fa35c0fea33f181e5a5d4653683802f395723dfbf5987973",
+      "console/web/src/ui/ModeStreamForm.tsx": "c73d9490ccf92da5a241d7d9d78abe302eb110867408ab2837d701e583a5a415",
+      "console/web/src/ui/ModeStreamProgress.tsx": "f649afbeedeb37715d2067fdbe155262cde18aa0be68485772b1f221c3d059ec",
+      "console/web/src/ui/OperatingModesPage.tsx": "cfcf5046a8806284d7ac63531c2728b2c910f406ab8bf9ad84f2580538dfdd28",
+      "console/web/src/ui/requestId.ts": "5ae78c0792b4e663bc968acf13e876f2fa3b4833f7c95b40af430f7e005656bc",
+      "console/web/src/ui/types.ts": "78a6dd56390c84885dd4c9bcd05f867aa3fa4c147dc8aa8c0b017e8821697528",
+      "harness/VERSION": "6c17554dba43398fe2fba3e3c6fa2dac4695faa18b6e61aa72342cdc56fe7852",
+      "lab/api/app.py": "317cf6a3e0bfeb846fddda16086751db87861f3605ba17eec897b135c50b80ea",
+      "lab/api/contracts.py": "92c3e9da935dcd7a7b0c3692c001dfc17d7bc096dd27191c1fd435842873f1d0",
+      "lab/api/mode_stream.py": "0d6c33ff41dd0ae7588f1a462aa558dce55414946bc0f550bd7c55cfba51c659",
+      "lab/api/registry.py": "2c6a719d474acc58b2f605fa7fb6448d3ac60be4e308c116e77a30b2cfb7168b",
+      "lab/cli.py": "14525cd6b890435b82c68dfa5ad0ba9e5a19cf55665a71a49bc7abe81dccda13",
+      "lab/db/migrations/versions/0043_mode_stream.py": "bfc423d33c2b833c18d8c985fe2b61b9e61df11a7d6295d966cc5de242a5b41b",
+      "lab/director/mode_stream.py": "44170f5208e01e00b33d65309f9b2024b1d60f5c41fc9e04246c49665625c348",
+      "lab/director/recovery.py": "a263e948b9c3449f79bf5d086bbfa79293cee02ca71ba455f7ace333ff1992c5",
+      "lab/director/task_plan.py": "b8a180515417965a51081ab3356ae590373f4f549c0b9fc04b80b0e1ad43fda8",
+      "lab/operating_modes/stream.py": "f7efadb0234ea119df27610d9b5695d17a0ec98de5f6b8f58ecbc96c187d74ae",
+      "lab/sandbox/candidate_entrypoint.py": "f9161467bdbce6acc01ee7a119b2fc3d76d923e8c1ca7a85454fc3150624eed9",
+      "lab/sandbox/docker_runner.py": "3450da2c454aa8f3b5c355b4d3499fbb7e22601f2a0830334463367c0e4e689e",
+      "lab/sandbox/mode_stream.py": "28b49d118a55e6c2e7462b7a38601ba92f53fdeb7da3b2080446d314edba63fc",
+      "lab/sandbox/sandbox_wrapper.py": "2fde6f53323e0ddcec226ee36e303fcbaf42aed2e8948f7dfc0449299fd51a0b",
+      "lab/scorer/mode_stream_report.py": "629062056a5f212c8f13f6f61e775fb31c156fc508777e1ebbac3097df4f3f8f",
+      "lab/scorer/service.py": "edf7002831403e4d8c2be20ceaa5bd4aabcf1846731b57e0447aa5994fec6065",
+      "ops/sandbox-image.lock": "d6e211f55506b91a3309f67325f145575a4cf005283b185ba0ac9b0fbd3e56de"
+    },
+    "feature_branch": "feat/omr-stream-v1",
+    "harness_sha256": "e224c76dce27a568dd0d7a0deea0dae465bcdcd5c61bb09683987810379a18d5",
+    "harness_version": "0.42.0",
+    "image_source_manifest_sha256": "e66e870847d8330cf366b540809592f13ddcbf2d5dd9cbe088a31229b2de174b",
+    "sandbox_image": "sha256:3c5016c5ee93a0428d19bf4bea29fd24cc766ec2eb4ece0f1cb4181c4fa05fd2",
+    "scientist_base_head": "55c5300600112ab823f76ec434029d6dc23e513c",
+    "scientist_runtime_tracked_diff_sha256": "994f407d081645a7e82b88cb1dd6dffb39fb23ebd43e5eeebb048658af93d440"
+  },
+  "verification": {
+    "console_proxy": "Actual console handlers in TestClient forwarding to actual loopback Lab API; not browser automation.",
+    "cpu_result_sha256": "da118d04ba85e94f7521c3e2121bccc44db9759753d6e3487b984d6139731b24",
+    "postgres_role_stop_tests": {
+      "evidence_sha256": "bf877c864e642e95cc2efd9e06cdbc45fee3adc76205505b51000bf0303a7bb3",
+      "exit_code": 0,
+      "passed": 56
+    },
+    "quality_gate": {
+      "commands": [
+        {
+          "exit_code": 0,
+          "tool": "ruff"
+        },
+        {
+          "exit_code": 0,
+          "tool": "pylint"
+        },
+        {
+          "exit_code": 0,
+          "tool": "bandit"
+        },
+        {
+          "exit_code": 0,
+          "tool": "pytest"
+        },
+        {
+          "exit_code": 0,
+          "tool": "mypy"
+        },
+        {
+          "exit_code": 0,
+          "tool": "uv"
+        },
+        {
+          "exit_code": 0,
+          "tool": "python"
+        }
+      ],
+      "evidence_location": "08bd136eb826f788a74f4824ec9f1240a4ec38b9:docs/ai-scientist/evidence/quality-gate-latest.json",
+      "evidence_sha256": "c082908eac03e90ffc8389eea12fabb91ebfb265a3bd0da49c2ec70fd27ff2ad",
+      "gpu_live_deselected": 177,
+      "overall_exit_code": 0,
+      "passed": 3103,
+      "skipped": 7
+    },
+    "typescript_build_exit_code": 0,
+    "vite_build_exit_code": 0
+  }
+}

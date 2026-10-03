@@ -1,7 +1,122 @@
 # Changelog
 
+## 2026-10-03 — local field-lab preview, unreleased
+
+- Added optional field intent (asset label, research goal and objective),
+  immutable snapshot/context binding and verified terminal readback in 0.46.0.
+  One actual SKAB CPU UI run completed in 279.61 s with 12 scores; identical
+  retry reused the run, four old reports survived and owned cleanup passed.
+  Desktop/mobile source/context references and OMR outputs verified. Gate:
+  3328 tests/all seven commands exit 0; image parity 210 files. No training,
+  operational maintenance action or shared GPU acceptance implied.
+
+- Added pinned public DEV snapshot import and bounded owner-scoped CPU grid
+  studies in 0.45.0. Actual SKAB UI run completed in 283.41 s with nine
+  baseline and three OPTICS scores; LSH was guard-rejected. OPTICS KEEP
+  does not beat the best baseline raw VUS-PR. Real desktop/mobile report,
+  470 OMR points, eight sensors and owned cleanup verified. Gate: 3314 tests,
+  seven commands exit 0; 209-file image parity. No model/GPU/training run.
+
+- Added explicit cross-run development findings selection (1–8 records),
+  immutable request/context binding and verified terminal UI readback in 0.44.0.
+  One actual synthetic CPU study completed in 222.87 seconds: three historical
+  findings, one context-bound proposal, nine baseline and one primary score.
+  The candidate was DISCARD. Idempotency, old reports and owned cleanup passed.
+  Final gate: 3305 tests, seven commands exit 0; image parity: 208 files.
+  SFT export excludes unreviewed history permission chains before redaction.
+  Automated knowledge selection, learned improvement, training and shared AOS
+  GPU acceptance remain open. No merge, push or deployment was performed.
+
+- Connected the agent workspace to verified experiment memory: six existing
+  experiment/trajectory pairs and one separate unscored stream report reference.
+  LSH/OPTICS/SOM decisions are visible with provenance and training exclusions.
+  Teacher preparation downloads references; real teacher execution, automatic
+  cross-run reuse and learned adapter/skill promotion remain open. Desktop/mobile flows,
+  37 focused CPU checks and 207-file image parity passed. Earlier full-gate
+  evidence belongs to its earlier source snapshot. Native main pins and AOS
+  processes were preserved; no shared GPU acceptance or training was run.
+
+## 2026-10-02
+
+- Completed one real local Qwen study: six proposals (S1×2/S2×4),
+  LSH/SOM/OPTICS, 15 independent scores, 8278 tokens and 934.062 s
+  admission-to-terminal. All six proposals were DISCARD; no improvement
+  claimed. Preserved and corrected the post-run artifact-path failures:
+  the separate feature branch forwards the selected root in Scorer/NRM
+  replay reads. All six decisions replayed exactly; owned GPU/process/DB
+  cleanup and the private database backup were verified. AOS/public/holdout
+  and training acceptance remain separate and open.
+
+- Added owner-scoped PostgreSQL capture for finite CPU OMR streams, real UTC
+  and gap provenance, stable capture retries and bounded cancellation. A real
+  PostgreSQL fixture ran 4224 rows/66 chunks in 227.58 s; active FETCH cleanup
+  after an actual HTTP disconnect took 0.174 s. The prior timeout-only result
+  was rejected and the ASGI disconnect watcher corrected. Separate local
+  branch only; generated data, no independent accuracy score or GPU use.
+- Carried forward the verified development-counter correction: cumulative
+  recorded totals use the latest sample from each goal period, with model
+  identities verified from session metadata and historical gaps labeled.
+- Added finite CPU OMR streams with one frozen fit, ordered chunk checkpoints,
+  alarm continuity, live diagnostics and an independent unscored terminal
+  report. A real 4352-row LSH run completed in 240.78 seconds; actual inflight
+  prediction cancellation and repeated stop produced a verified stopped report
+  and clean owned-worker/container/database shutdown. PostgreSQL: 56 checks;
+  required gate: 3103 tests and all seven commands exit 0. Browser visual and
+  AOS/GPU acceptance remain open; this separate branch is not deployed.
+- Made native artifact validity explicitly selectable (1–900 seconds,
+  default 300), capped by the existing original retained authority.
+  Receipts remain exclusive and cannot renew expired rights. Prepared
+  separate successful handoff and inflight cancellation runs. Required
+  gate: 3033 tests, all seven commands exit 0; real GPU acceptance pending.
+- Bounded the complete native retained verification lifecycle within its
+  original deadlines, including preparation and resolution. Overlapped fresh
+  dependency reads with source checks while preserving identity, cancellation,
+  byte limits and owned cleanup. CPU composition: 23.916 seconds of 30;
+  required gate: 3002 tests, all seven commands exit 0. Actual shared GPU
+  acceptance and controlled cancellation remain open.
+
+## 2026-10-01
+
+- Fixed retained recovery's actual CPU observer namespace failure using a
+  dedicated read-only absence check; GPU scheduler authority remains unchanged.
+  Reduced same-call guarded evaluation to seven isolated phases and retained
+  complete guard/Scorer wall timings with restart and confirmation validation.
+  Actual closure, runtime speedup and integrated GPU acceptance remain pending.
+- Added a separate retained-proof close-only recovery contract, bounded readonly
+  witness and exact closure readback, coordinated with the AOS session. Existing
+  proof expiry and admission fences remain intact. Mandatory gate:2677 passed,
+  all seven commands exit0; actual recovery and GPU acceptance remain pending.
+- Added readonly, exact-source providers for the original AOS records, scoped
+  cleanup context, live observer identity and historical dispatch provenance.
+  The observer CLI defaults to inspection; issuance requires its reviewed live
+  service and keeps it alive for bounded AOS closure readback. No real closure,
+  GPU release or historical crash recovery is claimed by this CPU delivery.
+- Agreed the scoped no-admission observation contract directly with the AOS
+  session. Added closed shape/hash validation and an unwired canonical
+  observational tombstone with a fence in the existing admission transaction.
+  CPU evidence is separate from real closure; the original uncertain intent
+  remains retained and integrated GPU acceptance remains open.
+- Routed deployment Scorer credential paths through all supervised workers,
+  finalizers and recovery jobs. A real worker wrote to an isolated PostgreSQL
+  ledger; the main ledger was unchanged and temporary resources were cleaned.
+- Connected native AOS configured-source/bootstrap admission, separate model
+  interpreters, bounded artifact verification receipts and independent live
+  service binding capture. Installed artifact checks passed; real research/GPU
+  acceptance remains open, including the AOS runtime workspace scope. Director
+  dispatch/resume now checks aggregate GPU slice limits before service creation
+  and rejects incompatible existing controls without changing them.
+
 ## 2026-09-30 — 0.41.0
 
+- Added explicit historical/runtime-v1 AOS source preflight profiles and strict
+  integer wire-version checks. Recorded the failed native calibration/stop test
+  with five partial scores and proven worker quiescence; no terminal report,
+  proposal recovery or AOS GPU acceptance claimed. Original deadlines retained.
+- Added an undeployed exact primary-proposal stop candidate with immutable
+  admission/terminal receipts, original owner/deadline fences and independent
+  Scorer drain. Passed 1360 CPU tests/all seven quality commands and fresh
+  PostgreSQL0037 migration plus 13 native ACL/guard checks. Actual inflight
+  proposal stop and AOS GPU acceptance remain open; earlier failures retained.
 - Added Windows and Bash client scripts to start the prepared Lab remotely,
   open an SSH loopback tunnel and browse the console after readiness.
 - Independently verified 243 completed public baseline measurements and their

@@ -1,185 +1,222 @@
 # AI Scientist
 
-Yerel modellerle çalışan, uzun süreli AI/ML deneyleri için geliştirilmekte
-olan bağımsız laboratuvar. Hedef; veri seçmek, yöntem ve hiperparametre
-denemek, sonuçları doğrulamak ve yeniden kullanılabilir bilgi, skill ve
-eğitim verisi üretmek.
+Yerel dil modelleriyle çalışan bir AI/ML araştırma laboratuvarı. Saha ekipleri için
+veri seçimi, çalışma modu kümeleme, anomali tespiti ve bütçeli hiperparametre
+deneylerini bir araya getirir. SWAPP veya AOS kurulumu çekirdeğin bağımlılığı değildir.
 
-**Geliştirme sürümü:** çekirdek `0.41.0`.
-[Public geliştirme deposu](https://github.com/aserdargun/ai-scientist) yayımlandı;
-proje lisansı henüz seçilmedi. Tam M0 kabulü tamamlanmadı.
+**Teslim adayı: 0.46.0 · 2026-10-03.** Mevcut CachyOS kurulumunda CPU deney
+akışı çalışır. Tam M0, temiz makine kurulumu ve AOS ile gerçek GPU birlikte çalışma
+kabulü tamamlanmadı. Kod deposu public; proje lisansı henüz seçilmedi.
 
-Public teslim temizlenmiş kaynak snapshot'ıyla başlar; eski yerel geliştirme
-geçmişi yayımlanmaz. [Yayın ve son test durumu](docs/ai-scientist/64-automatic-stop-and-publication.md).
+- [Teslim durumu, testler ve bilinen eksikler](docs/ai-scientist/122-delivery-guide.md)
+- [AOS ve uygulamaya özel entegrasyon planı](docs/ai-scientist/123-application-integration.md)
+- [Dokümantasyon dizini](docs/README.md)
 
-## Bağımsız çekirdek, farklı entegrasyonlar
+## Neler yapabilirsiniz?
 
-Çekirdek SWAPP veya AOS gerektirmeden kurulabilir olmalıdır. Kullanıcılar
-kendi fork'larında web uygulaması, ajan sistemi ve veri kaynakları için
-adaptör geliştirebilir. SWAPP + AOS, özel intranette kullanılacak bir fork
-senaryosudur; SWAPP şirkete özgü ve özel bir web uygulamasıdır. SWAPP kaynak
-kodu, kurumsal ayarlar ve veriler genel dağıtımın parçası değildir.
+| Yetenek | Bu sürümdeki durum |
+|---|---|
+| Sentetik veri üretme ve deney tasarlama | CPU kullanıcı akışında kullanılabilir |
+| Yetkili PostgreSQL kaynağından veri seçme | Yapılandırılmış, salt okunur kaynakla; sırlar sunucuda |
+| Temel istatistik ve veri kalitesi | Dağılım, korelasyon, otokorelasyon ve eksik veri incelemesi |
+| LSH, OPTICS, SOM | Çalışma modu öğrenimi ve hiperparametre denemeleri |
+| NN tahmini ve OMR | Mod toleransı, normal değer tahmini, sensör residual ve OMR grafikleri |
+| Anomali karşılaştırması | Robust-z, Isolation Forest, ECOD baseline ve aday ölçümleri |
+| Uzun OMR akışı | Bütçeli, sonlu CPU akışı; tek fit ve kronolojik parçalar |
+| Deney yaşam döngüsü | Başlat, izle, durdur, doğrulanmış rapor ve kalıcı kayıt |
+| Araştırma amacı ve hafıza | Varlık/hedef ve açıkça seçilen önceki bulgular öneri bağlamına bağlanır |
+| Yerel LLM araştırması | Ayrı yapılandırmada ölçüldü; varsayılan field-lab CPU profilinde kapalı |
+| Öğretmen / LoRA / QLoRA | Arayüzde hazırlık taslağı; bu sürümde öğrenilmiş adaptör teslimi yok |
+| AOS içinde adil GPU paylaşımı | Kaynak/CPU altyapısı mevcut; gerçek ortak kabul sonraki aşama |
 
-Mevcut AOS entegrasyon çalışması ve aynı host'ta kaynak paylaşımı testleri
-ayrı alandadır. Paket/servislerin mevcut `swapp-` adları tarihsel teknik
-adlardır; genel çekirdeğin SWAPP'a bağımlı olması hedeflenmez.
+Mod uzaklığı, SOM uzaklık skoru ve OMR farklı ölçülerdir. OMR burada belgelenmiş
+residual yaklaşımının uygulamasıdır; AVEVA veya TrendMiner ürün uyumluluğu iddiası
+yoktur. [Yöntemler ve kaynaklar](docs/ai-scientist/42-operating-modes-omr-experiments.md).
 
-## Şu anda denenebilenler
+## Hazır kurulumu açın
 
-- Web arayüzünden deney başlatma, izleme, durdurma ve rapor indirme.
-- Sentetik veri üretme; onaylı PostgreSQL kaynağından sensör/zaman seçimi.
-- Temel istatistik, histogram, korelasyon, otokorelasyon ve veri kalitesi.
-- LSH, OPTICS ve SOM ile mod belirleme; tolerans, nearest neighbor tahmini,
-  sensör residual'ları ve Overall Model Residual grafikleri.
-- Ayrı Docker/Scorer süreçlerinde anomali tespit ölçümleri; değişmez deney
-  kayıtları, veri kökeni ve hash ile doğrulanan raporlar.
-
-Tamamlanan örnekler: sentetik mod projesinde **12**, seçili Genesis/GECCO/
-CATSv2/SMD bölümlerindeki baseline projesinde **36 gerçek ölçüm**. Bunlar
-CPU deneyleridir; uzun yerel LLM araştırması veya gerçek AOS birlikte
-çalışma kabulünün yerine geçmez. SMD sunucu telemetrisidir.
-
-## Bu bilgisayarda başlatma
-
-Mevcut CachyOS kurulumu için, normal kullanıcı terminalinde:
+Bu komutlar **mevcut hazırlanmış CachyOS kurulumu** içindir. Güncel arayüz ayrı
+çalışma ağacındadır; eski ana dizindeki varsayılan başlatıcı farklı kurulumu açar.
 
 ```bash
-cd /home/cachyos/ai-scientist
-bash ops/start-lab.sh
+cd /home/cachyos/ai-scientist/data/runtime/omr-v1
+bash ops/start-lab.sh --profile field-lab
 ```
 
-Tarayıcı: **http://127.0.0.1:8788**. Başlatıcı mevcut PostgreSQL, API,
-deney işçisi ve arayüzü kontrol eder; kapalı bileşenleri başlatır. Açık
-servisleri yeniden başlatmaz. Terminal kapatılabilir; bilgisayar yeniden
-açıldığında komut tekrar çalıştırılır. Docker kapalıysa önce
-`sudo systemctl start docker` çalıştırın.
-
-Bu komut önceden hazırlanmış yerel ortamı kullanır; temiz makine kurucusu
-henüz değildir. Python 3.12 ortamı (`.venv`), derlenmiş konsol, mevcut
-`swapp-lab-postgres-m0` konteyneri, API/işçi ortam dosyaları ve özel
-principal/suite kayıtları önceden hazırlanmış olmalıdır. Komut bu dosyaları,
-veritabanını veya migration'ları oluşturmaz. Eksik yapılandırmayı boş dosya
-ile tamamlamayın; mevcut kurulumun yedeğini geri yükleyin veya kurulum
-sorumlusuyla giderin. Taşınabilir kurulum açık kaynak yayın planındadır.
-
-Başlatma hata verirse konsol rehberindeki
-[sorun giderme adımlarını](console/README.md#başlatma-sorununu-inceleme)
-izleyin. Başlatıcı yalnız yerel üç Lab servisini ve mevcut DB'yi hazırlar;
-uzaktan erişim tüneli ayrı bir özel kurulum bileşenidir. Yeniden başlatma
-sonrası yerel komutun başarısı uzaktan erişimin hazır olduğunu göstermez.
-Servisler kullanıcı systemd oturumunda çalışır; oturum kapandıktan sonraki
-ömür kullanıcı yöneticisinin ayarlarına bağlıdır.
-[İlk projeyi deneme rehberi](docs/ai-scientist/43-first-project-guide.md).
-
-## aserdargun bilgisayarından bağlanma
-
-Bu deponun bir kopyasında, **aserdargun bilgisayarındaki** terminalde çalıştırın.
-Yalnız bağlantı için ilgili `ops/connect-lab.sh` veya `ops/connect-lab.ps1` dosyasını
-aserdargun bilgisayarına kopyalamak da yeterlidir; aşağıdaki dosya yolunu buna göre değiştirin.
-`CACHYOS_SSH_HOST` yerine CachyOS bilgisayarına ulaşan hostname'i veya mevcut
-SSH config alias'ını yazın; varsayılan `cachyos` yalnız bu ad çözümleniyorsa
-çalışır. SSH erişimi ve normal anahtar/parola doğrulaması önceden hazır olmalıdır.
-
-Linux/macOS (Bash, SSH ve curl gerekir):
+Tarayıcı: **http://127.0.0.1:8789/**. API: `127.0.0.1:8767`.
+Açık servisler yeniden başlatılmaz. Komutu normal masaüstü kullanıcısı çalıştırır;
+terminal kapatılabilir. Yeniden oturum açınca aynı komutu kullanın.
 
 ```bash
-bash ops/connect-lab.sh --host CACHYOS_SSH_HOST --local-port 8878
+bash ops/start-lab.sh --profile field-lab --check
+bash ops/start-lab.sh --profile field-lab --stop
 ```
 
-Windows PowerShell (Windows OpenSSH `ssh.exe` gerekir):
+`--stop` yalnız kendi boşta profilini kapatır. Aktif deney varsa önce arayüzden
+**Durdur** isteyin ve doğrulanmış terminal durumu bekleyin. Stop isteğinin
+alınması işçinin kapandığını veya GPU'nun bırakıldığını göstermez. Veritabanı ve
+raporlar korunur; başka süreçleri kapatmayın.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\connect-lab.ps1 -HostName CACHYOS_SSH_HOST -LocalPort 8878
+### Başka bilgisayardan erişim
+
+Kurulmuş özel erişim köprüsünün adresi kurulum sorumlusundan alınır. Alternatif
+olarak erişim yetkiniz olan CachyOS SSH hesabıyla, kendi bilgisayarınızda:
+
+```bash
+ssh -N -L 8789:127.0.0.1:8789 CACHYOS_SSH_HOST
 ```
 
-Komut CachyOS'ta mevcut Lab başlatıcısını çalıştırır, ardından yerel
-`127.0.0.1:8878` portunu SSH ile CachyOS'un `127.0.0.1:8788` portuna bağlar;
-Lab yanıt verdiğinde tarayıcıyı açar. Lab zaten açıksa `--no-start-lab` / `-NoStartLab`
-kullanılabilir. Windows komutundaki execution policy yalnız o PowerShell süreci için geçerlidir. Terminali açık tutun; **Ctrl+C tüneli kapatır**, Lab servisleri
-çalışmaya devam eder. Mevcut özel uzaktan erişim proxy'si ayrı kullanılabilir.
-Port doluysa `--local-port 18788` / `-LocalPort 18788` kullanın. Kullanıcı ve
-kurulum yolu `--user`, `--remote-dir` / `-SshUser`, `-RemoteDir` ile değiştirilebilir;
-varsayılanlar `cachyos` ve `/home/cachyos/ai-scientist`tir. Kurulum yolu boşluk
-içermemelidir. Tarayıcı açılmasını atlamak için `--no-browser` / `-NoBrowser` kullanın.
+Ardından **http://127.0.0.1:8789/** açın. Yerel port boş olmalıdır. SSH terminali
+kapatılınca yalnız tünel kapanır. API anahtarını tarayıcıya veya URL'ye koymayın.
+Eski `connect-lab` scriptleri varsayılan eski profil içindir; field-lab için bu
+port eşlemesini kullanın. Uzak cihazdaki tarayıcı doğrulaması ayrı bir kabul maddesidir.
 
-## Geliştirme süresi, token kullanımı ve modeller
+## İlk deneyi görün ve kendiniz deneyin
 
-2026-09-30 güncel geliştirme tercihi: **GPT-6.1 Sol / medium**. Aşağıdaki
-tablo, oturum metadata’sında fiilen gözlenen model ve ayarları gösterir.
+1. **Eylemci** ekranında bağlantının hazır olduğunu kontrol edin.
+2. **Saha araştırma amacı** bölümünde varlık, dijital ikiz/kestirimci bakım hedefi
+   ve araştırma sorusunu yazın. Varlık etiketi kullanıcı beyanıdır.
+3. Veri ve yöntem seçimine geçin. İlk kendi denemenizde küçük sentetik veri,
+   tek OPTICS yapılandırması ve baseline dahil 600 saniye bütçe kullanın. Veri
+   istatistiklerini inceleyin. Sentetik snapshot oluşturduktan sonra **Scorer için
+   hazırla** düğmesine basıp hazır durumunu bekleyin.
+4. Deneyi başlatın; **Deneyler** üzerinden durumunu takip edin. Sonuçta OMR,
+   sensör değerleri, NN referansı ve residual katkılarını inceleyin.
+5. Raporu indirin. **Deney hafızası** ekranında doğrulanmış referansları görün;
+   isterseniz bulguları sonraki deneye açıkça seçerek aktarın.
+
+Hazır kurulumdaki tamamlanmış saha amacı örneği:
+`50ea6463-4589-4213-a2fe-817287f3a323`.
+SKAB DEV kesitinde **279,61 saniyede 12 bağımsız skor** üretildi: 9 baseline,
+1 OPTICS aday ve 2 teyit. 470 OMR noktası ve 8 sensör gösterilir. OPTICS KEEP
+kararı aldı; ham VUS-PR `0.59051`, en iyi baseline `0.59544` olduğundan bu örneği
+baseline üstünlüğü veya genel öğrenme olarak sunmuyoruz.
+[Deney ve cleanup kanıtı](docs/ai-scientist/121-field-intent-workflow.md).
+Bu kayıtlar kaynak kodla birlikte dağıtılan canlı veritabanı değildir.
+
+## Mimari ve kaynaklar
+
+```mermaid
+flowchart LR
+  UI[Web arayüzü veya uygulama adaptörü] --> API[Yetkili Lab API]
+  API --> D[Director: bütçe ve yaşam döngüsü]
+  D --> L[Yerel model: sınırlı öneri çağrıları]
+  D --> C[Ağsız CPU aday sandbox]
+  C --> S[Bağımsız Scorer]
+  S --> R[Deterministik Referee]
+  R --> DB[Ledger ve doğrulanmış rapor]
+  DB --> UI
+```
+
+Python 3.12, FastAPI, PostgreSQL, Docker sandbox ve React arayüzü kullanılır.
+Aday etiketleri görmez; KEEP/DISCARD kararını dil modeli vermez. Kimlik,
+owner/generation, idempotency, bütçe ve quarantine kontrolleri korunur.
+
+Mevcut host yaklaşık 32 GB RAM / RTX 4070 Ti SUPER 16 GB VRAM'dir. Field-lab
+CPU profilinin bileşen toplam CPU tavanı **5,5 çekirdek**; host RAM rezervi
+**6 GiB**, disk rezervi **20 GiB**. Bunlar ölçülmüş tüketim değildir. GPU modeli
+bu profilde açılmaz. AOS ve Scientist için tek ortak tahsis otoritesi korunur;
+yeni donanımda paralellik ölçüm ve kaynak admission ile artırılır.
+
+## Geliştirici kurulumu ve doğrulama
+
+Kaynak/CPU geliştirme ortamını oluşturmak için Python 3.12, uv ve Node.js/npm:
+
+```bash
+uv sync --extra dev --frozen
+cd console/web
+npm ci
+npm run build
+cd ../..
+PATH="$PWD/.venv/bin:$PATH" .venv/bin/python scripts/quality_gate.py
+```
+
+Bu komutlar tek başına tam Lab çalışma ortamı oluşturmaz. Servis çalıştırmak
+Linux kullanıcı systemd oturumu, Docker erişimi, pinli yerel imajlar ve özel
+profil yapılandırması gerektirir. `ops/start-lab.sh --profile NAME --prepare`
+yalnız özel yapılandırmayı hazırlar; eksik imajı/modeli indirmez. Temiz makine
+uçtan uca kurulum kabulü açık olduğu için hazırlanmış host akışı ile taşınabilir
+kurulumu ayrı tutuyoruz. [Önkoşullar ve sorun giderme](docs/ai-scientist/122-delivery-guide.md).
+
+0.46 ürün kaynağının son tam kapısı: **3328 passed, 7 skipped, 177 deselected**;
+yedi komut gerçek exit `0`. GPU/live testler bu kapının dışındadır. Gerçek
+masaüstü/mobil arayüz okuması, tek deney kabulü, idempotent retry, terminal rapor
+ve 12 Scorer/Director cleanup ayrıca doğrulandı. Sonraki yayın yardımcılarının
+sonuçları teslim kılavuzunda ayrıca kaydedilir.
+
+Teslim paketi ayrıca **3439 passed / 49 skipped / 177 deselected** ile
+doğrulandı. İlk servis ortamında eksik `uv` yolu düzeltildikten sonra aynı
+kaynağın wheel build/import kontrolleri tamamlandı; yedi kontrol exit `0`.
+[Son paket kontrolü ve açık kabuller](docs/ai-scientist/review-evidence/release-046-delivery.json).
+
+## Öğrenme, veri ve lisans sınırları
+
+Her deney ölçüm ve köken kaydı bırakır. Geçmiş bulguyu sonraki öneride kullanma
+çalışır; her koşuda otomatik kalıcı gelişme veya daha iyi model garantisi yoktur.
+Öğretmen ekranı yerel model/hedef/bütçe içeren taslak indirir. Eğitim izni olmayan
+saha amacı ve ham bağlam SFT dışa aktarımında dışlanır. Öğrenilmiş adaptör,
+bağımsız değerlendirme ve otomatik terfi sonraki aşamadır.
+
+Güncel veri profili **ticari olmayan araştırma**. Genesis, GECCO, CATSv2 ve
+SMD seçiminde SMD sunucu telemetrisidir. GHL/SWaT ek izin olmadığı için dışarıdadır.
+Her kaynak/veri/model lisansı ayrı izlenir; public repo özel verilerin veya model
+ağırlıklarının yayın izni değildir. Proje lisansı kararı açık kalır.
+
+## Geliştirme süresi, token ve maliyet
+
+Geliştirme oturumları ve uygulamanın yerel model tüketimi ayrı raporlanır.
+Gerçek fatura/abonelik belgesi yoktur; gerçek ücret **bilinmiyor**. API tarifesiyle
+hesaplanan senaryo yalnız varsayımsal karşılıktır. Kayıt kapsamı başlangıçtan bugüne
+eksiksiz fatura toplamı değildir. [Kullanım raporu](docs/usage/project-usage-latest.md) ve
+[kayıt/yayın işleyişi](docs/usage/README.md).
+
+Güncel tercih Astra/high orkestrasyon, çoğunlukla Sol 6.1 ve göreve göre effort.
+Aşağıdaki fiili model listesi metadata gözlemidir; talep edilen model fiilen
+çalışmış gibi kaydedilmez. Goal tokenı, API tokenı ve fatura birbirine eklenmez.
 
 <!-- development-metrics:start -->
-Sayaç güncellemesi: **2026-09-30 10:01:12 Europe/Istanbul**.
+Sayaç güncellemesi: **2026-10-03 15:18:40 Europe/Istanbul**.
 
 | Ölçüm | Değer |
 |---|---:|
-| Aktif süre | 52 saat 45 dakika 55 saniye |
-| Aktif süre (saniye) | 189955 |
-| Token | 89905084 |
-| Takvim süresi | 142.756389 saat |
+| Güncel goal dönemi aktif süre | 32 saat 40 dakika 10 saniye |
+| Güncel goal dönemi aktif süre (saniye) | 117610 |
+| Güncel goal dönemi token | 30575177 |
+| Güncel goal dönemi takvim süresi | 53.911944 saat |
+| Kaydedilen dönem sayısı | 2 |
+| Kaydedilen dönemlerin toplam aktif süresi | 104.505556 saat |
+| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 376220 |
+| Kaydedilen dönemlerin toplam tokenı | 132776995 |
 
 Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.
+Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplamıdır; ardışık snapshot'lar ve tekrarlar toplanmaz. Tarihsel gözlemlerin kapsamı eksiktir; gözlenmeyen dönemler veya son gözlemden sonraki kullanım bilinmez.
 
 | Model | Ayar | Rol | Gözlenen oturum |
 |---|---|---|---:|
-| gpt-6-astra | high | Teknik orkestrasyon ve mimari inceleme | 5 |
-| gpt-6-astra | xhigh | Ana Codex oturumu | 1 |
+| gpt-6-astra | high | Teknik orkestrasyon ve mimari inceleme | 22 |
+| gpt-6-astra | max | Ana oturum orkestrasyonu ve kritik düzeltme/inceleme işleri | 7 |
+| gpt-6-astra | xhigh | Ana Codex oturumu | 3 |
 | gpt-6-luna | high | İlk uygulama ve odaklı doğrulama işleri | 7 |
 | gpt-6-sol | high | Kodlama, entegrasyon ve inceleme işleri | 2 |
-| gpt-6.1-sol | high | Rol doğrulanmadı | 3 |
-| gpt-6.1-sol | medium | Kalan teknik orkestrasyon, uygulama ve inceleme | 12 |
+| gpt-6.1-sol | high | Rol doğrulanmadı | 18 |
+| gpt-6.1-sol | medium | Kalan teknik orkestrasyon, uygulama ve inceleme | 41 |
+| gpt-6.1-sol | xhigh | Rol doğrulanmadı | 2 |
 
-Bu taramada ilişkili oturum: 29.
+Bu taramada ilişkili oturum: 97.
 
 [Sayaç ve köken kaydı](docs/development-metrics.json).
 <!-- development-metrics:end -->
 
-Bu bölüm her anlamlı teslimatta ve son sürüm öncesinde
-`scripts/update_development_metrics.py` ile yenilenir. Araç, güncel Codex
-Goal snapshot'ını ve oturumların model metadatasını okur;
-[ölçüm tarihçesini](docs/development-metrics-history.jsonl) saklar. Özel
-snapshot ve ham oturum içerikleri bu depoya eklenmez.
+Sayaçlar `scripts/update_development_metrics.py` ile anlamlı teslimatlarda
+güncellenir. Ham oturum metinleri ve özel snapshot'lar yayımlanmaz.
 
-Claude ile ileride yapılacak fork/entegrasyon çalışmaları bu ölçüme dahil
-değildir. Ürünün yerel araştırma modeli Qwen3.5-9B geliştirme ajanlarından
-ayrıdır; gerçek araştırma ve eğitim kabulündeki açıklar aşağıda izlenir.
+## Sonraki aşama
 
-## Sonraki teslimatlar
+1. AOS adapter/producer/consumer bağlantısı ve aynı sürümde kaynak/config teyidi.
+2. Tek scheduler ile kısa gerçek GPU devir, iptal/toparlanma ve temiz kapanış kabulü.
+3. Uygulamaya özel yetki, varlık/sensör/zaman eşlemesi ve saha geri bildirim akışı.
+4. Öğretmen işi, uygun eğitim kayıtları, adaptör değerlendirme ve kontrollü terfi.
 
-1. Çekirdeğin kalan kesinti/devam, izolasyon, holdout, yerel model ve kaynak
-   paylaşımı kabullerini kapatmak.
-2. Genel kurulum ve bağımsız adaptör sözleşmeleri; eğitim kayıt tamlığını
-   bugünden doğrulamak.
-3. Model kataloğu, karşılaştırmalı model/yöntem seçimi ve geri dönüş.
-4. Kanıtla doğrulanan notebook ve skill üretimi/yayını.
-5. Temizlenmiş SFT/KTO/DPO paketleri, ardından ölçülmüş LoRA/QLoRA adapter
-   eğitimi ve bağımsız değerlendirme.
-
-Mevcut eğitim işçisi sentetik fizibilite denemesi içindir; adapter üretimi
-tamamlandı iddiası yoktur. Mevcut trajectory'ler denetim kaydıdır; otomatik
-olarak temiz eğitim verisi sayılmaz. Veri, kod ve model lisansları ayrı
-izlenir; mevcut deneylerin kullanım profili ticari olmayan araştırmadır.
-
-- [Ürün mimarisi ve teslim planı](docs/ai-scientist/44-open-laboratory-roadmap.md)
-- [M0 kabul ve kanıt kaydı](docs/ai-scientist/m0-acceptance.md): 22 maddenin
-  11'i geçti, 7'si kısmi, 4'ü açık. Bu oran kalan iş süresinin yüzdesi değildir.
-- [Çalışma modları ve OMR](docs/ai-scientist/42-operating-modes-omr-experiments.md)
-- [Arayüz geliştirme rehberi](console/README.md)
-
-## Doğrulama
-
-Son 0.41.0 kalite kapısı: **1247 test başarılı / 7 skipped / 120 deselected**,
-yedi kontrol exit 0.
-[Yürütme kaydı](docs/ai-scientist/review-evidence/release041-image-gate-r4-summary.json).
-0.41.0 kurulu; veritabanı yükseltme/geri alma provası ve gerçek Scorer işi geçti.
-[Dağıtım kaydı](docs/ai-scientist/review-evidence/release041-deployment-summary.json).
-
-Hazır geliştirme ortamında zorunlu kalite kapısı:
-
-```bash
-.venv/bin/python scripts/quality_gate.py
-```
-
-Kapı; statik analiz, CPU testleri, strict tip kontrolü ve wheel kontrolünü
-çalıştırır. PostgreSQL/Docker, gerçek model ve AOS testleri kendi açık
-çalıştırma koşulları ve kaynak sınırlarıyla ayrıca yürütülür. Başarılı CPU
-kapısı tüm ürün kabullerinin tamamlandığı anlamına gelmez.
+[Uygulama entegrasyonu ve bitti ölçütleri](docs/ai-scientist/123-application-integration.md).
+Özgün M0/OM maddeleri [kabul kaydında](docs/ai-scientist/m0-acceptance.md) korunur;
+bu teslim kalan araştırma/kapasite kabullerini tamamlanmış saymaz.

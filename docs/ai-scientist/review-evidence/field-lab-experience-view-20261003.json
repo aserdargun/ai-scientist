@@ -1,0 +1,447 @@
+{
+  "schema": "field-lab-experience-view-evidence.v1",
+  "captured_at": "2026-10-03T07:44:24.461626+00:00",
+  "scope": {
+    "profile": "field-lab",
+    "new_experiments": 0,
+    "source_kind": "existing synthetic CPU records",
+    "model_calls": 0,
+    "gpu_jobs": 0,
+    "training_started": false,
+    "learned_adapter": false,
+    "cross_run_automatic_reuse": false,
+    "aos_joint_runtime_acceptance": false
+  },
+  "source": {
+    "feature_head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+    "dirty_worktree": true,
+    "backend_and_test_sha256": {
+      "lab/api/experience.py": "df6d6b8835cddcf80f1756f881604dcfd6807de8e2cdfbe3b8890b78fa071d6c",
+      "lab/api/app.py": "72834b610e03e279cd6d318c54a48968f1c266309810ea898ae04b023de5d80b",
+      "lab/reporting.py": "fe62eade9601945f8d01e9b832a45c1c04c4ecfd47a556820c4d9cda8b47ac0a",
+      "console/app.py": "3e26111d7fe69ed91360f22d5745e55328fa1c4c2b5ce812b89c3b35a0a0a145",
+      "tests/test_experience_api.py": "f10fba9976dfa171a388c1d7984dfc40b20fffb756b8cd8edc4408e612ac51be"
+    },
+    "ui_sha256": {
+      "console/web/src/ui/AgentWorkspace.tsx": "fb7aa16718bd51f89b611f5e00439158835b466496ab5fe782d87f816ad577eb",
+      "console/web/src/ui/ExperiencePanel.tsx": "061d81193e011d4b9562e765bfe0423d0b7b62465d46d00346ac9a036cc07d99",
+      "console/web/src/ui/types.ts": "418943f6f42ea364e27f80f06e4508134a541a7c3a73dc8d55ea607d62dc2b7e",
+      "console/web/src/ui/api.ts": "5a20a39cc6c1bfdf342950115148119e6452dacc19c29aa57e3d2853713b324e",
+      "console/web/src/ui/styles.css": "6d6bdf88f0da391437814e10bade1dcceabf5c05cebf74b353747b7ed156ce37"
+    },
+    "image_snapshot_sha256": "db37d07ab839b71cd3644db6d98826462321aad9b62a6cacef20fda07bdc49a8",
+    "image_source_files": 207,
+    "current_source_matches_image_snapshot": true
+  },
+  "runtime": {
+    "harness_version": "0.43.3",
+    "harness_sha256": "623a4d3a354f7a26a38a6eecca5237db6f09c13660d4cceda83b92f5501c7eca",
+    "harness_file_count": 165,
+    "sandbox_image": "sha256:14349c48ae98b80c8d1d76a22e4ee9f600a85624a2010ffac249da74e44cd528",
+    "build_exit_code": 0,
+    "image_parity_exit_code": 0,
+    "image_byte_parity": true,
+    "historical_run_image": "sha256:e56defcb12891ee5898a5c093507beda0319bb108e7c7df7525d313aed54ee31",
+    "old_reports_rewritten": false,
+    "model": null,
+    "quantization": null,
+    "context_tokens": null,
+    "peak_vram_mib": null,
+    "gpu_wait_seconds": null,
+    "gpu_handoff_seconds": null,
+    "measurement_note": "No model/GPU execution in this delivery; null values are unmeasured, not zero-cost training."
+  },
+  "actual_api_reads": [
+    {
+      "http_status": 200,
+      "record_count": 6,
+      "records": [
+        {
+          "decision": null,
+          "kind": "baseline",
+          "method": "ecod_train_frozen",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_proposal",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        },
+        {
+          "decision": null,
+          "kind": "baseline",
+          "method": "iforest",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_proposal",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        },
+        {
+          "decision": null,
+          "kind": "baseline",
+          "method": "robust_z",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_proposal",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        },
+        {
+          "decision": "DISCARD",
+          "kind": "proposal",
+          "method": "lsh",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_confirmed_positive_candidate",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        },
+        {
+          "decision": "DISCARD",
+          "kind": "proposal",
+          "method": "optics",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_confirmed_positive_candidate",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        },
+        {
+          "decision": "DISCARD",
+          "kind": "proposal",
+          "method": "som",
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "not_confirmed_positive_candidate",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        }
+      ],
+      "run_id": "89dc9a5c-007d-480e-8594-6e14c035a0b9",
+      "schema": "run-experience.v1",
+      "wall_seconds": 0.017765
+    },
+    {
+      "http_status": 200,
+      "record_count": 1,
+      "records": [
+        {
+          "decision": null,
+          "kind": "cpu-mode-stream",
+          "method": null,
+          "model_receipt_status": "not-applicable-cpu",
+          "training_eligibility": {
+            "eligible": false,
+            "reasons": [
+              "cpu-not-local-llm",
+              "no-experiment-trajectory",
+              "export-permission-not-checked",
+              "clean-runtime-review-not-checked"
+            ]
+          }
+        }
+      ],
+      "run_id": "507458fd-72d7-4bc4-a8ae-68b4bf24191e",
+      "schema": "run-experience.v1",
+      "wall_seconds": 0.003265
+    }
+  ],
+  "existing_reports_sha256": {
+    "507458fd-72d7-4bc4-a8ae-68b4bf24191e": "930173a3be39a1569462fba9fbbf9d744e5e3b76ff0c648e11ff3f42e943cced",
+    "89dc9a5c-007d-480e-8594-6e14c035a0b9": "c261dec63d162cb2f9d667e488dd614a95333ea8a9a6cec5db279cf73c873159"
+  },
+  "owned_runtime_refresh": {
+    "completed": true,
+    "private_receipt_sha256": "3884e36480e84f50b6ca76349fa2172885a61d524f17121131eb9fe9c7391554",
+    "only_owned_profile_services": [
+      "api",
+      "director-drain",
+      "console"
+    ],
+    "queue_before": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "queue_after_admission_closed": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "queue_after": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "elapsed_seconds": 6.084419,
+    "reports_preserved": true,
+    "aos_processes_changed": false,
+    "earlier_pre_action_inspection_failure_preserved": true,
+    "earlier_attempt_sha256": "9ec42932cd69b1217e153c6a2760d587966e49c91db91b61943144de2e31bb2e"
+  },
+  "api_contract": {
+    "schema": "run-experience.v1",
+    "owned_terminal_report_required": true,
+    "report_and_record_hashes_verified": true,
+    "record_limit": 200,
+    "blob_bytes_limit": 2097152,
+    "aggregate_read_bytes_limit": 16777216,
+    "response_bytes_limit": 524288,
+    "read_deadline_seconds": 10,
+    "raw_messages_or_sensor_arrays_exported": false,
+    "protected_provenance_records_excluded": true,
+    "training_eligibility_granted": false,
+    "existing_sft_export_gates_unchanged": true
+  },
+  "browser": {
+    "environment": {
+      "url": "http://127.0.0.1:8789/",
+      "browser": "Browser plugin not available; isolated Playwright Chromium headless, GPU disabled"
+    },
+    "viewports": [
+      {
+        "width": 1365,
+        "height": 1000
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "actual_readback": {
+      "initial_experience_fetches": 0,
+      "page_identity": {
+        "url": "http://127.0.0.1:8789/",
+        "title": "AI Scientist · Kontrol merkezi",
+        "meaningful": true,
+        "framework_overlay": false
+      },
+      "grid": {
+        "records": 6,
+        "discard": 3,
+        "report_sha256": "c261dec63d162cb2f9d667e488dd614a95333ea8a9a6cec5db279cf73c873159",
+        "eligibility_granted": false
+      },
+      "stream": {
+        "records": 1,
+        "scored": false,
+        "report_sha256": "930173a3be39a1569462fba9fbbf9d744e5e3b76ff0c648e11ff3f42e943cced"
+      },
+      "preparation_download": true,
+      "teacher_draft_verified_refs": true,
+      "mobile_horizontal_overflow": false,
+      "http_errors": []
+    },
+    "actual_browser_initial_receipt_sha256": "cbc4416ee6cfad1da7a5a40bd4579332ffb2b36b911b4172dc685692dd318470",
+    "final_visual_delta": {
+      "desktop": {
+        "first_three_methods": [
+          "Aday deneyi · LSH",
+          "Aday deneyi · OPTICS",
+          "Aday deneyi · SOM"
+        ],
+        "first_three_method_headings_in_viewport": [
+          true,
+          true,
+          true
+        ],
+        "eligibility_reasons_collapsed": true,
+        "training_ineligible_visible": true,
+        "manifest_record_order_preserved": true,
+        "manifest_download": true,
+        "horizontal_overflow": false
+      },
+      "teacher_verified_refs": true,
+      "mobile": {
+        "first_three_methods": [
+          "Aday deneyi · LSH",
+          "Aday deneyi · OPTICS",
+          "Aday deneyi · SOM"
+        ],
+        "first_three_method_headings_in_viewport": [
+          true,
+          false,
+          false
+        ],
+        "eligibility_reasons_collapsed": true,
+        "training_ineligible_visible": true,
+        "manifest_record_order_preserved": true,
+        "manifest_download": true,
+        "horizontal_overflow": false
+      }
+    },
+    "final_visual_receipt_sha256": "801f3f943fe782af0cb33af298cd90dca632a262e8fd5813461c4f874c110414",
+    "root_inspected_desktop_and_mobile": true,
+    "screenshots": {
+      "desktop.png": "1a9f4da225037bc5dad68e3e0e19d32b1c8af34ee512f27baa719e25fefa0203",
+      "mobile.png": "a86c99b25a919a33f60827675ad32530a5fdbab6173f14bbb967519ae55e5c3d"
+    },
+    "actual_javascript_errors": 0,
+    "actual_http_errors": 0,
+    "new_post_requests": 0,
+    "intercepted_fixtures": {
+      "malformed_method_object_rejected": true,
+      "error_and_retry_recovered": true,
+      "rapid_change_aborts_old_selection": true,
+      "stale_selection_hides_cards_and_download": true,
+      "empty_registry_preserved": true
+    },
+    "injected_503_expected": true,
+    "final_wording_delta": {
+      "label": "AOS birlikte çalışma: Henüz doğrulanmadı",
+      "receipt_sha256": "953705d13414c7c1f5a65cc1d36214c2b2391f876a696f1eb27d59798ca885b8",
+      "build_exit_code": 0,
+      "typecheck_in_build": true,
+      "browser_suite_repeated": false,
+      "served_wording_verified": true
+    },
+    "final_served_assets_sha256": {
+      "/assets/index-DcPgpf_Z.js": "ebc502d2be094333267e43c8cfe3a22bb931d7260b945d5f0498bf7a45390e88",
+      "/assets/index-BKWP2YBJ.css": "519061cd56c4c3c3e489c137a5a2faf2a4cf09da2d040cca32c83e6acd9b886a"
+    },
+    "served_assets_equal_local_dist": true
+  },
+  "focused_backend_validation": {
+    "reported_by": "implementation owner, GPT-6.1 Sol/high",
+    "pytest_passed": 37,
+    "pytest_exit_code": 0,
+    "pytest_seconds": 1.46,
+    "ruff_exit_code": 0,
+    "syntax_exit_code": 0,
+    "full_quality_gate_repeated": false,
+    "earlier_full_gate_is_not_for_this_final_source": true
+  },
+  "aos_native_static_status": {
+    "scientist_head": "55c5300600112ab823f76ec434029d6dc23e513c",
+    "aos_head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+    "source_packet_sha256": "9ff29ed542cfad0a014784b29fc86723967f1758796bddd61348cb2164c02479",
+    "api_source_files": 136,
+    "native_source_files": 141,
+    "selected_source_mismatches": [],
+    "preparation_sha256": "04577691ff68907cf939228f9db62d6d7f56d1eb5c46bc8bbc03542a0ee09d07",
+    "actual_aos_final_ack_sha256": "d5e1a6e5604f89e869c088561cce2d219177618ef132e6bb249dff7ff735b4ea",
+    "source_config_accepted": true,
+    "control_version": 2,
+    "runtime_authorized": false,
+    "runtime_started": false,
+    "gpu_test_started": false,
+    "native_acceptance_complete": false,
+    "shared_manager_delta_covered_by_this_ack": false,
+    "blocker": "Live default AOS native task path can bypass canonical GPU admission; shared manager source closure is pending. Idle/quiesce is not release evidence."
+  },
+  "passed": [
+    "verified bounded experience API and authenticated console route",
+    "actual existing grid and unscored stream readback",
+    "desktop/mobile method decisions and refs",
+    "reference-only preparation download and teacher draft",
+    "owned refresh with unchanged old reports and empty queues"
+  ],
+  "remaining": [
+    "AOS shared manager source/config closure and real GPU handoff/cancellation acceptance",
+    "verified knowledge reuse across separate runs",
+    "suitable permitted training examples and real local teacher job",
+    "learned adapter/skill independent evaluation, promotion and rollback"
+  ],
+  "not_run": [
+    "GPU/model/teacher execution in this delivery",
+    "full training or adapter promotion",
+    "new public-data or field research",
+    "latest full source quality gate",
+    "actual remote aserdargun browser session"
+  ],
+  "separate_followups": [
+    "project license decision",
+    "general CI and clean portable installation"
+  ],
+  "limitations": [
+    "Existing method records are synthetic CPU measurements, not independent field validation.",
+    "All three method candidates are DISCARD; no measured improvement is claimed.",
+    "Preparation JSON contains references and exclusion reasons, not an approved training dataset.",
+    "Same-run last 30 development feedback items are available; each new run currently starts with empty automatic feedback.",
+    "No commit, merge, push or deployment of native main/AOS occurred."
+  ],
+  "final_worktree_provenance": {
+    "captured_at": "2026-10-03T07:46:23.654733+00:00",
+    "tracked_diff_definition": "git diff HEAD --binary; index and working tree; untracked files excluded. Snapshot after docs/metrics, not a commit or source approval.",
+    "main": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "branch": "feat/luna-m0-core",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "4dff4165fed678c4226cd771b2a44daf32d428af0a5265115a793ab97ce34e30"
+    },
+    "feature": {
+      "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+      "branch": "feat/omr-stream-v1",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "0c8840843869e4b29de163d168d422811a293495c481b977a5bcee617c69b40f",
+      "untracked_source_sha256": {
+        "console/web/src/ui/AgentWorkspace.tsx": "fb7aa16718bd51f89b611f5e00439158835b466496ab5fe782d87f816ad577eb",
+        "console/web/src/ui/ExperiencePanel.tsx": "061d81193e011d4b9562e765bfe0423d0b7b62465d46d00346ac9a036cc07d99",
+        "lab/api/experience.py": "df6d6b8835cddcf80f1756f881604dcfd6807de8e2cdfbe3b8890b78fa071d6c",
+        "ops/lab_profile.py": "bcd969214fa04052d962c9086009748a38a46321d7fb2d2d8d11c80430833bfa",
+        "tests/test_experience_api.py": "f10fba9976dfa171a388c1d7984dfc40b20fffb756b8cd8edc4408e612ac51be",
+        "tests/test_lab_profile.py": "c9908910142269111e84522cd3d8b260b40d46e6c46343bfdce79bf86aa58f46",
+        "tests/test_mode_diagnostics_api_root.py": "c63d9ff8164978ca2b5a6bf02b3f075815634794fd41d0ac5633e4089a3d9154"
+      }
+    },
+    "aos_read_only": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "branch": "main",
+      "dirty_tracked": true,
+      "tracked_diff_sha256": "df60b0d804d565df4402e06134b63beecb37b595de1419ddc95ab64001c3a4b1"
+    }
+  },
+  "main_native_pins": {
+    "version": "0.41.1",
+    "harness_sha256": "45acba391c2c32184339ae564d7bb7e0ef4e5fda247beb66bfe3c431e9cb69b9",
+    "harness_file_count": 158,
+    "sandbox_image": "sha256:e12dd9e6c660a95bf37d5db8dc9b0156b483a847a66cd712b5daf8aa0850ea85",
+    "selected_source_freeze_verified": true,
+    "quality_receipt_sha256": "e0ff127e5a6ba627c92a7e75034d4557af1b66ca630fcecec1d823dfd2dab4bb",
+    "parity_receipt_sha256": "32fe3add81a00b75130a8594408b19dd306e554256b0da97153c56818d937481"
+  },
+  "final_live_readback": {
+    "captured_at": "2026-10-03T07:46:23.730370+00:00",
+    "overview_http_status": 200,
+    "harness_version": "0.43.3",
+    "progress_matches_current_file": true,
+    "progress_updated_at": "2026-10-03T07:44:24.461626+00:00",
+    "aserdargun_bridge_service": "active, own service PID15933 observed; remote client not exercised"
+  },
+  "development_metrics": {
+    "captured_at": "2026-10-03T07:45:04.003102+00:00",
+    "source_sha256": "963bf27be50536d43509fe2459cd6462c3f9fb70cbf5e0e79a5e57b172c76ff3",
+    "root_goal_status": "active",
+    "main_and_feature_synced": true
+  }
+}

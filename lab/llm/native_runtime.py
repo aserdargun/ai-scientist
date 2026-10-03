@@ -26,6 +26,7 @@ import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from contextlib import closing
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal, Protocol, cast
@@ -175,6 +176,10 @@ def _parse_systemd_duration_usec(value: str) -> int:
 
 class ModelRuntimeError(RuntimeError):
     """A bounded local model request failed without releasing ownership unsafely."""
+
+
+class ModelTurnCancelled(ModelRuntimeError):
+    """Trusted captured Director owner stopped, was fenced, or cannot be observed."""
 
 
 class ModelOutputBudgetExceeded(ModelRuntimeError):
@@ -517,6 +522,18 @@ class GpuObserver(Protocol):
     def snapshot(self) -> GpuSnapshot: ...
 
 
+observation_deadline: ContextVar[float | None] = ContextVar("observation_deadline", default=None)
+
+
+def _observation_timeout(maximum: float) -> float:
+    """Share one trusted readback deadline across systemd/NVIDIA queries."""
+    deadline = observation_deadline.get()
+    remaining = maximum if deadline is None else min(maximum, deadline - time.monotonic())
+    if remaining <= 0:
+        raise ModelRuntimeError("physical observation deadline expired")
+    return remaining
+
+
 class NvidiaSmiObserver:
     """Read GPU process and memory counters from the fixed nvidia-smi binary."""
 
@@ -529,7 +546,7 @@ class NvidiaSmiObserver:
             ],
             capture_output=True,
             text=True,
-            timeout=3,
+            timeout=_observation_timeout(3.0),
             check=False,
         )
         gpu_rows = subprocess.run(  # nosec B603 -- fixed read-only NVIDIA query
@@ -540,7 +557,7 @@ class NvidiaSmiObserver:
             ],
             capture_output=True,
             text=True,
-            timeout=3,
+            timeout=_observation_timeout(3.0),
             check=False,
         )
         if app_rows.returncode != 0 or gpu_rows.returncode != 0:
@@ -608,7 +625,7 @@ class SystemdUnitManager:
                 *[f"--property={name}" for name in properties],
                 unit,
             ],
-            timeout=5,
+            timeout=_observation_timeout(5.0),
         )
         if result.returncode != 0:
             raise ModelRuntimeError("systemd runtime unit inspection failed")
@@ -1287,8 +1304,10 @@ class OwnedVllmRuntime:
         queue_timeout_seconds: int = 900,
         required_free_disk_bytes: int = MINIMUM_FREE_DISK_BYTES,
         profile: ModelTurnProfile = DIAGNOSTIC_S1_PROFILE,
+        cancellation_observer: Callable[[], None] | None = None,
     ) -> None:
         self._database = database
+        self._cancellation_observer = cancellation_observer
         if MODEL_TURN_PROFILES.get(profile.profile_id) != profile:
             raise ValueError("model turn profile is not a trusted registered profile")
         self.profile = profile
@@ -1421,6 +1440,11 @@ class OwnedVllmRuntime:
         ):
             raise ModelRuntimeError("model UDS runtime directory is not private")
 
+    def _check_cancellation(self) -> None:
+        # This observer has no release authority and is never consulted during drain.
+        if self._cancellation_observer is not None:
+            self._cancellation_observer()
+
     def _wait_runtime_directory(
         self, lease: GpuLease, row: sqlite3.Row, path: Path, *, call_deadline: float
     ) -> None:
@@ -1429,6 +1453,7 @@ class OwnedVllmRuntime:
             self._clock() + 5.0, lease.activation_deadline, lease.total_deadline, call_deadline
         )
         while self._clock() < deadline:
+            self._check_cancellation()
             fresh = self.scheduler.heartbeat(lease)
             if fresh is None:
                 raise ModelRuntimeError("GPU activation lease expired before runtime directory")
@@ -1705,6 +1730,7 @@ class OwnedVllmRuntime:
         start = self._clock()
         deadline = min(lease.activation_deadline, lease.total_deadline, call_deadline)
         while self._clock() < deadline:
+            self._check_cancellation()
             current_lease = self.scheduler.heartbeat(lease)
             if current_lease is None:
                 raise ModelRuntimeError("GPU activation lease expired or was fenced")
@@ -1743,6 +1769,7 @@ class OwnedVllmRuntime:
                         None,
                         timeout=1,
                         maximum=64 * 1024,
+                        progress=self._check_cancellation,
                     )
                     data = models.get("data")
                     if isinstance(data, list) and data and isinstance(data[0], dict):
@@ -2002,6 +2029,7 @@ class OwnedVllmRuntime:
 
         def progress() -> None:
             nonlocal current
+            self._check_cancellation()
             fresh = self.scheduler.heartbeat(current)
             if fresh is None:
                 raise ModelRuntimeError("model inference lease expired or was fenced")
@@ -2067,6 +2095,7 @@ class OwnedVllmRuntime:
         if remaining <= 0:
             raise ModelRuntimeError("model episode deadline expired before GPU queue admission")
         queue_timeout = min(self.scheduler.queue_timeout_seconds, max(1, math.ceil(remaining)))
+        self._check_cancellation()
         entry = self.scheduler.submit(
             owner,
             request_id,
@@ -2076,11 +2105,17 @@ class OwnedVllmRuntime:
             total_seconds=min(self.scheduler.max_total_seconds, MODEL_RUNTIME_MAX_SECONDS),
             queue_timeout_seconds=queue_timeout,
         )
-        while self._clock() < min(entry.queue_deadline, call_deadline):
-            lease = self.scheduler.try_acquire(owner, request_id)
-            if lease is not None:
-                return lease
-            self._sleep(0.2)
+        try:
+            while self._clock() < min(entry.queue_deadline, call_deadline):
+                self._check_cancellation()
+                lease = self.scheduler.try_acquire(owner, request_id)
+                if lease is not None:
+                    return lease
+                self._sleep(0.2)
+        except BaseException:
+            # Authenticated cancel only touches this invocation's queued request.
+            self.scheduler.cancel_queued(owner, request_id)
+            raise
         self.scheduler.cancel_queued(owner, request_id)
         raise ModelRuntimeError("GPU ticket expired while waiting for a fair turn")
 
@@ -2247,14 +2282,16 @@ class OwnedVllmRuntime:
         host_peak = 0
         cpu_usage = 0
         try:
+            self._check_cancellation()
             # Recheck capacity immediately before the first external model side effect.
             self._phase = "host_preflight"
             self._preflight_host()
             self._phase = "durable_unit_intent"
             row = self._prepare_unit(lease)
             diagnostic_log = self._diagnostic_log_path(lease, row)
-            self._set_launch_result(lease, "uncertain")
             self._phase = "unit_launch"
+            self._check_cancellation()
+            self._set_launch_result(lease, "uncertain")
             self.units.launch(
                 row["unit"],
                 row["nonce"],

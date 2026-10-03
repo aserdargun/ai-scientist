@@ -16,9 +16,11 @@ import subprocess  # nosec B404 -- fixed systemctl command with validated unit n
 import time
 from collections.abc import Callable
 from contextlib import closing
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Protocol
+
+from lab.llm.aos_gpu_control_store import ControlStore
 
 OWNERS = ("aos", "lab")
 HEARTBEAT_SECONDS = 30
@@ -157,18 +159,17 @@ def _principal_unit_matches(owner: str, unit: str) -> bool:
     if owner not in OWNERS:
         return False
     fixed_gpu_unit = re.fullmatch(rf"swapp-{owner}-gpu-[a-z0-9_.@-]+\.service", unit)
-    run_bound_lab_dispatch = (
-        owner == "lab"
-        and re.fullmatch(
-            r"swapp-ai-scientist-director-dispatch-[0-9a-f]{32}\.service", unit
-        )
+    run_bound_lab_dispatch = owner == "lab" and re.fullmatch(
+        r"swapp-ai-scientist-director-dispatch-[0-9a-f]{32}\.service", unit
     )
     return fixed_gpu_unit is not None or bool(run_bound_lab_dispatch)
 
 
-def _systemctl_show(unit: str, *, owner: str) -> dict[str, str]:
+def _systemctl_show(unit: str, *, owner: str, timeout: float = 3.0) -> dict[str, str]:
     if not _principal_unit_matches(owner, unit):
         raise ValueError("GPU service unit name is outside the fixed deployment namespace")
+    if not 0 < timeout <= 3.0:
+        raise ValueError("systemd principal lookup timeout must be bounded")
     result = subprocess.run(  # nosec B603 -- fixed binary, fixed properties, validated unit
         [
             SYSTEMCTL,
@@ -180,7 +181,7 @@ def _systemctl_show(unit: str, *, owner: str) -> dict[str, str]:
         ],
         capture_output=True,
         text=True,
-        timeout=3,
+        timeout=timeout,
         check=False,
     )
     if result.returncode != 0:
@@ -285,6 +286,7 @@ class SharedGpuScheduler:
         max_total_seconds: int = DEFAULT_TOTAL_SECONDS,
         queue_timeout_seconds: int = MAX_QUEUE_SECONDS,
         clock: Callable[[], float] = boottime,
+        control_store: ControlStore | None = None,
     ) -> None:
         self._check_int(max_activation_seconds, 1, MAX_ACTIVATION_SECONDS, "activation")
         self._check_int(max_inference_seconds, 1, MAX_INFERENCE_SECONDS, "inference")
@@ -301,6 +303,9 @@ class SharedGpuScheduler:
         self._principal_resolver = principal_resolver
         self._drain_verifier = drain_verifier
         self._clock = clock
+        if control_store is not None and control_store.database.resolve() != database.resolve():
+            raise ValueError("control records must use the sole arbiter database")
+        self._control_store = control_store
         database.parent.mkdir(parents=True, exist_ok=True)
         self._database = database
         self._initialize_schema()
@@ -446,6 +451,11 @@ class SharedGpuScheduler:
         digest = hashlib.sha256(payload).hexdigest()
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
+            queue_deadline = timestamp + queue_timeout
+            if owner == "aos" and self._control_store is not None:
+                queue_deadline = self._control_store.before_submit(
+                    connection, request_id, digest, queue_deadline, asdict(receipt)
+                )
             existing = connection.execute(
                 "SELECT * FROM gpu_turn_requests WHERE owner=? AND request_id=?",
                 (owner, request_id),
@@ -484,7 +494,7 @@ class SharedGpuScheduler:
                         activation,
                         inference,
                         total,
-                        timestamp + queue_timeout,
+                        queue_deadline,
                         receipt.identity.pid,
                         receipt.identity.start_ticks,
                         receipt.identity.boot_id,
@@ -578,6 +588,16 @@ class SharedGpuScheduler:
                     )
                 connection.commit()
                 return None
+            if self._control_store is not None:
+                expired_tickets = connection.execute(
+                    "SELECT request_id FROM gpu_turn_requests "
+                    "WHERE owner='aos' AND state='queued' AND queue_deadline<=?",
+                    (timestamp,),
+                ).fetchall()
+                for ticket in expired_tickets:
+                    self._control_store.no_admission(
+                        connection, ticket["request_id"], "expired", "queue_timeout"
+                    )
             connection.execute(
                 "UPDATE gpu_turn_requests SET state='expired' "
                 "WHERE state='queued' AND queue_deadline<=?",
@@ -597,6 +617,10 @@ class SharedGpuScheduler:
                 if not _process_identity_alive(identity) or not self._principal_resolver.verify(
                     persisted
                 ):
+                    if ticket["owner"] == "aos" and self._control_store is not None:
+                        self._control_store.no_admission(
+                            connection, ticket["request_id"], "expired", "generation_lost"
+                        )
                     connection.execute(
                         "UPDATE gpu_turn_requests SET state='expired' "
                         "WHERE owner=? AND request_id=?",
@@ -633,11 +657,26 @@ class SharedGpuScheduler:
             token = int(state["active_token"]) + 1
             activation_deadline = timestamp + int(chosen["activation_seconds"])
             total_deadline = timestamp + int(chosen["total_seconds"])
+            if owner == "aos" and self._control_store is not None:
+                total_deadline = min(
+                    total_deadline, self._control_store.before_acquire(connection, request_id)
+                )
             activation_deadline = min(
                 activation_deadline, total_deadline - int(chosen["inference_seconds"])
             )
             inference_deadline = total_deadline
             heartbeat_deadline = min(timestamp + HEARTBEAT_SECONDS, activation_deadline)
+            if activation_deadline <= timestamp:
+                if owner == "aos" and self._control_store is not None:
+                    self._control_store.no_admission(
+                        connection, request_id, "expired", "queue_timeout"
+                    )
+                connection.execute(
+                    "UPDATE gpu_turn_requests SET state='expired' WHERE owner=? AND request_id=?",
+                    (owner, request_id),
+                )
+                connection.commit()
+                return None
             connection.execute(
                 "UPDATE gpu_turn_requests SET state='active' WHERE owner=? AND request_id=?",
                 (owner, request_id),
@@ -665,6 +704,13 @@ class SharedGpuScheduler:
                     receipt.invocation_id,
                 ),
             )
+            if owner == "aos" and self._control_store is not None:
+                allocated = connection.execute(
+                    "SELECT * FROM gpu_turn_state WHERE singleton=1"
+                ).fetchone()
+                self._control_store.bind_allocation(
+                    connection, asdict(self._lease_from_row(allocated))
+                )
             connection.commit()
         return GpuLease(
             owner,
@@ -765,6 +811,8 @@ class SharedGpuScheduler:
                 (inference_deadline, heartbeat_deadline),
             )
             row = connection.execute("SELECT * FROM gpu_turn_state WHERE singleton=1").fetchone()
+            if lease.owner == "aos" and self._control_store is not None:
+                self._control_store.mark_ready(connection, asdict(self._lease_from_row(row)))
             connection.commit()
         return self._lease_from_row(row)
 
@@ -797,12 +845,26 @@ class SharedGpuScheduler:
                 "UPDATE gpu_turn_requests SET state='canceled' WHERE owner=? AND request_id=?",
                 (owner, request_id),
             )
+            if owner == "aos" and self._control_store is not None:
+                self._control_store.no_admission(
+                    connection, request_id, "canceled", "caller_cancel"
+                )
             connection.commit()
             return True
 
     def _finish(
-        self, connection: sqlite3.Connection, lease: GpuLease, timestamp: float, *, expired: bool
+        self,
+        connection: sqlite3.Connection,
+        lease: GpuLease,
+        timestamp: float,
+        *,
+        expired: bool,
+        recovered: bool = False,
     ) -> None:
+        if lease.owner == "aos" and self._control_store is not None:
+            self._control_store.finish(
+                connection, asdict(lease), expired=expired, recovered=recovered
+            )
         owner = "lab" if lease.owner == "aos" else "aos"
         connection.execute(
             "UPDATE gpu_turn_requests SET state=? "
@@ -894,6 +956,59 @@ class SharedGpuScheduler:
             ):
                 connection.rollback()
                 return False
-            self._finish(connection, lease, timestamp, expired=True)
+            self._finish(connection, lease, timestamp, expired=True, recovered=True)
             connection.commit()
             return True
+
+    def recover_controlled_turn(self) -> bool:
+        """Trusted service recovery loop; never used by a control request worker.
+
+        Quarantine is committed before physical inspection. Blocking exact child
+        drain runs through the existing verifier outside SQLite's write lock.
+        """
+        if self._control_store is None:
+            return False
+        timestamp = self._now()
+        with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            unallocated_recovered = self._control_store.recover_unallocated(connection, limit=8)
+            state = connection.execute("SELECT * FROM gpu_turn_state WHERE singleton=1").fetchone()
+            if state["active_owner"] != "aos":
+                connection.commit()
+                return unallocated_recovered > 0
+            lease = self._lease_from_row(state)
+            controlled = connection.execute(
+                "SELECT allocation_sha256 FROM aos_control_requests WHERE request_id=?",
+                (lease.request_id,),
+            ).fetchone()
+            if controlled is None or controlled["allocation_sha256"] is None:
+                connection.commit()
+                return unallocated_recovered > 0
+            current = PrincipalReceipt(
+                lease.owner, lease.owner_identity, lease.owner_unit, lease.owner_invocation_id
+            )
+            try:
+                valid = self._principal_resolver.verify(current)
+            except (OSError, RuntimeError, subprocess.SubprocessError):
+                valid = False
+            phase_deadline = (
+                lease.activation_deadline
+                if lease.phase == "activating"
+                else lease.inference_deadline
+            )
+            needs_recovery = (
+                lease.phase == "quarantined"
+                or not valid
+                or timestamp >= phase_deadline
+                or timestamp >= lease.total_deadline
+                or timestamp >= lease.heartbeat_deadline
+                or self._control_store.should_recover(connection, asdict(lease))
+            )
+            if not needs_recovery:
+                connection.commit()
+                return unallocated_recovered > 0
+            connection.execute("UPDATE gpu_turn_state SET phase='quarantined' WHERE singleton=1")
+            self._control_store.mark_quarantined(connection, asdict(lease))
+            connection.commit()
+        released = self.recover_quarantined(expected_lease=lease)
+        return released or unallocated_recovered > 0

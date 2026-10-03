@@ -201,7 +201,9 @@ def seal_run_task_plan(
         elif observed_state == "stop_requested":
             assert_execution_owner_closure_transaction(connection, run_id=run_id)
         run = connection.execute(
-            select(runs.c.state, runs.c.task_plan_sha256, runs.c.task_plan_count)
+            select(
+                runs.c.state, runs.c.task_plan_sha256, runs.c.task_plan_count, runs.c.request_json
+            )
             .where(runs.c.run_id == run_id)
             .with_for_update()
         ).one_or_none()
@@ -221,7 +223,16 @@ def seal_run_task_plan(
             .mappings()
             .all()
         )
-        if not task_rows and run.state != "stop_requested":
+        stream = (
+            isinstance(run.request_json, dict) and run.request_json.get("purpose") == "mode-stream"
+        )
+        if stream:
+            from lab.director.mode_stream import plan_from_request
+
+            plan_from_request(run.request_json)
+            if task_rows:
+                raise ValueError("diagnostic mode streams cannot contain Scorer tasks")
+        if not task_rows and run.state != "stop_requested" and not stream:
             raise ValueError("an active completed run cannot seal an empty task plan")
         digest = canonical_task_plan_digest(task_rows)
         count = len(task_rows)

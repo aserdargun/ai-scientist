@@ -8,6 +8,7 @@ import pytest
 
 from lab import cli
 from lab.cli import _validated_gpu_runtime_database
+from lab.director.ownership import ExecutionOwner
 
 
 def _private_directory(path: Path) -> Path:
@@ -41,6 +42,19 @@ def test_provider_uses_only_the_fixed_shared_database_from_service_environment(
     database = home / ".local/state/swapp-gpu/arbiter.sqlite3"
     captured: dict[str, object] = {}
     expected_config = "a" * 64
+    run_id = uuid4()
+    engine = object()
+    owner = ExecutionOwner(
+        run_id=run_id, generation=1, invocation_id="d" * 32, execution_sha256="e" * 64
+    )
+
+    def observer() -> None:
+        pass
+
+    def observer_factory(actual_engine, actual_owner):
+        assert actual_engine is engine
+        assert actual_owner is owner
+        return observer
 
     monkeypatch.setenv("SWAPP_AOS_GPU_UNIT", "swapp-aos-gpu-review.service")
     monkeypatch.setenv(
@@ -49,16 +63,22 @@ def test_provider_uses_only_the_fixed_shared_database_from_service_environment(
     monkeypatch.setenv("SWAPP_GPU_RUNTIME_DB", str(database))
     monkeypatch.setattr(cli, "provider_config_sha256", lambda profile_set: expected_config)
     monkeypatch.setattr(cli, "SystemdPrincipalResolver", lambda units: units)
+    monkeypatch.setattr(cli, "active_execution_owner", lambda: owner)
+    monkeypatch.setattr(cli, "_director_model_observer", observer_factory)
 
     def provider_factory(**kwargs: object) -> SimpleNamespace:
         captured.update(kwargs)
         return SimpleNamespace(configuration_sha256=expected_config)
 
     monkeypatch.setattr(cli, "LocalQwenProposalProvider", provider_factory)
-    provider = cli._local_qwen_provider(uuid4(), "c" * 64, profile_set="research")
+    provider = cli._local_qwen_provider(
+        run_id, "c" * 64, director_engine=engine, profile_set="research"
+    )
 
     assert provider.configuration_sha256 == expected_config
     assert captured["runtime_database"] == database
+    assert captured["cancellation_observer"] is observer
+    assert captured["proposal_contract"] == "candidate-python.v1"
 
 
 def test_shared_database_may_be_created_by_broker_after_validation(

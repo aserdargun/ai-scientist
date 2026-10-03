@@ -1,0 +1,1 @@
+{"assigned":{"activation_deadline_us":null,"admitted_boottime_us":null,"boot_id":"00000000-0000-0000-0000-000000000001","envelope_deadline_us":null,"inference_deadline_us":null,"queue_deadline_us":null,"total_deadline_us":null},"profile_limits":{"activation_seconds":600,"context_tokens":4096,"inference_seconds":60,"max_output_tokens":512,"queue_seconds":900,"total_seconds":660}}

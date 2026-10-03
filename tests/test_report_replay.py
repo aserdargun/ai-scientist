@@ -323,3 +323,177 @@ def test_nrm_guard_requires_complete_artifact_bound_suite(monkeypatch: pytest.Mo
     )[0]
     assert incomplete.state == "pending"
     assert not incomplete.passed
+
+
+@pytest.mark.parametrize("family", ["EVT", "NRM"])
+def test_replay_score_evidence_uses_only_selected_artifact_root(
+    tmp_path, monkeypatch: pytest.MonkeyPatch, family: str
+) -> None:
+    from contextlib import contextmanager
+
+    from harness.baselines import normalize_task_score
+    from lab.director.baselines import (
+        BASELINE_NAMES,
+        build_task_calibration,
+        calibration_sha256,
+        freeze_calibration_document,
+    )
+    from lab.director.journal import canonical_bytes
+    from lab.replay import _verify_score_evidence
+    from lab.scorer.jobs import DEFAULT_ARTIFACT_ROOT
+
+    # The ambient default is an isolated empty cwd, not the user's runtime.
+    monkeypatch.chdir(tmp_path)
+    artifact_root = tmp_path / "selected-run-artifacts"
+    payload = canonical_bytes(
+        {
+            "schema": "candidate-scores.v1",
+            "sample_indices": list(range(32)),
+            "scores": [float(index % 4) for index in range(32)],
+        }
+    )
+    digest = hashlib.sha256(payload).hexdigest()
+
+    def fixture_blob(root):
+        shard = root / digest[:2]
+        shard.mkdir(parents=True, mode=0o700)
+        path = shard / f"{digest}.json"
+        path.write_bytes(payload)
+        path.chmod(0o600)
+        return path
+
+    selected_blob = fixture_blob(artifact_root)
+    run_id = UUID("00000000-0000-0000-0000-000000000126")
+    parent_id, child_id = "exp_" + "0" * 32, "exp_" + "1" * 32
+    task = build_task_calibration(
+        task_id="task-1",
+        dataset_id="fixture",
+        split_id="dev",
+        session_id="session-1",
+        profile_sha256=_digest("profile"),
+        family=family,
+        baseline_seed_scores={name: {seed: 0.2 for seed in range(3)} for name in BASELINE_NAMES},
+        scorer_artifact_sha256={
+            name: {seed: digest for seed in range(3)} for name in BASELINE_NAMES
+        },
+        baseline_candidate_sha256={name: _digest(name) for name in BASELINE_NAMES},
+        task_weight=1.0,
+    )
+    calibration = freeze_calibration_document(
+        run_id=run_id,
+        suite_id="fixture-suite",
+        suite_version=1,
+        harness_sha256=_digest("harness"),
+        image_sha256=_digest("image"),
+        tasks=(task,),
+        expected_task_identities=(("fixture", "dev", "session-1", "task-1"),),
+        champion_experiment_id=parent_id,
+        champion_baseline_name="robust_z",
+        champion_suite_scores={seed: 0.0 for seed in range(3)},
+    )
+    bias = check_complete_suite_position_bias(
+        {task.task_id: tuple(float(index % 4) for index in range(32))} if family == "NRM" else {},
+        {task.task_id: family},
+    )
+
+    def row(seed, kind, score):
+        return {
+            "candidate_sha256": _digest("candidate"),
+            "seed": seed,
+            "task_id": task.task_id,
+            "evaluation_kind": kind,
+            "dataset_id": task.dataset_id,
+            "split_id": task.split_id,
+            "session_id": task.session_id,
+            "profile_sha256": task.profile_sha256,
+            "task_family": family,
+            "task_score": score,
+            "candidate_output_sha256": digest,
+            "position_bias": bias.task_bias.get(task.task_id),
+        }
+
+    parent_rows = [row(seed, "baseline", 0.2) for seed in range(3)]
+    child_rows = [row(0, "primary", 0.3)]
+
+    class Engine:
+        @contextmanager
+        def connect(self):
+            yield self
+
+        def execute(self, query, parameters):
+            del query
+            rows = parent_rows if parameters["experiment_id"] == parent_id else child_rows
+            return SimpleNamespace(mappings=lambda: SimpleNamespace(all=lambda: rows))
+
+    def receipt(experiment_id, seed, kind, score):
+        return hashlib.sha256(
+            canonical_bytes(
+                {
+                    "experiment_id": experiment_id,
+                    "seed": seed,
+                    "evaluation_kind": kind,
+                    "task_ids": (task.task_id,),
+                    "raw_scores": (score,),
+                    "output_sha256": (digest,),
+                }
+            )
+        ).hexdigest()
+
+    manifest = SimpleNamespace(
+        run_id=run_id,
+        calibration_sha256=calibration_sha256(calibration),
+        task_ids=(task.task_id,),
+        task_families=(family,),
+        profile_sha256=(task.profile_sha256,),
+        normalization_base=(task.base_score,),
+        normalization_reference=(task.reference_score,),
+        weights=(1.0,),
+        parent_experiment_id=parent_id,
+        experiment_id=child_id,
+        parent_seed_ids=(0,),
+        parent_seed_evaluation_kinds=("baseline",),
+        parent_raw_scores=((0.2,),),
+        parent_seed_output_sha256=((digest,),),
+        parent_seed_score_sha256=(receipt(parent_id, 0, "baseline", 0.2),),
+        decision_seeds=(0,),
+        child_raw_scores=((0.3,),),
+        child_seed_output_sha256=((digest,),),
+        child_seed_score_sha256=(receipt(child_id, 0, "primary", 0.3),),
+        parent_noise_seed_ids=(0, 1, 2),
+        parent_noise_evaluation_kinds=("baseline", "baseline", "baseline"),
+        parent_noise_raw_scores=((0.2,), (0.2,), (0.2,)),
+        parent_noise_output_sha256=((digest,), (digest,), (digest,)),
+        parent_noise_score_sha256=tuple(
+            receipt(parent_id, seed, "baseline", 0.2) for seed in range(3)
+        ),
+        position_bias_threshold=0.8,
+        guard_results={"position_bias": "pass"},
+        parent=(
+            float(normalize_task_score(0.2, task.base_score, task.reference_score, family=family)),
+        ),
+        child=(
+            float(normalize_task_score(0.3, task.base_score, task.reference_score, family=family)),
+        ),
+        noise_sd=0.0,
+    )
+
+    def verify():
+        _verify_score_evidence(
+            Engine(),
+            manifest,
+            parent_experiment=SimpleNamespace(
+                experiment_id=parent_id, candidate_sha256=_digest("candidate")
+            ),
+            child_experiment=SimpleNamespace(
+                experiment_id=child_id, candidate_sha256=_digest("candidate")
+            ),
+            calibration=calibration,
+            artifact_root=artifact_root,
+        )
+
+    verify()
+    # A matching blob in the ambient default must not rescue missing run evidence.
+    fixture_blob(DEFAULT_ARTIFACT_ROOT)
+    selected_blob.unlink()
+    with pytest.raises(FileNotFoundError):
+        verify()

@@ -8,6 +8,7 @@ import os
 import re
 import subprocess  # nosec B404 -- fixed systemctl command and validated unit names
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid5
@@ -20,6 +21,7 @@ from lab.director.journal import DirectorRunLease, canonical_bytes
 from lab.director.ledger import canonical_json_bytes
 from lab.director.ownership import ExecutionOwner, owned_execution
 from lab.director.task_plan import seal_run_task_plan
+from lab.scorer.baseline_report import validate_baseline_report
 from lab.scorer.supervisor import run_scorer_finalize_process
 
 OWNER_DRAIN_UNIT = "swapp-ai-scientist-director-drain.service"
@@ -339,7 +341,8 @@ def inspect_recovery(
         run = (
             connection.execute(
                 text(
-                    "SELECT state,payload_sha256,report_sha256 FROM lab.runs WHERE run_id=:run_id"
+                    "SELECT state,payload_sha256,report_sha256,"
+                    "request_json->>'purpose' AS purpose FROM lab.runs WHERE run_id=:run_id"
                 ),
                 {"run_id": run_id},
             )
@@ -493,10 +496,21 @@ def inspect_recovery(
         report_json = report_row["report_json"]
         try:
             report_digest = hashlib.sha256(canonical_bytes(report_json)).hexdigest()
+            schema_valid = False
+            if isinstance(report_json, dict):
+                if run["purpose"] == "baseline":
+                    validate_baseline_report(report_json)
+                    schema_valid = True
+                elif run["purpose"] == "mode-stream":
+                    from lab.scorer.mode_stream_report import validate_mode_stream_report
+
+                    validate_mode_stream_report(report_json)
+                    schema_valid = True
+                else:
+                    schema_valid = report_json.get("schema") == "lab.report.v1"
             report_valid = (
                 report_digest == report_row["report_sha256"] == run["report_sha256"]
-                and isinstance(report_json, dict)
-                and report_json.get("schema") == "lab.report.v1"
+                and schema_valid
                 and report_json.get("run_id") == str(run_id)
                 and report_json.get("status") == run["state"]
             )
@@ -557,6 +571,7 @@ def _persist_receipt(
     owner: OwnerGeneration | None,
     state: str,
     result: dict[str, Any],
+    execution_owner: ExecutionOwner | None = None,
 ) -> dict[str, Any]:
     result_bytes = canonical_bytes(result)
     digest = hashlib.sha256(result_bytes).hexdigest()
@@ -615,7 +630,36 @@ def _persist_receipt(
                 if hashlib.sha256(old_bytes).hexdigest() != existing["result_sha256"]:
                     raise ValueError("stored terminal recovery receipt digest is invalid")
                 return {**old, "recovery_state": existing["state"], "replayed": True}
-        else:
+        if execution_owner is not None:
+            # Evidence belongs to this captured generation, not a later worker.
+            # A terminal run cannot use the active-work assertion RPC. Lock and
+            # compare its canonical rows only; grant no new mutation capability.
+            identity = (
+                connection.execute(
+                    text(
+                        "SELECT r.state,r.report_sha256,c.current_generation,"
+                        "o.worker_invocation_id,o.execution_sha256 "
+                        "FROM lab.runs r JOIN lab.director_execution_control c USING(run_id) "
+                        "JOIN lab.director_owner_generations o ON o.run_id=c.run_id "
+                        "AND o.generation=c.current_generation WHERE r.run_id=:run_id "
+                        "FOR UPDATE OF r"
+                    ),
+                    {"run_id": run_id},
+                )
+                .mappings()
+                .one_or_none()
+            )
+            if (
+                execution_owner.run_id != run_id
+                or identity is None
+                or identity["state"] != "stopped"
+                or identity["report_sha256"] != result.get("report_sha256")
+                or identity["current_generation"] != execution_owner.generation
+                or identity["worker_invocation_id"] != execution_owner.invocation_id
+                or identity["execution_sha256"] != execution_owner.execution_sha256
+            ):
+                raise ValueError("terminal cancellation audit execution generation changed")
+        if existing is None:
             values["state"] = "started"
             values["result_json"] = None
             values["result_sha256"] = None
@@ -716,6 +760,35 @@ def _ensure_recovery_intent(
     return None
 
 
+def _stopped_proposal_requires_attempted_closure(
+    director: Engine, run_id: UUID, recovery_id: UUID
+) -> bool:
+    """Route by the actual proposal stage or its durable stop marker, never fabricate a stage."""
+    with director.connect() as connection:
+        rows = (
+            connection.execute(
+                text(
+                    "SELECT e.status,(SELECT to_jsonb(s)->>'stop_mode' "
+                    "FROM lab.director_stopped_proposals s WHERE s.recovery_id=:id "
+                    "AND s.experiment_id=e.experiment_id) AS stop_mode "
+                    "FROM lab.experiments e WHERE e.run_id=:run AND e.kind='proposal' "
+                    "ORDER BY e.sequence LIMIT 2"
+                ),
+                {"id": recovery_id, "run": run_id},
+            )
+            .mappings()
+            .all()
+        )
+    if len(rows) != 1:
+        raise RecoveryPending("proposal stop requires one exact registered proposal")
+    row = rows[0]
+    if row["status"] == "primary_running" or row["stop_mode"] == "primary_admitted":
+        return True
+    if row["status"] in {"proposed", "abandoned"} and row["stop_mode"] in {None, "unattempted"}:
+        return False
+    raise RecoveryPending("proposal stop stage is unsupported; original admission is retained")
+
+
 def apply_stop_and_finalize(
     director: Engine,
     planner: Engine,
@@ -726,10 +799,21 @@ def apply_stop_and_finalize(
     reconcile_interrupted_baseline: bool = False,
     reconcile_interrupted_proposal: bool = False,
     artifact_root: Path | None = None,
+    expected_owner: ExecutionOwner | None = None,
+    cleanup_deadline: datetime | None = None,
 ) -> dict[str, Any]:
     """Stop a proven-dead Director owner and finalize only fully verified work."""
     if isinstance(remaining_seconds, bool) or not 1 <= remaining_seconds <= 600:
         raise ValueError("recovery finalization deadline must be in 1..600 seconds")
+    if cleanup_deadline is not None:
+        if not isinstance(cleanup_deadline, datetime) or cleanup_deadline.tzinfo is None:
+            raise ValueError("stop cleanup deadline must be timezone aware")
+        remaining_seconds = min(
+            remaining_seconds,
+            int((cleanup_deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()),
+        )
+        if remaining_seconds < 1:
+            raise RecoveryPending("original automatic stop cleanup deadline expired")
     request_sha = _request_sha256(run_id, "stop_and_finalize")
     expected_recovery_id = _recovery_id(run_id, request_sha)
     if recovery_id != expected_recovery_id:
@@ -738,7 +822,7 @@ def apply_stop_and_finalize(
         run = (
             connection.execute(
                 text(
-                    "SELECT state,payload_sha256,report_sha256,request_json "
+                    "SELECT state,payload_sha256,report_sha256,request_json,owner_id,origin "
                     "FROM lab.runs WHERE run_id=:id"
                 ),
                 {"id": run_id},
@@ -777,6 +861,8 @@ def apply_stop_and_finalize(
         )
         if owner is None or execution_owner.invocation_id != owner.worker_invocation_id:
             raise ValueError("current execution generation differs from the proven owner")
+    if expected_owner is not None and execution_owner != expected_owner:
+        raise RecoveryPending("automatic stop execution generation changed")
     if owner is not None and owner.payload_sha256 != run["payload_sha256"]:
         raise ValueError("persisted Director owner payload differs from the run request")
     if run["state"] not in TERMINAL_RUNS | {"running", "stop_requested"}:
@@ -899,8 +985,18 @@ def apply_stop_and_finalize(
                     )
                 from lab.director.stopped_proposal import reconcile_stopped_proposal
 
+                if reconcile_interrupted_proposal and _stopped_proposal_requires_attempted_closure(
+                    director, run_id, recovery_id
+                ):
+                    from lab.director.attempted_proposal_stop import (
+                        reconcile_stopped_attempted_proposal,
+                    )
+
+                    proposal_reconcile = reconcile_stopped_attempted_proposal
+                else:
+                    proposal_reconcile = reconcile_stopped_proposal
                 reconcile = (
-                    reconcile_stopped_proposal
+                    proposal_reconcile
                     if reconcile_interrupted_proposal
                     else reconcile_stopped_baseline
                 )
@@ -913,6 +1009,7 @@ def apply_stop_and_finalize(
                     execution_owner=execution_owner,
                     lease=lease,
                     artifact_root=artifact_root,
+                    **({"deadline_at": cleanup_deadline} if cleanup_deadline is not None else {}),
                 )
             except RecoveryPending as exc:
                 return _persist_receipt(
@@ -928,13 +1025,11 @@ def apply_stop_and_finalize(
         blockers = _child_blockers(planner, run_id, requires_gpu=requires_gpu)
         if blockers:
             with director.begin() as connection:
+                # The owner-bound RPC supplies the API stop context and skips
+                # the guarded UPDATE entirely when stop was already requested.
                 connection.execute(
-                    text(
-                        "UPDATE lab.runs SET state='stop_requested',stop_requested=true,"
-                        "updated_at=now() "
-                        "WHERE run_id=:id AND state='running'"
-                    ),
-                    {"id": run_id},
+                    text("SELECT lab.request_director_run_stop(:id,:owner_id,:origin)"),
+                    {"id": run_id, "owner_id": run["owner_id"], "origin": run["origin"]},
                 )
                 _insert_event(
                     connection,
@@ -969,11 +1064,8 @@ def apply_stop_and_finalize(
             ).scalar_one()
             if current == "running":
                 connection.execute(
-                    text(
-                        "UPDATE lab.runs SET state='stop_requested',stop_requested=true,"
-                        "updated_at=now() WHERE run_id=:id"
-                    ),
-                    {"id": run_id},
+                    text("SELECT lab.request_director_run_stop(:id,:owner_id,:origin)"),
+                    {"id": run_id, "owner_id": run["owner_id"], "origin": run["origin"]},
                 )
                 _insert_event(
                     connection,
@@ -1040,7 +1132,25 @@ def apply_stop_and_finalize(
                         },
                     )
                 remaining_seconds = min(remaining_seconds, remaining)
+        canceled_budget_audit = None
+        if requires_gpu and execution_owner is not None and artifact_root is not None:
+            from lab.director.cancelled_attempt_audit import cancelled_attempt_audit
+
+            canceled_budget_audit = cancelled_attempt_audit(
+                director,
+                lease=lease,
+                owner=execution_owner,
+                request=run_request,
+                artifact_root=artifact_root,
+            )
         try:
+            if cleanup_deadline is not None:
+                remaining_seconds = min(
+                    remaining_seconds,
+                    int((cleanup_deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()),
+                )
+                if remaining_seconds < 1:
+                    raise RecoveryPending("original automatic stop cleanup deadline expired")
             if execution_owner is None:
                 raise ValueError("stop seal requires its historical execution owner")
             with owned_execution(execution_owner):
@@ -1063,6 +1173,13 @@ def apply_stop_and_finalize(
                 result=result,
             )
         try:
+            if cleanup_deadline is not None:
+                remaining_seconds = min(
+                    remaining_seconds,
+                    int((cleanup_deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()),
+                )
+                if remaining_seconds < 1:
+                    raise RecoveryPending("original automatic stop cleanup deadline expired")
             if execution_owner is None:
                 raise ValueError("Scorer finalization requires a captured execution generation")
             if reconcile_interrupted_baseline or reconcile_interrupted_proposal:
@@ -1154,6 +1271,8 @@ def apply_stop_and_finalize(
             "finalizer_unit": finalized.unit,
             "finalizer_exit_code": finalized.exit_code,
         }
+        if canceled_budget_audit is not None:
+            result["cancelled_model_budget_audit"] = canceled_budget_audit
         return _persist_receipt(
             director,
             recovery_id=recovery_id,
@@ -1163,6 +1282,7 @@ def apply_stop_and_finalize(
             owner=owner,
             state="completed",
             result=result,
+            execution_owner=execution_owner,
         )
     finally:
         lease.__exit__(None, None, None)

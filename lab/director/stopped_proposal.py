@@ -7,6 +7,7 @@ import json
 import os
 import time
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid5
@@ -270,6 +271,7 @@ def reconcile_stopped_proposal(
     execution_owner: ExecutionOwner,
     lease: DirectorRunLease,
     artifact_root: Path,
+    deadline_at: datetime | None = None,
 ) -> None:
     """Close this exact no-candidate-job shape after validation, under one fixed window."""
     with director.connect() as connection:
@@ -355,6 +357,12 @@ def reconcile_stopped_proposal(
         )
     if seconds <= 0:
         raise recovery.RecoveryPending("original stopped-closure cleanup deadline expired")
+    if deadline_at is not None:
+        if not isinstance(deadline_at, datetime) or deadline_at.tzinfo is None:
+            raise ValueError("stop cleanup deadline must be timezone aware")
+        seconds = min(seconds, (deadline_at.astimezone(UTC) - datetime.now(UTC)).total_seconds())
+        if seconds <= 0:
+            raise recovery.RecoveryPending("original automatic stop cleanup deadline expired")
     deadline = time.monotonic() + min(120.0, seconds)
     _drain_director_sandbox(run_id, asdict(owner), artifact_root, deadline)
     remaining = int(deadline - time.monotonic())
@@ -367,6 +375,10 @@ def reconcile_stopped_proposal(
     if not prove_stopped_owner_dead(owner, run_id):
         raise recovery.RecoveryPending("current Director identity no longer proves dead")
     commit_seconds = remaining_stop_closure_seconds(director, recovery_id)
+    if deadline_at is not None and commit_seconds is not None:
+        commit_seconds = min(
+            commit_seconds, int((deadline_at.astimezone(UTC) - datetime.now(UTC)).total_seconds())
+        )
     if commit_seconds is None or commit_seconds < 1:
         raise recovery.RecoveryPending("original stopped-closure deadline expired before commit")
     with owned_execution(execution_owner):

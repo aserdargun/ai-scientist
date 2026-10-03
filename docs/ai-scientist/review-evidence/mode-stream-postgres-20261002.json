@@ -1,0 +1,371 @@
+{
+  "acceptance_harness_sha256": "171535af926b8c63ebe9d16b3e9bde5f76f481046faa483be4ab66cd0f841674",
+  "cancellation": {
+    "acceptance_upper_bound_seconds": 3.5,
+    "cleanup_seconds": 0.1741999059995578,
+    "connection_absent": true,
+    "independent_capture_only_cleanup_seconds": 0.1184048499999335,
+    "method": "close actual HTTP socket after observing active PostgreSQL FETCH in the exact owned source connection",
+    "observed_active_db_sessions": [
+      [
+        91,
+        "active",
+        "FETCH"
+      ]
+    ],
+    "statement_timeout_seconds": 5.0
+  },
+  "changed_source_sha256": {
+    "console/app.py": "bf8d76b1770fefd16e003b77976c3cc4f9b93ab17c6a2405153fe2b8b14f21c9",
+    "console/upstream.py": "1be508cf2d204e8fb236ab8afa8d9876da412b5adc96d2fe9baa5565e1ce29d7",
+    "console/web/src/ui/ModeStreamForm.tsx": "7ab68df71959fd5f4101726b53eb5012062d2986e3621ac027205963c7d707cd",
+    "console/web/src/ui/ModeStreamProgress.tsx": "6ef1d9a3416dfd15425e28549911a3b5c4199bc96f4f0abe512f12cf2952bd31",
+    "console/web/src/ui/types.ts": "200994e755c2fed82ee1bf2444e78a28c12b4c73315a47d7d9914e02978bc5f3",
+    "harness/VERSION": "45cf252eabfb9874cf77978f8074fddb21798cd05a2ba646116b3999024fd35d",
+    "lab/api/app.py": "db6a286dbc6bde3ee4b6a592610321199672200e0d71129db30f5ffd21887075",
+    "lab/api/mode_sources.py": "e744b56984b85640f10dd013e4a2dc7aa418be2f5b7cb3b702b86598db1493ae",
+    "lab/api/mode_stream.py": "36426015a8a6e01913282182f0621637e813fc9e422a639506367331b538baca",
+    "lab/director/mode_stream.py": "04250df20a16ea1eb3395274b80c2891bfe20c04cd1f6f9c7dbdbf487e95b968",
+    "lab/operating_modes/database_stream.py": "22b481bb11db08ee16be70dd6a6eb12f24575428906176688f9ed9c16746df2b",
+    "lab/operating_modes/stream.py": "ade95d9cab5faafbbf4c80d7a87d242db778b9cd6c70d4a03ec51f1f5c22bb91",
+    "lab/sandbox/candidate_entrypoint.py": "7e2c5035994cf94cb5788c4509d63b7317e2c841051b2f944047e0317ce9e0eb",
+    "lab/sandbox/mode_stream.py": "18f7c4a6fe400878ed898e05cefb269a111b41bfa5bfb05e370e4144dc0fef92",
+    "ops/sandbox-image.lock": "3a387c591778e602995a358073f6a4035fc1539a0f64868118e1c2bff765c06c",
+    "scripts/update_development_metrics.py": "6374dab6d14d3faf2750c40fb98803229afd9a72a14eb1db48f9b639d506afbd",
+    "tests/test_console_mode_stream.py": "0217f2e413860500b2708544a6569e15776e2b8a9fdb891362e11b1a42ce8251",
+    "tests/test_development_metrics.py": "d34ca1c758698336a19ec293c9358aa1a45df84be5f2ee25f7e1760b8b4dab46",
+    "tests/test_mode_stream_database_api.py": "ee89ecd2a5233a2e4c383302821a5c13802c657e8edacd8c310468635ca43039",
+    "tests/test_mode_stream_database_input.py": "08f580bee28188f6044fddeaaf7ab7c426d237703bd200f6f5d2a6c5fb561139",
+    "tests/test_mode_stream_sandbox.py": "c720c88c1cab80f150303e9ebb7df3541be3bf316fe80b333751def59186f15a"
+  },
+  "checks": {
+    "capture_failures_created_no_runs": true,
+    "capture_idempotency_and_recipe_mismatch": true,
+    "disconnect_cleanup_precedes_statement_timeout": true,
+    "duplicate_timestamp_and_row_overflow_rejected": true,
+    "foreign_owner_capture_and_hash_start_rejected": true,
+    "original_capture_timeout_connection_absent": true,
+    "real_utc_and_cross_chunk_gaps_preserved": true,
+    "same_fit_and_global_row_order": true
+  },
+  "cleanup": {
+    "director": {
+      "ActiveState": "inactive",
+      "ControlGroup": "",
+      "InvocationID": "",
+      "LoadState": "not-found",
+      "MainPID": "0",
+      "WorkingDirectory": ""
+    },
+    "owned_http_services": [
+      {
+        "exit_code": -15,
+        "pid": 179474,
+        "service": "console"
+      },
+      {
+        "exit_code": -15,
+        "pid": 179471,
+        "service": "api"
+      }
+    ],
+    "p1_intent_absent_at_source_observation": true,
+    "postgres_cleanup_verified": true,
+    "postgres_removed": true
+  },
+  "configuration": {
+    "alarm_quantile": 0.99,
+    "calibration": "leave_one_out",
+    "calibration_fraction": 0.2,
+    "dwell": 3,
+    "k": 3,
+    "lsh_merge_tables": 2,
+    "lsh_projections": 3,
+    "lsh_tables": 4,
+    "lsh_width": 0.35,
+    "method": "lsh",
+    "metric": "euclidean",
+    "min_support": 4,
+    "optics_max_eps": 2.0,
+    "optics_min_cluster_size": 8,
+    "optics_min_samples": 8,
+    "optics_xi": 0.05,
+    "release_ratio": 0.8,
+    "seed": 0,
+    "som_columns": 3,
+    "som_iterations": 400,
+    "som_learning_rate": 0.3,
+    "som_rows": 3,
+    "som_sigma": 1.5,
+    "tolerance_multiplier": 1.25,
+    "tolerance_quantile": 0.99,
+    "weighting": "distance"
+  },
+  "contracts": {
+    "aos": "control v2 unchanged",
+    "database_frame": "mode-stream-frame.v2",
+    "database_input": "mode-stream-input.v2",
+    "gpu_authority": "existing canonical SQLite arbiter only; this CPU stream does not acquire GPU",
+    "lifecycle": "mode-stream.v1"
+  },
+  "coordination": {
+    "aos_confirmation_received": false,
+    "aos_peer_message_delivery": "failed",
+    "handoff_document": "docs/ai-scientist/06-aos-coordination.md",
+    "native_gpu_execution": "not_started",
+    "reason": "local MCP transport unavailable"
+  },
+  "delivery_harness_sha256": "52032ca91c85f723be8bec9ef5465ab15fbe79c7c75e75ea4f2631199c16545a",
+  "execution": {
+    "capture_seconds": 1.4613592229979986,
+    "chunks": 66,
+    "dispatch_exit_code": 0,
+    "monitor_rows": 4224,
+    "observed_chunks": [
+      0,
+      2,
+      48,
+      65
+    ],
+    "run_id": "60f06a60-3f16-49c6-be9a-efbd4702b0e2",
+    "run_seconds": 227.58332179900026,
+    "same_fit_and_order_verified": true,
+    "source_default_timezone": "Europe/Istanbul",
+    "source_role_select_only": true,
+    "status": "completed",
+    "total_acceptance_seconds": 239.6181087010009,
+    "transport": "real HTTP through console BFF and Lab API"
+  },
+  "failed_observations_preserved": [
+    {
+      "reason": "missing fixed console Host header returned 403; guard unchanged; no experiment created",
+      "scope": "private acceptance client setup"
+    },
+    {
+      "reason": "server cursor shows FETCH rather than table name; observer corrected; no experiment created",
+      "scope": "private observer setup"
+    },
+    {
+      "accepted": false,
+      "normal_stream_passed": true,
+      "reason": "matches the statement timeout; not cancellation evidence",
+      "scope": "pre-fix actual disconnect",
+      "seconds": 5.022104407002189
+    },
+    {
+      "reason": "untracked duplicate image lock collided with canonical wheel force-include",
+      "scope": "first final quality gate",
+      "wheel_exit_code": 2
+    }
+  ],
+  "feature_branch": "feat/omr-stream-v1",
+  "feature_commit": "5201e956993db716bbdd83940852b2a0b594c11d",
+  "gpu": {
+    "context": null,
+    "handoff_seconds": null,
+    "model": null,
+    "quantization": null,
+    "reason": "No GPU or research LLM was invoked; these are unmeasured, not zero-valued GPU acceptance results.",
+    "used": false,
+    "vram_peak_mib": null,
+    "wait_seconds": null
+  },
+  "harness_version": "0.43.0",
+  "input": {
+    "chunk_count": 66,
+    "evaluation_rows": 4224,
+    "input_sha256": "d0fe72ba9cd3c3b4e0e655e44cee8800eadae988622de3f49cc9354bd0f64323",
+    "scoring_available": false,
+    "sensors": [
+      "temperature",
+      "pressure",
+      "vibration"
+    ],
+    "source": {
+      "alarm_basis": "observed_rows",
+      "entity": "asset-1",
+      "first_utc": "2026-01-01T00:00:00+00:00",
+      "gap_count": 45,
+      "last_utc": "2026-01-01T03:05:07.625000+00:00",
+      "local_export_allowed": false,
+      "sampling_seconds": 2.5,
+      "source_definition_sha256": "5f66be96f1f0f99ea83be8192db63792693d7b031ccb7e1aa7d3ddace946ace4",
+      "source_id": "generated-pg",
+      "source_version": "generated-pg-fixture.v1",
+      "timeline_sha256": "a7778d029312b0360906d9344c4b5acd77a25cfcb8910c1409971bcc469fab28",
+      "train_end_utc": "2026-01-01T00:07:57.625000+00:00",
+      "units": [
+        "degC",
+        "bar",
+        "mm/s"
+      ]
+    },
+    "source_kind": "private_database",
+    "train_rows": 192
+  },
+  "not_run": [
+    "browser visual acceptance",
+    "stream crash/resume under actual process failure",
+    "real industrial source/database acceptance",
+    "native AOS/GPU handoff and cancellation with current pins",
+    "autonomous method/model improvement",
+    "LoRA/QLoRA learned adapter",
+    "public CI and license completion"
+  ],
+  "operator_source_sha256": {
+    "fixture.py": "f8fe6a6f06fdc9bdeb4f491261f146488f7cf4c8a911258e2f12e99f7217d735",
+    "run_database.py": "da5dc1344b9300c523c464b7a94f91fd2a0af299c3a16fc9fe2e2295ef67c9a9",
+    "serve_console.py": "acc2ebc0bd7e5561f8a4492a7f0840c6e8eb4945f78e49997e89864dcc0ad064"
+  },
+  "packaging_correction": {
+    "acceptance_harness_sha256": "171535af926b8c63ebe9d16b3e9bde5f76f481046faa483be4ab66cd0f841674",
+    "cause": "Untracked lab/sandbox/image.lock duplicated the wheel force-include from ops/sandbox-image.lock.",
+    "correction": "Removed owned duplicate from source tree; canonical ops lock and runtime code unchanged.",
+    "created_at": "2026-10-02T12:21:14.893633+00:00",
+    "delivery_harness_sha256": "52032ca91c85f723be8bec9ef5465ab15fbe79c7c75e75ea4f2631199c16545a",
+    "in_memory_old_fingerprint_reconstruction_verified": true,
+    "only_trusted_source_delta": "removed duplicate lab/sandbox/image.lock; identical bytes remain in ops/sandbox-image.lock",
+    "sha256": "3a387c591778e602995a358073f6a4035fc1539a0f64868118e1c2bff765c06c"
+  },
+  "postgres_image": "sha256:efedf3595f1d6f415c08568ba171029bf54052e754cc9f030e3f2412b21f3d67",
+  "private_evidence_sha256": {
+    "database-result.private.json": "4c82070c895de63297cb8753d97f5f81a56173968c02dfd078ead1adf25865dd",
+    "postgres.private.json": "e60344ea9f1fcae6e08f6d0f09d30a8fbdf9ce1d6fdaa5a7802e9bdf2dd6a245",
+    "selected-chunks.private.json": "5db6538588ddcabfe3a19fd2c2c21fb3c7a39a89822c80511e31cf58c6103f23",
+    "source-fixture.private.json": "f65cbfcff00bd01b82ab16bb763061b55aab65c0e6a17fad051f51b4e3955e1d"
+  },
+  "publication": "local feature delivery only; no merge, push or deployment; raw rows and credentials remain private",
+  "recorded_at": "2026-10-02T12:29:24.257587+00:00",
+  "review": {
+    "new_tests_or_runtime_started": false,
+    "reasoning_effort": "max",
+    "result": "no critical identity, release or acceptance-claim blocker found",
+    "reviewer_model": "gpt-6-astra",
+    "scope": "readonly final delivery/source/evidence review"
+  },
+  "sandbox_image": "sha256:85f2fa5d25fa995524f9fe33456052f219d1286b251e1ddbe6f166c6536665ac",
+  "schema": "mode-stream-postgres-public-evidence.v1",
+  "scope": "finite CPU diagnostic stream from generated data served by real PostgreSQL; not industrial research acceptance",
+  "scoring_available": false,
+  "source_observation": {
+    "aos": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "tracked_diff_sha256": "16daf7d7dde92119fdda287b0d2b28c7ee30a0e8825f6461ed0ea13b8d011b45"
+    },
+    "aos_v8_files": [
+      "coordination-hold-package.private.log",
+      "coordination-hold.private.json",
+      "handoff.private.md",
+      "scope-preparation.private.json",
+      "source-boundary-review.private.json"
+    ],
+    "p1_intent_absent": true,
+    "recorded_at": "2026-10-02T12:13:02.436960+00:00",
+    "scheduler_tables": [
+      "gpu_turn_requests",
+      "sqlite_sequence",
+      "gpu_turn_state",
+      "gpu_runtime_bindings",
+      "aos_control_requests",
+      "aos_control_idempotency",
+      "aos_cleanup_grants",
+      "aos_control_reservations",
+      "aos_gpu_child_bindings",
+      "aos_gpu_output_bindings",
+      "aos_gpu_turn_results",
+      "aos_no_admission_observations"
+    ],
+    "scientist_feature": {
+      "head": "08bd136eb826f788a74f4824ec9f1240a4ec38b9",
+      "tracked_diff_sha256": "9d91e58138b00161f53df02f56a8e85e76602203b10e039c49540e6ce29dd9d4"
+    },
+    "scientist_main": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "tracked_diff_sha256": "a1e4bd2caf44762925a805eef15154dd869f59e4464c1f9d1784d2070828013e"
+    }
+  },
+  "terminal": {
+    "report_sha256": "9f254bb77a737fe13a11c8c0604d995664d44119d9cd7e30998646ab5bbe67c1",
+    "run_id": "60f06a60-3f16-49c6-be9a-efbd4702b0e2",
+    "verified_at": "2026-10-02T12:11:45.493996+00:00"
+  },
+  "timeout": {
+    "budget_seconds": 1,
+    "http_status": 504,
+    "observed_seconds": 1.0150846840006125,
+    "source_connection_absent": true
+  },
+  "verification": {
+    "quality_gate": {
+      "commands": [
+        {
+          "command": [
+            "ruff"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pylint"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "bandit"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "pytest"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "mypy"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "uv"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "/home/cachyos/ai-scientist/.venv/bin/python"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "created_at": "2026-10-02T12:26:22.243121+00:00",
+      "evidence_location": "5201e956993db716bbdd83940852b2a0b594c11d:docs/ai-scientist/evidence/quality-gate-latest.json",
+      "evidence_sha256": "88511b2a556bd643f81e521015f0261b8fdbefce6c385ec438fce6cdda5e58c6",
+      "gpu_live_deselected": 177,
+      "original_failed_attempt_preserved": true,
+      "overall_exit_code": 0,
+      "passed": 3198,
+      "skipped": 7,
+      "status": "passed"
+    },
+    "ui_build": {
+      "browser_acceptance": "not_run",
+      "dist": {
+        "dist/assets/index-C9BCDXN_.js": "9d294b36fadab254cf3e9f2c538f83f798ce12e814fe801bc6d0747619e56e9c",
+        "dist/assets/index-CsbKb_BA.css": "9c0501e91f03577ce146011909cbdcf458042a689947256bc6cc18f6a4d547bd",
+        "dist/index.html": "3b7b1b7d4cd58a25a15f46baeae2fa9061629897dc3e44a83c6504d61c02e2dd"
+      },
+      "recorded_at": "2026-10-02T11:31:07.317569+00:00",
+      "sources": {
+        "src/ui/ModeStreamForm.tsx": "7ab68df71959fd5f4101726b53eb5012062d2986e3621ac027205963c7d707cd",
+        "src/ui/ModeStreamProgress.tsx": "6ef1d9a3416dfd15425e28549911a3b5c4199bc96f4f0abe512f12cf2952bd31",
+        "src/ui/types.ts": "200994e755c2fed82ee1bf2444e78a28c12b4c73315a47d7d9914e02978bc5f3"
+      },
+      "tsc_exit_code": 0,
+      "vite_exit_code": 0
+    }
+  }
+}

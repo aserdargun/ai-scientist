@@ -12,6 +12,7 @@ import os
 import re
 import time
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid5
@@ -20,7 +21,11 @@ from sqlalchemy import Engine, text
 from sqlalchemy.exc import DBAPIError
 
 from lab.director import recovery
-from lab.director.artifacts import read_director_artifact, store_director_artifact
+from lab.director.artifacts import (
+    read_director_artifact,
+    read_registered_calibration,
+    store_director_artifact,
+)
 from lab.director.contracts import ExperimentDocument, TrajectoryDocument
 from lab.director.journal import DirectorRunLease, canonical_bytes
 from lab.director.ledger import canonical_json_bytes, commit_experiment_record
@@ -28,6 +33,10 @@ from lab.director.ownership import ExecutionOwner, owned_execution
 from lab.director.resume import _drain_director_sandbox
 from lab.director.runner import _candidate_git_tree
 from lab.scorer.holdout_supervisor import run_stopped_director_recovery_process
+from lab.scorer.recovery_identity import (
+    capture_empty_baseline_native_observation,
+    verify_attempted_stop_recovery_retirement,
+)
 from lab.scorer.supervisor import scorer_job_unit_is_quiescent
 
 _TRAJECTORY_NAMESPACE = UUID("0fac846e-d8f8-4c99-8998-d70967764392")
@@ -87,6 +96,69 @@ def prove_stopped_owner_dead(owner: recovery.OwnerGeneration, run_id: UUID) -> b
         )
     ):
         raise recovery.RecoveryPending("shared Director generation changed during proof")
+    return True
+
+
+def _retire_empty_baseline_worker(
+    director: Engine,
+    recovery_id: UUID,
+    owner: recovery.OwnerGeneration,
+    run_id: UUID,
+    deadline: float,
+    *,
+    expected_invocation: str | None = None,
+) -> bool:
+    """Reuse only sealed evidence whose exact native worker independently retired.
+
+    A registered but unsealed worker is never replaced by a new invocation. Its
+    original authority stays pending until expiry. The ordinary supervisor still
+    has to return success before this is called for a newly launched worker.
+    """
+    with director.connect() as connection:
+        evidence = {
+            str(row.phase): row.evidence_json
+            for row in connection.execute(
+                text(
+                    "SELECT phase,evidence_json FROM lab.director_empty_baseline_stop_evidence "
+                    "WHERE recovery_id=:id"
+                ),
+                {"id": recovery_id},
+            ).all()
+        }
+    if not evidence:
+        return False
+    sealed = evidence.get("seal")
+    if not isinstance(sealed, dict) or not isinstance(sealed.get("worker_identity"), dict):
+        raise recovery.RecoveryPending("empty baseline registered worker has no sealed proof")
+    identity = sealed["worker_identity"]
+    if (
+        expected_invocation is not None
+        and identity.get("worker_invocation_id") != expected_invocation
+    ):
+        raise recovery.RecoveryPending("empty baseline seal belongs to another recovery worker")
+    capture_empty_baseline_native_observation(owner, run_id, deadline=deadline)
+    observation = verify_attempted_stop_recovery_retirement(identity)
+    if time.monotonic() >= deadline:
+        raise recovery.RecoveryPending("original empty baseline cleanup deadline expired")
+    retired = evidence.get("retire")
+    # Re-observe native retirement even on exact idempotent replay. Keep the
+    # original durable observation bytes; a later timestamp is not a new proof.
+    payload = (
+        retired
+        if retired is not None
+        else {
+            "context": sealed["context"],
+            "worker_identity": identity,
+            "observation": observation,
+        }
+    )
+    with director.begin() as connection:
+        result = connection.execute(
+            text("SELECT lab.record_empty_baseline_stop(:id,'retire',:evidence)"),
+            {"id": recovery_id, "evidence": json.dumps(payload, sort_keys=True)},
+        ).scalar_one()
+    if result != "retired":
+        raise recovery.RecoveryPending("empty baseline worker retirement was not confirmed")
     return True
 
 
@@ -518,8 +590,11 @@ def reconcile_stopped_baseline(
     execution_owner: ExecutionOwner,
     lease: DirectorRunLease,
     artifact_root: Path,
+    deadline_at: datetime | None = None,
 ) -> None:
-    """Close existing unfinished baselines while preserving completed record pairs."""
+    """Close unfinished baselines or retain a fully verified frozen baseline phase."""
+    if deadline_at is not None and datetime.now(UTC) >= deadline_at:
+        raise recovery.RecoveryPending("original automatic stop cleanup deadline expired")
     with director.connect() as connection:
         execution = connection.execute(
             text("SELECT execution_json FROM lab.director_execution_contracts WHERE run_id=:run"),
@@ -544,10 +619,13 @@ def reconcile_stopped_baseline(
         ]
     if not raw_rows:
         return
-    if _has_baseline_calibration(director, run_id):
-        raise recovery.RecoveryPending("stopped baseline already has frozen calibration")
     rows: list[dict[str, Any]] = [dict(row) for row in raw_rows]
     unfinished = _partition_stopped_baselines(rows)
+    calibrated = _has_baseline_calibration(director, run_id)
+    if calibrated and (
+        len(rows) != 3 or unfinished or any(row["status"] != "scored" for row in rows)
+    ):
+        raise recovery.RecoveryPending("stopped baseline already has frozen calibration")
     from lab.api.registry import load_suite_registry
     from lab.sandbox.docker_runner import PROJECT_ROOT
 
@@ -582,6 +660,44 @@ def reconcile_stopped_baseline(
     )
     if not prove_stopped_owner_dead(owner, run_id):
         raise recovery.RecoveryPending("original Director is still alive")
+    if calibrated:
+        # Frozen baselines need no closure grant. Preserve their documents and the
+        # calibration, then let outer recovery prove children and seal/finalize.
+        calibration = read_registered_calibration(
+            director, run_id=run_id, artifact_root=artifact_root
+        )
+        manifest = json.loads(suite_manifest)
+        fields = ("task_id", "dataset_id", "split_id", "session_id", "profile_sha256", "family")
+        sources = {row["baseline_name"]: row["candidate_sha256"] for row in rows}
+        if (
+            calibration.run_id != run_id
+            or any(
+                getattr(calibration, key) != execution[key]
+                for key in ("suite_id", "suite_version", "harness_sha256", "image_sha256")
+            )
+            or {tuple(getattr(task, key) for key in fields) for task in calibration.tasks}
+            != {tuple(task[key] for key in fields) for task in manifest["tasks"]}
+            or any(
+                {version.name: version.candidate_sha256 for version in task.baseline_versions}
+                != sources
+                for task in calibration.tasks
+            )
+            or calibration.champion_experiment_id not in retained
+            or next(
+                row["baseline_name"]
+                for row in rows
+                if row["experiment_id"] == calibration.champion_experiment_id
+            )
+            != calibration.champion_baseline_name
+        ):
+            raise recovery.RecoveryPending(
+                "frozen calibration differs from retained baseline phase"
+            )
+        if deadline_at is not None and datetime.now(UTC) >= deadline_at:
+            raise recovery.RecoveryPending("original automatic stop cleanup deadline expired")
+        _assert_retained_baseline_receipts(director, retained)
+        lease.heartbeat()
+        return
     with director.begin() as connection:
         seconds = float(
             connection.execute(
@@ -590,14 +706,31 @@ def reconcile_stopped_baseline(
         )
     if seconds <= 0:
         raise recovery.RecoveryPending("original stopped-closure cleanup deadline expired")
+    if deadline_at is not None:
+        seconds = min(seconds, (deadline_at.astimezone(UTC) - datetime.now(UTC)).total_seconds())
+        if seconds <= 0:
+            raise recovery.RecoveryPending("original automatic stop cleanup deadline expired")
     deadline = time.monotonic() + min(120.0, seconds)
     _drain_director_sandbox(run_id, asdict(owner), artifact_root, deadline)
     remaining = min(120, int(deadline - time.monotonic()))
     if remaining < 1:
         raise recovery.RecoveryPending("original stopped-closure cleanup deadline expired")
-    result = run_stopped_director_recovery_process(recovery_id, remaining_seconds=remaining)
-    if result.state != "drained" or result.exit_code != 0:
-        raise recovery.RecoveryPending("stopped child reconciliation is incomplete")
+    reused_empty_proof = not measurements and _retire_empty_baseline_worker(
+        director, recovery_id, owner, run_id, deadline
+    )
+    if not reused_empty_proof:
+        result = run_stopped_director_recovery_process(recovery_id, remaining_seconds=remaining)
+        if result.state != "drained" or result.exit_code != 0:
+            raise recovery.RecoveryPending("stopped child reconciliation is incomplete")
+        if not measurements:
+            _retire_empty_baseline_worker(
+                director,
+                recovery_id,
+                owner,
+                run_id,
+                deadline,
+                expected_invocation=result.invocation_id,
+            )
     _prove_stopped_terminal_jobs(director, planner, run_id, deadline, execution_owner, recovery_id)
     if not prove_stopped_owner_dead(owner, run_id):
         raise recovery.RecoveryPending("original Director identity no longer proves dead")
@@ -630,6 +763,8 @@ def reconcile_stopped_baseline(
             ],
             suite_manifest=suite_manifest,
         )
+        if deadline_at is not None and datetime.now(UTC) >= deadline_at:
+            raise recovery.RecoveryPending("original automatic stop cleanup deadline expired")
         commit_remaining = remaining_stop_closure_seconds(director, recovery_id)
         if commit_remaining is None or commit_remaining < 1:
             raise recovery.RecoveryPending(

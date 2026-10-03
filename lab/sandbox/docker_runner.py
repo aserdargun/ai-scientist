@@ -6,6 +6,7 @@ import errno
 import fcntl
 import hashlib
 import json
+import math
 import os
 import shutil
 import signal
@@ -15,17 +16,17 @@ import tempfile
 import threading
 import time
 import uuid
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 from uuid import UUID
 
 from harness.contracts import FitContext
 from lab.sandbox.syscall_observer import AUDIT_EXIT, AUDIT_MARKER, OBSERVER_EXIT
 
-Phase = Literal["fit", "score", "guard"]
+Phase = Literal["fit", "score", "guard", "mode_stream_fit", "mode_stream_predict"]
 MAX_CODE_BYTES = 1 * 1024 * 1024
 MAX_INPUT_BYTES = 128 * 1024 * 1024
 MAX_ARTIFACT_INPUT_BYTES = 512 * 1024 * 1024
@@ -188,9 +189,12 @@ class LocalDockerRunner:
         contract_context: FitContext | None = None,
         trusted_baseline_name: str | None = None,
         timeout_seconds: int | None = None,
+        stream_context: dict[str, Any] | None = None,
+        deadline: float | None = None,
+        admission_check: Callable[[], None] | None = None,
     ) -> SandboxResult:
         """Execute one phase; candidate pickle bytes are only mounted in-container."""
-        if phase not in ("fit", "score", "guard"):
+        if phase not in ("fit", "score", "guard", "mode_stream_fit", "mode_stream_predict"):
             raise ValueError("unsupported sandbox phase")
         if not candidate_source or len(candidate_source) > MAX_CODE_BYTES:
             raise ValueError("candidate source must be non-empty and at most 1 MiB")
@@ -198,10 +202,38 @@ class LocalDockerRunner:
             raise ValueError("Arrow input exceeds 128 MiB")
         if fit_artifact is not None and len(fit_artifact) > MAX_ARTIFACT_INPUT_BYTES:
             raise ValueError("fit artifact exceeds 512 MiB")
-        if phase == "score" and fit_artifact is None:
+        if phase in {"score", "mode_stream_predict"} and fit_artifact is None:
             raise ValueError("score phase requires a fit artifact")
-        if contract_context is not None and phase not in {"fit", "score"}:
+        if contract_context is not None and phase not in {
+            "fit",
+            "score",
+            "mode_stream_fit",
+            "mode_stream_predict",
+        }:
             raise ValueError("typed contract execution supports fit and score phases only")
+        if phase in {"mode_stream_fit", "mode_stream_predict"}:
+            from lab.operating_modes.candidate import candidate_source as mode_source
+            from lab.operating_modes.stream import MAX_CHUNK_BYTES, MAX_TRAIN_BYTES
+            from lab.sandbox.mode_stream import MAX_FIT_ARTIFACT_BYTES, StreamPhaseContext
+
+            binding = StreamPhaseContext.model_validate(stream_context)
+            if (
+                contract_context is None
+                or candidate_source != mode_source(binding.configuration)
+                or (phase == "mode_stream_fit") != (binding.fit_artifact_sha256 is None)
+                or phase == "mode_stream_fit"
+                and fit_artifact is not None
+                or len(arrow_input)
+                > (MAX_TRAIN_BYTES if phase == "mode_stream_fit" else MAX_CHUNK_BYTES)
+                or fit_artifact is not None
+                and (
+                    len(fit_artifact) > MAX_FIT_ARTIFACT_BYTES
+                    or hashlib.sha256(fit_artifact).hexdigest() != binding.fit_artifact_sha256
+                )
+            ):
+                raise ValueError("stream phase requires exact source and bounded frozen inputs")
+        elif stream_context is not None:
+            raise ValueError("stream context is only valid for explicit stream phases")
         if trusted_baseline_name is not None:
             from lab.director.baselines import baseline_candidate_source
 
@@ -218,9 +250,24 @@ class LocalDockerRunner:
             or not 1 <= phase_timeout <= self.profile.timeout_seconds
         ):
             raise ValueError("phase timeout must be within the configured sandbox budget")
+        if deadline is not None:
+            if (
+                isinstance(deadline, bool)
+                or not isinstance(deadline, (int, float))
+                or not math.isfinite(deadline)
+            ):
+                raise ValueError("invalid original sandbox deadline")
+            deadline = min(deadline, time.monotonic() + phase_timeout)
+            self._remaining_deadline(deadline)
+        if admission_check is not None:
+            admission_check()
         if shutil.disk_usage(self.work_root).free < MIN_FREE_DISK_BYTES:
             raise SandboxRunError("minimum 20 GiB disk reserve is not available")
         with self._admit_p1_capacity():
+            if deadline is not None:
+                self._remaining_deadline(deadline)
+            if admission_check is not None:
+                admission_check()
             return self._invoke(
                 phase,
                 candidate_source,
@@ -229,7 +276,17 @@ class LocalDockerRunner:
                 contract_context=contract_context,
                 trusted_baseline_name=trusted_baseline_name,
                 timeout_seconds=phase_timeout,
+                stream_context=stream_context,
+                deadline=deadline,
+                admission_check=admission_check,
             )
+
+    @staticmethod
+    def _remaining_deadline(deadline: float) -> float:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise SandboxRunError("sandbox phase timed out")
+        return remaining
 
     @contextmanager
     def _admit_p1_capacity(self) -> Iterator[None]:
@@ -310,11 +367,24 @@ class LocalDockerRunner:
         contract_context: FitContext | None,
         trusted_baseline_name: str | None,
         timeout_seconds: int,
+        stream_context: dict[str, Any] | None = None,
+        deadline: float | None = None,
+        admission_check: Callable[[], None] | None = None,
     ) -> SandboxResult:
         run_id = uuid.uuid4().hex
         container_name = f"swapp-lab-{phase}-{run_id}"
         owner_label_value = run_id
         start = time.monotonic()
+        output_limit = self.profile.output_bytes
+        if phase in {"mode_stream_fit", "mode_stream_predict"}:
+            from lab.operating_modes.stream import MAX_STREAM_OUTPUT_BYTES
+            from lab.sandbox.mode_stream import MAX_FIT_ARTIFACT_BYTES
+
+            output_limit = min(
+                output_limit,
+                MAX_STREAM_OUTPUT_BYTES
+                + (MAX_FIT_ARTIFACT_BYTES if phase == "mode_stream_fit" else 0),
+            )
         with tempfile.TemporaryDirectory(prefix=f"{run_id}-", dir=self.work_root) as raw_dir:
             run_dir = Path(raw_dir)
             os.chmod(run_dir, 0o700)
@@ -359,7 +429,7 @@ class LocalDockerRunner:
                 "/dev/shm:rw,noexec,nosuid,nodev,size=64m,mode=1777",  # nosec B108
                 "--tmpfs",
                 (
-                    f"/output:rw,noexec,nosuid,nodev,size={self.profile.output_bytes},"
+                    f"/output:rw,noexec,nosuid,nodev,size={output_limit},"
                     "nr_inodes=1024,uid=10001,gid=10001,mode=0700"
                 ),
                 "--ulimit",
@@ -401,6 +471,20 @@ class LocalDockerRunner:
                 )
                 if trusted_baseline_name is not None:
                     command.extend(("--env", "SWAPP_TRUSTED_BASELINE=1"))
+            if stream_context is not None:
+                command.extend(
+                    (
+                        "--env",
+                        "SWAPP_STREAM_CONTEXT="
+                        + json.dumps(
+                            stream_context, sort_keys=True, separators=(",", ":"), allow_nan=False
+                        ),
+                    )
+                )
+            if deadline is not None:
+                timeout_seconds = min(timeout_seconds, int(self._remaining_deadline(deadline)))
+                if timeout_seconds < 1:
+                    raise SandboxRunError("sandbox phase timed out")
             command.extend(
                 (
                     "--env",
@@ -419,14 +503,28 @@ class LocalDockerRunner:
                     ),
                     phase,
                     str(timeout_seconds),
-                    str(self.profile.output_bytes),
+                    str(output_limit),
                 )
             )
             container_id: str | None = None
             try:
+                if admission_check is not None:
+                    admission_check()
+                if deadline is not None:
+                    self._remaining_deadline(deadline)
                 self._write_admission_intent(container_name, owner_label_value, run_dir)
-                container_id = self._create_container(command)
+                container_id = (
+                    self._create_container(command)
+                    if deadline is None
+                    else self._create_container(
+                        command, timeout_seconds=min(30, self._remaining_deadline(deadline))
+                    )
+                )
                 self._persist_container_id(container_id)
+                if admission_check is not None:
+                    admission_check()
+                if deadline is not None:
+                    self._remaining_deadline(deadline)
                 attach_command = [
                     self.docker_binary,
                     "start",
@@ -435,7 +533,11 @@ class LocalDockerRunner:
                     container_id,
                 ]
                 exit_code, stdout, stderr = self._run_bounded_process(
-                    attach_command, arrow_input, timeout_seconds=timeout_seconds
+                    attach_command,
+                    arrow_input,
+                    timeout_seconds=timeout_seconds,
+                    deadline=deadline,
+                    output_limit_bytes=output_limit,
                 )
             finally:
                 if container_id is None:
@@ -444,6 +546,10 @@ class LocalDockerRunner:
                     self._remove_named_container(container_id)
                     self._cleanup_run_directory(run_dir, expected_root=self.work_root)
                     self._clear_admission_intent()
+            if admission_check is not None:
+                admission_check()
+            if deadline is not None:
+                self._remaining_deadline(deadline)
             artifacts = self._decode_output_frame(stdout)
         return SandboxResult(
             phase=phase,
@@ -630,8 +736,16 @@ class LocalDockerRunner:
         raise SandboxRunError("sandbox orphan reconciliation did not reach a stable empty state")
 
     def _run_bounded_process(
-        self, command: list[str], input_bytes: bytes, *, timeout_seconds: int
+        self,
+        command: list[str],
+        input_bytes: bytes,
+        *,
+        timeout_seconds: int,
+        deadline: float | None = None,
+        output_limit_bytes: int | None = None,
     ) -> tuple[int, bytes, bytes]:
+        if deadline is not None:
+            self._remaining_deadline(deadline)
         try:
             process = subprocess.Popen(  # nosec B603  # pylint: disable=consider-using-with
                 command,
@@ -648,7 +762,10 @@ class LocalDockerRunner:
         size_lock = threading.Lock()
         overflow = threading.Event()
         output_limits = [
-            self.profile.output_bytes + 64 * 1024 + len(ARTIFACT_MAGIC) + 4,
+            (self.profile.output_bytes if output_limit_bytes is None else output_limit_bytes)
+            + 64 * 1024
+            + len(ARTIFACT_MAGIC)
+            + 4,
             self.profile.log_bytes,
         ]
 
@@ -684,7 +801,11 @@ class LocalDockerRunner:
             reader.start()
         writer = threading.Thread(target=send_input, daemon=True)
         writer.start()
-        deadline = time.monotonic() + timeout_seconds
+        deadline = (
+            min(time.monotonic() + timeout_seconds, deadline)
+            if deadline is not None
+            else time.monotonic() + timeout_seconds
+        )
         failure: str | None = None
         while process.poll() is None:
             if overflow.is_set():
@@ -721,14 +842,14 @@ class LocalDockerRunner:
             detail = f": {error}" if error else ""
             raise SandboxRunError(f"candidate phase failed{detail}", exit_code=exit_code)
 
-    def _create_container(self, command: list[str]) -> str:
+    def _create_container(self, command: list[str], *, timeout_seconds: float = 30) -> str:
         """Create without starting and return Docker's full immutable ID."""
         try:
             created = subprocess.run(  # nosec B603
                 command,
                 stdin=subprocess.DEVNULL,
                 capture_output=True,
-                timeout=30,
+                timeout=timeout_seconds,
                 check=False,
             )
         except (OSError, subprocess.TimeoutExpired) as exc:

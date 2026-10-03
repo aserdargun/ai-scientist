@@ -15,6 +15,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from uuid import UUID
 
+from lab.scorer.credential_path import scorer_deployment_environment
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORKER_MEMORY = "2G"
 WORKER_CPU_QUOTA = "100%"
@@ -352,10 +354,29 @@ def _ensure_aggregate_slice() -> None:
             raise RuntimeError(f"aggregate Scorer cgroup has an unexpected {name} limit")
 
 
+def _artifact_root_environment(artifact_root: Path | None) -> list[str]:
+    """Validate an explicit private deployment root before provisioning its worker."""
+    if artifact_root is None:
+        return []
+    resolved = artifact_root.resolve(strict=True)
+    runtime = (PROJECT_ROOT / "data/runtime").resolve(strict=True)
+    info = resolved.stat()
+    if (
+        artifact_root.absolute() != resolved
+        or not stat.S_ISDIR(info.st_mode)
+        or not resolved.is_relative_to(runtime)
+        or info.st_uid != os.getuid()
+        or info.st_mode & 0o077
+    ):
+        raise ValueError("Scorer artifact root must be a private project runtime directory")
+    return [f"--setenv=LAB_ARTIFACT_ROOT={resolved}"]
+
+
 def run_scorer_process(
     job_id: UUID,
     *,
     remaining_seconds: int = MAX_WORKER_RUNTIME_SECONDS,
+    artifact_root: Path | None = None,
     _recovery_expected_invocation_id: str | None = None,
 ) -> ScorerProcessResult:
     """Start one fresh CPU-bound Python process with deadline and resource limits."""
@@ -370,6 +391,8 @@ def run_scorer_process(
         and re.fullmatch(r"[0-9a-f]{32}", _recovery_expected_invocation_id) is None
     ):
         raise ValueError("recovery target must be a lowercase systemd InvocationID")
+    credential_environment = scorer_deployment_environment()
+    root_environment = _artifact_root_environment(artifact_root)
     unit = f"swapp-ai-scientist-scorer-{job_id.hex}.service"
     _ensure_aggregate_slice()
     command = [
@@ -397,6 +420,8 @@ def run_scorer_process(
         "--setenv=MKL_NUM_THREADS=2",
         "--setenv=NUMEXPR_NUM_THREADS=2",
         "--setenv=BLIS_NUM_THREADS=2",
+        *root_environment,
+        *credential_environment,
         str(PROJECT_ROOT / ".venv/bin/python"),
         "-m",
         "lab.scorer.worker",
@@ -563,11 +588,13 @@ def run_scorer_recovery_process(
     *,
     expected_claim_invocation_id: str,
     remaining_seconds: int = MAX_WORKER_RUNTIME_SECONDS,
+    artifact_root: Path | None = None,
 ) -> ScorerProcessResult:
     """Drain a recorded Scorer generation, then start a fresh same-unit writer."""
     return run_scorer_process(
         job_id,
         remaining_seconds=remaining_seconds,
+        artifact_root=artifact_root,
         _recovery_expected_invocation_id=expected_claim_invocation_id,
     )
 
@@ -694,20 +721,41 @@ def _run_scorer_finalize_process(
         or not 1 <= remaining_seconds <= MAX_WORKER_RUNTIME_SECONDS
     ):
         raise ValueError("Scorer deadline must be 1..600 remaining task seconds")
-    root_environment: list[str] = []
-    if artifact_root is not None:
-        resolved = artifact_root.resolve(strict=True)
-        runtime = (PROJECT_ROOT / "data/runtime").resolve(strict=True)
-        if (
-            artifact_root.is_symlink()
-            or not resolved.is_dir()
-            or not resolved.is_relative_to(runtime)
-            or resolved.stat().st_uid != os.getuid()
-            or resolved.stat().st_mode & 0o077
-        ):
-            raise ValueError("finalizer artifact root must be a private project runtime directory")
-        root_environment = [f"--setenv=LAB_ARTIFACT_ROOT={resolved}"]
+    deadline = time.monotonic() + remaining_seconds
+    # API repeat-stop callbacks and Director recovery share this canonical unit.
+    # Waiting consumes the caller's original budget; it never grants another window.
+    with _job_lifecycle_lock(run_id, timeout_seconds=remaining_seconds):
+        remaining = int(deadline - time.monotonic())
+        if remaining < 1:
+            raise TimeoutError("Scorer finalizer lifecycle deadline expired")
+        return _run_scorer_finalize_process_locked(
+            run_id,
+            admitted_generation=admitted_generation,
+            execution_sha256=execution_sha256,
+            empty_baseline_stop=empty_baseline_stop,
+            remaining_seconds=remaining,
+            artifact_root=artifact_root,
+            deadline=deadline,
+        )
+
+
+def _run_scorer_finalize_process_locked(
+    run_id: UUID,
+    *,
+    admitted_generation: int | None,
+    execution_sha256: str | None,
+    empty_baseline_stop: bool,
+    remaining_seconds: int,
+    artifact_root: Path | None,
+    deadline: float,
+) -> ScorerProcessResult:
+    """Start and await the unchanged canonical finalizer while owning its run lock."""
+    credential_environment = scorer_deployment_environment()
+    root_environment = _artifact_root_environment(artifact_root)
     _ensure_aggregate_slice()
+    remaining_seconds = min(remaining_seconds, int(deadline - time.monotonic()))
+    if remaining_seconds < 1:
+        raise TimeoutError("Scorer finalizer deadline expired before unit start")
     unit = f"swapp-ai-scientist-finalize-{run_id.hex}.service"
     command = [
         SYSTEMD_RUN,
@@ -735,6 +783,7 @@ def _run_scorer_finalize_process(
         "--setenv=NUMEXPR_NUM_THREADS=2",
         "--setenv=BLIS_NUM_THREADS=2",
         *root_environment,
+        *credential_environment,
         str(PROJECT_ROOT / ".venv/bin/python"),
         "-m",
         "lab.scorer.worker",
@@ -778,6 +827,7 @@ def run_mode_snapshot_install(snapshot_sha256: str) -> dict[str, str]:
     """Run only the fixed immutable-snapshot installer, bounded to the Scorer slot."""
     if re.fullmatch(r"[0-9a-f]{64}", snapshot_sha256) is None:
         raise ValueError("invalid snapshot identity")
+    credential_environment = scorer_deployment_environment()
     _ensure_aggregate_slice()
     unit = f"swapp-ai-scientist-mode-install-{snapshot_sha256[:32]}.service"
     command = [
@@ -803,6 +853,7 @@ def run_mode_snapshot_install(snapshot_sha256: str) -> dict[str, str]:
         "--setenv=OPENBLAS_NUM_THREADS=1",
         "--setenv=OMP_NUM_THREADS=1",
         "--setenv=MKL_NUM_THREADS=1",
+        *credential_environment,
         str(PROJECT_ROOT / ".venv/bin/python"),
         "-m",
         "lab.scorer.mode_snapshot_worker",

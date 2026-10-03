@@ -11,9 +11,10 @@ from lab.llm.aos_gpu_service import _prepare_socket_path
 from lab.llm.gpu_scheduler import GpuLease
 
 
-def test_aos_unbound_starting_unit_keeps_quarantine_until_late_launch_fence() -> None:
+def test_aos_unbound_starting_unit_keeps_quarantine_after_late_launch_deadline() -> None:
     now = [100.0]
     runtime = object.__new__(SystemdAOSProfileRuntime)
+    runtime.control_store = None
     runtime.clock = lambda: now[0]
     runtime._binding = lambda _lease: {
         "observed_gpu_pids_json": "[]",
@@ -41,6 +42,8 @@ def test_aos_unbound_starting_unit_keeps_quarantine_until_late_launch_fence() ->
         owner_invocation_id="b" * 32,
     )
 
+    assert runtime.verify_drained(lease) is False
+    now[0] = 851.0  # Created + total runtime + old 30-second fence has elapsed.
     assert runtime.verify_drained(lease) is False
 
 

@@ -78,6 +78,7 @@ def test_actual_process_job_and_invocation_survive_measurement_without_field_cha
         hardcoding=SimpleNamespace(code="pass"),
         determinism=SimpleNamespace(code="pass"),
         causality=SimpleNamespace(code="pass"),
+        guarded_wall_seconds=14.0,
     )
     monkeypatch.setattr(executor, "verify_execution_identity", lambda *args, **kwargs: None)
     monkeypatch.setattr(
@@ -86,20 +87,24 @@ def test_actual_process_job_and_invocation_survive_measurement_without_field_cha
     persisted = MagicMock()
     monkeypatch.setattr(evaluation_recovery, "persist_evaluation_evidence", persisted)
     monkeypatch.setattr(executor, "run_guarded_seed_evaluation", lambda *args, **kwargs: guarded)
-    monkeypatch.setattr(executor, "enqueue_score_job", lambda *args, **kwargs: job)
-    monkeypatch.setattr(
-        executor,
-        "run_scorer_process",
-        lambda *args, **kwargs: ScorerProcessResult(
+    enqueue = MagicMock(return_value=job)
+    monkeypatch.setattr(executor, "enqueue_score_job", enqueue)
+    clock = [100.0]
+
+    def score_process(*args, **kwargs):
+        assert kwargs["artifact_root"] == tmp_path
+        clock[0] += 2.5
+        return ScorerProcessResult(
             job,
             f"swapp-ai-scientist-scorer-{job.hex}.service",
             0,
             {"state": "completed"},
             invocation_id=invocation,
             attempt=3,
-        ),
-    )
-    monkeypatch.setattr(executor.time, "monotonic", lambda: 100.0)
+        )
+
+    monkeypatch.setattr(executor, "run_scorer_process", score_process)
+    monkeypatch.setattr(executor.time, "monotonic", lambda: clock[0])
     run = uuid4()
     process_receipt = {
         "schema": "completed-score-job-process-receipt.v1",
@@ -145,6 +150,8 @@ def test_actual_process_job_and_invocation_survive_measurement_without_field_cha
         "position_bias": None,
         "fit_seconds": 3.0,
         "score_seconds": 4.0,
+        "guarded_wall_seconds": 14.0,
+        "scorer_wall_seconds": 2.5,
         "guards": {"hardcoding": "pass", "determinism": "pass", "causality": "pass"},
         "systemd_unit": f"swapp-ai-scientist-scorer-{job.hex}.service",
         "scorer_process_exit_code": 0,
@@ -154,11 +161,23 @@ def test_actual_process_job_and_invocation_survive_measurement_without_field_cha
         "scorer_process_attempt": 3,
     }
     assert result == expected
+    assert enqueue.call_args.kwargs["artifact_root"] == tmp_path
     assert persisted.call_args.kwargs["payload"]["candidate_output_sha256"] == artifact_sha
+    assert persisted.call_args.kwargs["payload"]["guarded_wall_seconds"] == 14.0
+    assert "scorer_wall_seconds" not in persisted.call_args.kwargs["payload"]
 
 
+@pytest.mark.parametrize(
+    "timing_field,timing_value,valid",
+    [(None, None, True), ("guarded_wall_seconds", 0, True), ("guarded_wall_seconds", 14.5, True)]
+    + [
+        (field, value, False)
+        for field in ("fit_seconds", "score_seconds", "guarded_wall_seconds")
+        for value in (-0.1, float("nan"), float("inf"), True, "1.0", None, 10**1000)
+    ],
+)
 def test_recovered_score_is_marked_without_fabricating_process_exit_or_invocation(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, timing_field, timing_value, valid
 ):
     run = uuid4()
     job = uuid4()
@@ -182,6 +201,8 @@ def test_recovered_score_is_marked_without_fabricating_process_exit_or_invocatio
         "admitted_generation": 1,
         "execution_sha256": "b" * 64,
     }
+    if timing_field is not None:
+        evidence[timing_field] = timing_value
     row = {
         **identity,
         "candidate_output_sha256": artifact_sha,
@@ -208,21 +229,29 @@ def test_recovered_score_is_marked_without_fabricating_process_exit_or_invocatio
     monkeypatch.setattr(
         "lab.director.resume.assert_historical_receipt", lambda *args, **kwargs: None
     )
-    monkeypatch.setattr(
-        "lab.scorer.jobs.read_candidate_artifact", lambda *args, **kwargs: b"fixture"
-    )
-    with owned_execution(owner):
-        result = evaluation_recovery.recover_evaluation_measurement(
-            _engine(row),
-            lease,
-            run_id=run,
-            experiment_id="experiment",
-            kind="primary",
-            task_id="task",
-            seed=2,
-            expected=identity,
-            artifact_root=tmp_path,
-        )
+    read_artifact = MagicMock(return_value=b"fixture")
+    monkeypatch.setattr("lab.scorer.jobs.read_candidate_artifact", read_artifact)
+
+    def recover():
+        with owned_execution(owner):
+            return evaluation_recovery.recover_evaluation_measurement(
+                _engine(row),
+                lease,
+                run_id=run,
+                experiment_id="experiment",
+                kind="primary",
+                task_id="task",
+                seed=2,
+                expected=identity,
+                artifact_root=tmp_path,
+            )
+
+    if not valid:
+        with pytest.raises(ValueError, match="finite nonnegative"):
+            recover()
+        return
+    result = recover()
+    read_artifact.assert_called_once_with(artifact_sha, artifact_root=tmp_path)
     expected = {
         "task_id": "task",
         "experiment_id": "experiment",
@@ -246,9 +275,42 @@ def test_recovered_score_is_marked_without_fabricating_process_exit_or_invocatio
         "scorer_process_provenance": "recovered",
         "recovered_from_evidence_sha256": "f" * 64,
     }
+    if timing_field is not None:
+        expected[timing_field] = timing_value
+    assert "scorer_wall_seconds" not in result
     assert result == expected
     assert result["scorer_process_provenance"] != "actual_process"
     assert result["scorer_process_exit_code"] != 0
+
+
+def test_evidence_score_blob_and_checkpoint_use_the_same_private_root(monkeypatch, tmp_path):
+    owner = ExecutionOwner(uuid4(), 1, "a" * 32, "b" * 64)
+    payload = {
+        "run_id": str(owner.run_id),
+        "experiment_id": "baseline",
+        "evaluation_kind": "baseline",
+        "task_id": "task",
+        "seed": 0,
+        "fit_seconds": 1.0,
+        "score_seconds": 2.0,
+        "candidate_output_sha256": "c" * 64,
+    }
+    stored = MagicMock(return_value="c" * 64)
+    monkeypatch.setattr(evaluation_recovery, "store_candidate_artifact", stored)
+    engine, lease = MagicMock(), MagicMock()
+    with owned_execution(owner):
+        evaluation_recovery.persist_evaluation_evidence(
+            engine,
+            lease,
+            payload=payload,
+            score_artifact=b"fixture",
+            artifact_root=tmp_path,
+        )
+    stored.assert_called_once_with(b"fixture", artifact_root=tmp_path)
+    assert lease.append_checkpoint.call_args.kwargs["artifact_root"] == tmp_path
+    document = lease.append_checkpoint.call_args.kwargs["payload"]
+    assert document["admitted_generation"] == owner.generation
+    assert document["execution_sha256"] == owner.execution_sha256
 
 
 def _process_identity_case():
@@ -279,6 +341,32 @@ def _process_identity_case():
         seed=2,
     )
     return result, receipt, arguments
+
+
+@pytest.mark.parametrize("value", [-1, float("nan"), float("inf"), True, None, "1.0"])
+def test_invalid_guard_wall_is_rejected_before_evidence_artifact_or_checkpoint(
+    monkeypatch, tmp_path, value
+):
+    owner = ExecutionOwner(uuid4(), 1, "a" * 32, "b" * 64)
+    stored = MagicMock()
+    monkeypatch.setattr(evaluation_recovery, "store_candidate_artifact", stored)
+    engine, lease = MagicMock(), MagicMock()
+    with owned_execution(owner), pytest.raises(ValueError, match="finite nonnegative"):
+        evaluation_recovery.persist_evaluation_evidence(
+            engine,
+            lease,
+            payload={
+                "run_id": str(owner.run_id),
+                "fit_seconds": 1.0,
+                "score_seconds": 2.0,
+                "guarded_wall_seconds": value,
+            },
+            score_artifact=b"synthetic",
+            artifact_root=tmp_path,
+        )
+    stored.assert_not_called()
+    engine.connect.assert_not_called()
+    lease.append_checkpoint.assert_not_called()
 
 
 @pytest.mark.parametrize(

@@ -14,6 +14,73 @@ değildir. [M0 kabul kaydı](m0-acceptance.md) ve
 [çalışma modu kapsamı](42-operating-modes-omr-experiments.md) geçerlidir.
 Orijinal spec korunur; aşağıdaki sıra yeni ürün yönüne göre güncellenmiştir.
 
+## 2026-10-03 — Eylemci arayüzü ve öğrenme akışı
+
+Güncel kullanıcı hedefi; saha ekibinin varlık/dijital ikiz için veri ve amaç
+seçmesi, eylemcinin kaynak bütçesine uygun yöntem ve hiperparametre deneyleri
+yürütmesi, ölçümleri açıklaması ve sonraki çalışmalarda doğrulanmış bilgiyi
+kullanmasıdır. Güncel teslim sırası [103](103-delivery-reset-review.md)
+içindedir; bu arayüz tasarımı açık AOS/M0/OM kabullerini değiştirmez.
+
+| Arayüz alanı | Şimdiki ürün önizlemesi | Sonraki tamamlanma kanıtı |
+|---|---|---|
+| Eylemci durumu | Gerçek bağlantı, aktif işler, gözlenen host kapasitesi ve açık/kapalı yollar | AOS tarafından verilen hedef/varlık ile aynı kalıcı işin izlenmesi |
+| Genel yetenekler | Veri, istatistik, LSH/OPTICS/SOM, NN/residual/OMR, anomali, yerel araştırma, eğitim ve skill durumları | Yetenek durumunun doğrulanmış model/veri/kaynak profiline bağlı olması |
+| Deney ve gelişim geçmişi | Kalıcı koşu/rapor ve hash ile doğrulanmış deney hafızası; karar, yöntem ve eğitim dışlama gerekçeleri | Yeniden kullanılan bulgu/skill, önceki sürüm karşılaştırması ve geri alma kaydı |
+| Öğretmen model | Yerel model/amaç/bütçe taslağı ve doğrulanmış kayıt referanslarından veri hazırlık manifesti; gerçek eğitim kapalı | Taslağın doğrulanmış profile bağlanması; uygun veri paketi ve sınırlı gerçek öğretmen/eğitim işi |
+| Yeni eylemci sürümü | Otomatik terfi kapalı; öğrenilmiş adapter iddiası yok | Ayrı değerlendirmede temel sürüm karşılaştırması, kaynak maliyeti ve geri dönüş |
+
+Her çalışma değişmez deney/sonuç kaydını genişletir. Bir sonraki öneriye
+aktarılacak özet yalnız izinli geliştirme verisi ve doğrulanmış sonuçtan
+türetilir; sealed/holdout içeriği öneri veya eğitim bağlamına girmez.
+Başarısız veya DISCARD deney korunur; altyapı arızası yanlış yöntem dersi
+ya da otomatik negatif eğitim örneği olarak kullanılmaz.
+
+Öğrenme iki basamaklıdır: önce ölçülmüş yöntem/hiperparametre bulgularının
+yeniden kullanımı, ardından ihtiyaç ve yeterli uygun kayıt varsa yerel
+öğretmen ile veri hazırlığı ve LoRA/QLoRA. Her koşuda ağırlık güncelleme
+zorunluluğu yoktur. Gerçek gelişim bağımsız karşılaştırma ile gösterilir;
+iyileşmeyen aday etkin sürümün yerini almaz. Açık seçimle geliştirme bulgusu aktarımı 0.44.0 CPU koşusunda doğrulandı.
+Otomatik bilgi seçimi, ölçülmüş araştırma faydası, öğretmen yürütmesi ve
+sürüm terfisi adımları henüz tamamlanmamıştır.
+
+Eğitim ayrı, bütçeli bakım işi olarak mevcut scheduler ve fencing yolunu
+kullanır; ikinci GPU tahsis otoritesi oluşturmaz. AOS etkileşimli çalışması
+ile kaynak uygunluğu doğrulanmadan eğitim başlatılmaz. Daha büyük donanımda
+kapasite ölçümü ve doğrulanmış profil değişir; sınırsız iş/paralellik açılmaz.
+
+Çalışan önizlemeye erişim ve yeniden başlatma adımları
+[ilk proje rehberindedir](43-first-project-guide.md). Öğretmen JSON taslağı
+eğitim başlatmaz; hazırlık ile gerçek öğrenme arayüzde ayrı gösterilir.
+
+### Deney hafızası bağlantısı — 2026-10-03
+
+`run-experience.v1` görünümü, seçilen sahibine ait terminal raporu ve deney/
+trajectory çiftlerini mevcut ledger okuyucusuyla doğrular. Sonuç yalnız
+izinli metadata ve hash referanslarını içerir. Korumalı split kayıtları
+çıkarılır; ham mesaj, sensör değeri veya temizlenmemiş eğitim metni indirilmez.
+Mevcut field-lab karşılaştırmasında altı çift (üç baseline, üç DISCARD aday)
+ve ayrı OMR koşusunda puansız rapor referansı gerçek API üzerinden okundu.
+Önceki raporlar değişmedi. Eğitim uygunluğu verilmedi.
+
+Aynı koşunun son 30 geliştirme geri bildirimi Director bağlamında saklanır.
+0.44.0 ile yeni koşuya tek kaynak koşudan 1–8 doğrulanmış dev bulgusu açık
+seçimle eklenebilir; değişmez snapshot ve öneri bağlamı hash ile bağlanır.
+[Gerçek CPU aktarım kanıtı](119-prior-findings-context.md): üç kayıt/bir öneri,
+10 yeni bağımsız ölçüm. CPU parametre sırası değişmez; ölçülmüş öğrenme yok.
+Yeni koşuda otomatik bilgi/skill seçimi, gerçek öğretmen veri üretimi,
+öğrenilmiş adapter ve bağımsız terfi/rollback ayrı kalan teslimlerdir.
+Mevcut SFT ihracının izin, runtime/temizleme incelemesi ve teyitli KEEP
+kapıları korunur; hazırlık manifesti bu kapılardan geçmiş eğitim paketi değildir.
+Geçmiş bağlam kullanılan kayıtlarda kaynak izin zinciri incelenmedikçe SFT
+ihracı `prior_findings_permission_not_reviewed` ile reddedilir
+(`local-sft-reviewed.v2`); özgün prompt kontrol edilir.
+
+[Arayüz teslim kanıtı](review-evidence/field-lab-experience-view-20261003.json),
+gerçek servis kayıtlarını ve tarayıcıya enjekte edilen hata senaryolarını
+ayrı tutar. Masaüstü/mobil okuma, kayıt seçimi ve referans indirme geçti;
+eğitim veya adapter terfisi çalıştırılmadı.
+
 ## 1. Ürün sınırı
 
 AI Scientist bağımsız kurulabilen bir araştırma servisidir. Kendi arayüzü,
@@ -260,8 +327,17 @@ M0 AOS birlikte çalışma kabulü referans entegrasyon olarak ayrıca korunur.
 5. Genel kurulum yapılandırması ve yayın dosya envanteri; ardından model
    kataloğu, skill ve exporter işlerini bu sözleşmelere göre uygula.
 
-Kullanıcının son tercihiyle kalan teknik orkestrasyon, uygulama ve inceleme
-GPT-6.1 Sol/medium ile yürür. Birbirinden bağımsız işler paralel, migration/dağıtım ve
-paylaşılan donanım deneyleri sıralı yürür. SWAPP veya canlı AOS üzerinde
+Güncel model tercihi ve teslim sırası `103-delivery-reset-review.md` başındadır:
+teknik orkestrasyon Astra/high, uygulama çoğunlukla Sol 6.1 ve göreve göre
+effort ile yürür. Bağımsız işler paralel; migration ve paylaşılan donanım
+deneyleri sıralı yürür. SWAPP veya canlı AOS üzerinde
 değişiklik bu plan kaydıyla yapılmış sayılmaz; entegrasyon kopyası ve
 koordinasyon kuralları devam eder.
+
+## Public DEV karşılaştırması: kısmi teslim — 2026-10-03
+
+Gerçek arayüzden SKAB DEV çalışması tamamlandı: 283,41 saniye, 9 baseline +
+3 OPTICS skoru; LSH guard reddi. OPTICS KEEP ham VUS-PR üstünlüğü değildir.
+OMR/sensör görünümü ve sahipli süreç kapanışı doğrulandı. AOS gerçek GPU,
+holdout, öğretmen eğitimi ve otomatik öğrenilmiş iyileşme açık kalır.
+[Adımlar ve ölçüm kanıtı](120-public-dev-cpu-study.md).

@@ -434,6 +434,42 @@ def test_stale_release_rejected_after_recovery(tmp_path: Path) -> None:
         scheduler.release(old)
 
 
+def test_failed_cleanup_never_releases_turn_or_admits_peer(tmp_path: Path) -> None:
+    drained = {"value": False}
+    scheduler = _scheduler(tmp_path / "cleanup-failure.sqlite", drain=lambda _: drained["value"])
+    lease = _start(scheduler, "lab", "stopping", 1)
+    assert lease is not None
+    scheduler.submit("aos", "waiting", b"waiting")
+    with pytest.raises(LeaseConflict, match="drain/unload has not been verified"):
+        scheduler.release(lease)
+    assert scheduler.try_acquire("aos", "waiting") is None
+    _at(scheduler, 12)
+    assert scheduler.try_acquire("aos", "waiting") is None
+    assert not scheduler.recover_quarantined(lease)
+    drained["value"] = True
+    assert scheduler.recover_quarantined(lease)
+    successor = scheduler.try_acquire("aos", "waiting")
+    assert successor is not None and successor.fencing_token > lease.fencing_token
+    with pytest.raises(LeaseConflict, match="stale or quarantined"):
+        scheduler.release(lease)
+    assert not scheduler.recover_quarantined(lease)
+
+
+def test_duplicate_release_cannot_release_successor_turn(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path / "duplicate-release.sqlite")
+    old = _start(scheduler, "lab", "finished", 1)
+    assert old is not None
+    scheduler.release(old)
+    successor = _start(scheduler, "aos", "successor", 2)
+    assert successor is not None
+    with pytest.raises(LeaseConflict, match="stale or quarantined"):
+        scheduler.release(old)
+    scheduler.submit("lab", "next", b"next")
+    assert scheduler.try_acquire("lab", "next") is None
+    scheduler.release(successor)
+    assert scheduler.try_acquire("lab", "next") is not None
+
+
 def test_old_boot_active_row_is_quarantined_for_verified_recovery(tmp_path: Path) -> None:
     path = tmp_path / "reboot.sqlite"
     scheduler = _scheduler(path)
@@ -488,6 +524,13 @@ def test_two_cpu_processes_bound_starvation_with_aos_continuously_backlogged(
         assert all(item[0] == "acquired" for item in observed)
         assert next(index for index, item in enumerate(observed) if item[1] == "lab") <= 1
         assert any(item[1:] == ("aos", 1) for item in observed)
+        # The AOS backlog is deliberately longer than the fairness prefix.
+        # Await bounded progress for every submitted turn before joining; slow
+        # durable SQLite commits must not cause the test to kill its own worker.
+        observed.extend(events.get(timeout=8) for _ in range(32 - len(observed)))
+        assert set(observed) == {("acquired", "aos", index) for index in range(31)} | {
+            ("acquired", "lab", 0)
+        }
     finally:
         aos.join(timeout=3)
         lab.join(timeout=3)

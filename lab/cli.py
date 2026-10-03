@@ -20,8 +20,11 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import UUID
+
+if TYPE_CHECKING:
+    from lab.operating_modes.public_snapshot import PublicTaskBinding
 
 from sqlalchemy import Engine, case, create_engine, or_, select, text
 
@@ -61,9 +64,11 @@ from lab.director.recovery import (
 from lab.director.suite_manifest import SuiteManifest, load_suite_manifest
 from lab.director.task_plan import cancel_queued_score_job, seal_run_task_plan
 from lab.llm.gpu_scheduler import SystemdPrincipalResolver
+from lab.llm.native_runtime import SystemdUnitManager
 from lab.replay import replay_run
 from lab.reporting import build_run_report
 from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE, LocalDockerRunner
+from lab.scorer.credential_path import configured_scorer_dsn_file
 from lab.scorer.supervisor import (
     MAX_WORKER_RUNTIME_SECONDS,
     SYSTEMD_RUN,
@@ -82,7 +87,9 @@ DIRECTOR_DISPATCH_OVERHEAD_SECONDS = 600
 DIRECTOR_DISPATCH_ENVIRONMENT = (
     "LAB_DIRECTOR_DSN_FILE",
     "LAB_PLANNER_DSN_FILE",
+    "LAB_SCORER_DSN_FILE",
     "LAB_SUITE_REGISTRY_FILE",
+    "LAB_CPU_ONLY",
     "SWAPP_AOS_GPU_UNIT",
     "SWAPP_LAB_GPU_UNIT",
     "SWAPP_GPU_RUNTIME_DB",
@@ -92,11 +99,22 @@ DIRECTOR_DISPATCH_ENVIRONMENT = (
 )
 
 
+def _director_model_observer(engine: Engine, owner: ExecutionOwner) -> Callable[[], None]:
+    """Observe the captured owner with a bounded read-only private SQL worker."""
+    from lab.director.model_cancellation import DirectorModelObserver
+
+    return DirectorModelObserver(engine, owner)
+
+
 def _local_qwen_provider(
     run_id: UUID,
     registry_entry_sha256: str,
     *,
+    director_engine: Engine,
     profile_set: Literal["smoke", "research"] = "smoke",
+    proposal_contract: Literal[
+        "candidate-python.v1", "operating-mode-config.v1"
+    ] = "candidate-python.v1",
 ) -> LocalQwenProposalProvider:
     """Build the fixed local provider from service-owned identity and runtime paths."""
     if re.fullmatch(r"[0-9a-f]{64}", registry_entry_sha256) is None:
@@ -108,7 +126,14 @@ def _local_qwen_provider(
         raise RuntimeError("local model service requires its fixed GPU principal mapping")
     database = Path(database_value)
     database = _validated_gpu_runtime_database(database)
-    expected_configuration = provider_config_sha256(profile_set)
+    owner = active_execution_owner()
+    if owner is None or owner.run_id != run_id:
+        raise RuntimeError("local provider requires its captured Director execution owner")
+    expected_configuration = (
+        provider_config_sha256(profile_set)
+        if proposal_contract == "candidate-python.v1"
+        else provider_config_sha256(profile_set, proposal_contract)
+    )
     provider = LocalQwenProposalProvider(
         run_id=run_id,
         owner="lab",
@@ -116,6 +141,8 @@ def _local_qwen_provider(
         runtime_database=database,
         registry_entry_sha256=registry_entry_sha256,
         profile_set=profile_set,
+        proposal_contract=proposal_contract,
+        cancellation_observer=_director_model_observer(director_engine, owner),
     )
     if provider.configuration_sha256 != expected_configuration:
         raise RuntimeError("local provider configuration changed during construction")
@@ -292,6 +319,88 @@ def _resume_terminal_loop(loop: DirectorLoop, calibration: Any) -> DirectorLoopR
     return loop._result(state, checkpoint, status)
 
 
+def _request_proposal_contract(
+    request: Mapping[str, object],
+) -> Literal["candidate-python.v1", "operating-mode-config.v1"]:
+    contract = request.get("proposal_contract", "candidate-python.v1")
+    if not isinstance(contract, str) or contract not in {
+        "candidate-python.v1",
+        "operating-mode-config.v1",
+    }:
+        raise ValueError("immutable proposal contract is unsupported")
+    return (
+        "operating-mode-config.v1"
+        if contract == "operating-mode-config.v1"
+        else "candidate-python.v1"
+    )
+
+
+def _registered_public_grid_binding(
+    request: dict[str, Any], suite_file: Path, *, owner_id: str, origin: str, snapshot_sha256: str
+) -> PublicTaskBinding:
+    """Recheck immutable public CPU authority before any candidate or baseline dispatch."""
+    from lab.api.mode_experiments import ModeSnapshotStore
+
+    configured = os.environ.get("LAB_SUITE_REGISTRY_FILE", "")
+    if not configured:
+        raise ValueError("public development registry unavailable")
+    registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
+    entry = registry.get(request["suite"])
+    policy = entry.public_dev_study
+    public = ModeSnapshotStore(PROJECT_ROOT / "data/runtime/mode-snapshots").public_snapshot(
+        snapshot_sha256
+    )
+    if (
+        policy is None
+        or public is None
+        or policy.owner_id != owner_id
+        or policy.origin != origin
+        or request.get("public_dev_study") != policy.model_dump(mode="json")
+        or request.get("provider") != entry.provider
+        or request.get("track") != entry.track
+        or request.get("study_kind") != "single_snapshot_study"
+        or request.get("provider_config_sha256") != entry.provider_config_sha256
+        or request.get("provider_registry_entry_sha256") != registry.entry_sha256(entry)
+        or request.get("suite_manifest_sha256") != entry.suite_manifest_sha256
+        or request.get("snapshot_sha256") != policy.snapshot_sha256
+        or registry.verify_entry(entry)[0] != suite_file.resolve(strict=True)
+    ):
+        raise ValueError("public development dispatch differs from immutable registry authority")
+    policy.verify_snapshot(public)
+    budget = request["budget"]
+    policy.verify_budget(budget["experiments"], budget["wall_seconds"], budget["model_tokens"])
+    return public.binding
+
+
+def _registered_mode_agent_snapshot(request: dict[str, object], suite_file: Path) -> str:
+    """Grant single-snapshot authority only to the hash-bound local mode registry entry."""
+    configured = os.environ.get("LAB_SUITE_REGISTRY_FILE", "")
+    if not configured or request.get("study_kind") != "single_snapshot_study":
+        raise ValueError("mode agent study requires its registered immutable admission")
+    registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
+    suite_id = request.get("suite")
+    if not isinstance(suite_id, str):
+        raise ValueError("mode agent suite identity is missing")
+    entry = registry.get(suite_id)
+    path, _ = registry.verify_entry(entry)
+    if (
+        entry.provider != "local-qwen"
+        or entry.track != "mode"
+        or entry.proposal_contract != "operating-mode-config.v1"
+        or entry.snapshot_sha256 is None
+        or request.get("provider") != entry.provider
+        or request.get("track") != entry.track
+        or request.get("proposal_contract") != entry.proposal_contract
+        or request.get("snapshot_sha256") != entry.snapshot_sha256
+        or request.get("provider_config_sha256") != entry.provider_config_sha256
+        or request.get("provider_registry_entry_sha256") != registry.entry_sha256(entry)
+        or request.get("suite_manifest_sha256") != entry.suite_manifest_sha256
+        or path != suite_file.resolve(strict=True)
+    ):
+        raise ValueError("mode agent snapshot differs from trusted registry admission")
+    return entry.snapshot_sha256
+
+
 def _finalize_mode_study(
     planner: Engine,
     *,
@@ -306,7 +415,15 @@ def _finalize_mode_study(
     """Seal a finished explicit mode study under its original live execution budget."""
     if (
         holdout_enabled
-        or request.get("provider") != "mode-grid"
+        or not (
+            request.get("provider") == "mode-grid"
+            or (
+                request.get("provider") == "local-qwen"
+                and request.get("proposal_contract") == "operating-mode-config.v1"
+                and request.get("snapshot_sha256") == snapshot_sha256
+                and request.get("study_kind") == "single_snapshot_study"
+            )
+        )
         or request.get("track") != "mode"
         or manifest.weight_policy != "single_snapshot_study.v1"
         or snapshot_sha256 is None
@@ -367,7 +484,10 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
                 assert_execution_owner_transaction(connection, owner, run_id=args.run_id)
             run = (
                 connection.execute(
-                    text("SELECT state, request_json FROM lab.runs WHERE run_id=:run_id"),
+                    text(
+                        "SELECT state, request_json, owner_id, origin FROM lab.runs "
+                        "WHERE run_id=:run_id"
+                    ),
                     {"run_id": args.run_id},
                 )
                 .mappings()
@@ -378,7 +498,13 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
         runtime = _private_runtime_directory(args.artifact_root)
         planner = _planner_engine()
         request = run["request_json"]
+        from lab.director.field_context import load_frozen_field_context
+        from lab.director.history_context import load_frozen_prior_findings
+
+        prior_findings = load_frozen_prior_findings(request)
+        field_context = load_frozen_field_context(request)
         study_snapshot = None
+        public_binding = None
         if request.get("provider") == "mode-grid" and request.get("track") == "mode":
             from lab.api.mode_experiments import ModeSnapshotStore
             from lab.director.parameter_grid import ParameterGridProvider
@@ -398,8 +524,29 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
                 is None
             ):
                 raise ValueError("mode study snapshot is not installed")
+            store = ModeSnapshotStore(PROJECT_ROOT / "data/runtime/mode-snapshots")
+            public = store.public_snapshot(study_snapshot)
+            if public is not None:
+                public_binding = _registered_public_grid_binding(
+                    request,
+                    args.suite_file,
+                    owner_id=run["owner_id"],
+                    origin=run["origin"],
+                    snapshot_sha256=study_snapshot,
+                )
+        elif request.get("proposal_contract") == "operating-mode-config.v1":
+            study_snapshot = _registered_mode_agent_snapshot(request, args.suite_file)
+            if args.provider != "local-qwen":
+                raise ValueError("mode agent study requires the registered local provider")
+        if field_context is not None:
+            load_frozen_field_context(request, expected_snapshot_sha256=study_snapshot)
+            if study_snapshot is None:
+                raise ValueError("field context dispatch has no verified mode snapshot")
         manifest, tasks, manifest_sha = load_suite_manifest(
-            args.suite_file, planner, study_snapshot_sha256=study_snapshot
+            args.suite_file,
+            planner,
+            study_snapshot_sha256=study_snapshot,
+            public_task_binding=public_binding,
         )
         if not isinstance(request, dict) or not isinstance(request.get("budget"), dict):
             raise ValueError("immutable Director request has no valid budget")
@@ -469,23 +616,30 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
             config_sha = request.get("provider_config_sha256")
             if not isinstance(config_sha, str):
                 raise ValueError("immutable local provider configuration digest is missing")
-            profile_set = provider_profile_set_for_sha256(config_sha)
+            proposal_contract = _request_proposal_contract(request)
+            profile_set = provider_profile_set_for_sha256(config_sha, proposal_contract)
             if (
                 not isinstance(entry_sha, str)
                 or request.get("scenario_sha256") is not None
-                or config_sha != provider_config_sha256(profile_set)
+                or config_sha != provider_config_sha256(profile_set, proposal_contract)
                 or request.get("provider_registry_entry_sha256") != entry_sha
             ):
                 raise ValueError("local provider configuration differs from immutable request")
             injected_provider = getattr(args, "provider_instance", None)
             provider = injected_provider or _local_qwen_provider(
-                args.run_id, entry_sha, profile_set=profile_set
+                args.run_id,
+                entry_sha,
+                director_engine=director,
+                profile_set=profile_set,
+                proposal_contract=proposal_contract,
             )
             if (
                 getattr(provider, "provider_id", None) != "local-qwen.v1"
                 or getattr(provider, "configuration_sha256", None)
                 != request.get("provider_config_sha256")
                 or getattr(provider, "registry_entry_sha256", None) != entry_sha
+                or getattr(provider, "proposal_contract", "candidate-python.v1")
+                != proposal_contract
             ):
                 raise ValueError("local provider instance does not match the registered identity")
         else:
@@ -546,6 +700,8 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
                 proposal_limit=proposal_limit,
                 seed_wall_seconds=args.seed_wall_seconds,
                 holdout_enabled=holdout_enabled,
+                prior_findings=prior_findings,
+                field_context=field_context,
             )
             loop_result = _resume_terminal_loop(loop, calibration) if closure_only else loop.run()
             holdout_status = "not_registered_manual_review"
@@ -855,13 +1011,20 @@ def _validate_dispatch_target(
         or request.get("scenario_sha256") != entry.scenario_sha256
         or request.get("provider_config_sha256") != entry.provider_config_sha256
         or request.get("provider_registry_entry_sha256") != registry.entry_sha256(entry)
+        or _request_proposal_contract(request) != entry.proposal_contract
+        or request.get("snapshot_sha256") != entry.snapshot_sha256
         or proposal_limit > entry.proposal_limit
     ):
         raise ValueError("queued request no longer matches the trusted suite registry")
     entry_sha = registry.entry_sha256(entry)
     purpose = request.get("purpose", "research")
-    if purpose not in {"research", "baseline"}:
+    if purpose not in {"research", "baseline", "mode-stream"}:
         raise ValueError("queued run has an unsupported purpose")
+    if purpose == "mode-stream":
+        if entry.provider != "mode-stream" or entry.allowed_purposes != ("mode-stream",):
+            raise ValueError("stream request requires its dedicated registered purpose")
+        if proposal_limit != 0 or budget_json.get("model_tokens") != 0:
+            raise ValueError("diagnostic streams cannot reserve research proposals or tokens")
     if purpose == "baseline" and (proposal_limit != 0 or budget_json.get("model_tokens") != 0):
         raise ValueError("baseline request must reserve zero proposals and model tokens")
     if purpose == "research" and not 1 <= proposal_limit <= entry.proposal_limit:
@@ -873,8 +1036,10 @@ def _validate_dispatch_target(
     elif purpose == "research":
         if entry.provider_config_sha256 is None:
             raise ValueError("registered local provider configuration digest is missing")
-        profile_set = provider_profile_set_for_sha256(entry.provider_config_sha256)
-        current_config_sha = provider_config_sha256(profile_set)
+        profile_set = provider_profile_set_for_sha256(
+            entry.provider_config_sha256, entry.proposal_contract
+        )
+        current_config_sha = provider_config_sha256(profile_set, entry.proposal_contract)
         if current_config_sha != entry.provider_config_sha256:
             raise ValueError("registered local provider profile differs from this worker")
     # Suite version belongs to the hash-pinned manifest, not the registry entry.
@@ -884,9 +1049,28 @@ def _validate_dispatch_target(
         hashlib.sha256(manifest_payload).hexdigest() != entry.suite_manifest_sha256
     ):
         raise ValueError("suite manifest changed before Director execution claim")
-    suite_document = SuiteManifest.model_validate_json(manifest_payload, strict=True)
-    if suite_document.suite_id != entry.suite_id:
+    suite_version: int
+    if purpose == "mode-stream":
+        from lab.director.mode_stream import ModeStreamPlan, plan_from_request
+        from lab.operating_modes.stream import load_input
+
+        stream_plan = ModeStreamPlan.model_validate_json(manifest_payload, strict=True)
+        if stream_plan != plan_from_request(request):
+            raise ValueError("stream plan differs from the admitted request")
+        stream_plan.verify_input(
+            load_input(registry.runtime_root / "mode-stream-inputs", stream_plan.input_sha256)
+        )
+        suite_identity, suite_version = stream_plan.suite_id, stream_plan.suite_version
+    else:
+        suite_document = SuiteManifest.model_validate_json(manifest_payload, strict=True)
+        suite_identity, suite_version = suite_document.suite_id, suite_document.suite_version
+    if suite_identity != entry.suite_id:
         raise ValueError("verified suite manifest identity differs from the registry")
+    from lab.director.field_context import load_frozen_field_context
+    from lab.director.history_context import load_frozen_prior_findings
+
+    load_frozen_prior_findings(request)
+    load_frozen_field_context(request)
     payload = json.dumps(
         {key: value for key, value in request.items() if key != "idempotency_key"},
         sort_keys=True,
@@ -897,12 +1081,16 @@ def _validate_dispatch_target(
         raise ValueError("queued request payload digest failed verification")
     harness_sha = compute_harness_hash(PROJECT_ROOT).sha256
     image_digest = DEFAULT_SANDBOX_IMAGE.rsplit("@sha256:", 1)[-1].removeprefix("sha256:")
+    if purpose == "mode-stream" and (
+        request.get("harness_sha256") != harness_sha or request.get("image_sha256") != image_digest
+    ):
+        raise ValueError("stream worker differs from the originally admitted harness/image")
     contract = ExecutionContract.build(
         run_id=run_id,
         request=request,
         request_sha256=str(row["payload_sha256"]),
         suite_id=entry.suite_id,
-        suite_version=suite_document.suite_version,
+        suite_version=suite_version,
         suite_manifest_sha256=entry.suite_manifest_sha256,
         registry_entry_sha256=entry_sha,
         harness_sha256=harness_sha,
@@ -987,11 +1175,34 @@ def _dispatch_director_run(run_id: UUID) -> dict[str, object]:
             elif purpose == "research":
                 if profile_set is None:
                     raise RuntimeError("trusted local provider profile was not verified")
-                provider_instance = _local_qwen_provider(run_id, entry_sha, profile_set=profile_set)
+                provider_instance = _local_qwen_provider(
+                    run_id,
+                    entry_sha,
+                    director_engine=director,
+                    profile_set=profile_set,
+                    proposal_contract=entry.proposal_contract,
+                )
             runtime = _private_runtime_directory(
                 PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id)
             )
-            if purpose == "baseline":
+            if purpose == "mode-stream":
+                from lab.director.mode_stream import plan_from_request, run_mode_stream
+
+                planner = _planner_engine()
+                try:
+                    with DirectorRunLease(director, run_id) as lease:
+                        result = run_mode_stream(
+                            director,
+                            planner,
+                            run_id=run_id,
+                            plan=plan_from_request(target.request),
+                            input_root=registry.runtime_root / "mode-stream-inputs",
+                            artifact_root=runtime,
+                            lease=lease,
+                        )
+                finally:
+                    planner.dispose()
+            elif purpose == "baseline":
                 planner = _planner_engine()
                 try:
                     with DirectorRunLease(director, run_id) as lease:
@@ -1023,13 +1234,198 @@ def _dispatch_director_run(run_id: UUID) -> dict[str, object]:
                     artifact_root=runtime,
                 )
                 result = _run_director(args)
-            return _completed_dispatch_result(director, run_id, owner, result)
+            return {
+                **_completed_dispatch_result(director, run_id, owner, result),
+                "admitted_owner": _admitted_owner_result(owner),
+            }
         except Exception as error:
-            return _record_claimed_dispatch_failure(director, run_id, error, owner=owner)
+            return {
+                **_record_claimed_dispatch_failure(director, run_id, error, owner=owner),
+                "admitted_owner": _admitted_owner_result(owner),
+            }
         finally:
             reset_execution_owner(owner_token)
     finally:
         director.dispose()
+
+
+def _admitted_owner_result(owner: ExecutionOwner) -> dict[str, object]:
+    return {
+        "generation": owner.generation,
+        "invocation_id": owner.invocation_id,
+        "execution_sha256": owner.execution_sha256,
+    }
+
+
+def _automatic_stopped_baseline_recovery(
+    run_id: UUID, expected_owner: dict[str, object] | None
+) -> dict[str, object]:
+    """Attempt existing stop recovery once, with the original generation/deadline.
+
+    This runs outside the exited run's global callback. Normal recovery retains
+    its physical owner/child proofs, stopped-ledger checks and cleanup deadline.
+    """
+    from lab.director.recovery import _recovery_id, _request_sha256
+
+    pending: dict[str, object] = {
+        "run_id": str(run_id),
+        "state": "stop_requested",
+        "dispatch": "recovery_pending",
+    }
+    director, planner = _director_engine(), _planner_engine()
+    try:
+        with director.connect() as connection:
+            row = (
+                connection.execute(
+                    text(
+                        "SELECT r.state,r.request_json,r.payload_sha256,g.generation,"
+                        "g.worker_invocation_id,g.execution_sha256,g.worker_pid,g.worker_start_ticks,"
+                        "g.worker_boot_id,g.worker_unit,g.worker_cgroup,"
+                        "e.deadline_at,sc.created_at+interval '120 seconds' "
+                        "AS stop_cleanup_deadline, "
+                        "(SELECT min(created_at)+interval '120 seconds' FROM lab.run_events "
+                        "WHERE run_id=r.run_id AND event_type='run.stop_requested') "
+                        "AS requested_stop_deadline, "
+                        "EXISTS(SELECT 1 FROM lab.experiments WHERE run_id=r.run_id "
+                        "AND kind='proposal') AS proposal_stop "
+                        "FROM lab.runs r JOIN lab.director_execution_control c "
+                        "ON c.run_id=r.run_id JOIN lab.director_owner_generations g "
+                        "ON g.run_id=c.run_id AND g.generation=c.current_generation "
+                        "JOIN lab.director_execution_contracts e ON e.run_id=r.run_id "
+                        "LEFT JOIN lab.director_stop_closures sc ON sc.run_id=r.run_id "
+                        "WHERE r.run_id=:run AND c.mode='active'"
+                    ),
+                    {"run": run_id},
+                )
+                .mappings()
+                .one_or_none()
+            )
+        if row is None or row["state"] != "stop_requested" or expected_owner is None:
+            return {**pending, "recovery_reason": "stop_generation_unavailable"}
+        owner = ExecutionOwner(
+            run_id, row["generation"], row["worker_invocation_id"], row["execution_sha256"]
+        )
+        if _admitted_owner_result(owner) != expected_owner:
+            return {**pending, "recovery_reason": "stop_generation_changed"}
+        deadline = row["deadline_at"]
+        if not isinstance(deadline, datetime) or deadline.tzinfo is None:
+            return {**pending, "recovery_reason": "original_deadline_unavailable"}
+        remaining = min(120, int((deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()))
+        requested_stop_deadline = row["requested_stop_deadline"]
+        if (
+            not isinstance(requested_stop_deadline, datetime)
+            or requested_stop_deadline.tzinfo is None
+        ):
+            return {**pending, "recovery_reason": "first_stop_deadline_unavailable"}
+        cleanup_deadline = min(deadline, requested_stop_deadline)
+        remaining = min(
+            remaining,
+            int((requested_stop_deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()),
+        )
+        stop_deadline = row["stop_cleanup_deadline"]
+        if stop_deadline is not None:
+            if not isinstance(stop_deadline, datetime) or stop_deadline.tzinfo is None:
+                return {**pending, "recovery_reason": "stop_cleanup_deadline_unavailable"}
+            cleanup_deadline = min(cleanup_deadline, stop_deadline)
+            remaining = min(
+                remaining, int((stop_deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds())
+            )
+        if remaining < 1:
+            return {**pending, "recovery_reason": "original_deadline_expired"}
+        stream_stop = row["request_json"].get("purpose") == "mode-stream"
+        if stream_stop:
+            from lab.director.recovery import _owner_is_proven_dead, _stored_owner
+            from lab.director.resume import _drain_director_sandbox
+
+            prior = _stored_owner(row)
+            if prior is None or not _owner_is_proven_dead(prior, run_id):
+                return {**pending, "recovery_reason": "stream_owner_not_proven_dead"}
+            _drain_director_sandbox(
+                run_id,
+                dict(row),
+                PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id),
+                time.monotonic() + max(0.0, (cleanup_deadline - datetime.now(UTC)).total_seconds()),
+            )
+        result = _with_director_global_slot(
+            run_id,
+            lambda: apply_stop_and_finalize(
+                director,
+                planner,
+                run_id=run_id,
+                recovery_id=_recovery_id(run_id, _request_sha256(run_id, "stop_and_finalize")),
+                remaining_seconds=remaining,
+                reconcile_interrupted_baseline=not stream_stop
+                and not bool(row.get("proposal_stop", False)),
+                reconcile_interrupted_proposal=bool(row.get("proposal_stop", False)),
+                expected_owner=owner,
+                cleanup_deadline=cleanup_deadline,
+                artifact_root=_private_runtime_directory(
+                    PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id)
+                ),
+            ),
+        )
+        if (
+            result.get("recovery_state") == "completed"
+            and result.get("action") == "finalized_stopped"
+        ):
+            return {
+                "run_id": str(run_id),
+                "state": "stopped",
+                "dispatch": "terminal",
+                "report_sha256": result["report_sha256"],
+                "automatic_stop_recovery": "completed",
+            }
+        return {**pending, "recovery_reason": result.get("reason", result.get("state", "pending"))}
+    except Exception as exc:
+        failure: dict[str, object] = {
+            **pending,
+            "recovery_reason": "stop_recovery_unavailable",
+            "recovery_error_type": type(exc).__name__,
+        }
+        sqlstate = getattr(getattr(exc, "orig", None), "sqlstate", None)
+        if isinstance(sqlstate, str) and re.fullmatch(r"[0-9A-Z]{5}", sqlstate):
+            failure["recovery_sqlstate"] = sqlstate
+        return failure
+    finally:
+        planner.dispose()
+        director.dispose()
+
+
+def _recover_stopped_baselines_at_drain_start(engine: Engine) -> None:
+    """One bounded snapshot after a drain generation replaces its exited owner."""
+    with engine.connect() as connection:
+        rows = (
+            connection.execute(
+                text(
+                    "SELECT r.run_id,g.generation,g.worker_invocation_id,g.execution_sha256 "
+                    "FROM lab.runs r JOIN lab.director_execution_control c ON c.run_id=r.run_id "
+                    "JOIN lab.director_owner_generations g ON g.run_id=c.run_id "
+                    "AND g.generation=c.current_generation "
+                    "JOIN lab.director_execution_contracts e ON e.run_id=r.run_id "
+                    "LEFT JOIN lab.director_stop_closures sc ON sc.run_id=r.run_id "
+                    "WHERE r.state='stop_requested' AND e.deadline_at>clock_timestamp() "
+                    "AND (sc.created_at IS NULL OR sc.created_at+interval '120 seconds'"
+                    ">clock_timestamp()) "
+                    "AND (SELECT min(created_at)+interval '120 seconds' FROM lab.run_events "
+                    "WHERE run_id=r.run_id AND event_type='run.stop_requested')>clock_timestamp() "
+                    "AND c.mode='active' AND (r.request_json->>'purpose'='mode-stream' "
+                    "OR EXISTS (SELECT 1 FROM lab.experiments x "
+                    "WHERE x.run_id=r.run_id AND x.kind='baseline' "
+                    "AND x.status IN ('proposed','primary_running'))) "
+                    "ORDER BY r.created_at,r.run_id LIMIT 16"
+                )
+            )
+            .mappings()
+            .all()
+        )
+    for row in rows:
+        owner = {
+            "generation": row["generation"],
+            "invocation_id": row["worker_invocation_id"],
+            "execution_sha256": row["execution_sha256"],
+        }
+        result = _automatic_stopped_baseline_recovery(UUID(str(row["run_id"])), owner)
+        print(json.dumps(result, sort_keys=True), flush=True)
 
 
 def _completed_dispatch_result(
@@ -1084,7 +1480,44 @@ def _record_claimed_dispatch_failure(
     owner: ExecutionOwner,
     failure_reason: str = "execution_exception",
 ) -> dict[str, object]:
-    """Fail a clean claimed run, or request safe recovery when ledger work is open."""
+    """Fail clean work or preserve an already requested stop of this exact owner."""
+
+    def owned_stop_requested() -> bool:
+        # The API stop RPC already changed running to stop_requested. The normal
+        # failure-closure RPC intentionally only accepts running, so it cannot
+        # re-close that row. This observation performs no mutation and admits
+        # only the same active execution tuple as the failure-closure fence.
+        with director.connect() as connection:
+            value = connection.execute(
+                text(
+                    "SELECT 1 FROM lab.runs r "
+                    "JOIN lab.director_execution_control c ON c.run_id=r.run_id "
+                    "JOIN lab.director_owner_generations g ON g.run_id=c.run_id "
+                    "AND g.generation=c.current_generation "
+                    "JOIN lab.director_execution_contracts e ON e.run_id=r.run_id "
+                    "WHERE r.run_id=:run_id AND r.state='stop_requested' "
+                    "AND r.stop_requested AND c.mode='active' "
+                    "AND c.current_generation=:generation "
+                    "AND g.worker_invocation_id=:invocation_id "
+                    "AND g.execution_sha256=:execution_sha256 "
+                    "AND e.execution_sha256=:execution_sha256"
+                ),
+                {
+                    "run_id": run_id,
+                    "generation": owner.generation,
+                    "invocation_id": owner.invocation_id,
+                    "execution_sha256": owner.execution_sha256,
+                },
+            ).scalar_one_or_none()
+        return value == 1
+
+    def stop_result() -> dict[str, object]:
+        return {
+            "run_id": str(run_id),
+            "state": "stop_requested",
+            "dispatch": "recovery_required",
+            "error_type": type(error).__name__,
+        }
 
     def close_as(target_state: str) -> dict[str, object]:
         with director.begin() as connection:
@@ -1109,6 +1542,8 @@ def _record_claimed_dispatch_failure(
             raise RuntimeError("Director failure closure returned an invalid receipt")
         return payload
 
+    if owned_stop_requested():
+        return stop_result()
     try:
         close_as("failed")
         return {
@@ -1118,32 +1553,17 @@ def _record_claimed_dispatch_failure(
             "error_type": type(error).__name__,
         }
     except Exception:
-        # The ledger terminal fence blocks failure while experiment pairs are open.
-        # Persist a safe stop request using the same generation, even after deadline.
-        close_as("stop_requested")
-        return {
-            "run_id": str(run_id),
-            "state": "stop_requested",
-            "dispatch": "recovery_required",
-            "error_type": type(error).__name__,
-        }
-    with director.connect() as connection:
-        current = (
-            connection.execute(
-                text("SELECT state, report_sha256 FROM lab.runs WHERE run_id=:run_id"),
-                {"run_id": run_id},
-            )
-            .mappings()
-            .one_or_none()
-        )
-    if current is None:
-        raise RuntimeError("claimed Director run disappeared while recording failure")
-    return {
-        "run_id": str(run_id),
-        "state": current["state"],
-        "report_sha256": current["report_sha256"],
-        "dispatch": "state_changed_concurrently",
-    }
+        # The API may have won the stop race after the first observation.
+        if owned_stop_requested():
+            return stop_result()
+        try:
+            # Existing ledger terminal fences can require a new safe stop.
+            close_as("stop_requested")
+        except Exception:
+            # Also cover a stop that wins after the second observation.
+            if not owned_stop_requested():
+                raise
+        return stop_result()
 
 
 def _with_director_global_slot(
@@ -1229,7 +1649,7 @@ def _launch_director_unit(
     ):
         raise TypeError("Director unit identity must use UUID values")
     if (
-        isinstance(unit_runtime, bool)
+        type(unit_runtime) is not int
         or not 1 <= unit_runtime <= MAX_RUN_WALL_SECONDS + DIRECTOR_DISPATCH_OVERHEAD_SECONDS
     ):
         raise ValueError("Director unit runtime exceeds its immutable bounded ceiling")
@@ -1259,6 +1679,8 @@ def _launch_director_unit(
         value = os.environ.get(name)
         if value is None:
             continue
+        if name == "LAB_SCORER_DSN_FILE":
+            value = str(configured_scorer_dsn_file())
         if "\x00" in value or "\n" in value or len(value) > 4096:
             raise ValueError(f"dispatcher environment value is malformed: {name}")
         command.append(f"--setenv={name}={value}")
@@ -1275,6 +1697,10 @@ def _launch_director_unit(
     )
     if restart_id is not None:
         command.extend(("--restart-id", str(restart_id)))
+    # Validate all caller inputs before any service operation. Provision the
+    # aggregate limits before systemd-run can implicitly create this slice with
+    # unlimited defaults; an existing incompatible slice must fail unchanged.
+    SystemdUnitManager().ensure_slice()
     try:
         completed = subprocess.run(  # nosec B603 -- fixed binary/module/argv and bounded unit
             command,
@@ -1298,6 +1724,8 @@ def _launch_director_unit(
         raise RuntimeError("owned resume unit result differs from its restart attempt")
     result["owner_unit"] = unit
     result["owner_exit_code"] = completed.returncode
+    if result.get("state") == "stop_requested":
+        result.update(_automatic_stopped_baseline_recovery(run_id, result.get("admitted_owner")))
     return result
 
 
@@ -1341,8 +1769,11 @@ def _resume_director_run_owned(run_id: UUID, restart_id: UUID) -> dict[str, obje
         if row is None or row["state"] != "running" or row["stop_requested"]:
             raise ValueError("resume requires an existing unstopped running execution")
         request = row["request_json"]
-        if not isinstance(request, dict) or request.get("purpose", "research") != "research":
-            raise ValueError("supported resume requires a research run")
+        if not isinstance(request, dict) or request.get("purpose", "research") not in {
+            "research",
+            "mode-stream",
+        }:
+            raise ValueError("supported resume requires a research or diagnostic stream run")
         remaining = float(row["remaining_seconds"])
         if not math.isfinite(remaining) or not 0 <= remaining <= MAX_RUN_WALL_SECONDS:
             raise ValueError("original execution deadline is malformed")
@@ -1390,8 +1821,8 @@ def _resume_director_run(run_id: UUID, restart_id: UUID) -> dict[str, object]:
         if row is None or row["state"] != "running":
             raise ValueError("resume requires an existing running execution")
         target = _validate_dispatch_target(run_id, dict(row), registry)
-        if target.purpose != "research":
-            raise ValueError("supported resume requires a research execution")
+        if target.purpose not in {"research", "mode-stream"}:
+            raise ValueError("supported resume requires a research or diagnostic stream execution")
         observed = capture_current_owner(str(row["payload_sha256"]), run_id)
         process = OwnerProcessIdentity(
             observed.payload_sha256,
@@ -1423,6 +1854,28 @@ def _resume_director_run(run_id: UUID, restart_id: UUID) -> dict[str, object]:
             }
         with owned_execution(receipt.owner):
             try:
+                if target.purpose == "mode-stream":
+                    from lab.director.mode_stream import plan_from_request, run_mode_stream
+
+                    if receipt.closure_only:
+                        raise TimeoutError("original stream deadline expired; replay cannot resume")
+                    with DirectorRunLease(director, run_id) as lease:
+                        result = run_mode_stream(
+                            director,
+                            planner,
+                            run_id=run_id,
+                            plan=plan_from_request(target.request),
+                            input_root=registry.runtime_root / "mode-stream-inputs",
+                            artifact_root=runtime,
+                            lease=lease,
+                        )
+                    return {
+                        **_completed_dispatch_result(director, run_id, receipt.owner, result),
+                        "restart_id": str(restart_id),
+                        "admitted_owner": _admitted_owner_result(receipt.owner),
+                        "generation": receipt.owner.generation,
+                        "original_deadline_at": receipt.deadline_at.isoformat(),
+                    }
                 args = argparse.Namespace(
                     run_id=run_id,
                     suite_id=target.entry.suite_id,
@@ -1443,6 +1896,7 @@ def _resume_director_run(run_id: UUID, restart_id: UUID) -> dict[str, object]:
                 return {
                     **terminal,
                     "restart_id": str(restart_id),
+                    "admitted_owner": _admitted_owner_result(receipt.owner),
                     "generation": receipt.owner.generation,
                     "closure_only": receipt.closure_only,
                     "original_deadline_at": receipt.deadline_at.isoformat(),
@@ -1457,6 +1911,7 @@ def _resume_director_run(run_id: UUID, restart_id: UUID) -> dict[str, object]:
                         failure_reason="resume_reconciliation_failed",
                     ),
                     "restart_id": str(restart_id),
+                    "admitted_owner": _admitted_owner_result(receipt.owner),
                 }
     finally:
         planner.dispose()
@@ -1480,13 +1935,36 @@ def _drain_director_queue(*, poll_seconds: int) -> int:
         raise ValueError("Director queue poll interval must be in 1..60 seconds")
     engine = _director_engine()
     try:
+        _recover_stopped_baselines_at_drain_start(engine)
         while True:
             run_id = _next_queued_run(engine)
             if run_id is None:
                 time.sleep(poll_seconds)
                 continue
             try:
-                result = _dispatch_director_run_with_global_slot(run_id)
+                with engine.connect() as connection:
+                    queued_request = connection.execute(
+                        select(runs.c.request_json).where(runs.c.run_id == run_id)
+                    ).scalar_one()
+                if (
+                    isinstance(queued_request, dict)
+                    and queued_request.get("purpose") == "mode-stream"
+                ):
+                    # A stream's stopped sandbox is reconciled after this exact
+                    # bounded owner exits; the queue process keeps no stream lease.
+                    wall = queued_request.get("budget", {}).get("wall_seconds")
+                    if type(wall) is not int or not 1 <= wall <= MAX_RUN_WALL_SECONDS:
+                        raise ValueError("stream queue entry has an invalid original wall budget")
+                    result = _launch_director_unit(
+                        run_id, unit_runtime=wall + DIRECTOR_DISPATCH_OVERHEAD_SECONDS
+                    )
+                else:
+                    if os.environ.get("LAB_CPU_ONLY") == "true" and (
+                        not isinstance(queued_request, dict)
+                        or queued_request.get("provider") != "mode-grid"
+                    ):
+                        raise ValueError("CPU-only profile cannot dispatch this queued provider")
+                    result = _dispatch_director_run_owned(run_id)
             except Exception as exc:
                 print(
                     json.dumps(
@@ -1502,6 +1980,11 @@ def _drain_director_queue(*, poll_seconds: int) -> int:
                 time.sleep(poll_seconds)
             else:
                 print(json.dumps(result, sort_keys=True), flush=True)
+                if result.get("state") == "stop_requested":
+                    # The shipped unit Restart=on-failure replaces this OWN
+                    # generation. Its successor can prove retired shared owner
+                    # death; this living process cannot recover itself.
+                    return 75
                 if result.get("state") == "capacity_busy":
                     time.sleep(poll_seconds)
                 else:
@@ -1832,6 +2315,11 @@ def main(argv: list[str] | None = None) -> int:
                 return 75
             if result.get("state") in {"failed", "recovery_required", "dispatch_error"}:
                 return 1
+            if (
+                result.get("state") == "stopped"
+                and result.get("automatic_stop_recovery") == "completed"
+            ):
+                return 0
             if result.get("owner_exit_code") not in {None, 0}:
                 return 1
             return 0
@@ -2035,7 +2523,10 @@ def main(argv: list[str] | None = None) -> int:
             from lab.scorer.worker import DEFAULT_DSN_FILE, _secret
 
             calibration_engine = create_engine(
-                _secret(DEFAULT_DSN_FILE), pool_size=1, max_overflow=0, pool_timeout=5
+                _secret(configured_scorer_dsn_file(DEFAULT_DSN_FILE)),
+                pool_size=1,
+                max_overflow=0,
+                pool_timeout=5,
             )
             result = run_care_calibration(
                 calibration_engine,

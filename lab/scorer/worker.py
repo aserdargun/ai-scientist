@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from uuid import UUID
 
+from lab.scorer.credential_path import configured_scorer_dsn_file
+
 if TYPE_CHECKING:
     from sqlalchemy import Engine
 
@@ -254,7 +256,9 @@ def process_one(
                 return None
             try:
                 harness_sha256 = compute_harness_hash(PROJECT_ROOT).sha256
-                scorer = IndependentScorer(engine, harness_sha256=harness_sha256)
+                scorer = IndependentScorer(
+                    engine, harness_sha256=harness_sha256, artifact_root=artifact_root
+                )
                 payload = read_candidate_artifact(job.artifact_sha256, artifact_root=artifact_root)
                 scorer.score_task(
                     run_id=job.run_id,
@@ -403,6 +407,7 @@ def process_recover_stopped_job(
     job_id: UUID,
     expected_claim_invocation_id: str,
     invocation: ScorerInvocation,
+    artifact_root: Path = DEFAULT_ARTIFACT_ROOT,
 ) -> dict[str, str]:
     """Cancel one stop-requested job after its prior systemd generation drained."""
     from sqlalchemy import select, text
@@ -455,7 +460,9 @@ def process_recover_stopped_job(
                     )
                 ).one_or_none()
             scorer = IndependentScorer(
-                engine, harness_sha256=compute_harness_hash(PROJECT_ROOT).sha256
+                engine,
+                harness_sha256=compute_harness_hash(PROJECT_ROOT).sha256,
+                artifact_root=artifact_root,
             )
             if row["state"] == "cancelled":
                 if (
@@ -560,7 +567,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.finalize_run_id is not None
         else f"swapp-ai-scientist-scorer-{(args.job_id or args.recover_job_id).hex}.service"
     )
-    dsn_file = Path(os.environ.get("LAB_SCORER_DSN_FILE", DEFAULT_DSN_FILE))
+    dsn_file = configured_scorer_dsn_file(DEFAULT_DSN_FILE)
     artifact_root = Path(os.environ.get("LAB_ARTIFACT_ROOT", DEFAULT_ARTIFACT_ROOT))
     try:
         invocation = verify_systemd_invocation(expected_unit)
@@ -594,6 +601,7 @@ def main(argv: list[str] | None = None) -> int:
                 job_id=args.recover_job_id,
                 expected_claim_invocation_id=args.expected_claim_invocation_id,
                 invocation=invocation,
+                artifact_root=artifact_root,
             )
         else:
             result = process_one(

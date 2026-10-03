@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
@@ -22,10 +23,13 @@ from lab.director.contracts import CandidateProposal
 from lab.director.runner import (
     PrimaryEvaluationResult,
     RegisteredProposal,
+    _build_replay_manifest,
     _candidate_git_tree,
+    _merge_confirmation_measurements,
     commit_primary_terminal_record,
     decide_proposal_from_measurements,
 )
+from lab.scorer.jobs import read_artifact_bytes
 
 
 def _fixture(tmp_path: Path) -> tuple[dict[str, Any], PrimaryEvaluationResult]:
@@ -138,6 +142,141 @@ def _repeat(primary: PrimaryEvaluationResult, seed: int) -> PrimaryEvaluationRes
             dict(row, evaluation_kind="confirmation", seed=seed) for row in primary.measurements
         ),
     )
+
+
+def test_terminal_replay_reads_outputs_from_the_run_artifact_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Synthetic ledger rows; real file reads must preserve the isolated run root."""
+    monkeypatch.chdir(tmp_path)
+    artifact_root = tmp_path / "run-blobs"
+    arguments, primary = _fixture(artifact_root)
+    proposal = arguments["proposal"]
+    parent_output = b'{"schema":"candidate-scores.v1","sample_indices":[0],"scores":[0.1]}'
+    child_output = b'{"schema":"candidate-scores.v1","sample_indices":[0],"scores":[0.2]}'
+
+    def write_fixture(payload: bytes, root: Path) -> str:
+        digest = hashlib.sha256(payload).hexdigest()
+        shard = root / digest[:2]
+        shard.mkdir(parents=True, mode=0o700, exist_ok=True)
+        path = shard / f"{digest}.json"
+        path.write_bytes(payload)
+        path.chmod(0o600)
+        return digest
+
+    parent_digest = write_fixture(parent_output, artifact_root)
+    child_digest = write_fixture(child_output, artifact_root)
+    # A matching parent in the default store cannot authorize reading the child there.
+    write_fixture(parent_output, Path("data/runtime/candidate-blobs"))
+    assert read_artifact_bytes(parent_digest) == parent_output
+    with pytest.raises(FileNotFoundError):
+        read_artifact_bytes(child_digest)
+    measured = dict(
+        primary.measurements[0],
+        vus_pr=0.2,
+        task_score=0.2,
+        task_family="EVT",
+        candidate_output_sha256=child_digest,
+    )
+    primary = replace(primary, measurements=(measured,))
+    arguments["result"] = primary
+    referee = decide_proposal_from_measurements(
+        **{key: value for key, value in arguments.items() if key not in {"artifact_root", "run_id"}}
+    )
+    assert referee.decision.verdict == "DISCARD"
+    parents = [
+        dict(
+            measured,
+            experiment_id=proposal.parent_experiment_id,
+            evaluation_kind="baseline",
+            seed=seed,
+            candidate_output_sha256=parent_digest,
+        )
+        for seed in (0, 1, 2)
+    ]
+
+    def execute(statement: Any, parameters: dict[str, Any]) -> Any:
+        if "FROM lab.experiments" in str(statement):
+            row = {"candidate_sha256": proposal.candidate_sha256, "kind": "baseline"}
+            return SimpleNamespace(mappings=lambda: SimpleNamespace(one_or_none=lambda: row))
+        rows = (
+            parents if parameters["experiment_id"] == proposal.parent_experiment_id else [measured]
+        )
+        return SimpleNamespace(mappings=lambda: SimpleNamespace(all=lambda: rows))
+
+    engine = SimpleNamespace(connect=lambda: nullcontext(SimpleNamespace(execute=execute)))
+    manifest = _build_replay_manifest(
+        director_engine=engine,
+        run_id=arguments["run_id"],
+        proposal=proposal,
+        calibration=arguments["calibration"],
+        parent_source=arguments["parent_source"],
+        referee=referee,
+        primary=primary,
+        confirmation=None,
+        artifact_root=artifact_root,
+        best_suite=0.0,
+        epsilon=0.01,
+        bootstrap_seed=0,
+        decision_stage="primary",
+    )
+    assert manifest is not None
+    assert manifest.expected_decision.verdict == "DISCARD"
+    assert manifest.child_seed_output_sha256 == ((child_digest,),)
+    assert manifest.parent_noise_output_sha256 == ((parent_digest,),) * 3
+
+
+def test_confirmation_timings_sum_both_measured_seeds(tmp_path: Path) -> None:
+    _, primary = _fixture(tmp_path)
+    primary = replace(
+        primary,
+        measurements=(
+            dict(primary.measurements[0], guarded_wall_seconds=14.0, scorer_wall_seconds=2.0),
+        ),
+    )
+    confirmation = _repeat(primary, 1)
+    confirmation = replace(
+        confirmation,
+        measurements=(
+            dict(confirmation.measurements[0], guarded_wall_seconds=20.0, scorer_wall_seconds=3.0),
+        ),
+    )
+    row = _merge_confirmation_measurements(primary, confirmation).measurements[0]
+    assert row["guarded_wall_seconds"] == 34.0
+    assert row["scorer_wall_seconds"] == 5.0
+    assert row["fit_seconds"] == 2.0
+    assert row["score_seconds"] == 2.0
+
+
+@pytest.mark.parametrize("missing_seed", [0, 1])
+def test_confirmation_does_not_invent_missing_historical_timing(
+    tmp_path: Path, missing_seed: int
+) -> None:
+    _, primary = _fixture(tmp_path)
+    confirmation = _repeat(primary, 1)
+    measured = primary if missing_seed == 1 else confirmation
+    measured = replace(
+        measured,
+        measurements=(
+            dict(measured.measurements[0], guarded_wall_seconds=14.0, scorer_wall_seconds=2.0),
+        ),
+    )
+    if missing_seed == 1:
+        primary = measured
+    else:
+        confirmation = measured
+    row = _merge_confirmation_measurements(primary, confirmation).measurements[0]
+    assert "guarded_wall_seconds" not in row
+    assert "scorer_wall_seconds" not in row
+
+
+def test_confirmation_rejects_timing_sum_overflow(tmp_path: Path) -> None:
+    _, primary = _fixture(tmp_path)
+    primary = replace(
+        primary, measurements=(dict(primary.measurements[0], guarded_wall_seconds=1e308),)
+    )
+    with pytest.raises(ValueError, match="finite nonnegative"):
+        _merge_confirmation_measurements(primary, _repeat(primary, 1))
 
 
 def test_provisional_keep_cannot_commit_without_confirmation(tmp_path: Path) -> None:

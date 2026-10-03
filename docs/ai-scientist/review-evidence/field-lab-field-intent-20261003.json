@@ -1,0 +1,165 @@
+{
+  "schema": "field-lab-field-intent-delivery.v1",
+  "recorded_at": "2026-10-03T11:59:28.381019+00:00",
+  "version": "0.46.0",
+  "run_id": "50ea6463-4589-4213-a2fe-817287f3a323",
+  "state": "completed",
+  "contracts": [
+    "field-study-context.v1",
+    "run-experience.v1"
+  ],
+  "field_context_usage": {
+    "field_context_sha256": "b12d46c67b4dd9e5956d71923538ece23c2e79988b1e535cd517e1178c05c8a4",
+    "snapshot_sha256": "964641ae824487aca2a83890bbec794a1eb8a19afed114b13b20b803660e0101",
+    "intent": {
+      "asset_id": "DEMO-SKAB-VALVE-1",
+      "goal_kind": "predictive_maintenance",
+      "objective": "SKAB vana örneğinde çalışma modlarına göre residual ve OMR davranışını karşılaştır."
+    },
+    "asset_identity": "user_supplied",
+    "use": "advisory-only",
+    "status": "context-bound",
+    "context_bound_proposal_count": 1
+  },
+  "report_sha256": "3d50f90bfa9767d6e5f76f0f8df65f812ff410d6035e12efdb1dfb9b750bf0fb",
+  "report_schema_unchanged": "lab.report.v1",
+  "elapsed_seconds": 279.614549,
+  "budget_seconds": 600,
+  "scores": 12,
+  "score_breakdown": {
+    "baseline": 9,
+    "optics_primary": 1,
+    "optics_confirmation": 2
+  },
+  "optics_decision": "KEEP",
+  "optics_raw_vus_pr": 0.5905116220683974,
+  "best_baseline_raw_vus_pr": 0.5954360146097041,
+  "improvement_claim": false,
+  "runtime": {
+    "model_calls": 0,
+    "gpu_jobs": 0,
+    "model": null,
+    "quantization": null,
+    "context_tokens": null,
+    "vram_peak": null,
+    "gpu_handoff_latency": null
+  },
+  "resources": {
+    "director_cgroup_peak_memory_bytes_observed": 237858816,
+    "min_host_available_bytes_observed": 17677541376,
+    "observation_started_at": "2026-10-03T11:45:00.682163+00:00"
+  },
+  "image": {
+    "schema": "field-lab-field-intent-image.v1",
+    "started_at_epoch": 1791027224.8793983,
+    "finished_at_epoch": 1791027230.783372,
+    "image_id": "sha256:5dfc403b6fc6e7347c80c99ca461c1902b3ca4725a9428569a33d27f0ff1214c",
+    "prior_image": "sha256:5cff6ce77457f31626e7d7162adc2bb9e094df0b9c4ba7711e7aa105b3a9b8ca",
+    "build_exit_code": 0,
+    "parity_exit_code": 0,
+    "parity": {
+      "source_files": 210,
+      "byte_parity": true,
+      "mismatches": []
+    },
+    "source_files": 210,
+    "source_manifest_sha256": "50c1e9ebc55e15a2d3819d64e93d19b92df156c94155819efc799fe6bfa0a77c",
+    "harness_sha256": "fa0e0b9d5c76d49216e086a9184bf1985bc0065a3426b99b1def7c08cb892837",
+    "harness_file_count": 168,
+    "cpu_limit": 2,
+    "memory_limit_bytes": 2147483648,
+    "network": "none",
+    "gpu_started": false
+  },
+  "quality_gate": {
+    "passed": 3328,
+    "skipped": 7,
+    "deselected": 177,
+    "all_seven_commands_exit_zero": true,
+    "receipt_sha256": "fc926fde92f5df7a274350a1305862475356e9e8b1c326ad821f0131947d2967",
+    "initial_attempt_failed_before_any_check": "ruff missing from shell PATH; corrected tool environment; preserved failed log"
+  },
+  "cleanup": {
+    "scorer_jobs_completed": 12,
+    "director_process_absent": true,
+    "director_cgroup_empty_or_absent": true,
+    "scorer_cgroups_empty_or_absent": true,
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "sandbox_count": 0,
+    "aos_preview_original_processes_unchanged": true,
+    "gpu_release_claim": false
+  },
+  "ui": {
+    "ui_exact_same_intent_readback": true,
+    "source_and_context_hashes_visible": true,
+    "asset_is_user_declaration_only": true,
+    "improvement_or_maintenance_claim": false,
+    "mobile_overflow": false,
+    "page_errors": [],
+    "console_errors": [],
+    "blocked_non_read": [],
+    "served_assets_byte_equal": {
+      "/assets/index-CDwLaZq6.js": "471d6364149c748721fa053ada866e99931c8b158cba39574fa45339628a8e23",
+      "/assets/index-CsIpjamX.css": "fe0bd986e124cd35eece23814f8840ed46877d00946533914cded8b2df07446c"
+    },
+    "screenshot_sha256": {
+      "actual-field-context-desktop.png": "ba12b1310daff24afa93623cb67393ac7ae4ca09752be964f9a39cb1071ccf70",
+      "actual-field-context-mobile.png": "442fa423d88bae0d3c3d138ddbb21c80e5d2d12b9cfe7b14cbf72c0f6f9436c1",
+      "actual-optics-desktop.png": "c593920e3e6d836f92b2658d6d62b6a9a49dfc3cbfdde1fe6c681d408875c23e",
+      "actual-optics-mobile.png": "a15126763ef0875df6763a3b9ec0ef49afc9c18b9669f936469bab7a9fa7f1d5"
+    }
+  },
+  "idempotency": {
+    "ui_start_posts": 1,
+    "identical_retry_posts": 1,
+    "same_run": true,
+    "retry_status": 200,
+    "reused": true
+  },
+  "prior_observer_failures": {
+    "missing_browser_cache_environment": {
+      "jobs_started": 0
+    },
+    "accessible_label_counters_and_select_text": {
+      "jobs_started": 0
+    },
+    "product_source_changed_for_observer_failures": false
+  },
+  "evidence_sha256": {
+    "workflow-receipt.private.json": "fb28e73066ba41b95892ab1538449cede40ae45942f799301d4b6c10428c45a2",
+    "cleanup.private.json": "ddcd0b1d6460aff2089b356a4496a43a3b9416bc29235731f3833518fa88e5bb",
+    "runtime-refresh.private.json": "f00e7e6d44b6a292fe6e5b2f188926ee4944836c2ebe68e534321bc0e0122f49",
+    "idempotent-retry.private.json": "299866d3f455600ff8037a713f1b3d14467b66f1994de61a2753273cf944cda2",
+    "actual-ui-admission.private.json": "77e9521aa48ff66452eab21e7095dc8319229f1b4259ccfef4479638a7aad0f6",
+    "source-review.private.json": "9f1ef91fd712144acedd0f3e624a8f6d735ca0d963ffa0791bed25c2df674b8f"
+  },
+  "actual_ui_receipt_sha256": "ac516be51a61945020946dcc27f3dc6a51a88669c31b3d7299332ac88c75d5ec",
+  "not_run": [
+    "local-model field-intent usefulness",
+    "authorized industrial asset identity verification",
+    "holdout",
+    "teacher training",
+    "AOS GPU coexistence or GPU cancellation"
+  ],
+  "repositories": {
+    "scientist_main": {
+      "head": "55c5300600112ab823f76ec434029d6dc23e513c",
+      "tracked_diff_sha256": "7ccced5bf104b2c5f0efed60da2f5b50741640acad7ca1be6b29ca51e37cde7b",
+      "scope": "point-in-time tracked diff before documentation update; untracked files excluded"
+    },
+    "scientist_feature": {
+      "head": "8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3",
+      "tracked_diff_sha256": "f096ab25f502f590ec898cdc2dd1806132f1bd6145a522f93ffa9bf60b1fe0c5",
+      "scope": "point-in-time tracked diff before documentation update; untracked files excluded"
+    },
+    "aos": {
+      "head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+      "tracked_diff_sha256": "2ac99b871f55b2f2d719ad5347f8ce2b8398b57193edb2b66b98ed93bded93f1",
+      "scope": "point-in-time tracked diff before documentation update; untracked files excluded"
+    }
+  }
+}

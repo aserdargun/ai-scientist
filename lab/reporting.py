@@ -7,9 +7,11 @@ import html
 import json
 import math
 import re
+from collections.abc import Callable
+from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 from uuid import UUID
 
 from pydantic import ValidationError
@@ -21,6 +23,14 @@ from lab.director.ledger import canonical_json_bytes
 
 MAX_REPORT_BYTES = 4 * 1024 * 1024
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+
+
+class LedgerReader(Protocol):
+    """The read interface shared by SQL engines and bounded evidence transports."""
+
+    def connect(self) -> AbstractContextManager[Any]:
+        """Return a connection scoped by its owning reader."""
+        ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,12 +76,13 @@ def _parsed_canonical_object(payload: bytes) -> dict[str, Any]:
 
 
 def _read_verified_experiment(
-    engine: Engine,
+    engine: LedgerReader,
     experiment_id: str,
     *,
     run_id: UUID,
     status: str,
     artifact_root: Path,
+    artifact_reader: Callable[[str], bytes] | None = None,
 ) -> ExperimentDocument:
     with engine.connect() as connection:
         receipt = connection.execute(
@@ -88,7 +99,10 @@ def _read_verified_experiment(
     blob_sha = _digest(receipt.get("experiment_blob_sha256"), "experiment_blob_sha256")
     if document_sha != blob_sha:
         raise ValueError("experiment blob is not the canonical document")
-    payload = read_director_artifact(blob_sha, artifact_root=artifact_root)
+    read = artifact_reader or (
+        lambda value: read_director_artifact(value, artifact_root=artifact_root)
+    )
+    payload = read(blob_sha)
     if hashlib.sha256(payload).hexdigest() != document_sha:
         raise ValueError("experiment artifact hash differs from ledger receipt")
     _parsed_canonical_object(payload)
@@ -100,9 +114,7 @@ def _read_verified_experiment(
         raise ValueError("experiment artifact identity differs from ledger receipt")
     if document.status != status:
         raise ValueError("experiment artifact status differs from ledger")
-    candidate_source = read_director_artifact(
-        document.candidate_blob_sha256, artifact_root=artifact_root
-    )
+    candidate_source = read(document.candidate_blob_sha256)
     if hashlib.sha256(candidate_source).hexdigest() != document.candidate_sha256:
         raise ValueError("candidate source artifact differs from immutable experiment identity")
     return document
@@ -113,12 +125,16 @@ def _read_verified_trajectory(
     *,
     experiment: ExperimentDocument,
     artifact_root: Path,
+    artifact_reader: Callable[[str], bytes] | None = None,
 ) -> TrajectoryDocument:
     document_sha = _digest(receipt.get("trajectory_sha256"), "trajectory_sha256")
     blob_sha = _digest(receipt.get("trajectory_blob_sha256"), "trajectory_blob_sha256")
     if document_sha != blob_sha:
         raise ValueError("trajectory blob is not the canonical document")
-    payload = read_director_artifact(blob_sha, artifact_root=artifact_root)
+    read = artifact_reader or (
+        lambda value: read_director_artifact(value, artifact_root=artifact_root)
+    )
+    payload = read(blob_sha)
     if hashlib.sha256(payload).hexdigest() != document_sha:
         raise ValueError("trajectory artifact hash differs from ledger receipt")
     _parsed_canonical_object(payload)
@@ -138,33 +154,41 @@ def _read_verified_trajectory(
         or document.messages_blob_sha256 != receipt.get("messages_blob_sha256")
     ):
         raise ValueError("trajectory artifact identity differs from experiment receipt")
-    messages = read_director_artifact(document.messages_blob_sha256, artifact_root=artifact_root)
+    messages = read(document.messages_blob_sha256)
     if hashlib.sha256(messages).hexdigest() != document.messages_blob_sha256:
         raise ValueError("trajectory messages artifact failed its digest")
     return document
 
 
 def read_run_pairs(
-    engine: Engine,
+    engine: LedgerReader,
     run_id: UUID,
     *,
     artifact_root: Path,
+    max_records: int | None = None,
+    artifact_reader: Callable[[str], bytes] | None = None,
 ) -> tuple[_LedgerExperiment, ...]:
-    """Read ordered immutable experiment/trajectory pairs from trusted receipts."""
+    """Read verified pairs; optional limits reject overflow rather than return partial evidence."""
+    if max_records is not None and (type(max_records) is not int or max_records < 1):
+        raise ValueError("invalid ledger record bound")
+    limit = "" if max_records is None else f" LIMIT {max_records + 1}"
+    # Only the strictly validated positive integer limit is appended; identities stay bound.
     with engine.connect() as connection:
         rows = (
             connection.execute(
                 text(
-                    """SELECT experiment_id, sequence, status
-                     FROM lab.experiments
-                    WHERE run_id = :run_id
-                    ORDER BY sequence, experiment_id"""
+                    "SELECT experiment_id, sequence, status\n"  # nosec B608
+                    "FROM lab.experiments\n"
+                    "WHERE run_id = :run_id\n"
+                    "ORDER BY sequence, experiment_id" + limit
                 ),
                 {"run_id": run_id},
             )
             .mappings()
             .all()
         )
+    if max_records is not None and len(rows) > max_records:
+        raise ValueError("ledger record bound exceeded")
     experiments: list[_LedgerExperiment] = []
     seen: set[str] = set()
     prior_sequence = -1
@@ -189,10 +213,12 @@ def read_run_pairs(
         if not isinstance(receipt, dict):
             raise ValueError("ledger returned an invalid experiment receipt")
         document = _read_verified_experiment(
-            engine, experiment_id, run_id=run_id, status=status, artifact_root=artifact_root
+            engine, experiment_id, run_id=run_id, status=status, artifact_root=artifact_root,
+            artifact_reader=artifact_reader,
         )
         trajectory = _read_verified_trajectory(
-            receipt, experiment=document, artifact_root=artifact_root
+            receipt, experiment=document, artifact_root=artifact_root,
+            artifact_reader=artifact_reader,
         )
         experiments.append(
             _LedgerExperiment(sequence=sequence, document=document, trajectory=trajectory)

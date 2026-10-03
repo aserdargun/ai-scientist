@@ -174,6 +174,8 @@ def test_baseline_dispatch_never_constructs_provider_or_enters_research_loop(tmp
         suite_manifest_sha256=manifest_sha,
         scenario_sha256="b" * 64,
         provider_config_sha256=None,
+        proposal_contract="candidate-python.v1",
+        snapshot_sha256=None,
     )
     registry = SimpleNamespace(
         get=lambda _suite: entry,

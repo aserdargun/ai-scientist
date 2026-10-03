@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal, cast
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, SerializerFunctionWrapHandler, model_serializer
+
+from lab.director.field_context import FieldIntent
+from lab.director.history_context import PriorExperienceSelection
 
 
 class RunBudget(BaseModel):
@@ -37,6 +40,18 @@ class StartRunRequest(BaseModel):
     external_action_id: str | None = Field(
         default=None, pattern=r"^action-[0-9a-f]{32}$", max_length=39
     )
+    prior_experience: PriorExperienceSelection | None = None
+    field_intent: FieldIntent | None = None
+
+    @model_serializer(mode="wrap")
+    def preserve_request_bytes(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        """Absent opt-in history must preserve legacy payload/idempotency bytes."""
+        value = cast(dict[str, Any], handler(self))
+        if self.field_intent is None:
+            value.pop("field_intent", None)
+        if self.prior_experience is None:
+            value.pop("prior_experience", None)
+        return value
 
 
 class BaselineBudget(BaseModel):
@@ -73,7 +88,7 @@ class RunStatusResponse(BaseModel):
 
     run_id: UUID
     origin: str
-    purpose: Literal["baseline", "research", "mode-grid"] | None = None
+    purpose: Literal["baseline", "research", "mode-grid", "mode-stream"] | None = None
     state: str
     created_at: str
     updated_at: str

@@ -1,0 +1,1054 @@
+{
+  "$comment": "Proposed/unadmitted. Shape and hash consistency only; never GPU-release or admission authority. Legacy AOS ScientistAdmissionRecordV2 full canonical schema SHA256: f2a3d671f8f56aa70833e59a51783254fd962dd4721d6a315199c8f219ddbe06",
+  "$defs": {
+    "ScientistAdmissionBindingV2": {
+      "additionalProperties": false,
+      "properties": {
+        "caller_generation": {
+          "$ref": "#/$defs/ScientistCallerGeneration"
+        },
+        "control_schema": {
+          "$ref": "#/$defs/ScientistControlSchemaPin"
+        },
+        "infer_schema": {
+          "$ref": "#/$defs/ScientistInferSchemaPin"
+        },
+        "policy_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "profile_id": {
+          "enum": [
+            "aos.decider.turn.v1",
+            "aos.bonsai.recovery.v1",
+            "aos.bonsai.vision.v1"
+          ],
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "profile_pin": {
+          "$ref": "#/$defs/ScientistProfilePinV2"
+        },
+        "server_generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "source_fingerprints": {
+          "$ref": "#/$defs/ScientistSourceFingerprints"
+        },
+        "terminal_schema": {
+          "$ref": "#/$defs/ScientistTerminalSchemaPin"
+        }
+      },
+      "required": [
+        "server_generation",
+        "caller_generation",
+        "policy_sha256",
+        "source_fingerprints",
+        "profile_id",
+        "profile_pin",
+        "infer_schema",
+        "control_schema",
+        "terminal_schema"
+      ],
+      "title": "ScientistAdmissionBindingV2",
+      "type": "object"
+    },
+    "ScientistAdmissionRecordV2": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_binding": {
+          "$ref": "#/$defs/ScientistAdmissionBindingV2"
+        },
+        "admission_binding_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Admission Binding Sha256",
+          "type": "string"
+        },
+        "capability_freshness": {
+          "$ref": "#/$defs/ScientistCapabilityFreshness"
+        },
+        "capability_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Capability Sha256",
+          "type": "string"
+        },
+        "captured_boottime": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "ge": 0,
+          "le": 9007199254740991,
+          "title": "Captured Boottime"
+        },
+        "intent_binding_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Intent Binding Sha256",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "request_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Request Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "session_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Session Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "admission_binding",
+        "capability_sha256",
+        "capability_freshness",
+        "schema_version",
+        "request_id",
+        "request_sha256",
+        "session_id",
+        "intent_binding_sha256",
+        "admission_binding_sha256",
+        "captured_boottime"
+      ],
+      "title": "ScientistAdmissionRecordV2",
+      "type": "object"
+    },
+    "ScientistCallerGeneration": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "control_group": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^/",
+          "title": "Control Group",
+          "type": "string"
+        },
+        "invocation_id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "parent_pid": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Parent Pid",
+          "type": "integer"
+        },
+        "parent_start_ticks": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Parent Start Ticks",
+          "type": "integer"
+        },
+        "pid": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Pid",
+          "type": "integer"
+        },
+        "start_ticks": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Start Ticks",
+          "type": "integer"
+        },
+        "uid": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uid",
+          "type": "integer"
+        },
+        "unit": {
+          "maxLength": 255,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.@-]+\\.service$",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uid",
+        "pid",
+        "start_ticks",
+        "boot_id",
+        "unit",
+        "invocation_id",
+        "control_group",
+        "parent_pid",
+        "parent_start_ticks"
+      ],
+      "title": "ScientistCallerGeneration",
+      "type": "object"
+    },
+    "ScientistCapabilityFreshness": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "expires_boottime": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "ge": 0,
+          "le": 9007199254740991,
+          "title": "Expires Boottime"
+        },
+        "issued_boottime": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "ge": 0,
+          "le": 9007199254740991,
+          "title": "Issued Boottime"
+        }
+      },
+      "required": [
+        "boot_id",
+        "issued_boottime",
+        "expires_boottime"
+      ],
+      "title": "ScientistCapabilityFreshness",
+      "type": "object"
+    },
+    "ScientistControlSchemaPin": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "aos-scientist-control.v1",
+          "title": "Name",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "sha256",
+        "name"
+      ],
+      "title": "ScientistControlSchemaPin",
+      "type": "object"
+    },
+    "ScientistInferSchemaPin": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "aos-scientist-runtime.v1",
+          "title": "Name",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "sha256",
+        "name"
+      ],
+      "title": "ScientistInferSchemaPin",
+      "type": "object"
+    },
+    "ScientistOutputContractPin": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Bundle Sha256",
+          "type": "string"
+        },
+        "name": {
+          "const": "aos-scientist-profile-output.v2",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "const": 2,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "bundle_sha256"
+      ],
+      "title": "ScientistOutputContractPin",
+      "type": "object"
+    },
+    "ScientistProfilePinV2": {
+      "additionalProperties": false,
+      "properties": {
+        "config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Config Sha256",
+          "type": "string"
+        },
+        "deployment_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Deployment Digest",
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "output_contract": {
+          "$ref": "#/$defs/ScientistOutputContractPin"
+        },
+        "response_schema_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Response Schema Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "deployment_digest",
+        "manifest_sha256",
+        "config_sha256",
+        "response_schema_sha256",
+        "output_contract"
+      ],
+      "title": "ScientistProfilePinV2",
+      "type": "object"
+    },
+    "ScientistServerGeneration": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "control_group": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "pattern": "^/",
+          "title": "Control Group",
+          "type": "string"
+        },
+        "invocation_id": {
+          "pattern": "^[a-f0-9]{32}$",
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "pid": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Pid",
+          "type": "integer"
+        },
+        "start_ticks": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Start Ticks",
+          "type": "integer"
+        },
+        "uid": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Uid",
+          "type": "integer"
+        },
+        "unit": {
+          "maxLength": 255,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.@-]+\\.service$",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uid",
+        "pid",
+        "start_ticks",
+        "boot_id",
+        "unit",
+        "invocation_id",
+        "control_group"
+      ],
+      "title": "ScientistServerGeneration",
+      "type": "object"
+    },
+    "ScientistSourceFingerprints": {
+      "additionalProperties": false,
+      "properties": {
+        "aos": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Aos",
+          "type": "string"
+        },
+        "scientist": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Scientist",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scientist",
+        "aos"
+      ],
+      "title": "ScientistSourceFingerprints",
+      "type": "object"
+    },
+    "ScientistTerminalSchemaPin": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "aos-scientist-terminal.v1",
+          "title": "Name",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "sha256",
+        "name"
+      ],
+      "title": "ScientistTerminalSchemaPin",
+      "type": "object"
+    },
+    "absent_child": {
+      "additionalProperties": false,
+      "properties": {
+        "cgroup_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "process_absent": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "generation",
+        "generation_sha256",
+        "process_absent",
+        "cgroup_absent"
+      ],
+      "type": "object"
+    },
+    "canonical": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "allocation_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "child_binding_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "deferred_execution_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "gpu_queue_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "quarantined_allocation_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "store": {
+          "$ref": "#/$defs/store"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "tombstone": {
+          "$ref": "#/$defs/tombstone"
+        },
+        "tombstone_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "target",
+        "store",
+        "admission_absent",
+        "gpu_queue_absent",
+        "allocation_absent",
+        "child_binding_absent",
+        "deferred_execution_absent",
+        "quarantined_allocation_absent",
+        "tombstone",
+        "tombstone_sha256"
+      ],
+      "type": "object"
+    },
+    "cleanup_scope": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization_context_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "current_generation": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "current_owner": {
+          "const": "PAUSED",
+          "type": "string"
+        },
+        "current_status": {
+          "const": "stopped",
+          "type": "string"
+        },
+        "lease_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "original_generation": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "purpose": {
+          "const": "observe_no_admission",
+          "type": "string"
+        },
+        "runtime_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "session_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "store": {
+          "$ref": "#/$defs/store"
+        }
+      },
+      "required": [
+        "store",
+        "session_id",
+        "runtime_id",
+        "original_generation",
+        "current_generation",
+        "current_status",
+        "current_owner",
+        "authorization_context_sha256",
+        "purpose",
+        "lease_id"
+      ],
+      "type": "object"
+    },
+    "freshness": {
+      "additionalProperties": false,
+      "properties": {
+        "boot_id": {
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "title": "Boot Id",
+          "type": "string"
+        },
+        "clock": {
+          "const": "CLOCK_BOOTTIME",
+          "type": "string"
+        },
+        "expires_boottime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "max_age_us": {
+          "const": 60000000,
+          "type": "integer"
+        },
+        "observed_boottime_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "unit": {
+          "const": "microseconds",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clock",
+        "unit",
+        "boot_id",
+        "observed_boottime_us",
+        "expires_boottime_us",
+        "max_age_us"
+      ],
+      "type": "object"
+    },
+    "hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-f0-9]{32}$",
+      "type": "string"
+    },
+    "intent_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization_context_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "generation": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "lease_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "owner": {
+          "const": "AGENT",
+          "type": "string"
+        },
+        "runtime_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "session_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "runtime_id",
+        "lease_id",
+        "generation",
+        "owner",
+        "authorization_context_sha256"
+      ],
+      "type": "object"
+    },
+    "observer": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {
+          "$ref": "#/$defs/observer_capability"
+        },
+        "capability_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "purpose": {
+          "const": "observe_no_admission",
+          "type": "string"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "generation",
+        "generation_sha256",
+        "source_sha256",
+        "config_sha256",
+        "capability",
+        "capability_sha256",
+        "purpose"
+      ],
+      "type": "object"
+    },
+    "observer_capability": {
+      "additionalProperties": false,
+      "properties": {
+        "config_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "feature": {
+          "const": "no-admission-observation.v1",
+          "type": "string"
+        },
+        "generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "purpose": {
+          "const": "observe_no_admission",
+          "type": "string"
+        },
+        "schema_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "version": {
+          "const": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "feature",
+        "version",
+        "schema_sha256",
+        "generation_sha256",
+        "source_sha256",
+        "config_sha256",
+        "purpose"
+      ],
+      "type": "object"
+    },
+    "original": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_binding_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "admission_capture_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "admission_record": {
+          "$ref": "#/$defs/ScientistAdmissionRecordV2"
+        },
+        "admission_record_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "broker_generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "broker_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "intent_binding": {
+          "$ref": "#/$defs/intent_binding"
+        },
+        "intent_binding_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "request_canonical": {
+          "contentMediaType": "application/json",
+          "maxLength": 131072,
+          "minLength": 2,
+          "type": "string"
+        },
+        "store": {
+          "$ref": "#/$defs/store"
+        }
+      },
+      "required": [
+        "request_canonical",
+        "admission_record",
+        "admission_record_sha256",
+        "admission_binding_sha256",
+        "admission_capture_sha256",
+        "intent_binding",
+        "intent_binding_sha256",
+        "broker_generation",
+        "broker_generation_sha256",
+        "store"
+      ],
+      "type": "object"
+    },
+    "physical": {
+      "additionalProperties": false,
+      "properties": {
+        "broker_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "broker_generation": {
+          "$ref": "#/$defs/ScientistServerGeneration"
+        },
+        "broker_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "caller_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "caller_generation": {
+          "$ref": "#/$defs/ScientistCallerGeneration"
+        },
+        "caller_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/absent_child"
+          },
+          "maxItems": 256,
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "children_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "late_dispatch_fenced": {
+          "const": true,
+          "type": "boolean"
+        },
+        "original_cgroups_absent": {
+          "const": true,
+          "type": "boolean"
+        },
+        "proof_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "provenance_complete": {
+          "const": true,
+          "type": "boolean"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        }
+      },
+      "required": [
+        "target",
+        "caller_generation",
+        "caller_generation_sha256",
+        "broker_generation",
+        "broker_generation_sha256",
+        "children",
+        "caller_absent",
+        "broker_absent",
+        "original_cgroups_absent",
+        "children_absent",
+        "provenance_complete",
+        "late_dispatch_fenced",
+        "proof_sha256"
+      ],
+      "type": "object"
+    },
+    "store": {
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "inode": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "uid": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path_sha256",
+        "device",
+        "inode",
+        "uid"
+      ],
+      "type": "object"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "original_caller_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "request_id": {
+          "$ref": "#/$defs/id"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      },
+      "required": [
+        "request_id",
+        "request_sha256",
+        "original_caller_generation_sha256"
+      ],
+      "type": "object"
+    },
+    "tombstone": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_record_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "freshness": {
+          "$ref": "#/$defs/freshness"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "intent_binding_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "late_admission_fenced": {
+          "const": true,
+          "type": "boolean"
+        },
+        "observer_generation_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "physical_proof_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "store": {
+          "$ref": "#/$defs/store"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        }
+      },
+      "required": [
+        "id",
+        "target",
+        "store",
+        "admission_record_sha256",
+        "intent_binding_sha256",
+        "observer_generation_sha256",
+        "physical_proof_sha256",
+        "freshness",
+        "late_admission_fenced"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admission_budget": {
+      "type": "null"
+    },
+    "canonical": {
+      "$ref": "#/$defs/canonical"
+    },
+    "cleanup_scope": {
+      "$ref": "#/$defs/cleanup_scope"
+    },
+    "freshness": {
+      "$ref": "#/$defs/freshness"
+    },
+    "observation_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "observer": {
+      "$ref": "#/$defs/observer"
+    },
+    "original": {
+      "$ref": "#/$defs/original"
+    },
+    "outcome": {
+      "const": "never_received",
+      "type": "string"
+    },
+    "physical": {
+      "$ref": "#/$defs/physical"
+    },
+    "schema": {
+      "const": "aos-scientist-no-admission-observation.v1",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "version": {
+      "const": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "version",
+    "target",
+    "original",
+    "observer",
+    "canonical",
+    "physical",
+    "cleanup_scope",
+    "outcome",
+    "admission_budget",
+    "freshness",
+    "observation_sha256"
+  ],
+  "type": "object"
+}

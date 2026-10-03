@@ -90,7 +90,46 @@ def _wheel_smoke() -> list[dict[str, object]]:
             "vendor/tsb_ad_eval/NOTICE.md",
             "vendor/tsb_ad_eval/LICENSE",
             "lab/sandbox/image.lock",
+            "lab/llm/aos_profile_output.py",
+            "lab/llm/aos_control_contract_v2.py",
+            "lab/llm/aos_evidence_transport.py",
+            "lab/llm/aos_retained_evidence_transport.py",
+            "lab/llm/aos_no_admission_observation.py",
+            "lab/llm/aos_no_admission_store.py",
+            "lab/llm/aos_no_admission_providers.py",
+            "lab/llm/aos_no_admission_recovery.py",
+            "lab/llm/aos_no_admission_recovery_providers.py",
+            "lab/llm/contracts/no_admission_observation_v1/observation.schema.json",
+            "lab/llm/contracts/no_admission_observation_recovery_v1/recovery.schema.json",
+            "lab/llm/contracts/profile_output_v2/bundle.json",
+            "lab/llm/contracts/control_v2/bundle.json",
         }
+        expected.update(
+            "lab/llm/contracts/profile_output_v2/" + name
+            for name in (
+                "decider-response.template.schema.json",
+                "decider-usage.schema.json",
+                "bonsai-response.schema.json",
+                "bonsai-usage.schema.json",
+                "bonsai-recovery-content.schema.json",
+                "bonsai-vision-content.schema.json",
+                "result.schema.json",
+                "bonsai-raw.schema.json",
+            )
+        )
+        expected.update(
+            "lab/llm/contracts/control_v2/" + name
+            for name in (
+                "admission-binding.schema.json",
+                "capability.schema.json",
+                "cleanup-grant.schema.json",
+                "legacy-terminal.schema.json",
+                "request.schema.json",
+                "response.template.schema.json",
+                "terminal-evidence.schema.json",
+                "terminal.schema.json",
+            )
+        )
         with ZipFile(wheel) as archive:
             missing = expected.difference(archive.namelist())
         if missing:

@@ -2,20 +2,21 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import socket
 import tempfile
 import threading
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 from uuid import UUID
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from console.acceptance import (
     evidence_content,
@@ -23,6 +24,7 @@ from console.acceptance import (
 )
 from console.checks import CheckManager
 from console.host import system_info
+from console.progress import read_development_progress
 from console.upstream import ROOT, Upstream
 from lab.api.contracts import (
     RunStatusResponse,
@@ -30,10 +32,128 @@ from lab.api.contracts import (
     StartRunRequest,
     StartRunResponse,
 )
+from lab.operating_modes.contracts import SCENARIOS, ModeConfig, PredictionBatch
 
 DIST_ROOT = ROOT / "console/web/dist"
 VERSION_FILE = ROOT / "harness/VERSION"
 MAX_WATCHED_RUNS = 64
+
+
+def console_port() -> int:
+    """Use the profile's explicit loopback port, preserving the historical default."""
+    value = os.environ.get("LAB_CONSOLE_PORT", "8788")
+    if not value.isdecimal() or not 1024 <= int(value) <= 65535:
+        raise ValueError("LAB_CONSOLE_PORT must be an integer in 1024..65535")
+    return int(value)
+
+
+class StreamInputRequest(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    scenario: str
+    seed: int = Field(ge=0, le=2**32 - 1)
+    train_rows: int = Field(default=192, ge=16, le=4096)
+    evaluation_rows: int = Field(default=8192, ge=1, le=65536)
+    chunk_rows: int = Field(default=64, ge=1, le=64)
+
+
+class StreamInputResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    input_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    source_kind: Literal["synthetic", "private_database"]
+    sensors: list[str] = Field(min_length=1, max_length=64)
+    train_rows: int = Field(ge=16, le=4096)
+    evaluation_rows: int = Field(ge=1, le=65536)
+    chunk_count: int = Field(ge=1, le=1024)
+    scoring_available: Literal[False]
+    source: StreamSourceSummary | None = None
+
+
+class StreamSourceSummary(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    source_id: str = Field(min_length=1, max_length=128)
+    source_version: str = Field(min_length=1, max_length=128)
+    entity: str | None = Field(max_length=128)
+    units: list[str] = Field(max_length=50)
+    first_utc: str = Field(max_length=64)
+    train_end_utc: str = Field(max_length=64)
+    last_utc: str = Field(max_length=64)
+    sampling_seconds: float | None = Field(gt=0, allow_inf_nan=False)
+    timeline_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    source_definition_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    gap_count: int | None = Field(ge=0, le=65535)
+    alarm_basis: Literal["observed_rows"]
+    local_export_allowed: bool
+
+
+class StreamStartRequest(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    idempotency_key: str = Field(min_length=16, max_length=128)
+    input_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    configuration: ModeConfig
+    wall_seconds: int = Field(default=1800, ge=1, le=14400)
+
+
+class StreamStatus(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    run_id: UUID
+    state: Literal["queued", "running", "stop_requested", "completed", "stopped", "failed"]
+    stop_requested: bool
+    input_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    model_sha256: str | None = Field(pattern=r"^[0-9a-f]{64}$")
+    fit_artifact_sha256: str | None = Field(pattern=r"^[0-9a-f]{64}$")
+    total_rows: int = Field(ge=1, le=65536)
+    committed_rows: int = Field(ge=0, le=65536)
+    committed_chunks: int = Field(ge=0, le=1024)
+    latest_chunk_index: int | None = Field(ge=0, le=1023)
+    finished: bool
+    scoring_available: Literal[False]
+    failure_reason: str | None = Field(max_length=2048)
+    program_version: Literal["mode-stream.v1"]
+    source_kind: Literal["synthetic", "private_database"]
+    configuration: ModeConfig
+    sensors: list[str] = Field(min_length=1, max_length=64)
+    alarm_threshold: float | None = Field(allow_inf_nan=False)
+    source: StreamSourceSummary | None = None
+
+
+class StreamChunk(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    run_id: UUID
+    chunk_index: int = Field(ge=0, le=1023)
+    row_offset: int = Field(ge=0, le=65535)
+    row_count: int = Field(ge=1, le=64)
+    input_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    model_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    fit_artifact_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    previous_chunk_sha256: str | None = Field(pattern=r"^[0-9a-f]{64}$")
+    artifact_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    candidate_derived: Literal[True]
+    scoring_available: Literal[False]
+    prediction: PredictionBatch
+    timestamps_utc: list[str] = Field(default_factory=list, max_length=64)
+    gaps_before: list[bool] = Field(default_factory=list, max_length=64)
+
+
+def _utc_stamp(value: str) -> datetime:
+    stamp = datetime.fromisoformat(value)
+    if stamp.tzinfo is None or stamp.utcoffset() != timedelta(0):
+        raise ValueError("timestamp must be UTC")
+    return stamp
+
+
+def _source_valid(source_kind: str, source: StreamSourceSummary | None) -> bool:
+    if source_kind == "synthetic":
+        return source is None
+    if source is None:
+        return False
+    try:
+        return (
+            _utc_stamp(source.first_utc)
+            <= _utc_stamp(source.train_end_utc)
+            < _utc_stamp(source.last_utc)
+        )
+    except ValueError:
+        return False
 
 
 def _now() -> str:
@@ -61,7 +181,12 @@ class WatchStore:
     def __init__(self, path: Path | None = None) -> None:
         if path is None:
             state_home = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
-            path = state_home / "swapp-ai-scientist-console/watched-runs.json"
+            path = Path(
+                os.environ.get(
+                    "LAB_CONSOLE_WATCH_FILE",
+                    state_home / "swapp-ai-scientist-console/watched-runs.json",
+                )
+            )
         self.path = path
         self.rows: dict[str, dict[str, Any]] = {}
         self.lock = threading.Lock()
@@ -82,7 +207,7 @@ class WatchStore:
                     continue
                 if str(status.run_id) == parsed:
                     self.rows[parsed] = status.model_dump(mode="json")
-                    if value.get("purpose") in {"baseline", "research", "mode-grid"}:
+                    if value.get("purpose") in {"baseline", "research", "mode-grid", "mode-stream"}:
                         self.rows[parsed]["purpose"] = value["purpose"]
             self.rows = dict(list(self.rows.items())[-MAX_WATCHED_RUNS:])
         except (OSError, ValueError, TypeError):
@@ -114,7 +239,7 @@ class WatchStore:
             previous = self.rows.get(run_id, {})
             row = status.model_dump(mode="json")
             operation = purpose or previous.get("purpose")
-            if operation in {"baseline", "research", "mode-grid"}:
+            if operation in {"baseline", "research", "mode-grid", "mode-stream"}:
                 row["purpose"] = operation
             self.rows[run_id] = row
             self.rows = dict(list(self.rows.items())[-MAX_WATCHED_RUNS:])
@@ -169,6 +294,7 @@ def create_app(
     api = upstream or Upstream()
     checks = CheckManager()
     watches = WatchStore(watch_path)
+    port = console_port()
     evidence_paths: dict[str, Path] = {}
     evidence_lock = threading.Lock()
     app = FastAPI(title="SWAPP AI Scientist Console", docs_url=None, redoc_url=None)
@@ -177,7 +303,7 @@ def create_app(
     @app.middleware("http")
     async def browser_and_loopback_guard(request: Request, call_next: Any) -> Response:
         host = request.headers.get("host", "").lower()
-        allowed_hosts = {"127.0.0.1:8788", "localhost:8788", "[::1]:8788"}
+        allowed_hosts = {f"127.0.0.1:{port}", f"localhost:{port}", f"[::1]:{port}"}
         if host not in allowed_hosts:
             return JSONResponse(status_code=403, content={"detail": "Host is not allowed"})
         client_host = request.client.host if request.client else None
@@ -189,9 +315,9 @@ def create_app(
             "OPTIONS",
         }:
             if request.headers.get("origin") not in {
-                "http://127.0.0.1:8788",
-                "http://localhost:8788",
-                "http://[::1]:8788",
+                f"http://127.0.0.1:{port}",
+                f"http://localhost:{port}",
+                f"http://[::1]:{port}",
             }:
                 return JSONResponse(status_code=403, content={"detail": "Origin is not allowed"})
             if request.headers.get("x-lab-console") != "1":
@@ -218,6 +344,7 @@ def create_app(
             "version": _version(),
             "generated_at": _now(),
             "acceptance": acceptance,
+            "development_progress": read_development_progress(),
             "system": system_info(),
             "lab": {
                 "configured": api.configured,
@@ -325,6 +452,10 @@ def create_app(
             api, "POST", "/v1/mode-snapshots", json=request.model_dump(mode="json")
         )
 
+    @app.get("/console-api/mode-snapshots/{digest}")
+    def describe_snapshot(digest: str) -> Any:
+        return _json_response(api, "GET", f"/v1/mode-snapshots/{snapshot_digest(digest)}")
+
     @app.get("/console-api/mode-snapshots/{digest}/statistics")
     def mode_statistics(digest: str, partition: str = "all") -> Any:
         if partition not in {"all", "train", "evaluation"}:
@@ -363,6 +494,222 @@ def create_app(
         live = _status_response(_json_response(api, "GET", f"/v1/runs/{run_id}"), run_id)
         watches.put(run_id, live, purpose="mode-grid")
         response.status_code = 200 if started.reused else 202
+        return started.model_dump(mode="json")
+
+    @app.post("/console-api/mode-stream-inputs/synthetic")
+    def create_stream_input(payload: dict[str, Any]) -> Any:
+        try:
+            request = StreamInputRequest.model_validate(payload, strict=True)
+            if (
+                request.scenario not in SCENARIOS
+                or (request.evaluation_rows + request.chunk_rows - 1) // request.chunk_rows > 1024
+            ):
+                raise ValueError("invalid scenario or chunk count")
+        except (ValidationError, ValueError):
+            raise HTTPException(status_code=422, detail="invalid stream input request") from None
+        value = _json_response(
+            api,
+            "POST",
+            "/v1/mode-stream-inputs/synthetic",
+            json=request.model_dump(mode="json"),
+            timeout=50.0,
+        )
+        try:
+            created = StreamInputResponse.model_validate_json(json.dumps(value), strict=True)
+        except ValidationError:
+            raise HTTPException(status_code=502, detail="invalid stream input response") from None
+        if (
+            created.source_kind != "synthetic"
+            or not _source_valid(created.source_kind, created.source)
+            or created.train_rows != request.train_rows
+            or created.evaluation_rows != request.evaluation_rows
+            or created.chunk_count
+            != (request.evaluation_rows + request.chunk_rows - 1) // request.chunk_rows
+        ):
+            raise HTTPException(status_code=502, detail="mismatched stream input response")
+        return created.model_dump(mode="json")
+
+    @app.post("/console-api/mode-stream-inputs/database")
+    async def create_database_stream_input(payload: dict[str, Any], browser: Request) -> Any:
+        from lab.api.mode_sources import DatabaseStreamRequest
+
+        try:
+            request = DatabaseStreamRequest.model_validate(payload, strict=True)
+        except ValidationError:
+            raise HTTPException(status_code=422, detail="invalid database stream request") from None
+
+        async def disconnected() -> None:
+            # FastAPI has consumed the JSON body. Blocking on the next ASGI message
+            # avoids is_disconnected's cancelled polling scope around middleware receive.
+            while True:
+                if (await browser.receive())["type"] == "http.disconnect":
+                    return
+
+        capture = asyncio.create_task(api.capture_request(request.model_dump(mode="json")))
+        watcher = asyncio.create_task(disconnected())
+        try:
+            completed, _ = await asyncio.wait(
+                {capture, watcher}, return_when=asyncio.FIRST_COMPLETED
+            )
+            if watcher in completed:
+                await watcher
+                raise HTTPException(status_code=499, detail="capture client disconnected")
+            upstream_response = await capture
+        finally:
+            for task in (watcher, capture):
+                if not task.done():
+                    task.cancel()
+            # Cancellation closes only this capture's client/connection.
+            await asyncio.gather(watcher, capture, return_exceptions=True)
+        try:
+            created = StreamInputResponse.model_validate_json(
+                json.dumps(upstream_response.json()), strict=True
+            )
+        except (ValidationError, ValueError):
+            raise HTTPException(status_code=502, detail="invalid stream input response") from None
+        if (
+            created.source_kind != "private_database"
+            or not _source_valid(created.source_kind, created.source)
+            or created.source is None
+            or created.source.source_id != request.source_id
+            or created.source.entity != request.entity
+            or created.sensors != request.sensors
+            or created.train_rows != request.train_rows
+            or created.train_rows + created.evaluation_rows > request.row_limit
+            or created.chunk_count
+            != (created.evaluation_rows + request.chunk_rows - 1) // request.chunk_rows
+        ):
+            raise HTTPException(status_code=502, detail="mismatched database stream input response")
+        return created.model_dump(mode="json")
+
+    @app.post("/console-api/mode-streams")
+    def start_mode_stream(payload: dict[str, Any], response: Response) -> Any:
+        try:
+            request = StreamStartRequest.model_validate(payload, strict=True)
+        except ValidationError:
+            raise HTTPException(status_code=422, detail="invalid stream start request") from None
+        if len(watches.list()) >= MAX_WATCHED_RUNS:
+            raise HTTPException(status_code=507, detail="console is already watching 64 runs")
+        upstream_response = api.request(
+            "POST", "/v1/mode-streams", json=request.model_dump(mode="json")
+        )
+        if upstream_response.status_code not in {200, 202}:
+            raise HTTPException(status_code=502, detail="unexpected stream start status")
+        try:
+            started = StartRunResponse.model_validate_json(
+                json.dumps(upstream_response.json()), strict=True
+            )
+        except (ValidationError, ValueError):
+            raise HTTPException(status_code=502, detail="invalid stream run identity") from None
+        if started.state not in {
+            "queued",
+            "running",
+            "stop_requested",
+            "completed",
+            "stopped",
+            "failed",
+        }:
+            raise HTTPException(status_code=502, detail="unknown stream run state")
+        run_id = str(started.run_id)
+        live = _status_response(_json_response(api, "GET", f"/v1/runs/{run_id}"), run_id)
+        watches.put(run_id, live, purpose="mode-stream")
+        response.status_code = 200 if started.reused else 202
+        return started.model_dump(mode="json")
+
+    @app.get("/console-api/runs/{run_id}/mode-stream")
+    def get_mode_stream(run_id: str) -> Any:
+        parsed = _uuid(run_id)
+        value = _json_response(api, "GET", f"/v1/runs/{parsed}/mode-stream")
+        try:
+            status = StreamStatus.model_validate_json(json.dumps(value), strict=True)
+        except ValidationError:
+            raise HTTPException(status_code=502, detail="invalid stream status") from None
+        if (
+            str(status.run_id) != parsed
+            or not _source_valid(status.source_kind, status.source)
+            or status.committed_rows > status.total_rows
+            or status.committed_chunks > status.committed_rows
+        ):
+            raise HTTPException(status_code=502, detail="mismatched stream status")
+        return status.model_dump(mode="json")
+
+    @app.get("/console-api/runs/{run_id}/mode-stream/chunks/{index}")
+    def get_mode_stream_chunk(run_id: str, index: int) -> Any:
+        parsed = _uuid(run_id)
+        if index < 0 or index > 1023:
+            raise HTTPException(status_code=422, detail="invalid stream chunk index")
+        value = _json_response(api, "GET", f"/v1/runs/{parsed}/mode-stream/chunks/{index}")
+        try:
+            chunk = StreamChunk.model_validate_json(json.dumps(value), strict=True)
+        except ValidationError:
+            raise HTTPException(status_code=502, detail="invalid stream chunk") from None
+        if (
+            str(chunk.run_id) != parsed
+            or chunk.chunk_index != index
+            or chunk.row_offset + chunk.row_count > 65536
+            or len(chunk.prediction.rows) != chunk.row_count
+            or chunk.prediction.model_sha256 != chunk.model_sha256
+            or any(
+                row.index != chunk.row_offset + offset or len(row.residuals) > 64
+                for offset, row in enumerate(chunk.prediction.rows)
+            )
+        ):
+            raise HTTPException(status_code=502, detail="mismatched stream chunk")
+        if chunk.timestamps_utc or chunk.gaps_before:
+            try:
+                stamps = [_utc_stamp(value) for value in chunk.timestamps_utc]
+            except ValueError:
+                raise HTTPException(status_code=502, detail="invalid stream UTC timeline") from None
+            if (
+                len(stamps) != chunk.row_count
+                or len(chunk.gaps_before) != chunk.row_count
+                or any(first >= second for first, second in zip(stamps, stamps[1:], strict=False))
+            ):
+                raise HTTPException(status_code=502, detail="mismatched stream UTC timeline")
+        return chunk.model_dump(mode="json")
+
+    @app.post("/console-api/mode-agent-experiments")
+    def start_mode_agent(payload: dict[str, Any], response: Response) -> Any:
+        from lab.api.mode_experiments import ModeAgentRequest
+
+        if not api.configured:
+            raise HTTPException(status_code=503, detail="Lab API is not configured")
+        if not api.model_runs_enabled:
+            raise HTTPException(status_code=503, detail="local model runs are disabled")
+        try:
+            request = ModeAgentRequest.model_validate(payload, strict=True)
+        except ValidationError as exc:
+            raise HTTPException(status_code=422, detail=exc.errors(include_input=False)) from None
+        if len(watches.list()) >= MAX_WATCHED_RUNS:
+            raise HTTPException(status_code=507, detail="console is already watching 64 runs")
+        upstream_response = api.request(
+            "POST", "/v1/mode-agent-experiments", json=request.model_dump(mode="json")
+        )
+        try:
+            started = StartRunResponse.model_validate_json(
+                json.dumps(upstream_response.json()), strict=True
+            )
+        except (ValueError, ValidationError):
+            raise HTTPException(
+                status_code=502, detail="Lab API returned invalid run identity"
+            ) from None
+        if upstream_response.status_code not in {200, 202}:
+            raise HTTPException(
+                status_code=502, detail="Lab API returned an unexpected start status"
+            )
+        if started.state not in {
+            "queued",
+            "running",
+            "stop_requested",
+            "completed",
+            "stopped",
+            "failed",
+        }:
+            raise HTTPException(status_code=502, detail="Lab API returned an unknown run state")
+        run_id = str(started.run_id)
+        live = _status_response(_json_response(api, "GET", f"/v1/runs/{run_id}"), run_id)
+        watches.put(run_id, live, purpose="research")
+        response.status_code = upstream_response.status_code
         return started.model_dump(mode="json")
 
     @app.post("/console-api/baselines")
@@ -450,6 +797,10 @@ def create_app(
         live = _status_response(value, parsed)
         return watches.put(parsed, live)
 
+    @app.get("/console-api/runs/{run_id}/experience")
+    def run_experience(run_id: str) -> Any:
+        return _json_response(api, "GET", f"/v1/runs/{_uuid(run_id)}/experience")
+
     @app.get("/console-api/runs/{run_id}/report")
     def run_report(run_id: str) -> Any:
         parsed = _uuid(run_id)
@@ -482,11 +833,12 @@ def create_app(
 def main() -> None:
     import uvicorn
 
+    port = console_port()
     with socket.socket() as listener_probe:
         listener_probe.settimeout(0.2)
-        if listener_probe.connect_ex(("127.0.0.1", 8788)) == 0:
-            raise SystemExit("port 8788 is already occupied")
-    uvicorn.run(create_app(), host="127.0.0.1", port=8788, access_log=False)
+        if listener_probe.connect_ex(("127.0.0.1", port)) == 0:
+            raise SystemExit(f"port {port} is already occupied")
+    uvicorn.run(create_app(), host="127.0.0.1", port=port, access_log=False)
 
 
 if __name__ == "__main__":

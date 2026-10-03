@@ -2,18 +2,32 @@
 
 from __future__ import annotations
 
+import array
 import concurrent.futures
 import errno
-import json
 import os
 import re
+import select
 import socket
+import sqlite3
 import stat
 import threading
+import time
+from dataclasses import asdict
 from pathlib import Path
+from subprocess import SubprocessError  # nosec B404 -- exception type only; no process launch here
 
-from lab.llm.aos_gpu_broker import LabAOSBroker
+from lab.llm.aos_gpu_broker import LabAOSBroker, PeerGeneration
+from lab.llm.aos_gpu_control import (
+    CALL_SECONDS,
+    CONTROL_BACKLOG,
+    CONTROL_WORKERS,
+    ControlPolicy,
+    LabAOSControl,
+)
+from lab.llm.aos_gpu_control_store import ControlStore, control_deadline
 from lab.llm.aos_gpu_executor import (
+    PROJECT_ROOT,
     AOSProfile,
     BrokerOwnedTurnExecutor,
     ProfileRegistry,
@@ -21,11 +35,67 @@ from lab.llm.aos_gpu_executor import (
     SystemdSocketPeerAuthenticator,
     TurnBudgets,
 )
+from lab.llm.aos_profile_output import decode as decode_output
+from lab.llm.aos_retained_channel import RetainedChannelBootstrap
+from lab.llm.aos_retained_provider import RetainedProviderServer, prepare_channel
+from lab.llm.gpu_scheduler import (
+    _boot_id,
+    _process_cgroup,
+    _read_process_identity,
+    _systemctl_show,
+    boottime,
+)
 from lab.llm.native_runtime import NvidiaSmiObserver, SystemdUnitManager
 
 MAX_CONFIG_BYTES = 64 * 1024
 WORKERS = 4
 PROFILE_KEYS = frozenset({"aos.decider.turn.v1", "aos.bonsai.recovery.v1", "aos.bonsai.vision.v1"})
+BROKER_UNIT = "swapp-lab-gpu-broker.service"
+
+
+def _broker_unit_snapshot() -> dict[str, str]:
+    deadline = control_deadline.get()
+    remaining = 3.0 if deadline is None else min(3.0, deadline - time.monotonic())
+    if remaining <= 0:
+        raise ValueError("broker identity deadline expired")
+    return _systemctl_show(BROKER_UNIT, owner="lab", timeout=remaining)
+
+
+def _broker_generation() -> dict[str, object]:
+    """Bind the broker to its actual fixed unit, invocation and process birth."""
+    pid = os.getpid()
+    identity = _read_process_identity(pid)
+    values = _broker_unit_snapshot()
+    group = values["ControlGroup"]
+    if (
+        identity is None
+        or identity.boot_id != _boot_id()
+        or values["LoadState"] != "loaded"
+        or values["ActiveState"] != "active"
+        or values["MainPID"] != str(pid)
+        or re.fullmatch(r"[0-9a-f]{32}", values["InvocationID"]) is None
+        or not group.startswith("/")
+        or ".." in Path(group).parts
+        or not group.endswith("/" + BROKER_UNIT)
+        or _process_cgroup(pid) != group
+        or _read_process_identity(pid) != identity
+        or _broker_unit_snapshot() != values
+    ):
+        raise ValueError("broker must run in its exact authenticated systemd generation")
+    return {
+        **asdict(identity),
+        "uid": os.getuid(),
+        "unit": BROKER_UNIT,
+        "invocation_id": values["InvocationID"],
+        "control_group": group,
+    }
+
+
+def _broker_still_current(generation: dict[str, object]) -> bool:
+    try:
+        return _broker_generation() == generation
+    except (OSError, ValueError, RuntimeError, SubprocessError):
+        return False
 
 
 def _private_json(path: Path) -> dict[str, object]:
@@ -46,7 +116,7 @@ def _private_json(path: Path) -> dict[str, object]:
         os.close(descriptor)
     if not raw or len(raw) > MAX_CONFIG_BYTES:
         raise ValueError("broker profile config exceeds its bound")
-    value = json.loads(raw)
+    value = decode_output(raw, limit=MAX_CONFIG_BYTES)
     if not isinstance(value, dict):
         raise ValueError("broker profile config must be an object")
     return value
@@ -90,7 +160,8 @@ def load_profiles(path: Path, *, source_root: Path) -> ProfileRegistry:
             "context_tokens",
         }
         if (
-            set(item) != keys
+            set(item) not in (keys, keys | {"output_contract"})
+            or ("output_contract" in item and not isinstance(item["output_contract"], dict))
             or not isinstance(item["model_paths"], list)
             or not isinstance(item["budgets"], dict)
         ):
@@ -116,6 +187,7 @@ def load_profiles(path: Path, *, source_root: Path) -> ProfileRegistry:
             temperature=item["temperature"],
             max_output_tokens=item["max_output_tokens"],
             context_tokens=item["context_tokens"],
+            output_contract=item.get("output_contract"),
         )
         profiles[profile_id] = profile
     return ProfileRegistry(profiles)
@@ -159,7 +231,122 @@ def _prepare_socket_path(socket_path: Path) -> None:
     socket_path.unlink()
 
 
-def serve() -> None:
+def _control_listener(
+    listener: socket.socket,
+    control: LabAOSControl,
+    stopping: threading.Event,
+    channels: RetainedChannelBootstrap | None = None,
+) -> None:
+    """Independent bounded capacity; never share the four inference handlers."""
+    capacity = threading.BoundedSemaphore(CONTROL_WORKERS)
+
+    def handle(connection: socket.socket) -> None:
+        try:
+            deadline = time.monotonic() + CALL_SECONDS
+            if channels is not None and channels.is_request(
+                _peek_control_frame(connection, deadline)
+            ):
+                channels.serve(connection, deadline=deadline)
+            else:
+                control.serve_connection(connection, deadline=deadline)
+        except (OSError, ValueError, RuntimeError):
+            pass
+        finally:
+            connection.close()
+            capacity.release()
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=CONTROL_WORKERS, thread_name_prefix="gpu-control"
+    ) as pool:
+        while not stopping.is_set():
+            try:
+                connection, _ = listener.accept()
+            except TimeoutError:
+                continue
+            except OSError:
+                if stopping.is_set():
+                    break
+                raise
+            if not capacity.acquire(blocking=False):
+                connection.close()
+                continue
+            pool.submit(handle, connection)
+
+
+def _peek_control_frame(connection: socket.socket, deadline: float) -> bytes:
+    """Route one bounded frame without consuming its sender credentials or FDs.
+
+    MSG_PEEK duplicates delivered SCM_RIGHTS; close every duplicate, including
+    malformed requests. The selected handler consumes and validates the actual
+    frame. This routing wait shares the handler's original deadline.
+    """
+    frame_deadline = min(deadline, time.monotonic() + 1.0)
+    while True:
+        remaining = frame_deadline - time.monotonic()
+        if remaining <= 0:
+            raise ValueError("original control frame deadline expired")
+        connection.settimeout(remaining)
+        raw, ancillary, flags, _address = connection.recvmsg(
+            8193,
+            socket.CMSG_SPACE(253 * 4) + socket.CMSG_SPACE(12),
+            socket.MSG_PEEK | socket.MSG_CMSG_CLOEXEC,
+        )
+        for level, kind, payload in ancillary:
+            if level == socket.SOL_SOCKET and kind == socket.SCM_RIGHTS:
+                descriptors = array.array("i")
+                descriptors.frombytes(payload[: len(payload) - len(payload) % descriptors.itemsize])
+                for descriptor in descriptors:
+                    os.close(descriptor)
+        if not raw or len(raw) > 8192 or flags & (socket.MSG_TRUNC | socket.MSG_CTRUNC):
+            raise ValueError("invalid control routing frame")
+        line, separator, trailing = raw.partition(b"\n")
+        if separator:
+            if trailing:
+                raise ValueError("multiple control routing frames")
+            return line
+        time.sleep(min(0.005, max(0.0, frame_deadline - time.monotonic())))
+
+
+def _control_recovery(executor: BrokerOwnedTurnExecutor, stopping: threading.Event) -> None:
+    """Trusted internal drain only; this thread has no admission/launch operation."""
+    while not stopping.is_set():
+        try:
+            executor.scheduler.recover_controlled_turn()
+            executor.cleanup_terminal_workdirs(limit=8)
+        except (OSError, ValueError, RuntimeError, sqlite3.Error):
+            # Durable quarantine remains intact. The next observation retries
+            # the same original allocation; it never fabricates a release.
+            pass
+        stopping.wait(1.0)
+
+
+def _retained_channel_worker(
+    channel: socket.socket, provider: RetainedProviderServer, stopping: threading.Event
+) -> None:
+    """Readback uses separate bounded capacity on the existing broker object."""
+    sequence = 1
+    try:
+        while not stopping.is_set():
+            ready, _, _ = select.select([channel], [], [], 1.0)
+            if not ready:
+                continue
+            provider.serve_once(channel, sequence)
+            sequence += 1
+    except (OSError, ValueError, RuntimeError, EOFError, sqlite3.Error):
+        # A lost readback does not resolve an AOS journal or free a GPU lease.
+        pass
+    finally:
+        channel.close()
+
+
+def serve(*, retained_channel: socket.socket | None = None) -> None:
+    """Serve the canonical broker; trusted bootstrap may supply one private FD.
+
+    No environment flag creates a provider listener. Bootstrap must pass the
+    other endpoint to the separately authorized AOS service generation.
+    """
+    if retained_channel is not None:
+        prepare_channel(retained_channel)
     runtime = _runtime_directory()
     bus = os.environ.get("DBUS_SESSION_BUS_ADDRESS", "")
     expected_bus = re.compile(
@@ -200,12 +387,35 @@ def serve() -> None:
     source_root = Path(source_root_value).resolve(strict=True)
     profiles = load_profiles(profile_config, source_root=source_root)
     authenticator = SystemdSocketPeerAuthenticator(aos_unit)
+    control_store = ControlStore(
+        database,
+        clock=boottime,
+        boot_id=_boot_id,
+        peer_verifier=lambda peer: authenticator.still_current(PeerGeneration(**peer)),
+    )
+    policy_path = os.environ.get("SWAPP_GPU_CONTROL_POLICY")
+    policy = ControlPolicy(
+        None if not policy_path else Path(policy_path),
+        profiles=profiles,
+        source_root=PROJECT_ROOT,
+    )
+    server_generation = _broker_generation()
+    control = LabAOSControl(
+        policy=policy,
+        authenticator=authenticator,
+        store=control_store,
+        server_generation=server_generation,
+        server_current=lambda: _broker_still_current(server_generation),
+        clock=boottime,
+    )
     units = SystemdUnitManager()
+    gpu = NvidiaSmiObserver()
     runtime_driver = SystemdAOSProfileRuntime(
         database,
         units=units,
-        gpu=NvidiaSmiObserver(),
+        gpu=gpu,
         work_root=state_dir / "worker-turns",
+        control_store=control_store,
     )
     executor = BrokerOwnedTurnExecutor(
         database,
@@ -213,8 +423,14 @@ def serve() -> None:
         lab_units={"aos": aos_unit, "lab": lab_unit},
         profiles=profiles,
         runtime=runtime_driver,
+        control_store=control_store,
     )
-    service = LabAOSBroker(authenticator, executor)
+    service = LabAOSBroker(authenticator, executor, admission=control.admit_infer)
+    provider = (
+        None if retained_channel is None else RetainedProviderServer(control, units=units, gpu=gpu)
+    )
+    if provider is not None:
+        provider.verify_configuration()
     listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     listener.bind(str(socket_path))
     os.chmod(socket_path, 0o600)
@@ -222,17 +438,65 @@ def serve() -> None:
     listener.listen(WORKERS)
     listener.settimeout(1)
     capacity = threading.BoundedSemaphore(WORKERS)
+    stopping = threading.Event()
+    control_socket: socket.socket | None = None
+    control_path: Path | None = None
+    control_bound: os.stat_result | None = None
+    control_thread: threading.Thread | None = None
+    channels = RetainedChannelBootstrap(control, units=units, gpu=gpu)
+    retained_thread: threading.Thread | None = None
+    recovery_thread = threading.Thread(
+        target=_control_recovery,
+        args=(executor, stopping),
+        name="gpu-control-recovery",
+        daemon=True,
+    )
 
     def handle(connection: socket.socket) -> None:
         try:
             service.serve_connection(connection)
-        except (OSError, ValueError, TimeoutError):
+        except (OSError, ValueError, RuntimeError, TimeoutError):
             pass
         finally:
             connection.close()
             capacity.release()
 
     try:
+        if policy.config is not None:
+            if policy.config["caller_unit"] != aos_unit:
+                raise ValueError("control policy and peer authenticator units differ")
+            control_path = Path(policy.config["control_socket"])
+            if (
+                not control_path.is_absolute()
+                or control_path.parent != directory
+                or control_path == socket_path
+                or re.fullmatch(r"[a-z0-9-]+\.sock", control_path.name) is None
+            ):
+                raise ValueError("control socket must be distinct in the private runtime directory")
+            _prepare_socket_path(control_path)
+            control_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            control_socket.setsockopt(socket.SOL_SOCKET, socket.SO_PASSCRED, 1)
+            control_socket.bind(str(control_path))
+            os.chmod(control_path, 0o600)
+            control_bound = control_path.lstat()
+            control_socket.listen(CONTROL_BACKLOG)
+            control_socket.settimeout(1.0)
+            control_thread = threading.Thread(
+                target=_control_listener,
+                args=(control_socket, control, stopping, channels),
+                name="gpu-control-listener",
+                daemon=True,
+            )
+            control_thread.start()
+        if provider is not None and retained_channel is not None:
+            retained_thread = threading.Thread(
+                target=_retained_channel_worker,
+                args=(retained_channel, provider, stopping),
+                name="gpu-retained-readback",
+                daemon=True,
+            )
+            retained_thread.start()
+        recovery_thread.start()
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=WORKERS, thread_name_prefix="gpu-turn"
         ) as pool:
@@ -246,6 +510,35 @@ def serve() -> None:
                     continue
                 pool.submit(handle, connection)
     finally:
+        channels.close()
+        stopping.set()
+        if retained_channel is not None:
+            try:
+                retained_channel.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+            retained_channel.close()
+        if retained_thread is not None:
+            retained_thread.join(timeout=4.0)
+        if control_socket is not None:
+            control_socket.close()
+        if control_thread is not None:
+            control_thread.join(timeout=CALL_SECONDS + 1.0)
+        if recovery_thread.is_alive():
+            recovery_thread.join(timeout=1.0)
+        if control_path is not None and control_bound is not None:
+            try:
+                current_control = control_path.lstat()
+            except FileNotFoundError:
+                current_control = None
+            if (
+                current_control is not None
+                and stat.S_ISSOCK(current_control.st_mode)
+                and current_control.st_uid == os.getuid()
+                and (current_control.st_dev, current_control.st_ino)
+                == (control_bound.st_dev, control_bound.st_ino)
+            ):
+                control_path.unlink()
         listener.close()
         try:
             current = socket_path.lstat()

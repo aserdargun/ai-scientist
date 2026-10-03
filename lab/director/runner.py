@@ -43,6 +43,7 @@ from lab.director.contracts import (
     TrajectoryDocument,
     replay_configuration_sha256,
 )
+from lab.director.evaluation_recovery import validated_evaluation_timings
 from lab.director.executor import (
     CandidateExecutionRejected,
     evaluate_and_score_seed,
@@ -125,10 +126,16 @@ class _ProposalCompletionClock:
             "model_tokens": self.reservation.model_tokens,
             "boot_id": self.boot_id,
             "started_boottime": self.started_boottime,
-            **{key: payload[key] for key in (
-                "candidate_sha256", "inputs_sha256", "deterministic_provider_id",
-                "provider_config_sha256", "provider_registry_entry_sha256",
-            )},
+            **{
+                key: payload[key]
+                for key in (
+                    "candidate_sha256",
+                    "inputs_sha256",
+                    "deterministic_provider_id",
+                    "provider_config_sha256",
+                    "provider_registry_entry_sha256",
+                )
+            },
         }
 
     def capture(self, payload: dict[str, Any]) -> dict[str, Any]:
@@ -154,9 +161,12 @@ class _ProposalCompletionClock:
         completed = receipt["completed_boottime"]
         elapsed = receipt["measured_wall_seconds"]
         if (
-            any(isinstance(value, bool) or not isinstance(value, (int, float))
+            any(
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
                 or not math.isfinite(value)
-                for value in (self.started_boottime, completed, elapsed))
+                for value in (self.started_boottime, completed, elapsed)
+            )
             or self.started_boottime < 0
             or completed < self.started_boottime
             or elapsed != completed - self.started_boottime
@@ -191,6 +201,9 @@ _CANDIDATE_TERMINAL_CODES = frozenset(
         "empty_fit_artifact",
         "score_artifact_set_mismatch",
         "guard_vector_mismatch",
+        "guard_input_provenance_changed",
+        "guard_fit_provenance_changed",
+        "guard_score_provenance_changed",
         "non_finite_guard_vector",
         "invalid_causality_cut",
         "invalid_position_bias_vector",
@@ -950,15 +963,14 @@ def execute_candidate_seed(
         if cached is not None:
             measurements.append(cached)
             continue
-        if _task_has_terminal_outcome(
+        has_terminal_outcome = _task_has_terminal_outcome(
             planner_engine,
             run_id=run_id,
             experiment_id=proposal.experiment_id,
             task=task,
             evaluation_kind=evaluation_kind,
             seed=seed,
-        ):
-            raise RuntimeError("primary task already has a durable terminal outcome")
+        )
         attempts = infrastructure_retries + 1
         last_error: Exception | None = None
         measured_result: dict[str, Any] | None = None
@@ -969,9 +981,16 @@ def execute_candidate_seed(
                 int(overall_deadline - time.monotonic()),
                 int(budget.remaining_wall_seconds + reservation.wall_seconds),
             )
-            if remaining < 1:
-                raise RuntimeError("whole_suite_seed_budget_exhausted")
+            if remaining < 1 and last_error is not None:
+                # An uncertain infrastructure/cleanup failure is never a candidate timeout.
+                break
+            if remaining >= 1 and has_terminal_outcome:
+                raise RuntimeError("primary task already has a durable terminal outcome")
             try:
+                if remaining < 1:
+                    # No task was dispatched. The fenced Planner writer also verifies
+                    # exact idempotency if timeout bookkeeping was interrupted on resume.
+                    raise CandidateExecutionRejected("timeout")
                 measured_result = evaluate_and_score_seed(
                     director_engine,
                     planner_engine,
@@ -1028,11 +1047,13 @@ def execute_candidate_seed(
                     break
                 lease.require_run_active()
         if last_error is not None:
-            elapsed = min(
-                reservation.wall_seconds,
-                max(0.0, (datetime.now(UTC) - started_at).total_seconds()),
+            elapsed = max(0.0, (datetime.now(UTC) - started_at).total_seconds())
+            reconcile = (
+                budget.reconcile_proposal_overrun
+                if elapsed > reservation.wall_seconds
+                else budget.reconcile_proposal
             )
-            budget.reconcile_proposal(
+            reconcile(
                 reservation,
                 measured_wall_seconds=elapsed,
                 measured_model_tokens=0,
@@ -1062,8 +1083,16 @@ def execute_candidate_seed(
             break
     elapsed = max(0.0, (datetime.now(UTC) - started_at).total_seconds())
     if elapsed > reservation.wall_seconds:
-        raise RuntimeError("whole_suite_seed_exceeded_reserved_wall_budget")
-    budget.reconcile_proposal(reservation, measured_wall_seconds=elapsed, measured_model_tokens=0)
+        # Only completed work or a typed guard rejection reaches this boundary.
+        # Charge actual drain/bookkeeping time; the original deadline never moves.
+        candidate_rejection = candidate_rejection or CandidateExecutionRejected("timeout")
+        budget.reconcile_proposal_overrun(
+            reservation, measured_wall_seconds=elapsed, measured_model_tokens=0
+        )
+    else:
+        budget.reconcile_proposal(
+            reservation, measured_wall_seconds=elapsed, measured_model_tokens=0
+        )
     _append_next_checkpoint(
         lease,
         director_engine,
@@ -1141,7 +1170,6 @@ def _read_completed_seed(
         or not isinstance(elapsed_value, (int, float))
         or not math.isfinite(elapsed_value)
         or elapsed_value < 0
-        or elapsed_value > MAX_SEED_WALL_SECONDS
         or (terminal_code is not None and not isinstance(terminal_code, str))
         or not isinstance(reservation_digest, str)
         or not isinstance(durable_budget, dict)
@@ -1167,10 +1195,27 @@ def _read_completed_seed(
         wall_seconds=reservation_payload["wall_seconds"],
         model_tokens=reservation_payload["model_tokens"],
     )
+    if (
+        isinstance(reservation.wall_seconds, bool)
+        or not isinstance(reservation.wall_seconds, int)
+        or not 1 <= reservation.wall_seconds <= MAX_SEED_WALL_SECONDS
+        or (
+            elapsed_value > reservation.wall_seconds
+            and terminal_code not in _CANDIDATE_TERMINAL_CODES
+        )
+    ):
+        raise RuntimeError("completed seed exceeded its reservation without a candidate rejection")
     snapshot = budget.snapshot()
     active = {item.reservation_id: item for item in snapshot.reservations}
     if reservation.reservation_id in active:
-        budget.reconcile_proposal(
+        if active[reservation.reservation_id] != reservation:
+            raise RuntimeError("completed seed differs from its active reservation")
+        reconcile = (
+            budget.reconcile_proposal_overrun
+            if elapsed_value > reservation.wall_seconds
+            else budget.reconcile_proposal
+        )
+        reconcile(
             active[reservation.reservation_id],
             measured_wall_seconds=float(elapsed_value),
             measured_model_tokens=0,
@@ -1422,8 +1467,9 @@ def _read_measurement(
                 family_metrics.append(float(row["position_bias"]))
         else:
             raise RuntimeError("resumed measurement has an unsupported trusted task family")
-        fit_seconds = float(row["fit_seconds"])
-        score_seconds = float(row["score_seconds"])
+        timings = validated_evaluation_timings(row)
+        fit_seconds = timings["fit_seconds"]
+        score_seconds = timings["score_seconds"]
     except (KeyError, TypeError, ValueError, OverflowError) as exc:
         raise RuntimeError("resumed measurement lacks complete family score provenance") from exc
 
@@ -1847,12 +1893,26 @@ def _merge_confirmation_measurements(
             merged_position_bias = [
                 float(value) for value in cast(list[int | float], position_bias)
             ]
+        first_timings = validated_evaluation_timings(first)
+        second_timings = validated_evaluation_timings(second)
+        merged_timings = validated_evaluation_timings(
+            {
+                key: first_timings[key] + second_timings[key]
+                for key in first_timings.keys() & second_timings.keys()
+            }
+        )
+        # A missing historical duration is unknown, so publish a total only
+        # when both decision seeds supplied that duration.
+        first_fields = {
+            key: value
+            for key, value in first.items()
+            if key not in {"guarded_wall_seconds", "scorer_wall_seconds"}
+        }
         merged.append(
             {
-                **first,
+                **first_fields,
                 **merged_metrics,
-                "fit_seconds": float(first["fit_seconds"]) + float(second["fit_seconds"]),
-                "score_seconds": float(first["score_seconds"]) + float(second["score_seconds"]),
+                **merged_timings,
                 "guards": merged_guards,
                 "seed_artifacts_sha256": [
                     first["candidate_output_sha256"],
@@ -1984,7 +2044,7 @@ def _build_replay_manifest(
                 digest = scorer_row.get("candidate_output_sha256")
                 if not isinstance(digest, str) or len(digest) != 64:
                     raise ValueError("replay Scorer row omits its output artifact receipt")
-                output = read_artifact_bytes(digest)
+                output = read_artifact_bytes(digest, artifact_root=artifact_root)
                 if hashlib.sha256(output).hexdigest() != digest:
                     raise ValueError("replay Scorer output artifact failed its digest")
                 raw_values.append(raw_score)
@@ -2333,7 +2393,12 @@ def commit_primary_terminal_record(
     exclusions: tuple[str, ...] = (
         "labels and raw feature values were not supplied to the proposal provider",
     )
-    if result.terminal_code == "harness_hash_mismatch":
+    if result.terminal_code in {
+        "harness_hash_mismatch",
+        "guard_input_provenance_changed",
+        "guard_fit_provenance_changed",
+        "guard_score_provenance_changed",
+    }:
         exclusions += ("execution identity rejection; not a candidate quality label",)
     replay_inputs = (
         replay_decisions
@@ -2648,10 +2713,15 @@ def run_one_proposal(
             ),
             completion_clock=(
                 _ProposalCompletionClock(
-                    run_id, ordinal, provider_reservation, reservation_boot_id,
-                    started_boottime, current_boot_id,
+                    run_id,
+                    ordinal,
+                    provider_reservation,
+                    reservation_boot_id,
+                    started_boottime,
+                    current_boot_id,
                 )
-                if provider_reservation is not None else None
+                if provider_reservation is not None
+                else None
             ),
         )
     except Exception as provider_error:

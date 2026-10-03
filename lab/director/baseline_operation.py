@@ -409,6 +409,7 @@ def _finish_stopped_baseline(
                 UUID(str(job["job_id"])),
                 expected_claim_invocation_id=invocation,
                 remaining_seconds=min(MAX_WORKER_RUNTIME_SECONDS, remaining),
+                artifact_root=artifact_root,
             )
             if recovery.exit_code != 0 or recovery.result is None:
                 return _cleanup_pending(run_id, "owned Scorer generation did not drain cleanly")

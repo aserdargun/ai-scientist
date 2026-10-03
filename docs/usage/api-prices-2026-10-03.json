@@ -1,0 +1,79 @@
+{
+  "schema": "api-price-reference.v1",
+  "currency": "USD",
+  "retrieved_at": "2026-10-03T11:55:04.117800+00:00",
+  "interpretation": "counterfactual_not_bill",
+  "historical_price_coverage_verified": false,
+  "assumptions": [
+    "Standard API service scenario only; actual Codex subscription/credits/service tier not inferred.",
+    "Short-context scenario is not a verified classification of historical requests.",
+    "No cache-write usage, regional uplift, taxes, tools, credits or discounts inferred.",
+    "Reasoning output is already a subset of output tokens, never added a second time."
+  ],
+  "models": {
+    "gpt-6-astra": {
+      "provider": "openai",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "standard_short_per_million": {
+        "input": "10",
+        "cached_input": "1",
+        "cache_write": "12.5",
+        "output": "50"
+      },
+      "standard_long_per_million": {
+        "input": "20",
+        "cached_input": "2",
+        "cache_write": "25",
+        "output": "75"
+      }
+    },
+    "gpt-6.1-sol": {
+      "provider": "openai",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "standard_short_per_million": {
+        "input": "2",
+        "cached_input": "0.10",
+        "cache_write": "2.5",
+        "output": "10"
+      },
+      "standard_long_per_million": {
+        "input": "4",
+        "cached_input": "0.20",
+        "cache_write": "5",
+        "output": "15"
+      }
+    },
+    "gpt-6-luna": {
+      "provider": "openai",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "standard_short_per_million": {
+        "input": "0.10",
+        "cached_input": "0.01",
+        "cache_write": "0.125",
+        "output": "0.50"
+      },
+      "standard_long_per_million": {
+        "input": "0.20",
+        "cached_input": "0.02",
+        "cache_write": "0.25",
+        "output": "0.75"
+      }
+    },
+    "gpt-6-sol": {
+      "provider": "openai",
+      "source_url": "https://developers.openai.com/api/docs/pricing?tab=suite",
+      "standard_short_per_million": {
+        "input": "2",
+        "cached_input": "0.20",
+        "cache_write": "2.5",
+        "output": "10"
+      },
+      "standard_long_per_million": {
+        "input": "4",
+        "cached_input": "0.40",
+        "cache_write": "5",
+        "output": "15"
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ import time
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from lab.scorer.credential_path import scorer_deployment_environment
 from lab.scorer.supervisor import (
     PROJECT_ROOT,
     SCORER_SLICE,
@@ -104,6 +105,7 @@ def run_holdout_process(
         or not 1 <= remaining_seconds <= MAX_HOLDOUT_PROCESS_SECONDS
     ):
         raise ValueError("holdout worker deadline must be 1..600 seconds")
+    credential_environment = scorer_deployment_environment()
     total_deadline = time.monotonic() + remaining_seconds
     unit = f"swapp-ai-scientist-scorer-{reservation_id.hex}.service"
     _ensure_aggregate_slice()
@@ -151,6 +153,7 @@ def run_holdout_process(
             "--setenv=OMP_NUM_THREADS=1",
             "--setenv=MKL_NUM_THREADS=1",
             "--setenv=NUMEXPR_NUM_THREADS=1",
+            *credential_environment,
             str(PROJECT_ROOT / ".venv/bin/python"),
             "-m",
             "lab.scorer.holdout_worker",
@@ -265,8 +268,10 @@ def _parse_recovery_status(
         raise RuntimeError("holdout recovery worker returned invalid JSON") from exc
     identity_key = f"{target_kind}_id"
     allowed_states = (
-        {"pending", "drained"}
-        if target_kind in {"run", "restart", "stop"}
+        {"pending", "drained", "children_drained"}
+        if target_kind == "stop"
+        else {"pending", "drained"}
+        if target_kind in {"run", "restart"}
         else {"pending", "passed", "reverted", "failed", "exhausted"}
     )
     if (
@@ -300,6 +305,7 @@ def _run_holdout_recovery_process(
         or not 1 <= remaining_seconds <= 120
     ):
         raise ValueError("holdout recovery deadline must be 1..120 seconds")
+    credential_environment = scorer_deployment_environment()
     total_deadline = time.monotonic() + remaining_seconds
     cleanup_reserve = min(_CLEANUP_RESERVE_SECONDS, max(0, remaining_seconds - 1))
     recovery_id = uuid4()
@@ -341,6 +347,7 @@ def _run_holdout_recovery_process(
             "--setenv=OMP_NUM_THREADS=1",
             "--setenv=MKL_NUM_THREADS=1",
             "--setenv=NUMEXPR_NUM_THREADS=1",
+            *credential_environment,
             str(PROJECT_ROOT / ".venv/bin/python"),
             "-m",
             "lab.scorer.stop_recovery"

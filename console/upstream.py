@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
+import subprocess
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -86,7 +88,11 @@ class Upstream:
             }
         else:
             self.model_runs_enabled = model_runs_enabled
+        self._research_from_environment = model_runs_enabled is None and self.model_runs_enabled
         self._client: httpx.Client | None = None
+        self._async_transport = (
+            transport if isinstance(transport, httpx.AsyncBaseTransport) else None
+        )
         self._error: str | None = None
         self.url: str | None = None
         self.token: str | None = None
@@ -117,6 +123,24 @@ class Upstream:
         return self._error is None and self.url is not None and self.registry is not None
 
     def health(self) -> tuple[bool, str | None]:
+        if self._research_from_environment:
+            try:
+                from ops.research_configuration import (
+                    assert_service_configuration,
+                    installed_configuration,
+                )
+
+                installation = installed_configuration()
+                if installation is None:
+                    raise ValueError("research setup is absent")
+                assert_service_configuration(installation)
+            except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError):
+                self.model_runs_enabled = False
+                return (
+                    False,
+                    "Research configuration drift or missing readiness; finish cleanup, "
+                    "run setup, and explicitly restart owned services.",
+                )
         if self._error:
             return False, self._error
         if self._client is None or self.url is None:
@@ -157,6 +181,10 @@ class Upstream:
             return []
         result: list[dict[str, Any]] = []
         for entry in self.registry.entries.values():
+            if entry.provider == "mode-stream":
+                # Diagnostic streams have their own form and cannot be submitted
+                # through the generic baseline/research controls.
+                continue
             result.append(
                 {
                     "suite_id": entry.suite_id,
@@ -198,3 +226,35 @@ class Upstream:
     def close(self) -> None:
         if self._client is not None:
             self._client.close()
+
+    async def capture_request(self, payload: dict[str, Any]) -> httpx.Response:
+        """One cancellable capture connection with the same fixed local principal."""
+        if not self.configured or self.url is None or self.token is None:
+            raise HTTPException(status_code=503, detail=self._error or "Lab API is unavailable")
+        connected, reason = await asyncio.to_thread(self.health)
+        if not connected:
+            raise HTTPException(status_code=503, detail=reason or "Lab API unavailable")
+        try:
+            async with httpx.AsyncClient(
+                transport=self._async_transport,
+                timeout=httpx.Timeout(40.0, connect=0.75),
+                follow_redirects=False,
+                trust_env=False,
+            ) as client:
+                async with asyncio.timeout(40.0):
+                    response = await client.post(
+                        f"{self.url}/v1/mode-stream-inputs/database",
+                        headers={"Authorization": f"Bearer {self.token}"},
+                        json=payload,
+                    )
+        except (httpx.HTTPError, TimeoutError) as exc:
+            raise HTTPException(
+                status_code=503, detail=f"Lab API unreachable: {type(exc).__name__}"
+            ) from None
+        if response.status_code >= 400:
+            try:
+                detail = response.json().get("detail", "Lab API request failed")
+            except (ValueError, AttributeError):
+                detail = "Lab API request failed"
+            raise HTTPException(status_code=response.status_code, detail=str(detail))
+        return response

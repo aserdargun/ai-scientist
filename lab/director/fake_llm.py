@@ -18,6 +18,8 @@ from pydantic import (
 
 from lab.director.contracts import CandidateProposal, MoveType
 from lab.director.explore import ExploreIntent, family_directive
+from lab.director.field_context import FieldContext
+from lab.director.history_context import PriorFindingsSnapshot, snapshot_bytes
 from lab.director.journal import canonical_bytes
 
 
@@ -35,6 +37,10 @@ class AgentContext(BaseModel):
     recent_feedback: tuple[StrictStr, ...] = Field(max_length=30)
     explore_intent: ExploreIntent | None = None
     explore_directive: StrictStr | None = None
+    field_context: FieldContext | None = None
+    field_context_sha256: StrictStr | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    prior_findings: PriorFindingsSnapshot | None = None
+    prior_findings_sha256: StrictStr | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
 
     @model_validator(mode="after")
     def verify_explore_directive(self) -> AgentContext:
@@ -50,6 +56,19 @@ class AgentContext(BaseModel):
                 raise ValueError("EXPLORE context differs from its exact S2 family intent")
         elif self.explore_directive is not None:
             raise ValueError("family directive requires an immutable EXPLORE intent")
+        if self.field_context is None:
+            if self.field_context_sha256 is not None:
+                raise ValueError("context field digest lacks frozen intent")
+        elif self.field_context.sha256 != self.field_context_sha256:
+            raise ValueError("context field intent digest differs")
+        if self.prior_findings is None:
+            if self.prior_findings_sha256 is not None:
+                raise ValueError("context findings digest lacks a frozen snapshot")
+        elif (
+            hashlib.sha256(snapshot_bytes(self.prior_findings)).hexdigest()
+            != self.prior_findings_sha256
+        ):
+            raise ValueError("context frozen findings digest differs")
         return self
 
     @model_serializer(mode="wrap")
@@ -58,6 +77,16 @@ class AgentContext(BaseModel):
         if self.explore_intent is None:
             value.pop("explore_intent", None)
             value.pop("explore_directive", None)
+        if self.field_context is None:
+            value.pop("field_context", None)
+            value.pop("field_context_sha256", None)
+        else:
+            value["field_context"] = self.field_context.model_dump(mode="json", by_alias=True)
+        if self.prior_findings is None:
+            value.pop("prior_findings", None)
+            value.pop("prior_findings_sha256", None)
+        else:
+            value["prior_findings"] = self.prior_findings.model_dump(mode="json", by_alias=True)
         return value
 
 
@@ -139,6 +168,8 @@ class ProviderReceipt(BaseModel):
         "director.candidate-contract.metadata-only.v3",
         "director.candidate-contract.metadata-only.v4",
         "director.candidate-contract.metadata-only.v5",
+        "director.candidate-contract.metadata-only.v6",
+        "director.operating-mode-contract.metadata-only.v1",
     ]
     context_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
     prompt_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")

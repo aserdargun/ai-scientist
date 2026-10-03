@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "BoundingBox": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "exclusiveMaximum": 640,
+          "minimum": 0,
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Y",
+          "type": "integer"
+        },
+        "width": {
+          "maximum": 640,
+          "minimum": 10,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "maximum": 360,
+          "minimum": 10,
+          "title": "Height",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "title": "BoundingBox",
+      "type": "object"
+    },
+    "SceneElement": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "const": "button",
+          "title": "Role",
+          "type": "string"
+        },
+        "label": {
+          "enum": [
+            "SAVE",
+            "CANCEL"
+          ],
+          "title": "Label",
+          "type": "string"
+        },
+        "bbox": {
+          "$ref": "#/$defs/BoundingBox"
+        }
+      },
+      "required": [
+        "role",
+        "label",
+        "bbox"
+      ],
+      "title": "SceneElement",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "capture_id": {
+      "pattern": "^[a-f0-9]{32}$",
+      "title": "Capture Id",
+      "type": "string"
+    },
+    "state_version": {
+      "minimum": 0,
+      "title": "State Version",
+      "type": "integer"
+    },
+    "width": {
+      "const": 640,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "const": 360,
+      "title": "Height",
+      "type": "integer"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/SceneElement"
+      },
+      "maxItems": 2,
+      "title": "Elements",
+      "type": "array"
+    },
+    "needs_human": {
+      "title": "Needs Human",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "capture_id",
+    "state_version",
+    "width",
+    "height",
+    "elements",
+    "needs_human"
+  ],
+  "title": "VisionScene",
+  "type": "object"
+}

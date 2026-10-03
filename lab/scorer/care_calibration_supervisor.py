@@ -19,6 +19,7 @@ from lab.scorer.care_calibration import (
     CareBaselineCellClaim,
     fail_care_baseline_cell,
 )
+from lab.scorer.credential_path import scorer_deployment_environment
 from lab.scorer.supervisor import (
     PROJECT_ROOT,
     SCORER_SLICE,
@@ -118,9 +119,7 @@ def _drain_exact_claim_sandbox(claim_id: UUID) -> bool:
         os.close(process_lock)
 
 
-def _parse_worker_result(
-    stdout: str, calibration_id: UUID, claim_id: UUID, generation: int
-) -> str:
+def _parse_worker_result(stdout: str, calibration_id: UUID, claim_id: UUID, generation: int) -> str:
     try:
         payload = json.loads(stdout)
     except json.JSONDecodeError as exc:
@@ -205,9 +204,7 @@ def _terminal_worker_is_drained(row: dict[str, object], claim_id: UUID) -> bool:
             slice_properties = _systemctl_show(SCORER_SLICE)
             slice_group = slice_properties.get("ControlGroup", "")
             canonical_group = f"{slice_group.rstrip('/')}/{unit}" if slice_group else ""
-            cgroup_drained = bool(canonical_group) and _cgroup_is_absent_or_empty(
-                canonical_group
-            )
+            cgroup_drained = bool(canonical_group) and _cgroup_is_absent_or_empty(canonical_group)
             process_gone = True
         else:
             cgroup_value = row.get("worker_cgroup")
@@ -246,11 +243,7 @@ def _terminal_worker_is_drained(row: dict[str, object], claim_id: UUID) -> bool:
             )
         except (OSError, ValueError, RuntimeError, TimeoutError, subprocess.TimeoutExpired):
             return False
-        return (
-            drained
-            and _recorded_worker_is_gone(row)
-            and _drain_exact_claim_sandbox(claim_id)
-        )
+        return drained and _recorded_worker_is_gone(row) and _drain_exact_claim_sandbox(claim_id)
     if properties.get("ActiveState") != "inactive" or properties.get("MainPID") != "0":
         return False
     try:
@@ -422,6 +415,7 @@ def run_care_baseline_cell_process(
     """Start only a newly reserved generation, bind it, and prove exact drain."""
     if not 1 <= remaining_seconds <= CARE_CELL_RESERVATION_SECONDS:
         raise ValueError("CARE worker deadline must be within its durable 100-second reservation")
+    credential_environment = scorer_deployment_environment()
     claim_row = _claim_row(engine, claim_id)
     if (
         claim_row is None
@@ -471,6 +465,7 @@ def run_care_baseline_cell_process(
         "--setenv=OMP_NUM_THREADS=1",
         "--setenv=MKL_NUM_THREADS=1",
         "--setenv=NUMEXPR_NUM_THREADS=1",
+        *credential_environment,
         str(PROJECT_ROOT / ".venv/bin/python"),
         "-m",
         "lab.scorer.care_calibration_worker",
@@ -586,9 +581,7 @@ def run_care_baseline_cell_process(
                         current_id if re.fullmatch(r"[0-9a-f]{32}", current_id) else None
                     )
                     stdout, _stderr = process.communicate()
-                    reported = _parse_worker_result(
-                        stdout, calibration_id, claim_id, generation
-                    )
+                    reported = _parse_worker_result(stdout, calibration_id, claim_id, generation)
                     row = _claim_row(engine, claim_id)
                     if row is not None and row["state"] == "succeeded":
                         return CareCellProcessResult(

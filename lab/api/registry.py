@@ -6,13 +6,27 @@ import hashlib
 import json
 import stat
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    SerializerFunctionWrapHandler,
+    StrictStr,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 
 from lab.suite_limits import MAX_SUITE_MANIFEST_BYTES
 
+if TYPE_CHECKING:
+    from lab.operating_modes.public_snapshot import PublicTaskSnapshot
+
+
 MAX_PROPOSAL_SCENARIO_BYTES = 4 * 1024**2
+MAX_REGISTRY_BYTES = 64 * 1024
 
 
 class ApiPrincipal(BaseModel):
@@ -35,6 +49,41 @@ class PrincipalFile(BaseModel):
         return tuple(value) if isinstance(value, list) else value
 
 
+class PublicDevStudy(BaseModel):
+    """One immutable CPU development grant, inside the existing registry authority."""
+
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+    owner_id: StrictStr = Field(min_length=1, max_length=128)
+    origin: Literal["local"]
+    snapshot_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    binding_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    source_suite_manifest_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    original_task_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    profile_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    max_experiments: int = Field(ge=1, le=2)
+    max_wall_seconds: int = Field(ge=1, le=600)
+    model_tokens: int = Field(ge=0, le=0)
+
+    def verify_snapshot(self, snapshot: PublicTaskSnapshot) -> None:
+        if (
+            self.snapshot_sha256 != snapshot.sha256
+            or self.binding_sha256 != snapshot.binding.sha256
+            or self.source_suite_manifest_sha256 != snapshot.binding.source_suite_manifest_sha256
+            or self.original_task_sha256 != snapshot.binding.original_task_sha256
+            or self.profile_sha256 != snapshot.binding.original_task.profile_sha256
+        ):
+            raise ValueError("public registry grant differs from the source binding")
+
+    def verify_budget(self, experiments: int, wall_seconds: int, model_tokens: int) -> None:
+        if (
+            any(type(value) is not int for value in (experiments, wall_seconds, model_tokens))
+            or not 1 <= experiments <= self.max_experiments
+            or not 1 <= wall_seconds <= self.max_wall_seconds
+            or model_tokens != 0
+        ):
+            raise ValueError("public development study exceeds its CPU policy")
+
+
 class SuiteEntry(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -43,12 +92,27 @@ class SuiteEntry(BaseModel):
     program_version: StrictStr = Field(min_length=1, max_length=64)
     suite_manifest_path: StrictStr = Field(min_length=1, max_length=1024)
     suite_manifest_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
-    provider: Literal["fake-json", "local-qwen", "mode-grid"]
+    provider: Literal["fake-json", "local-qwen", "mode-grid", "mode-stream"]
     scenario_path: StrictStr | None = Field(default=None, min_length=1, max_length=1024)
     scenario_sha256: StrictStr | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     provider_config_sha256: StrictStr | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     proposal_limit: int = Field(ge=1, le=35)
-    allowed_purposes: tuple[Literal["research", "baseline"], ...] = ("research", "baseline")
+    proposal_contract: Literal["candidate-python.v1", "operating-mode-config.v1"] = (
+        "candidate-python.v1"
+    )
+    snapshot_sha256: StrictStr | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
+    public_dev_study: PublicDevStudy | None = None
+    allowed_purposes: tuple[Literal["research", "baseline", "mode-stream"], ...] = (
+        "research",
+        "baseline",
+    )
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_bytes(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        value = cast(dict[str, Any], handler(self))
+        if self.public_dev_study is None:
+            value.pop("public_dev_study", None)
+        return value
 
     @field_validator("allowed_purposes", mode="before")
     @classmethod
@@ -61,6 +125,33 @@ class SuiteEntry(BaseModel):
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> SuiteEntry:
+        if self.provider == "mode-stream":
+            if (
+                self.track != "mode"
+                or self.program_version != "mode-stream.v1"
+                or self.allowed_purposes != ("mode-stream",)
+                or self.proposal_limit != 1
+                or self.scenario_path is not None
+                or self.scenario_sha256 is not None
+                or self.provider_config_sha256 is None
+                or self.snapshot_sha256 is not None
+                or self.proposal_contract != "candidate-python.v1"
+            ):
+                raise ValueError("mode-stream requires a finite diagnostic-only plan")
+            return self
+        if "mode-stream" in self.allowed_purposes:
+            raise ValueError("mode-stream purpose requires its explicit provider")
+        if self.proposal_contract == "operating-mode-config.v1":
+            if (
+                self.provider != "local-qwen"
+                or self.track != "mode"
+                or self.snapshot_sha256 is None
+            ):
+                raise ValueError(
+                    "mode configuration proposals require local-qwen/mode snapshot pins"
+                )
+        elif self.snapshot_sha256 is not None and self.public_dev_study is None:
+            raise ValueError("snapshot pins require the operating mode proposal contract")
         if self.provider == "fake-json":
             if (
                 self.scenario_path is None
@@ -81,6 +172,16 @@ class SuiteEntry(BaseModel):
             or self.provider_config_sha256 is None
         ):
             raise ValueError("local-qwen suite requires a provider configuration digest")
+        if self.public_dev_study is not None:
+            if (
+                self.provider != "mode-grid"
+                or self.track != "mode"
+                or self.proposal_contract != "candidate-python.v1"
+                or self.snapshot_sha256 != self.public_dev_study.snapshot_sha256
+                or self.proposal_limit > self.public_dev_study.max_experiments
+                or self.allowed_purposes != ("research",)
+            ):
+                raise ValueError("public development requires its bounded CPU grid registry entry")
         return self
 
 
@@ -88,7 +189,7 @@ class SuiteRegistryFile(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
     schema_version: Literal["lab-suite-registry.v1"] = Field(alias="schema")
-    suites: tuple[SuiteEntry, ...] = Field(min_length=1, max_length=64)
+    suites: tuple[SuiteEntry, ...] = Field(max_length=64)
 
     @field_validator("suites", mode="before")
     @classmethod
@@ -122,6 +223,8 @@ class SuiteRegistry:
                 )
             mapped[entry.suite_id] = entry
         self.entries = mapped
+        for entry in entries:
+            self.verify_snapshot(entry)
 
     def get(self, suite_id: str) -> SuiteEntry:
         try:
@@ -137,6 +240,7 @@ class SuiteRegistry:
             entry.suite_manifest_sha256,
             maximum_bytes=MAX_SUITE_MANIFEST_BYTES,
         )
+        self.verify_snapshot(entry)
         scenario = None
         if entry.provider in {"fake-json", "mode-grid"}:
             if entry.scenario_path is None or entry.scenario_sha256 is None:
@@ -151,6 +255,11 @@ class SuiteRegistry:
     @staticmethod
     def entry_sha256(entry: SuiteEntry) -> str:
         payload = entry.model_dump(mode="json")
+        if entry.public_dev_study is None:
+            payload.pop("public_dev_study", None)
+        if entry.proposal_contract == "candidate-python.v1" and entry.snapshot_sha256 is None:
+            payload.pop("proposal_contract")
+            payload.pop("snapshot_sha256")
         # Default both-purpose entries retain their historical admission digest.
         if set(entry.allowed_purposes) == {"research", "baseline"}:
             payload.pop("allowed_purposes")
@@ -162,6 +271,62 @@ class SuiteRegistry:
             allow_nan=False,
         ).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
+
+    def verify_snapshot(self, entry: SuiteEntry) -> Path | None:
+        """Bind the one-task exception to the exact Scorer-installed source snapshot."""
+        if entry.public_dev_study is not None:
+            from lab.api.mode_experiments import ModeSnapshotStore
+            from lab.api.mode_sources import authorize_snapshot
+            from lab.director.suite_manifest import SuiteManifest
+
+            store = ModeSnapshotStore(self.runtime_root / "mode-snapshots")
+            snapshot = store.public_snapshot(entry.public_dev_study.snapshot_sha256)
+            if snapshot is None or store.installed(snapshot.sha256) is None:
+                raise ValueError("public development snapshot is not installed")
+            entry.public_dev_study.verify_snapshot(snapshot)
+            authorize_snapshot(store, snapshot.sha256, entry.public_dev_study.owner_id)
+            path = self.verify_file(entry.suite_manifest_path, entry.suite_manifest_sha256)
+            document = SuiteManifest.model_validate_json(path.read_bytes(), strict=True)
+            if (
+                document.suite_id != entry.suite_id
+                or document.weight_policy != "single_snapshot_study.v1"
+                or document.family_cap != 1.0
+                or len(document.tasks) != 1
+            ):
+                raise ValueError("public development suite binding differs")
+            snapshot.binding.verify_study_task(document.tasks[0])
+            return path
+        if entry.snapshot_sha256 is None:
+            return None
+        from lab.api.mode_experiments import ModeSnapshotStore
+        from lab.director.local_llm import provider_profile_set_for_sha256
+        from lab.director.suite_manifest import SuiteManifest
+
+        root = self.runtime_root / "mode-snapshots"
+        if not root.is_dir():
+            raise ValueError("registered mode snapshot store is unavailable")
+        store = ModeSnapshotStore(root)
+        store.load(entry.snapshot_sha256)
+        if store.installed(entry.snapshot_sha256) is None:
+            raise ValueError("registered mode snapshot has no Scorer installation receipt")
+        path = self.verify_file(entry.suite_manifest_path, entry.suite_manifest_sha256)
+        document = SuiteManifest.model_validate_json(path.read_bytes(), strict=True)
+        if (
+            document.suite_id != entry.suite_id
+            or document.weight_policy != "single_snapshot_study.v1"
+            or len(document.tasks) != 1
+            or document.tasks[0].provenance.source_manifest_sha256 != entry.snapshot_sha256
+        ):
+            raise ValueError("mode suite does not match its pinned installed snapshot")
+        original = SuiteManifest.model_validate_json(
+            (store.directory(entry.snapshot_sha256) / "suite.json").read_bytes(), strict=True
+        )
+        if document.model_copy(update={"suite_id": original.suite_id}) != original:
+            raise ValueError("mode suite differs from its Scorer-installed task and weights")
+        if entry.provider_config_sha256 is None:
+            raise ValueError("mode provider configuration digest is missing")
+        provider_profile_set_for_sha256(entry.provider_config_sha256, entry.proposal_contract)
+        return path
 
     def resolve(self, relative_path: str, expected_sha256: str, *, maximum_bytes: int) -> Path:
         path = Path(relative_path)
@@ -199,7 +364,7 @@ class SuiteRegistry:
         return path
 
 
-def _read_private_json(path: Path, *, maximum_bytes: int = 64 * 1024) -> object:
+def _read_private_json(path: Path, *, maximum_bytes: int = MAX_REGISTRY_BYTES) -> object:
     candidate = path.expanduser()
     if candidate.is_symlink() or not candidate.is_file():
         raise ValueError("private registry must be a regular, non-symlink file")

@@ -1,8 +1,86 @@
 # İlk projeyi arayüzden deneme
 
+> **Güncel 0.46 field-lab:** konsol `127.0.0.1:8789`, API `127.0.0.1:8767`.
+> Aşağıdaki varsayılan 8788/8766 adımları eski kuruluma aittir. Güncel
+> başlatma ve ilk deney için [teslim kılavuzunu](122-delivery-guide.md) kullanın.
+
+## Güncel Eylemci önizlemesi — 2026-10-03
+
+**Yeni:** geçmiş geliştirme bulguları açık seçimle yeni deney bağlamına taşınabilir.
+[0.44.0 kullanım adımları ve tamamlanan örnek](119-prior-findings-context.md).
+Son kaynak kalite kapısı 3305 test / yedi komut exit 0; aşağıdaki eski
+kapı ve koşu sayıları kendi tarihsel kaynaklarına aittir.
+
+Çalışan ürün önizlemesi `feat/omr-stream-v1` çalışma ağacındadır;
+native çekirdek `55c5300` tabanındadır. Ortak AOS başlatıcısının yerel
+Scientist değişikliği [koordinasyon kaydındadır](06-aos-coordination.md). Normal kullanıcı terminalinde:
+
+```bash
+bash /home/cachyos/ai-scientist/data/runtime/omr-v1/ops/start-lab.sh --profile field-lab
+```
+
+Yerel arayüz **http://127.0.0.1:8789**, API **127.0.0.1:8767**.
+Eylemci ekranı canlı bağlantıyı, sekiz yeteneği ve gerçek koşu/rapor
+geçmişini gösterir. **Deney tasarla** veri, istatistik ve yöntem akışını
+açar. Host kapasitesi canlı ölçümden alınır. Öğretmen alanı yerel model,
+veri referansı, amaç ve bütçe içeren JSON taslağı indirir; eğitim veya
+skill/model otomatik terfisi henüz çalıştırılamaz. Bu profil CPU içindir;
+yerel model çağrıları kapalıdır.
+
+**Deney hafızası:** üstteki bağlantıdan
+`89dc9a5c-007d-480e-8594-6e14c035a0b9` koşusunu seçin. Üç baseline ve
+LSH/OPTICS/SOM için üç deney kaydı, kararları ve doğrulanmış referansları
+okunur. Üç yöntem bu sentetik karşılaştırmada DISCARD olmuştur; iyileşme
+iddiası yoktur. **Öğretmen veri hazırlığı JSON indir** yalnız referansları
+ve eğitim için dışlama nedenlerini kaydeder. Mevcut altı kayıt eğitime
+uygun değildir; CPU ölçümleri yerel LLM öğretmen örneği sayılmaz.
+
+**Öğretmen:** yerel öğretmeni, hedef yeteneği ve bütçeyi seçin. Seçili
+hafızanın referansları eğitim taslağına eklenir. Bu taslak ve veri hazırlık
+manifesti eğitim başlatmaz. Aynı araştırma koşusundaki son 30 geliştirme
+geri bildirimi sonraki öneride kullanılabilir; farklı koşular arasında
+otomatik yeniden kullanım, gerçek öğretmen işi ve adapter terfisi henüz
+tamamlanmamıştır. Durdurulan OMR kaydı ise puansız rapor referansıdır.
+
+Yalnız bu profilin durumunu kontrol etmek ve boşta kapatmak için:
+
+```bash
+bash /home/cachyos/ai-scientist/data/runtime/omr-v1/ops/start-lab.sh --profile field-lab --check
+bash /home/cachyos/ai-scientist/data/runtime/omr-v1/ops/start-lab.sh --profile field-lab --stop
+```
+
+`--stop` aktif iş varken kapanışı reddeder; önce arayüzden ilgili işi
+durdurup terminal raporu bekleyin. Otomatik başlangıç/enable varsayılan
+değildir; yeniden oturum açınca başlatma komutunu kullanın.
+
+Bu host'taki erişim köprüsünü açmak için:
+
+```bash
+systemctl --user start swapp-aserdargun-field-lab-20261003-v1.service
+```
+
+**aserdargun cihazından:** http://HOST:8788.
+Köprü, yerel 8789 arayüzüne gider; profile ait ayrı erişim kuralı korunur.
+Bu profilde 12 ölçümlü CPU grid completed; 64 satır işlenen OMR akışı
+stopped raporu verdi. Gerçek boşta kapat/aç sonrası aynı kayıtlar ve
+bağımsız raporlar korundu. Bu sonuç GPU/model eğitimi veya gerçek AOS
+birlikte çalışma kabulü değildir. İki rapor arayüzde doğru hash ile açıldı.
+Artifact yolu düzeltildi; LSH/SOM/OPTICS açıklamalarının her birinde 86 OMR
+noktası ve dört sensörün gerçek/NN referans/fark tablosu gerçek kayıttan
+görüntülendi. Kaynak kalite kapısı 7/7 adım exit 0 ile geçti
+(3244 passed, 7 skipped, 177 deselected); sonraki dar artifact düzeltmesi
+17 odaklı test, lint ve bu üç arayüz seçimiyle ayrıca doğrulandı.
+[Kısa CPU çalışma kanıtı](review-evidence/field-lab-first-user-workflow-20261003.json).
+[Deney hafızası ve öğretmen hazırlığı kanıtı](review-evidence/field-lab-experience-view-20261003.json):
+gerçek kayıt okuma, masaüstü/mobil görünüm ve referans indirme doğrulandı.
+Yeni hafıza yolu 37 odaklı kontrolden geçti; önceki tam kalite kapısı bu
+son değişikliğin tam kapısı olarak sunulmaz. Gerçek öğretmen eğitimi ve
+koşular arasında otomatik yeniden kullanım henüz tamamlanmadı.
+Aşağıdaki eski örnekler önceki kayıtlı kuruluma aittir.
+
 Yerel arayüz: **http://127.0.0.1:8788**. API ve Director ayrı, kaynakları
-sınırlanmış servislerde çalışır. Bu sayfadaki denemeler CPU kullanır ve
-yerel dil modeline çağrı yapmaz.
+sınırlanmış servislerde çalışır. Aşağıdaki grid/baseline örnekleri CPU
+kullanır; terminal raporlu yerel model araştırması ayrıca belirtilmiştir.
 
 ## Kendiniz başlatma
 
@@ -29,6 +107,15 @@ journalctl --user -u swapp-ai-scientist-console.service -n 50 --no-pager
 journalctl --user -u swapp-ai-scientist-api.service -n 50 --no-pager
 journalctl --user -u swapp-ai-scientist-director-drain.service -n 50 --no-pager
 ```
+
+## Tamamlanmış yerel model araştırmasını görün
+
+**Deneyler** ekranında `9564b284-d6f8-4297-9f62-1a58383536bd` koşusunu
+**İzle → Rapor** ile açın. Gerçek Qwen S1 önerisi,36 baseline ve4 aday
+ölçümü, ayrı holdout ve terminal rapor tamamlandı; model işçisi/GPU
+kapanışı doğrulandı. Aday **DISCARD** oldu; iyileşme yok, baseline korundu.
+Bu tek önerili sentetik koşu AOS birlikte çalışma veya public benchmark
+kabulü değildir. [Ölçümler ve kalan işler](105-first-completed-local-research.md).
 
 ## Tamamlanmış LSH/OPTICS/SOM projesi
 
@@ -178,3 +265,41 @@ OMR yüzdesi olasılık değildir. Bu kısa sentetik çalışma, saha doğruluğ
 uzun süreli yerel model araştırması veya AOS/GPU birlikte çalışma kabulü
 anlamına gelmez. Güncel ölçümler ve açık işler
 [kabul kaydında](m0-acceptance.md) tutulur.
+
+
+## Yerel model araştırmasını kendi başınıza hazırlama
+
+Mevcut baseline-proof DB/kimlik kurulumu ve önbellekte yerel model/tokenizer
+gereklidir; bu komut boş makine kurucusu değildir. Yeni özel runtime dizini seçin:
+
+```bash
+cd /home/cachyos/ai-scientist
+.venv/bin/python ops/install_synthetic_research.py \
+  --output-runtime /home/cachyos/ai-scientist/data/runtime/my-research \
+  --install-holdout --aos-gpu-unit swapp-aos-gpu-joint-acceptance.service
+```
+
+Dört sentetik development ve ayrı private holdout hazırlanır. Mevcut kimlikler
+korunur; pending konfigürasyon yazılır, model/deney/servis başlatılmaz.
+Aktivasyon sadece Scientist servisleri kapalıyken ve güncel owner-bound iş,
+Scorer/holdout ve GPU cleanup beklemiyorken kullanılabilir:
+
+```bash
+bash ops/start-lab.sh --activate-research
+```
+
+Aktif iş varsa komut anlaşılır hata verir; servisleri kendiliğinden durdurmaz.
+Şu an açık ana arayüzde model başlatma kapalıdır. Önce pending yapılandırmayı
+inceleyin; devam eden kullanıcı işini kesmeyin.
+
+Tamamlanan gerçek model LSH örneği: Deneyler →
+947fe42f-0bc5-4805-b3b5-716d8c7c5539 → Rapor.
+[Sonuçlar ve stop kabulündeki açık hata](106-mode-agent-and-inflight-stop.md).
+
+## Gerçek SKAB DEV deneyi — 2026-10-03
+
+Gerçek arayüzden SKAB DEV çalışması tamamlandı: 283,41 saniye, 9 baseline +
+3 OPTICS skoru; LSH guard reddi. OPTICS KEEP ham VUS-PR üstünlüğü değildir.
+OMR/sensör görünümü ve sahipli süreç kapanışı doğrulandı. AOS gerçek GPU,
+holdout, öğretmen eğitimi ve otomatik öğrenilmiş iyileşme açık kalır.
+[Adımlar ve ölçüm kanıtı](120-public-dev-cpu-study.md).

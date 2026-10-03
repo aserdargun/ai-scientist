@@ -1,14 +1,14 @@
 {
   "schema": "development-goal-usage.v1",
   "source": "Codex get_goal",
-  "captured_at": "2026-09-30T07:01:14.393528+00:00",
+  "captured_at": "2026-10-03T12:20:15.484052+00:00",
   "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
-  "goal_created_at_epoch": 1790237749,
-  "goal_updated_at_epoch": 1790751672,
-  "tokens_used": 89905084,
-  "active_seconds": 189955,
-  "active_hours": 52.765277777777776,
-  "calendar_hours": 142.7563888888889,
+  "goal_created_at_epoch": 1790835837,
+  "goal_updated_at_epoch": 1791029920,
+  "tokens_used": 30575177,
+  "active_seconds": 117610,
+  "active_hours": 32.669444444444444,
+  "calendar_hours": 53.911944444444444,
   "status": "active",
   "scope_note": "Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.",
   "development_models": [
@@ -16,15 +16,22 @@
       "model": "gpt-6-astra",
       "reasoning_effort": "high",
       "role": "Teknik orkestrasyon ve mimari inceleme",
-      "observed_sessions": 5,
-      "currently_observed_sessions": 5
+      "observed_sessions": 22,
+      "currently_observed_sessions": 22
+    },
+    {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "max",
+      "role": "Ana oturum orkestrasyonu ve kritik düzeltme/inceleme işleri",
+      "observed_sessions": 7,
+      "currently_observed_sessions": 7
     },
     {
       "model": "gpt-6-astra",
       "reasoning_effort": "xhigh",
       "role": "Ana Codex oturumu",
-      "observed_sessions": 1,
-      "currently_observed_sessions": 1
+      "observed_sessions": 3,
+      "currently_observed_sessions": 3
     },
     {
       "model": "gpt-6-luna",
@@ -44,23 +51,58 @@
       "model": "gpt-6.1-sol",
       "reasoning_effort": "high",
       "role": "Rol doğrulanmadı",
-      "observed_sessions": 3,
-      "currently_observed_sessions": 3
+      "observed_sessions": 18,
+      "currently_observed_sessions": 18
     },
     {
       "model": "gpt-6.1-sol",
       "reasoning_effort": "medium",
       "role": "Kalan teknik orkestrasyon, uygulama ve inceleme",
-      "observed_sessions": 12,
-      "currently_observed_sessions": 12
+      "observed_sessions": 41,
+      "currently_observed_sessions": 41
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "xhigh",
+      "role": "Rol doğrulanmadı",
+      "observed_sessions": 2,
+      "currently_observed_sessions": 2
     }
   ],
   "model_evidence": {
     "source": "session_meta ancestry; all associated turn_context model/effort",
-    "related_sessions": 29,
+    "related_sessions": 97,
     "complete": true,
     "limitations": [],
     "raw_prompts_or_secrets_exported": false
   },
-  "counter_decreases": []
+  "counter_decreases": [],
+  "recorded_goal_period_totals": {
+    "source": "latest observed counters per (goal_thread_id, goal_created_at_epoch)",
+    "observed_periods": 2,
+    "tokens_used": 132776995,
+    "active_seconds": 376220,
+    "active_hours": 104.50555555555556,
+    "periods": [
+      {
+        "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
+        "goal_created_at_epoch": 1790237749,
+        "goal_updated_at_epoch": 1790835614,
+        "tokens_used": 102201818,
+        "active_seconds": 258610
+      },
+      {
+        "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
+        "goal_created_at_epoch": 1790835837,
+        "goal_updated_at_epoch": 1791029920,
+        "tokens_used": 30575177,
+        "active_seconds": 117610
+      }
+    ],
+    "complete": false,
+    "limitations": [
+      "historical_observations_only",
+      "unobserved_periods_or_later_usage_unknown"
+    ]
+  }
 }

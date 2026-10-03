@@ -25,7 +25,12 @@ from lab.api.contracts import (
     StartRunRequest,
     StartRunResponse,
 )
-from lab.api.mode_experiments import ModeGridRequest, ModeSnapshotStore, SyntheticSnapshotRequest
+from lab.api.mode_experiments import (
+    ModeAgentRequest,
+    ModeGridRequest,
+    ModeSnapshotStore,
+    SyntheticSnapshotRequest,
+)
 from lab.api.mode_sources import DatabaseSnapshotRequest, SourceCatalog, authorize_snapshot
 from lab.api.registry import ApiPrincipal, SuiteRegistry, load_principals, load_suite_registry
 from lab.db.schema import reports, run_events, runs
@@ -34,6 +39,15 @@ from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MAX_RUN_REQUEST_BYTES = 32 * 1024
 _LOGGER = logging.getLogger(__name__)
+
+
+def _assert_cpu_admission(provider: str | None) -> None:
+    """Fence model admission in an explicitly CPU-only local profile."""
+    if os.environ.get("LAB_CPU_ONLY", "false") == "true" and provider not in {
+        "mode-grid",
+        "mode-stream",
+    }:
+        raise HTTPException(403, "this local profile permits CPU operating-mode work only")
 
 
 def _recover_holdout_after_stop(
@@ -61,7 +75,11 @@ def _recover_holdout_after_stop(
         def remaining_seconds() -> int:
             return max(0, min(30, int(monotonic_deadline - time.monotonic())))
 
-        if purpose == "baseline" and admitted_generation is None and execution_sha256 is None:
+        if (
+            purpose in {"baseline", "mode-stream"}
+            and admitted_generation is None
+            and execution_sha256 is None
+        ):
             remaining = remaining_seconds()
             if remaining < 1:
                 _LOGGER.warning(
@@ -71,6 +89,10 @@ def _recover_holdout_after_stop(
             from lab.scorer.supervisor import run_scorer_empty_baseline_stop_process
 
             finalized = run_scorer_empty_baseline_stop_process(run_id, remaining_seconds=remaining)
+        elif purpose == "mode-stream":
+            # The exiting owned Director/drain reconciles its exact P1 sandbox
+            # before stream stop publication. The API cannot attest physical drain.
+            return
         elif admitted_generation is not None and execution_sha256 is not None:
             if purpose != "baseline":
                 remaining = remaining_seconds()
@@ -159,7 +181,14 @@ class RequestBodyLimitMiddleware:
         limited = (
             scope.get("type") == "http"
             and scope.get("method") == "POST"
-            and scope.get("path") in {"/v1/runs", "/v1/baselines"}
+            and scope.get("path")
+            in {
+                "/v1/runs",
+                "/v1/baselines",
+                "/v1/mode-streams",
+                "/v1/mode-stream-inputs/synthetic",
+                "/v1/mode-stream-inputs/database",
+            }
         )
         if not limited:
             await self.app(scope, receive, send)
@@ -228,11 +257,21 @@ def _iso(value: datetime) -> str:
     return value.isoformat()
 
 
-def _request_purpose(request: object) -> Literal["baseline", "research", "mode-grid"] | None:
+def _request_purpose(
+    request: object,
+) -> Literal["baseline", "research", "mode-grid", "mode-stream"] | None:
     """Classify only an admitted request shape; legacy research has no purpose field."""
     if not isinstance(request, dict):
         return None
     purpose = request.get("purpose", "research")
+    if purpose == "mode-stream":
+        from lab.director.mode_stream import plan_from_request
+
+        try:
+            plan_from_request(request)
+        except (TypeError, ValueError):
+            return None
+        return "mode-stream"
     if not isinstance(purpose, str) or purpose not in {"baseline", "research"}:
         return None
     try:
@@ -325,6 +364,14 @@ def create_app(
                 return principal
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
 
+    from lab.api.aos_capability import install_aos_capability_route
+
+    install_aos_capability_route(app, principal_from_authorization)
+
+    from lab.api.mode_stream import install_mode_stream_routes
+
+    install_mode_stream_routes(app, principal_from_authorization, PROJECT_ROOT)
+
     @app.get("/health")
     def health() -> dict[str, str]:
         return {"status": "ok", "service": "lab-api"}
@@ -361,6 +408,27 @@ def create_app(
                 registry.verify_entry(entry)
             except (KeyError, ValueError):
                 raise HTTPException(status_code=422, detail="suite is not available") from None
+            if entry.public_dev_study is not None:
+                policy = entry.public_dev_study
+                if policy.owner_id != principal.owner_id or policy.origin != principal.origin:
+                    raise HTTPException(
+                        status_code=403, detail="public development source unavailable"
+                    )
+                try:
+                    policy.verify_budget(
+                        request.budget.experiments,
+                        request.budget.wall_seconds,
+                        request.budget.model_tokens,
+                    )
+                    authorize_snapshot(mode_store(), policy.snapshot_sha256, principal.owner_id)
+                except (ValueError, OSError):
+                    raise HTTPException(
+                        status_code=422, detail="public development policy denied"
+                    ) from None
+                request_json.update(
+                    snapshot_sha256=policy.snapshot_sha256,
+                    public_dev_study=policy.model_dump(mode="json"),
+                )
             if "research" not in entry.allowed_purposes:
                 raise HTTPException(status_code=422, detail="suite does not allow research runs")
             if (
@@ -386,12 +454,141 @@ def create_app(
                     **(
                         {"study_kind": "single_snapshot_study"}
                         if entry.provider == "mode-grid"
-                        else {}
+                        else (
+                            {
+                                "study_kind": "single_snapshot_study",
+                                "proposal_contract": entry.proposal_contract,
+                                "snapshot_sha256": entry.snapshot_sha256,
+                            }
+                            if entry.proposal_contract == "operating-mode-config.v1"
+                            else {}
+                        )
                     ),
                 }
             )
+        _assert_cpu_admission(entry.provider if entry is not None else None)
         if entry is None:
             request_json.update({"proposal_limit": request.budget.experiments})
+        if request.field_intent is not None:
+            from lab.director.field_context import FieldContext
+            from lab.director.parameter_grid import ParameterGridProvider
+            from lab.director.suite_manifest import SuiteManifest
+
+            try:
+                if entry is None or registry is None or request.track != "mode":
+                    raise ValueError("field intent requires a registered mode source")
+                suite_path, scenario_path = registry.verify_entry(entry)
+                if entry.provider == "mode-grid" and scenario_path is not None:
+                    if entry.provider_config_sha256 is None:
+                        raise ValueError("field intent grid configuration is missing")
+                    snapshot_sha = ParameterGridProvider.load(
+                        scenario_path,
+                        configuration_sha256=entry.provider_config_sha256,
+                        registry_entry_sha256=registry.entry_sha256(entry),
+                    ).snapshot_sha256
+                elif (
+                    entry.provider == "local-qwen"
+                    and entry.proposal_contract == "operating-mode-config.v1"
+                    and entry.snapshot_sha256 is not None
+                ):
+                    snapshot_sha = entry.snapshot_sha256
+                else:
+                    raise ValueError("field intent has no verified mode snapshot")
+                store = mode_store()
+                authorize_snapshot(store, snapshot_sha, principal.owner_id)
+                if store.installed(snapshot_sha) is None:
+                    raise ValueError("field intent source is not installed")
+                # Both branches retain the full original task; only the registered suite ID differs.
+                original = SuiteManifest.model_validate_json(
+                    (store.directory(snapshot_sha) / "suite.json").read_bytes(), strict=True
+                )
+                registered = SuiteManifest.model_validate_json(suite_path.read_bytes(), strict=True)
+                if registered.model_copy(update={"suite_id": original.suite_id}) != original:
+                    raise ValueError("field intent source differs from its installed task")
+                context = FieldContext(
+                    schema="field-study-context.v1",
+                    intent=request.field_intent,
+                    snapshot_sha256=snapshot_sha,
+                )
+                request_json.update(
+                    field_context=context.model_dump(mode="json", by_alias=True),
+                    field_context_sha256=context.sha256,
+                )
+            except (ValueError, OSError):
+                raise HTTPException(422, "field intent source unavailable") from None
+        if request.prior_experience is not None:
+            from sqlalchemy.exc import SQLAlchemyError
+
+            from lab.api.experience import (
+                ExperienceLimitError,
+                ExperienceReader,
+                ExperienceTimeoutError,
+                freeze_prior_findings,
+                read_run_request,
+            )
+            from lab.director.history_context import load_frozen_prior_findings, snapshot_bytes
+
+            # Retry the immutable admitted snapshot without rereading old history blobs.
+            with app.state.director_engine.connect() as connection:
+                previous = (
+                    connection.execute(
+                        select(runs).where(
+                            runs.c.origin == principal.origin,
+                            runs.c.owner_id == principal.owner_id,
+                            runs.c.idempotency_key == request.idempotency_key,
+                        )
+                    )
+                    .mappings()
+                    .first()
+                )
+            if previous is not None:
+                stored = previous["request_json"]
+                public = {
+                    k: v
+                    for k, v in stored.items()
+                    if k not in {"prior_findings", "prior_findings_sha256"}
+                }
+                canonical = json.dumps(
+                    {k: v for k, v in stored.items() if k != "idempotency_key"},
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    ensure_ascii=False,
+                    allow_nan=False,
+                ).encode()
+                if public != request_json:
+                    raise HTTPException(409, "idempotency key was used with a different request")
+                try:
+                    if hashlib.sha256(canonical).hexdigest() != previous["payload_sha256"]:
+                        raise ValueError("stored request hash differs")
+                    load_frozen_prior_findings(stored)
+                except ValueError:
+                    raise HTTPException(
+                        500, "stored history request integrity check failed"
+                    ) from None
+                response.status_code = 200
+                return StartRunResponse(
+                    run_id=previous["run_id"], state=previous["state"], reused=True
+                )
+            selection = request.prior_experience
+            reader = ExperienceReader(
+                app.state.director_engine,
+                PROJECT_ROOT / "data/runtime/director-artifacts" / selection.source_run_id,
+            )
+            try:
+                source_report = verified_report(
+                    UUID(selection.source_run_id), authorization, reader
+                )
+                source_request = read_run_request(reader, UUID(selection.source_run_id))
+                snapshot = freeze_prior_findings(reader, selection, source_report, source_request)
+                raw = snapshot_bytes(snapshot)
+            except ExperienceLimitError:
+                raise HTTPException(413, "selected history exceeds read limits") from None
+            except (ExperienceTimeoutError, SQLAlchemyError):
+                raise HTTPException(503, "selected history read unavailable") from None
+            except (ValueError, OSError, KeyError):
+                raise HTTPException(422, "selected history evidence is unavailable") from None
+            request_json["prior_findings"] = snapshot.model_dump(mode="json", by_alias=True)
+            request_json["prior_findings_sha256"] = hashlib.sha256(raw).hexdigest()
         payload_json = json.dumps(
             {key: value for key, value in request_json.items() if key != "idempotency_key"},
             sort_keys=True,
@@ -536,6 +733,10 @@ def create_app(
         try:
             store = mode_store()
             authorize_snapshot(store, digest, principal.owner_id)
+            if store.public_snapshot(digest) is not None:
+                raise ValueError(
+                    "public snapshots require separate operator registration verification"
+                )
             store.load(digest)
             result = run_mode_snapshot_install(digest)
             if result["state"] == "capacity_busy":
@@ -562,8 +763,29 @@ def create_app(
         try:
             principal = mode_principal(authorization)
             authorize_snapshot(mode_store(), request.snapshot_sha256, principal.owner_id)
+            store = mode_store()
+            public = store.public_snapshot(request.snapshot_sha256)
+            policy = None
+            if public is not None:
+                if app.state.suite_registry is None:
+                    raise ValueError("public development registry unavailable")
+                matches = [
+                    entry.public_dev_study
+                    for entry in app.state.suite_registry.entries.values()
+                    if entry.public_dev_study is not None
+                    and entry.public_dev_study.snapshot_sha256 == request.snapshot_sha256
+                    and entry.public_dev_study.owner_id == principal.owner_id
+                    and entry.public_dev_study.origin == principal.origin
+                ]
+                if not matches or any(value != matches[0] for value in matches):
+                    raise ValueError("public development policy unavailable")
+                policy = matches[0]
             registry, entry = register_grid(
-                mode_store(), request, Path(configured), PROJECT_ROOT / "data/runtime"
+                store,
+                request,
+                Path(configured),
+                PROJECT_ROOT / "data/runtime",
+                public_dev_study=policy,
             )
         except (ValueError, OSError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from None
@@ -571,6 +793,8 @@ def create_app(
         return start_run(
             StartRunRequest(
                 idempotency_key=request.idempotency_key,
+                prior_experience=request.prior_experience,
+                field_intent=request.field_intent,
                 track=entry.track,
                 suite=entry.suite_id,
                 program_version=entry.program_version,
@@ -578,6 +802,48 @@ def create_app(
                     experiments=entry.proposal_limit,
                     wall_seconds=request.wall_seconds,
                     model_tokens=0,
+                ),
+            ),
+            response,
+            authorization,
+        )
+
+    @app.post("/v1/mode-agent-experiments", response_model=StartRunResponse, status_code=202)
+    def start_mode_agent_experiment(
+        request: ModeAgentRequest,
+        response: Response,
+        authorization: Annotated[str | None, Header()] = None,
+    ) -> StartRunResponse:
+        """Admit a bounded local Qwen study into the common Director queue."""
+        _assert_cpu_admission("local-qwen")
+        from lab.api.contracts import RunBudget
+        from lab.api.mode_experiments import register_agent
+
+        principal = mode_principal(authorization)
+        configured = os.environ.get("LAB_SUITE_REGISTRY_FILE")
+        if not configured:
+            raise HTTPException(status_code=503, detail="persistent suite registry unavailable")
+        try:
+            store = mode_store()
+            authorize_snapshot(store, request.snapshot_sha256, principal.owner_id)
+            registry, entry = register_agent(
+                store, request, Path(configured), PROJECT_ROOT / "data/runtime"
+            )
+        except (ValueError, OSError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from None
+        app.state.suite_registry = registry
+        return start_run(
+            StartRunRequest(
+                idempotency_key=request.idempotency_key,
+                prior_experience=request.prior_experience,
+                field_intent=request.field_intent,
+                track=entry.track,
+                suite=entry.suite_id,
+                program_version=entry.program_version,
+                budget=RunBudget(
+                    experiments=request.experiments,
+                    wall_seconds=request.wall_seconds,
+                    model_tokens=request.model_tokens,
                 ),
             ),
             response,
@@ -818,12 +1084,9 @@ def create_app(
             )
         return _status(row)
 
-    @app.get("/v1/runs/{run_id}/report")
-    def get_report(
-        run_id: UUID, authorization: Annotated[str | None, Header()] = None
-    ) -> dict[str, Any]:
+    def verified_report(run_id: UUID, authorization: str | None, engine: Any) -> dict[str, Any]:
         principal = principal_from_authorization(authorization)
-        with app.state.director_engine.connect() as connection:
+        with engine.connect() as connection:
             row = (
                 connection.execute(
                     select(reports, runs.c.state.label("run_state"))
@@ -862,6 +1125,41 @@ def create_app(
             "verified_at": _iso(row["verified_at"]),
         }
 
+    @app.get("/v1/runs/{run_id}/report")
+    def get_report(
+        run_id: UUID, authorization: Annotated[str | None, Header()] = None
+    ) -> dict[str, Any]:
+        return verified_report(run_id, authorization, app.state.director_engine)
+
+    @app.get("/v1/runs/{run_id}/experience")
+    def get_experience(
+        run_id: UUID, authorization: Annotated[str | None, Header()] = None
+    ) -> dict[str, Any]:
+        from sqlalchemy.exc import SQLAlchemyError
+
+        from lab.api.experience import (
+            ExperienceLimitError,
+            ExperienceReader,
+            ExperienceTimeoutError,
+            build_experience,
+            read_run_request,
+        )
+
+        reader = ExperienceReader(
+            app.state.director_engine,
+            PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id),
+        )
+        try:
+            verified = verified_report(run_id, authorization, reader)
+            source_request = read_run_request(reader, run_id)
+            return build_experience(reader, run_id, verified, source_request)
+        except ExperienceLimitError:
+            raise HTTPException(413, "experience evidence exceeds read limits") from None
+        except (ExperienceTimeoutError, SQLAlchemyError):
+            raise HTTPException(503, "experience evidence read unavailable") from None
+        except (ValueError, OSError):
+            raise HTTPException(500, "experience integrity check failed") from None
+
     @app.get("/v1/runs/{run_id}/mode-diagnostics/{digest}")
     def get_mode_diagnostics(
         run_id: UUID, digest: str, authorization: Annotated[str | None, Header()] = None
@@ -882,7 +1180,10 @@ def create_app(
         from lab.scorer.service import parse_candidate_score
 
         try:
-            artifact = parse_candidate_score(read_candidate_artifact(digest))
+            artifact_root = PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id)
+            artifact = parse_candidate_score(
+                read_candidate_artifact(digest, artifact_root=artifact_root)
+            )
             if artifact.mode_diagnostics is None:
                 raise ValueError("missing diagnostics")
             row = matching[0]
