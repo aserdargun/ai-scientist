@@ -35,19 +35,19 @@ Observed counters have incomplete coverage. Actual billing and subscription cost
 | 2026-10-02 | openai | gpt-6.1-sol | medium | 100209021 | 98339072 | 332008 | 100541029 |
 | 2026-10-02 | openai | gpt-6.1-sol | xhigh | 15514541 | 14852992 | 102451 | 15616992 |
 | 2026-10-02 | unknown | unknown | unknown | 47465 | 7808 | 148 | 47613 |
-| 2026-10-03 | openai | gpt-6-astra | high | 250380127 | 244820608 | 740006 | 251120133 |
+| 2026-10-03 | openai | gpt-6-astra | high | 254399851 | 248797056 | 750383 | 255150234 |
 | 2026-10-03 | openai | gpt-6-astra | max | 55353459 | 53403264 | 255309 | 55608768 |
-| 2026-10-03 | openai | gpt-6.1-sol | high | 188548118 | 183940096 | 784315 | 189332433 |
+| 2026-10-03 | openai | gpt-6.1-sol | high | 190620805 | 185950208 | 792047 | 191412852 |
 | 2026-10-03 | openai | gpt-6.1-sol | medium | 2486090 | 2351360 | 10816 | 2496906 |
 | 2026-10-03 | openai | gpt-6.1-sol | xhigh | 22906680 | 22138752 | 111830 | 23018510 |
 
-Development observed totals: input_tokens=5543701924, cached_input_tokens=5421940992, output_tokens=20502198, total_tokens=5564204122.
+Development observed totals: input_tokens=5549794335, cached_input_tokens=5427927552, output_tokens=20520307, total_tokens=5570314642.
 Runtime reviewed runs=3; model calls=6; local model input_tokens=5478, output_tokens=2800, total_tokens=8278.
 Recorded goal observations: observed_periods=2, tokens_used=139714443, active_seconds=403068.
 
 Cached input and reasoning output are subsets, not extra tokens. Ambiguous intervals are excluded; these counters are not bills.
 
-Counterfactual Standard short-context priced-subset equivalent: 2983.31109548 USD. Historical rates, service tier and long-context classification are unverified.
+Counterfactual Standard short-context priced-subset equivalent: 2988.64263468 USD. Historical rates, service tier and long-context classification are unverified.
 
 Product runtime includes only explicitly reviewed local/CPU receipts. Electricity and hardware costs were not measured.
 
