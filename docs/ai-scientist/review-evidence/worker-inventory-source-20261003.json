@@ -1,0 +1,94 @@
+{
+  "schema": "scientist.worker-inventory-source-review.v1",
+  "observed_at": "2026-10-03T18:03:54.651264+00:00",
+  "scientist_base_commit": "d972e94b92575d3298250cdb09f1b244f2f456bd",
+  "aos_source_observation": {
+    "observed_at": "2026-10-03T17:35:50.559889+00:00",
+    "scientist_candidate_head": "d972e94b92575d3298250cdb09f1b244f2f456bd",
+    "aos_publication_head": "a1a0c2e32f7aeea4c03afdfd7cd519476b4ee7f3",
+    "aos_root_head": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+    "aos_tracked_diff_sha256": "1c1e0e7376b2eb020a7b31eef1b95c35b4037c02713c4fe7a364bdd6a9bd0ded",
+    "aos_selected_source_sha256": {
+      "src/aos/native_maintenance.py": "ed139fa89a9484d424f5d030eb45f07c74865ca70d1e8b0a71f3e05026db6044",
+      "src/aos/native_exclusion.py": "4c6ddd50f4054084a6f24c03948d4c7fdef5079da83741291375b11e5b9111b8",
+      "src/aos/shared_desktop_host.py": "3a62e9945ab99802f266c9a2b0855856c614095009aa2110148507bbcc4e0b40"
+    },
+    "scope": "point-in-time source observation; tracked diff excludes untracked files; no deployed agreement",
+    "peer_message_delivered": false,
+    "native_interpreter_coexistence_supported": false,
+    "gpu_admission": false,
+    "aos_modified": false
+  },
+  "source_freeze_sha256": "2f4a7335184f882f1dca0b5ef161d36cf57d9c267a6afa7a16b8c575a8fc4d65",
+  "source_files": {
+    "lab/llm/worker_inventory.py": "d734a7b01ef12d2baee5315849d07134f00e7c69b606ab943dd23d397aa218cd",
+    "tests/test_worker_inventory.py": "ae3ca57f5d648491bb0ef34a3004d671c208420883458756dedca02106ddb4df",
+    "ops/connect-lab.sh": "d856261f3c7378cbfc698115d544c71e9a7bd3befda0697678bfb67efc41c405",
+    "ops/connect-lab.ps1": "1dfe01c75161d71dedcc3c21530bc12a5102590c8fcfacaa82b662de75d29902",
+    "tests/test_connect_lab.py": "b1f35d3c6de2ef3e7eb967626f17cdb97986829b3860198b2c18b8babe1d7041"
+  },
+  "focused_inventory_tests": 17,
+  "focused_connection_tests": 6,
+  "full_gate_status": "passed",
+  "host_diagnostic": {
+    "duration_seconds": 0.16634511599841062,
+    "database_file_unchanged": true,
+    "source_changed": false,
+    "workers": 31,
+    "statuses": {
+      "unavailable": 31
+    },
+    "blockers": [
+      "aos_memory_task_configuration_provenance_unknown",
+      "lab_profile_provider_deployment_provenance_unknown",
+      "original_namespace_provenance_unknown",
+      "process_observation_unavailable",
+      "worker_physical_state_unknown"
+    ],
+    "authority": false
+  },
+  "scope": {
+    "internal_diagnostic_only": true,
+    "peer_ack": false,
+    "runtime_inventory_deployed": false,
+    "new_model_or_gpu_started": false,
+    "gpu_release_verified": false,
+    "model_settings": null,
+    "vram_peak_mib": null,
+    "gpu_handover_or_run_latency": null,
+    "reason_unmeasured": "No model, GPU admission, transfer or release was executed."
+  },
+  "limitations": [
+    "Process observations were incomplete; historical records cannot be treated as confirmed absence.",
+    "Original namespace and selected profile/resource provenance are unavailable.",
+    "No peer-approved wire contract or native interpreter exception.",
+    "Mac SSH/browser and Windows PowerShell runtime acceptance not performed."
+  ],
+  "interrupted_preliminary_gate": {
+    "reason": "Final Bandit explanation annotation corrected after initial source freeze. Only owned quality-gate service stopped, then full gate restarted.",
+    "runtime_seconds": 29.35,
+    "completed_quality_gate": false
+  },
+  "full_gate": {
+    "overall_exit_code": 0,
+    "command_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "passed": 3644,
+    "skipped": 49,
+    "deselected": 177,
+    "warnings": 603,
+    "pytest_seconds": 252.43,
+    "service_runtime_seconds": 328.276,
+    "cpu_seconds": 137.839,
+    "memory_peak_display": "887.9M",
+    "swap_bytes": 0,
+    "frozen_source_unchanged": true
+  }
+}

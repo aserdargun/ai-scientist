@@ -12,7 +12,22 @@ import pytest
 import test_reviewed_publication as shared
 from test_reviewed_publication import run, seal, write_private
 
-setup = shared.setup
+base_setup = shared.setup
+MARKED_README = (
+    b"initial reviewed public source\n"
+    b"<!-- api-cost-summary:start -->\nold summary\n<!-- api-cost-summary:end -->\n"
+)
+
+
+@pytest.fixture
+def setup(base_setup):
+    repo = base_setup[2]
+    (repo / "README.md").write_bytes(MARKED_README)
+    run(repo, "add", "README.md")
+    run(repo, "commit", "-m", "Review cost block boundary")
+    run(repo, "push", "origin", "main")
+    return base_setup
+
 
 SCRIPTS = Path(__file__).parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
@@ -121,17 +136,19 @@ def test_raw_or_malformed_data_rejected(tmp_path, mutation):
         hourly.project(result)
 
 
-def test_only_two_docs_published_then_stable_noop(setup, tmp_path):
+def test_three_outputs_published_together_then_stable_noop(setup, tmp_path):
     initial = (setup[2] / "README.md").read_bytes()
     config_path, _, _ = configure(setup, tmp_path, report(tmp_path))
     assert hourly.hourly(config_path, execute=False, test_local_remote=True)["status"] == "ready"
     first = hourly.hourly(config_path, execute=True, test_local_remote=True)
     assert first["status"] == "published"
-    assert (setup[2] / "README.md").read_bytes() == initial
+    assert (setup[2] / "README.md").read_bytes() == hourly.pub.update_readme_cost(
+        initial, json.loads((setup[2] / hourly.OUTPUTS[0]).read_bytes())
+    )
     assert set(run(setup[2], "ls-files").splitlines()) == {"README.md", *hourly.OUTPUTS}
     second = hourly.hourly(config_path, execute=True, test_local_remote=True)
     assert second["status"] == "unchanged"
-    assert run(setup[2], "rev-list", "--count", "HEAD") == "2"
+    assert run(setup[2], "rev-list", "--count", "HEAD") == "3"
 
 
 def test_collector_failure_keeps_last_good(setup, tmp_path):
@@ -169,11 +186,16 @@ def test_timestamp_only_changes_have_same_meaning(tmp_path):
 
 def test_root_reviewed_snapshot_precedes_generated_docs(setup, tmp_path):
     path, _, _ = configure(setup, tmp_path, report(tmp_path))
-    seal(setup, {"README.md": b"root reviewed release source\n"})
+    updated = MARKED_README.replace(
+        b"initial reviewed public source", b"root reviewed release source"
+    )
+    seal(setup, {"README.md": updated})
     result = hourly.hourly(path, execute=True, test_local_remote=True)
     assert result["status"] == "published"
-    assert (setup[2] / "README.md").read_bytes() == b"root reviewed release source\n"
-    assert run(setup[2], "rev-list", "--count", "HEAD") == "3"
+    assert (setup[2] / "README.md").read_bytes() == hourly.pub.update_readme_cost(
+        updated, json.loads((setup[2] / hourly.OUTPUTS[0]).read_bytes())
+    )
+    assert run(setup[2], "rev-list", "--count", "HEAD") == "4"
 
 
 def test_generated_overlay_cannot_change_other_source(setup, tmp_path):
@@ -186,17 +208,26 @@ def test_generated_overlay_cannot_change_other_source(setup, tmp_path):
     root = queue / "ready" / identity
     manifest = json.loads((root / "manifest.json").read_bytes())
     review = json.loads((root / "review.json").read_bytes())
-    raw = b"unreviewed code modification\n"
+    raw = (
+        (root / "files/README.md")
+        .read_bytes()
+        .replace(b"initial reviewed public source", b"unreviewed code modification")
+    )
     (root / "files/README.md").write_bytes(raw)
     manifest["files"]["README.md"]["sha256"] = hourly.pub.digest(raw)
     manifest["files"]["README.md"]["size"] = len(raw)
     review["file_map_sha256"] = hourly.pub.digest(hourly.pub.canonical(manifest["files"]))
+    review["output_file_map_sha256"] = hourly.pub.digest(
+        hourly.pub.canonical({name: manifest["files"][name] for name in hourly.OUTPUTS})
+    )
     manifest["review_receipt_sha256"] = hourly.pub.digest(hourly.pub.canonical(review))
     write_private(root / "manifest.json", manifest)
     write_private(root / "review.json", review)
     new_id = hourly.pub.digest(hourly.pub.canonical(manifest))
     root.rename(queue / "ready" / new_id)
-    with pytest.raises(hourly.pub.PublicationError, match="generated-overlay-path-violation"):
+    with pytest.raises(
+        hourly.pub.PublicationError, match="generated-readme-outside-deterministic-block"
+    ):
         hourly.hourly(config_path, execute=True, test_local_remote=True)
     assert run(setup[2], "status", "--porcelain") == ""
 
@@ -261,3 +292,26 @@ def test_collector_source_changes_during_collection_rejected(setup, tmp_path):
     with pytest.raises(hourly.pub.PublicationError, match="pipeline-changed-during-collection"):
         hourly.hourly(path, execute=True, test_local_remote=True)
     assert run(setup[2], "status", "--porcelain") == ""
+
+
+@pytest.mark.parametrize("change", ["missing", "duplicate", "reversed"])
+def test_hourly_malformed_readme_keeps_public_tree(setup, tmp_path, change):
+    repo = setup[2]
+    raw = MARKED_README
+    if change == "missing":
+        raw = raw.replace(hourly.pub.COST_END, b"")
+    elif change == "duplicate":
+        raw += hourly.pub.COST_START + b"\n"
+    else:
+        raw = hourly.pub.COST_END + b"\n" + hourly.pub.COST_START + b"\n"
+    (repo / "README.md").write_bytes(raw)
+    run(repo, "add", "README.md")
+    run(repo, "commit", "-m", "Malformed fixture markers")
+    run(repo, "push", "origin", "main")
+    before = run(repo, "rev-parse", "HEAD")
+    path, _, _ = configure(setup, tmp_path, report(tmp_path))
+    with pytest.raises(hourly.pub.PublicationError, match="readme-cost-markers"):
+        hourly.hourly(path, execute=True, test_local_remote=True)
+    assert run(repo, "rev-parse", "HEAD") == before
+    assert run(repo, "status", "--porcelain") == ""
+    assert not list((Path(setup[1]["queue"]) / "ready").iterdir())

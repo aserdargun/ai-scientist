@@ -501,6 +501,7 @@ class UnitManager(Protocol):
         diagnostic_log: Path,
         *,
         model_max_len: int,
+        before_launch: Callable[[], None] | None = None,
     ) -> None: ...
 
     def inspect(self, unit: str) -> UnitSnapshot: ...
@@ -744,6 +745,7 @@ class SystemdUnitManager:
         diagnostic_log: Path,
         *,
         model_max_len: int,
+        before_launch: Callable[[], None] | None = None,
     ) -> None:
         """Start one offline, network-namespaced, UDS-only vLLM instance."""
         if re.fullmatch(r"swapp-(?:aos|lab)-gpu-turn-[0-9a-f]{32}\.service", unit) is None:
@@ -888,6 +890,8 @@ class SystemdUnitManager:
             "qwen3_coder",
             "--enable-auto-tool-choice",
         ]
+        if before_launch is not None:
+            before_launch()
         result = SystemdUnitManager._run(command, timeout=25)
         if result.returncode != 0:
             raise ModelRuntimeError("bounded vLLM systemd launch failed")
@@ -1570,6 +1574,88 @@ class OwnedVllmRuntime:
             if cursor.rowcount != 1:
                 raise LeaseConflict("GPU process identity changed while persisting drain evidence")
 
+    def _refresh_launch_allocation(self, lease: GpuLease) -> None:
+        # Authenticate the caller outside the DB transaction: systemd lookup is bounded.
+        if (
+            lease.owner != "lab"
+            or lease.phase != "activating"
+            or self.scheduler.heartbeat(lease) is None
+        ):
+            raise LeaseConflict("model launch no longer owns a live activation allocation")
+
+    @staticmethod
+    def _assert_launch_allocation(
+        connection: sqlite3.Connection, lease: GpuLease, timestamp: float
+    ) -> None:
+        """Check the original lease and ticket under the caller's write transaction."""
+        row = connection.execute(
+            "SELECT s.*,r.state AS ticket_state,r.owner_pid AS ticket_pid,"
+            "r.owner_start_ticks AS ticket_ticks,r.owner_boot_id AS ticket_boot,"
+            "r.owner_unit AS ticket_unit,r.owner_invocation_id AS ticket_invocation "
+            "FROM gpu_turn_state s JOIN gpu_turn_requests r "
+            "ON r.owner=s.active_owner AND r.request_id=s.active_request_id WHERE s.singleton=1"
+        ).fetchone()
+        principal = (
+            lease.owner_identity.pid,
+            lease.owner_identity.start_ticks,
+            lease.owner_identity.boot_id,
+            lease.owner_unit,
+            lease.owner_invocation_id,
+        )
+        if (
+            row is None
+            or (row["active_owner"], row["active_request_id"], row["active_token"])
+            != (lease.owner, lease.request_id, lease.fencing_token)
+            or row["phase"] != "activating"
+            or row["ticket_state"] != "active"
+            or tuple(
+                row[key]
+                for key in (
+                    "owner_pid",
+                    "owner_start_ticks",
+                    "owner_boot_id",
+                    "owner_unit",
+                    "owner_invocation_id",
+                )
+            )
+            != principal
+            or tuple(
+                row[key]
+                for key in (
+                    "ticket_pid",
+                    "ticket_ticks",
+                    "ticket_boot",
+                    "ticket_unit",
+                    "ticket_invocation",
+                )
+            )
+            != principal
+            or row["activation_deadline"] != lease.activation_deadline
+            or row["total_deadline"] != lease.total_deadline
+            or not all(
+                timestamp < row[key]
+                for key in ("activation_deadline", "heartbeat_deadline", "total_deadline")
+            )
+        ):
+            raise LeaseConflict("model launch allocation or principal was expired or replaced")
+
+    def _before_model_launch(self, lease: GpuLease, row: sqlite3.Row) -> None:
+        """Recheck after bounded launch preflight, immediately before systemd-run."""
+        self._check_cancellation()
+        self._refresh_launch_allocation(lease)
+        with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            self._assert_launch_allocation(connection, lease, self._clock())
+            intent = connection.execute(
+                "SELECT 1 FROM gpu_runtime_bindings "
+                "WHERE owner=? AND request_id=? AND fencing_token=? AND unit=? AND nonce=? "
+                "AND launch_state='uncertain'",
+                (lease.owner, lease.request_id, lease.fencing_token, row["unit"], row["nonce"]),
+            ).fetchone()
+            if intent is None:
+                raise LeaseConflict("model launch has no current uncertain intent")
+            connection.commit()
+
     def _prepare_unit(self, lease: GpuLease) -> sqlite3.Row:
         nonce = secrets.token_hex(32)
         suffix = uuid4().hex
@@ -1582,9 +1668,11 @@ class OwnedVllmRuntime:
             raise ModelRuntimeError("user runtime directory is not private")
         uds_directory = runtime_base / f"swapp-gpu-{suffix}"
         description = f"SWAPP GPU model turn {nonce}"
-        created = self._clock()
+        self._refresh_launch_allocation(lease)
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
+            created = self._clock()
+            self._assert_launch_allocation(connection, lease, created)
             connection.execute(
                 "INSERT INTO gpu_runtime_bindings(owner,request_id,fencing_token,unit,nonce,"
                 "uds_directory,model_sha256,expected_description,created_boottime,"
@@ -1664,6 +1752,12 @@ class OwnedVllmRuntime:
             return {"log_status": "unavailable"}
 
     def _bind_unit(self, lease: GpuLease, row: sqlite3.Row, snapshot: UnitSnapshot) -> None:
+        if lease.owner != "lab" or (row["owner"], row["request_id"], row["fencing_token"]) != (
+            lease.owner,
+            lease.request_id,
+            lease.fencing_token,
+        ):
+            raise LeaseConflict("model unit intent differs from its lease")
         unit = row["unit"]
         if (
             snapshot.load_state != "loaded"
@@ -1684,23 +1778,45 @@ class OwnedVllmRuntime:
         boot_id = Path("/proc/sys/kernel/random/boot_id").read_text(encoding="ascii").strip()
         with closing(self._connect()) as connection:
             connection.execute("BEGIN IMMEDIATE")
+            # Recovery may capture an unbound quarantined worker before drain;
+            # an established generation remains immutable under the same fence.
             cursor = connection.execute(
-                "UPDATE gpu_runtime_bindings SET launch_state='created',launch_finished_boottime=?,"
-                "invocation_id=?,main_pid=?,main_start_ticks=?,boot_id=?,control_group=? "
-                "WHERE owner=? AND request_id=? AND fencing_token=? AND unit=? "
-                "AND launch_state IN ('prepared','created','uncertain')",
-                (
-                    self._clock(),
-                    snapshot.invocation_id,
-                    snapshot.main_pid,
-                    identity_ticks,
-                    boot_id,
-                    snapshot.control_group,
-                    lease.owner,
-                    lease.request_id,
-                    lease.fencing_token,
-                    unit,
-                ),
+                "UPDATE gpu_runtime_bindings SET launch_state='created',launch_finished_boottime="
+                "CASE WHEN invocation_id IS NULL THEN :finished ELSE launch_finished_boottime END,"
+                "invocation_id=:invocation,main_pid=:pid,main_start_ticks=:ticks,"
+                "boot_id=:boot,control_group=:cgroup "
+                "WHERE owner=:owner AND request_id=:request AND fencing_token=:token "
+                "AND unit=:unit AND nonce=:nonce AND expected_description=:description "
+                "AND launch_state IN ('prepared','created','uncertain') "
+                "AND ((invocation_id IS NULL AND main_pid IS NULL AND main_start_ticks IS NULL "
+                "AND boot_id IS NULL AND control_group IS NULL) OR (invocation_id=:invocation "
+                "AND main_pid=:pid AND main_start_ticks=:ticks AND boot_id=:boot "
+                "AND control_group=:cgroup)) "
+                "AND EXISTS (SELECT 1 FROM gpu_turn_state WHERE singleton=1 "
+                "AND active_owner=:owner AND active_request_id=:request AND active_token=:token "
+                "AND owner_pid=:owner_pid AND owner_start_ticks=:owner_ticks "
+                "AND owner_boot_id=:owner_boot AND owner_unit=:owner_unit "
+                "AND owner_invocation_id=:owner_invocation "
+                "AND phase IN ('activating','inference','quarantined'))",
+                {
+                    "finished": self._clock(),
+                    "invocation": snapshot.invocation_id,
+                    "pid": snapshot.main_pid,
+                    "ticks": identity_ticks,
+                    "boot": boot_id,
+                    "cgroup": snapshot.control_group,
+                    "owner": lease.owner,
+                    "request": lease.request_id,
+                    "token": lease.fencing_token,
+                    "unit": unit,
+                    "nonce": row["nonce"],
+                    "description": row["expected_description"],
+                    "owner_pid": lease.owner_identity.pid,
+                    "owner_ticks": lease.owner_identity.start_ticks,
+                    "owner_boot": lease.owner_identity.boot_id,
+                    "owner_unit": lease.owner_unit,
+                    "owner_invocation": lease.owner_invocation_id,
+                },
             )
             if cursor.rowcount != 1:
                 connection.rollback()
@@ -1965,15 +2081,25 @@ class OwnedVllmRuntime:
     def _set_launch_result(self, lease: GpuLease, outcome: str) -> None:
         if outcome not in {"created", "uncertain"}:
             raise ValueError("invalid durable model launch state")
+        if outcome == "uncertain":
+            self._refresh_launch_allocation(lease)
         with closing(self._connect()) as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            finished = self._clock()
+            if outcome == "uncertain":
+                # Recovery must see this intent before it can release an absent unit.
+                self._assert_launch_allocation(connection, lease, finished)
             cursor = connection.execute(
                 "UPDATE gpu_runtime_bindings SET launch_state=?,launch_finished_boottime=? "
                 "WHERE owner=? AND request_id=? AND fencing_token=? "
-                "AND launch_state IN ('prepared','uncertain')",
-                (outcome, self._clock(), lease.owner, lease.request_id, lease.fencing_token),
+                "AND launch_state IN ('prepared','uncertain') "
+                "AND (? != 'uncertain' OR launch_state='prepared')",
+                (outcome, finished, lease.owner, lease.request_id, lease.fencing_token, outcome),
             )
             if cursor.rowcount != 1:
                 raise LeaseConflict("durable model launch intent was replaced")
+            # A completed launch may be recorded after expiry so cleanup can observe it.
+            connection.commit()
 
     def _read_socket_text(
         self,
@@ -2292,6 +2418,7 @@ class OwnedVllmRuntime:
             self._phase = "unit_launch"
             self._check_cancellation()
             self._set_launch_result(lease, "uncertain")
+            launch_row = row
             self.units.launch(
                 row["unit"],
                 row["nonce"],
@@ -2299,6 +2426,7 @@ class OwnedVllmRuntime:
                 self.pin,
                 diagnostic_log,
                 model_max_len=self.profile.model_max_len,
+                before_launch=lambda: self._before_model_launch(lease, launch_row),
             )
             self._set_launch_result(lease, "created")
             self._wait_runtime_directory(
@@ -2522,14 +2650,14 @@ def doctor_main(argv: Sequence[str] | None = None) -> int:
         reply = runtime.run_turn(
             "lab",
             args.request_id,
-                _DOCTOR_MESSAGES[args.profile],
-                enable_thinking=profile.enable_thinking,
-                max_output_tokens=profile.max_output_tokens,
-                thinking_token_budget=profile.thinking_token_budget,
-                temperature=profile.temperature,
-                top_p=profile.top_p,
-                top_k=profile.top_k,
-                profile=profile,
+            _DOCTOR_MESSAGES[args.profile],
+            enable_thinking=profile.enable_thinking,
+            max_output_tokens=profile.max_output_tokens,
+            thinking_token_budget=profile.thinking_token_budget,
+            temperature=profile.temperature,
+            top_p=profile.top_p,
+            top_k=profile.top_k,
+            profile=profile,
         )
         diagnostics = _doctor_runtime_diagnostic(database, args.request_id)
         diagnostics["request_profile"] = runtime._last_request_profile

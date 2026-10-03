@@ -1,0 +1,60 @@
+{
+  "schema": "scientist.cpu-study-source-review.v1",
+  "observed_at": "2026-10-03T15:25:19.512122+00:00",
+  "scientist_base_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+  "scope": "isolated source candidate, after prior controlled CPU runtime freeze",
+  "endpoint": "GET /v1/aos-cpu-study/{suite_id}",
+  "contract": "scientist.lab-cpu-study.v1",
+  "contract_status": "proposed_pending_peer_review",
+  "files": {
+    "lab/api/aos_cpu_capability.py": "7aa5e98413e7964e757adde7be64a76d4760bda70fd58e0a046c79a9a6930e00",
+    "tests/test_aos_cpu_study.py": "f38be5959518f0517114b41c21ab25c8dc030a955afe7b28793e0d47a829d36b",
+    "docs/contracts/aos-cpu-study.v1.schema.json": "263f588369cdc78f1f904422c45505f097a36fdb495abbd68320eb45825bcefa",
+    "docs/contracts/aos-cpu-study.v1.example.json": "510eabbaf6f8ec70b476697d6ad4b1ba9451b9048ddbc262491444200f9e96f4",
+    "lab/reporting.py": "fe7108d12da3cf0137a75752761cbe60094772aa97083303d9d2161525d20f14"
+  },
+  "checks": [
+    {
+      "scope": "CPU study and legacy capability focused fixtures",
+      "passed": 32,
+      "exit_code": 0
+    },
+    {
+      "scope": "Ruff API and focused tests",
+      "exit_code": 0
+    },
+    {
+      "scope": "strict mypy API",
+      "exit_code": 0
+    },
+    {
+      "scope": "existing report replay tests",
+      "passed": 8,
+      "exit_code": 0
+    },
+    {
+      "scope": "Ruff report renderer",
+      "exit_code": 0
+    },
+    {
+      "scope": "manual not_run report rendering preserves status/manual-review and neutral reference label",
+      "exit_code": 0
+    }
+  ],
+  "full_quality_gate_for_this_source": true,
+  "image_rebuilt_for_this_source": false,
+  "deployed": false,
+  "actual_runtime_acceptance_for_new_endpoint": false,
+  "gpu_acceptance": false,
+  "no_new_runtime_launched": true,
+  "remaining": [
+    "AOS descriptor schema review and UI consumer",
+    "AOS optional field/history forwarding source and runtime acceptance",
+    "new common source/config freeze and full quality gate before publication",
+    "finite exact-unit activation authority and complete active-worker observation",
+    "actual coordinated GPU coexistence and active-Scorer cancellation"
+  ],
+  "peer_handoff_delivery": "unconfirmed_two_transport_errors",
+  "quality_gate_completion": "aos-cpu-study-quality-completion-20261003.json",
+  "single_attempt_all_green": false
+}

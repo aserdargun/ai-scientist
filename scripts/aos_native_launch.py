@@ -510,12 +510,225 @@ def _artifact_authority_expiry(cfg, bindings, validity_seconds):
     return expires
 
 
+def _native_exclusion_contract(cfg):
+    """An explicit original maintenance review; never a grant to start or release GPU work."""
+    value = cfg.get("native_exclusion")
+    if cfg["caller_unit"] != SHARED_CALLER_UNIT:
+        if "native_exclusion" in cfg:
+            raise ValueError("Legacy caller cannot carry a shared native exclusion review")
+        return None
+    keys = {
+        "schema",
+        "request",
+        "receipt_sha256",
+        "legacy_state_path",
+        "candidate_manifest_path",
+        "candidate_patch_path",
+        "promoted_source_files",
+    }
+    if (
+        type(value) is not dict
+        or set(value) != keys
+        or value["schema"] != "scientist.native-exclusion-review.v1"
+        or type(value["request"]) is not dict
+        or type(value["receipt_sha256"]) is not str
+        or re.fullmatch(r"[a-f0-9]{64}", value["receipt_sha256"]) is None
+        or type(value["promoted_source_files"]) is not dict
+        or not 1 <= len(value["promoted_source_files"]) <= 512
+    ):
+        raise ValueError("Shared caller requires its explicit original native exclusion review")
+    paths = [
+        value[key]
+        for key in ("legacy_state_path", "candidate_manifest_path", "candidate_patch_path")
+    ]
+    paths.extend(value["promoted_source_files"])
+    for name in paths:
+        if type(name) is not str:
+            raise ValueError("Native exclusion path must be explicit")
+        path = Path(name)
+        if (
+            not path.is_absolute()
+            or str(path) != name
+            or ".." in path.parts
+            or any(ord(char) < 32 or ord(char) == 127 for char in name)
+        ):
+            raise ValueError("Native exclusion paths must be canonical and absolute")
+    if any(
+        type(pin) is not str or re.fullmatch(r"[a-f0-9]{64}", pin) is None
+        for pin in value["promoted_source_files"].values()
+    ):
+        raise ValueError("Native exclusion promoted sources require exact hashes")
+    return json.loads(canonical(value))
+
+
+def _native_exclusion_sources(configuration, review, source_inputs, deadline, *, loaded=False):
+    """Pin the reader before import and its actual imported dependency origins afterwards."""
+    required = {
+        "src/aos/native_exclusion.py",
+        "src/aos/native_maintenance.py",
+        "src/aos/native_handover.py",
+        "src/aos/lifecycle.py",
+        "src/aos/contracts.py",
+        "src/aos/shared_desktop_host.py",
+        "src/aos/shared_desktop_plan.py",
+        "schemas/native_exclusion_evidence.schema.json",
+    }
+    sources = configuration["source_files"]
+    if not required <= sources["aos"].keys():
+        raise ValueError("Native exclusion producer lacks its reviewed source closure")
+    selected = {}
+    for project, files in sources.items():
+        root = Path(configuration["source_roots"][project])
+        if not root.is_absolute() or root.resolve(strict=True) != root:
+            raise ValueError("Native exclusion source root differs")
+        for relative, pin in files.items():
+            if (
+                type(relative) is not str
+                or Path(relative).is_absolute()
+                or ".." in Path(relative).parts
+                or str(Path(relative)) != relative
+            ):
+                raise ValueError("Native exclusion source path differs")
+            path = root / relative
+            if (
+                source_inputs.get(str(path)) != pin
+                or review["promoted_source_files"].get(str(path)) != pin
+                or hashlib.sha256(read_regular(path, 8 * 1024**2)).hexdigest() != pin
+            ):
+                raise ValueError("Native exclusion producer source is not independently pinned")
+            selected[str(path)] = pin
+            _remaining(deadline)
+    if loaded:
+        for name, module in tuple(sys.modules.items()):
+            if name == "aos" or name.startswith("aos."):
+                path = Path(getattr(module, "__file__", "")).absolute()
+                if str(path) not in selected:
+                    raise ValueError("Native exclusion imported an unreviewed AOS dependency")
+
+
 class CurrentRuntimeRights:
     """Actual enabled policy/source revocation and native service generations."""
 
-    def __init__(self, bindings, configuration):
+    def __init__(
+        self,
+        bindings,
+        configuration,
+        *,
+        native_exclusion=None,
+        shared_scope=None,
+        source_inputs=None,
+    ):
         self.bindings = bindings
         self.configuration = configuration
+        self.native_exclusion = native_exclusion
+        self.shared_scope = shared_scope
+        self.source_inputs = source_inputs
+
+    def _verify_native_exclusion(self, caller, deadline):
+        """Post-spawn observation only; unsupported active-model coexistence stays denied."""
+        if caller.unit != SHARED_CALLER_UNIT:
+            if self.native_exclusion is not None:
+                raise ValueError("Native exclusion cannot authorize a legacy caller")
+            return
+        review, scope = self.native_exclusion, self.shared_scope
+        if review is None or scope is None or self.source_inputs is None:
+            raise ValueError("Shared model admission requires native exclusion evidence")
+        _native_exclusion_sources(self.configuration, review, self.source_inputs, deadline)
+        from aos.contracts import digest as aos_digest
+        from aos.lifecycle import process_identity
+        from aos.native_exclusion import NativeExclusionEvidence, NativeExclusionReader
+        from aos.native_maintenance import NativeMaintenanceRequest
+        from aos.shared_desktop_host import SharedServiceBinding
+
+        _native_exclusion_sources(
+            self.configuration, review, self.source_inputs, deadline, loaded=True
+        )
+        request = NativeMaintenanceRequest.model_validate(review["request"], strict=True)
+        actual = process_identity(caller.pid)
+        if caller.pid != os.getpid() or any(
+            getattr(actual, key) != getattr(caller, key)
+            for key in ("uid", "pid", "start_ticks", "boot_id")
+        ):
+            raise ValueError("Native exclusion caller is not this authenticated process")
+        expected = SharedServiceBinding(
+            unit=caller.unit,
+            invocation_id=caller.invocation_id,
+            process=actual,
+            control_group=caller.control_group,
+        )
+        before = time.clock_gettime(time.CLOCK_BOOTTIME)
+        # Sampling BOOTTIME before MONOTONIC makes this conversion conservative.
+        remaining = deadline - time.monotonic()
+        end = min(request.expires_boottime, before + remaining)
+        if (
+            remaining <= 0
+            or request.owner_uid != os.getuid()
+            or request.boot_id != actual.boot_id
+            or not request.issued_boottime <= before < end
+            or request.shared_plan_sha256 != scope["plan_sha256"]
+        ):
+            raise ValueError("Original native exclusion authority is expired or differs")
+        reader = NativeExclusionReader(
+            request.store,
+            request,
+            review["receipt_sha256"],
+            expected,
+            legacy_state_path=Path(review["legacy_state_path"]),
+            candidate_manifest_path=Path(review["candidate_manifest_path"]),
+            candidate_patch_path=Path(review["candidate_patch_path"]),
+            shared_plan_path=Path(scope["plan_path"]),
+        )
+        document, checksum = reader.read_native_exclusion(
+            request.handover_sha256, scope["plan_sha256"], deadline=end
+        )
+        evidence = NativeExclusionEvidence.model_validate(document, strict=True)
+        if (
+            aos_digest(document) != aos_digest(evidence.model_dump(mode="json"))
+            or aos_digest(document) != checksum
+        ):
+            raise ValueError("Native exclusion canonical evidence hash differs")
+        expected_values = {
+            "schema_version": "aos.native-exclusion.v1",
+            "profile": "shared-only-runtime-v1",
+            "scope": "repository-managed-entrypoints",
+            "native_admission_disabled": True,
+            "legacy_workers_absent": True,
+            "expiry_reopens_native": False,
+            "allocation_authority": False,
+            "shared_launch_authorized": False,
+            "gpu_release_verified": False,
+            "request_id": request.request_id,
+            "principal": request.principal,
+            "owner_uid": request.owner_uid,
+            "boot_id": request.boot_id,
+            "issued_boottime": request.issued_boottime,
+            "expires_boottime": request.expires_boottime,
+            "maintenance_request_sha256": aos_digest(request.model_dump(mode="json")),
+            "maintenance_receipt_sha256": review["receipt_sha256"],
+            "handover_sha256": request.handover_sha256,
+            "shared_plan_sha256": scope["plan_sha256"],
+            "candidate_manifest_sha256": request.candidate_manifest_sha256,
+            "candidate_patch_sha256": request.candidate_patch_sha256,
+            "source_files": review["promoted_source_files"],
+            "source_sha256": aos_digest(review["promoted_source_files"]),
+            "config_files": request.config_files,
+            "config_sha256": request.config_sha256,
+        }
+        after = time.clock_gettime(time.CLOCK_BOOTTIME)
+        if (
+            any(document[key] != value for key, value in expected_values.items())
+            or evidence.shared_caller != expected
+            or evidence.legacy.manager_session != request.expected_session
+            or evidence.legacy.original_state_sha256 != request.original_state_sha256
+            or not before <= evidence.observed_boottime <= after
+            or not after < evidence.effective_deadline_boottime <= end
+            or process_identity(caller.pid) != actual
+        ):
+            raise ValueError("Native exclusion evidence differs from the current original scope")
+        if time.clock_gettime(time.CLOCK_BOOTTIME) >= evidence.effective_deadline_boottime:
+            raise ValueError("Native exclusion expired during final process observation")
+        _remaining(deadline)
+        return evidence.effective_deadline_boottime
 
     def __call__(self, selected, requirements):
         from aos.scientist_admission_history import ScientistAdmissionBindingV2
@@ -555,6 +768,7 @@ class CurrentRuntimeRights:
             ):
                 raise ValueError("Unreviewed runtime selection")
             generations = set()
+            exclusion_deadline = None
             for profile, binding in selected.items():
                 reviewed = ScientistAdmissionBindingV2.model_validate(
                     self.bindings[profile], strict=True
@@ -597,8 +811,27 @@ class CurrentRuntimeRights:
                     != binding.caller_generation
                 ):
                     raise ValueError("Original caller generation is no longer current")
+                observed_deadline = self._verify_native_exclusion(binding.caller_generation, end)
+                if observed_deadline is not None:
+                    exclusion_deadline = (
+                        observed_deadline
+                        if exclusion_deadline is None
+                        else min(exclusion_deadline, observed_deadline)
+                    )
+                if self.native_exclusion is not None and (
+                    not auth.still_current(peer, deadline=end)
+                    or SystemdCallerAuthenticator().authenticate(
+                        binding.caller_generation, deadline=end
+                    )
+                    != binding.caller_generation
+                ):
+                    raise ValueError("Caller or broker changed during native exclusion observation")
             policy.verify()
             policy.verify_policy_hash()
+            if exclusion_deadline is not None and (
+                time.clock_gettime(time.CLOCK_BOOTTIME) >= exclusion_deadline
+            ):
+                raise ValueError("Native exclusion expired during final rights observation")
             if time.monotonic() >= end:
                 raise ValueError("Current rights observation exceeded its deadline")
         finally:
@@ -621,6 +854,7 @@ def _prepare_launch(path, expected, deadline):
     }:
         raise ValueError("Only the two reviewed AOS caller units are supported")
     shared_scope = _shared_scope_contract(cfg)
+    native_exclusion = _native_exclusion_contract(cfg)
     # Missing/disabled reviewed policy fails here, before verification or Desktop.
     bindings = capture_reviewed_bindings(
         args["profile_config_path"],
@@ -655,6 +889,7 @@ def _prepare_launch(path, expected, deadline):
             raise ValueError("Native launch/receipt producer source lacks independent pin")
     if shared_scope is not None:
         _shared_scope_preflight(cfg, args, static, path, expected, deadline)
+        _native_exclusion_sources(args, native_exclusion, static["source_inputs"], deadline)
 
     def native_verify():
         command = [
@@ -696,7 +931,13 @@ def _prepare_launch(path, expected, deadline):
     provider = NativeArtifactReceiptProvider(
         output,
         hashlib.sha256(body).hexdigest(),
-        verify_current_rights=CurrentRuntimeRights(bindings, args),
+        verify_current_rights=CurrentRuntimeRights(
+            bindings,
+            args,
+            native_exclusion=native_exclusion,
+            shared_scope=shared_scope,
+            source_inputs=static["source_inputs"],
+        ),
     )
     factory = ConfiguredScientistAdmissionFactory(
         bindings, **args, verify_artifact_closure=provider

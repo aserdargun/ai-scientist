@@ -1,0 +1,101 @@
+{
+  "observed_at": "2026-10-03T18:17:42.846629+00:00",
+  "scientist_commit": "bdad5b24eaa62519af7ca09a7ee9acaf17fc8355",
+  "aos_commit": "ed209498afa1e9c6a4c4573d0c0e8daff2a2ec17",
+  "aos_tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scientist_tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "producer_files": {
+    "lab/api/aos_cpu_capability.py": {
+      "candidate_sha256": "7aa5e98413e7964e757adde7be64a76d4760bda70fd58e0a046c79a9a6930e00",
+      "live_file_sha256": "7aa5e98413e7964e757adde7be64a76d4760bda70fd58e0a046c79a9a6930e00"
+    },
+    "lab/api/experience.py": {
+      "candidate_sha256": "892b555f74a0c117e6c24eba2d7eba600f6b60f0496cb3d7f42d3afd9bdd1d2e",
+      "live_file_sha256": "892b555f74a0c117e6c24eba2d7eba600f6b60f0496cb3d7f42d3afd9bdd1d2e"
+    },
+    "lab/api/app.py": {
+      "candidate_sha256": "ca866cc50935c922886ea6b153ba82ef9907b79ea4e4b5dc02546c85be2e5f5a",
+      "live_file_sha256": "ca866cc50935c922886ea6b153ba82ef9907b79ea4e4b5dc02546c85be2e5f5a"
+    },
+    "lab/director/field_context.py": {
+      "candidate_sha256": "0ec90edff0a69bb0a3468d3295a1610598dd6a0347c97a7ef304beba8fb07c57",
+      "live_file_sha256": "0ec90edff0a69bb0a3468d3295a1610598dd6a0347c97a7ef304beba8fb07c57"
+    },
+    "lab/director/history_context.py": {
+      "candidate_sha256": "35424cb64efaa23358be70beb4e77b8ea841e447ac9f70fed03baf2c91fea39f",
+      "live_file_sha256": "35424cb64efaa23358be70beb4e77b8ea841e447ac9f70fed03baf2c91fea39f"
+    }
+  },
+  "aos_consumer_files": {
+    "src/aos/scientist_cpu_study.py": "a887978f700c07103213d222d4c54e129cb3e03d7ec783431c571cbdf8e50fc8",
+    "src/aos/scientist_experience.py": "98fe5b127f0e8d15ac33912ce93445c5398e28620f105b83233b2ee6a4c04ac7",
+    "src/aos/scientist_cpu_session.py": "8a6d480421d03d20d8d0a3a6ab5b894203686a2cc60d53fa3aa21e645a5c83fa",
+    "src/aos/scientist_lab.py": "77e8bcdade95648727c5007452e49527793f49e39ed0b988dc698ed486d4761d",
+    "src/aos/scientist_lab_service.py": "4fcae15b1a3486cb298e2e965199159fff99b47d2659814e4e4b175beb578302",
+    "schemas/scientist_cpu_study_wire.schema.json": "263f588369cdc78f1f904422c45505f097a36fdb495abbd68320eb45825bcefa",
+    "ui/src/ScientistExperience.tsx": "471f60d8f1a73de6c56da267bb207173ee167982531de3f319f7ce33732f5d57",
+    "ui/src/ScientistLab.tsx": "227c966548e037beb811331dfc52007e973ae88fe0aed81280faebc4f97bb6d2"
+  },
+  "descriptor_schema_sha256": "263f588369cdc78f1f904422c45505f097a36fdb495abbd68320eb45825bcefa",
+  "review": "Narrow reciprocal source alignment; not deployment or runtime acceptance.",
+  "peer_transport_delivered": false,
+  "runtime_authorized": false,
+  "gpu_hold": true,
+  "inventory_observation_cause": {
+    "observed_processes": 103,
+    "namespace_permission_denials": 5,
+    "errno": 13,
+    "scope": "Point-in-time current-user process scan; incomplete namespace observation remains unknown."
+  },
+  "prepared_cpu_plan": {
+    "schema": "scientist.cpu-panel-acceptance-draft.v1",
+    "status": "prepared-not-authorized",
+    "source_pair": {
+      "scientist": "bdad5b24eaa62519af7ca09a7ee9acaf17fc8355",
+      "aos": "ed209498afa1e9c6a4c4573d0c0e8daff2a2ec17"
+    },
+    "contracts": {
+      "descriptor": "scientist.lab-cpu-study.v1",
+      "descriptor_sha256": "263f588369cdc78f1f904422c45505f097a36fdb495abbd68320eb45825bcefa",
+      "experience": "run-experience.v1"
+    },
+    "scope": {
+      "data": "fresh isolated synthetic snapshot; never GHL/SWaT/private field data",
+      "algorithm_provider": "mode-grid",
+      "experiments": 1,
+      "max_wall_seconds": 600,
+      "model_tokens": 0,
+      "gpu_admission": false,
+      "history_second_run_authorized": false
+    },
+    "steps": [
+      "AOS peer prepares its own isolated CPU console using the reviewed consumer source; root does not modify AOS.",
+      "Jointly freeze fresh owner, principal, API endpoint and grant/config hashes. No retired scope credentials or owners.",
+      "Scientist prepares fresh isolated API/PG/synthetic CPU study only after scope is explicitly established; live field-lab retained.",
+      "User selects Read study description in AOS panel; descriptor identity matches reviewed grant.",
+      "User enters synthetic asset/maintenance field intent, proposes one experiment and approves through existing AOS flow.",
+      "Scientist runs CPU Director and independent Scorer; AOS verifies terminal report then reads experience.",
+      "User explicitly selects measured eligible history and transfers to proposal draft; do not submit a second run.",
+      "Verify context/report links, queue terminal state and owned-worker cleanup; close only the new isolated scope."
+    ],
+    "required_evidence": [
+      "source/config and immutable request hashes",
+      "AOS real browser interactions without fixture decision/approval",
+      "terminal run/report and experience readback hashes",
+      "no hidden second run, model call or GPU allocation",
+      "exact owned unit/process/container cleanup"
+    ],
+    "remaining_scope_inputs": [
+      "AOS prepared isolated console identity and source deployment confirmation",
+      "fresh agreed owner/principal and bounded CPU scope",
+      "available isolated endpoint/profile names verified before start"
+    ],
+    "not_acceptance": [
+      "local-model research",
+      "GPU coexistence or release",
+      "holdout improvement",
+      "training or learned adapter",
+      "active-Scorer cancellation"
+    ]
+  }
+}

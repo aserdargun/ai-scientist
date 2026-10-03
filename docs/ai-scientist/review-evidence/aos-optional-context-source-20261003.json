@@ -1,0 +1,33 @@
+{
+  "schema": "scientist.aos-optional-context-source-review.v1",
+  "scope": "read-only inspection of mutable peer publication checkout; not runtime acceptance",
+  "aos_base_commit": "dfd06322219b9295c5fc618bef180464b3d17767",
+  "aos_files": {
+    "src/aos/scientist_lab_context.py": "a9d53e0d39ca37733b9822506e4520804ca9d8ac209580125dc6d10a32dc59a5",
+    "src/aos/scientist_lab.py": "c4b54d8916d94759f41f18a49cb94559bd1a71cc6e23a5bcc03ee318f92bae2e",
+    "src/aos/scientist_lab_service.py": "5279ccef5d14bdfef70e6f605a193a7577866b3d548228bb1f8c8097e1e47e19",
+    "src/aos/desktop_console.py": "25ac81a08252805f971d3ce8a8390c74cb0b36c909e216390ab1f518bce61376",
+    "ui/src/ScientistLab.tsx": "0de905522161d3cdc85e63ab5ddc0488fbb47ab3b9de5e93cf76e8d244e59fdf"
+  },
+  "compatible": [
+    "optional absent/null omissions",
+    "strict field/history shapes and bounds",
+    "normalized optional fields bound into approval/request hash",
+    "CPU grant/version/budget enforcement"
+  ],
+  "remaining": [
+    {
+      "kind": "minor_ui",
+      "finding": "JS trim and Python strip differ for U+0085; preview may differ from normalized server proposal"
+    },
+    {
+      "kind": "minor_ui",
+      "finding": "DOM maxLength counts UTF-16 units; backend and advisoryText count Unicode codepoints"
+    },
+    {
+      "kind": "integration",
+      "finding": "AOS UI/client does not yet read Scientist /experience admitted-only/context-bound usage"
+    }
+  ],
+  "changes_to_aos": false
+}

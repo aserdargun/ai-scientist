@@ -1,0 +1,42 @@
+{
+  "archive_sha256": "5aa602b192c54803083d3331a3a5488a792f87634dfccde3f95ca1b27f4f07f7",
+  "clean_machine_acceptance": false,
+  "docker_acceptance": false,
+  "evidence_sha256": {
+    "setup.private.json": "5c782aaa8985497247f296755efc661ccfc46af749151714d8888fca161ee3c7",
+    "smoke-receipt.private.json": "93595c42963edfb8c7e3aff65270ebb8ef734701411daa4860b019d3153eda08",
+    "sync-receipt.private.json": "625074b2f2c4463f15a14355ac543735a9b458213a7ec679abca51e91ffa15d6"
+  },
+  "fresh_environment_before": true,
+  "installed_distribution_count": 63,
+  "model_gpu_acceptance": false,
+  "node_ui_install_acceptance": false,
+  "package_version": "0.1.0",
+  "pyproject_sha256": "7fb95e2ad8806d9913bec16e270645d1780aee894916ab4fed08d1cb725381a6",
+  "python_version": "3.12.13",
+  "schema": "fresh-install-acceptance.v1",
+  "scope": "prepared-host-offline-fresh-python-development-install",
+  "services_started": false,
+  "smoke_checks": [
+    {
+      "exit": 0,
+      "name": "lab-help",
+      "seconds": 0.9868269580001652
+    },
+    {
+      "exit": 0,
+      "name": "dependency-check",
+      "seconds": 0.040938713998912135
+    }
+  ],
+  "smoke_seconds": 4.253664394000225,
+  "source_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+  "source_tag": "v0.1.0",
+  "source_tree": "81ba373aa45904b6008af22f9361a17335cbd70d",
+  "sync_exit": 0,
+  "sync_seconds": 0.4352669079999032,
+  "system_site_packages": false,
+  "uv_lock_sha256": "e076094ae5deb6f8ed30357e1541276c8696b242e6405d571c441ed63bd4f6b5",
+  "observed_at": "2026-10-03T13:35:39.460208+00:00",
+  "private_receipt_sha256": "0b039f2bfe062e8370401ed1c5fbfdb30f7bfa6eb21f846802a8d9c36c211ac9"
+}

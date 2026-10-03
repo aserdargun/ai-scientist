@@ -1,0 +1,103 @@
+{
+  "schema": "model-preparation-catalog.v1",
+  "execution_allowed": false,
+  "activation_allowed": false,
+  "models": [
+    {
+      "model_id": "qwen3.8-27b",
+      "upstream_repository": "Qwen/Qwen3.8-27B",
+      "architecture": "qwen3_5",
+      "inference": {
+        "repository": "unsloth/Qwen3.8-27B-GGUF",
+        "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502",
+        "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+        "bytes": 16464440224,
+        "sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+        "backend_bridge": "not_implemented",
+        "local_verified": false,
+        "full_16gb_gpu_fit": "unsupported"
+      },
+      "qlora": {
+        "repository": "unsloth/Qwen3.8-27B-unsloth-bnb-4bit",
+        "revision": "8aa5f05d26b7205477066e1449e0af13f762a299",
+        "format": "safetensors-bnb4",
+        "load_in_4bit": true,
+        "minimum_vram_gb": 24,
+        "resource_basis": "Model-specific Unsloth Qwen3.8 guide; minimum, not measured acceptance"
+      },
+      "lora": {
+        "repository": "Qwen/Qwen3.8-27B",
+        "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+        "format": "safetensors",
+        "load_in_4bit": false,
+        "minimum_vram_gb": 37,
+        "resource_basis": "Model-specific guide says greater than 36 GB; not the generic 27B recipe"
+      },
+      "documentation": ["https://unsloth.ai/docs/models/qwen3.8/train", "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF", "https://huggingface.co/Qwen/Qwen3.8-27B"]
+    },
+    {
+      "model_id": "qwen3.5-9b",
+      "upstream_repository": "Qwen/Qwen3.5-9B",
+      "architecture": "qwen3_5",
+      "inference": {
+        "repository": "unsloth/Qwen3.5-9B-GGUF",
+        "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+        "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "bytes": 5680522464,
+        "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+        "backend_bridge": "not_implemented",
+        "local_verified": false,
+        "full_16gb_gpu_fit": "unmeasured_candidate"
+      },
+      "qlora": {
+        "repository": "Qwen/Qwen3.5-9B",
+        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "format": "safetensors",
+        "load_in_4bit": true,
+        "minimum_vram_gb": 7,
+        "resource_basis": "Generic 9B QLoRA minimum 6.5 GB rounded up; on-load quantization, unmeasured"
+      },
+      "lora": {
+        "repository": "Qwen/Qwen3.5-9B",
+        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "format": "safetensors",
+        "load_in_4bit": false,
+        "minimum_vram_gb": 24,
+        "resource_basis": "Generic 9B LoRA minimum; not measured acceptance"
+      },
+      "documentation": ["https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements", "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF", "https://huggingface.co/Qwen/Qwen3.5-9B"]
+    },
+    {
+      "model_id": "qwen3-8b",
+      "upstream_repository": "Qwen/Qwen3-8B",
+      "architecture": "qwen3",
+      "inference": {
+        "repository": "Qwen/Qwen3-8B-GGUF",
+        "revision": "7c41481f57cb95916b40956ab2f0b139b296d974",
+        "filename": "Qwen3-8B-Q4_K_M.gguf",
+        "bytes": 5027783488,
+        "sha256": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785",
+        "backend_bridge": "not_implemented",
+        "local_verified": false,
+        "full_16gb_gpu_fit": "unmeasured_candidate"
+      },
+      "qlora": {
+        "repository": "unsloth/Qwen3-8B-unsloth-bnb-4bit",
+        "revision": "62efd7f9d748e394734a7adae2adf96e13a2abc8",
+        "format": "safetensors-bnb4",
+        "load_in_4bit": true,
+        "minimum_vram_gb": 6,
+        "resource_basis": "Generic 8B QLoRA minimum; not measured acceptance"
+      },
+      "lora": {
+        "repository": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "format": "safetensors",
+        "load_in_4bit": false,
+        "minimum_vram_gb": 22,
+        "resource_basis": "Generic 8B LoRA minimum; not measured acceptance"
+      },
+      "documentation": ["https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements", "https://huggingface.co/Qwen/Qwen3-8B-GGUF", "https://huggingface.co/Qwen/Qwen3-8B"]
+    }
+  ]
+}

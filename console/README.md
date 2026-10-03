@@ -1,10 +1,22 @@
 # AI Scientist yerel konsol
 
-> **Güncel 0.46 field-lab:** konsol `127.0.0.1:8789`, API `127.0.0.1:8767`.
+> **Güncel 0.47 field-lab:** konsol `127.0.0.1:8789`, API `127.0.0.1:8767`.
 > Aşağıdaki varsayılan 8788/8766 adımları eski kuruluma aittir. Güncel
 > başlatma ve ilk deney için [README](../README.md) kullanın.
 
 Tarayıcı adresi: **http://127.0.0.1:8788**.
+
+## Interface language / Arayüz dili
+
+The console opens in **English** by default. Use **Language / Dil** in the
+header to select **English** or **Türkçe**. The browser remembers your choice;
+if browser storage is unavailable, the choice remains active for that tab.
+Changing the language preserves form values and does not start an experiment.
+User-entered text, original evidence and raw reports retain their source language.
+
+Arayüz varsayılan olarak İngilizce açılır. Üstteki **Language / Dil** seçicisinden
+Türkçe seçilebilir; tercih tarayıcıda saklanır. Dil değişimi form değerlerini
+ve deney kayıtlarını değiştirmez.
 
 ## Kullanım
 

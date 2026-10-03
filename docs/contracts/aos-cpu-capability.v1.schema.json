@@ -1,0 +1,135 @@
+{
+  "additionalProperties": false,
+  "description": "Separate from the existing local-model capability and its authority.",
+  "properties": {
+    "allocation_authority": {
+      "const": false,
+      "title": "Allocation Authority",
+      "type": "boolean"
+    },
+    "allowed_purpose": {
+      "const": "research",
+      "title": "Allowed Purpose",
+      "type": "string"
+    },
+    "aos_cpu_study_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Aos Cpu Study Sha256",
+      "type": "string"
+    },
+    "gpu_release_verified": {
+      "const": false,
+      "title": "Gpu Release Verified",
+      "type": "boolean"
+    },
+    "launch_authorized": {
+      "const": false,
+      "title": "Launch Authorized",
+      "type": "boolean"
+    },
+    "max_experiments": {
+      "maximum": 35,
+      "minimum": 1,
+      "title": "Max Experiments",
+      "type": "integer"
+    },
+    "max_wall_seconds": {
+      "maximum": 14400,
+      "minimum": 1,
+      "title": "Max Wall Seconds",
+      "type": "integer"
+    },
+    "model_tokens": {
+      "const": 0,
+      "title": "Model Tokens",
+      "type": "integer"
+    },
+    "native_inference_authorized": {
+      "const": false,
+      "title": "Native Inference Authorized",
+      "type": "boolean"
+    },
+    "origin": {
+      "const": "aos",
+      "title": "Origin",
+      "type": "string"
+    },
+    "owner_id": {
+      "title": "Owner Id",
+      "type": "string"
+    },
+    "program_version": {
+      "title": "Program Version",
+      "type": "string"
+    },
+    "provider": {
+      "const": "mode-grid",
+      "title": "Provider",
+      "type": "string"
+    },
+    "provider_config_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Provider Config Sha256",
+      "type": "string"
+    },
+    "schema": {
+      "const": "scientist.lab-cpu-capability.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "snapshot_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Snapshot Sha256",
+      "type": "string"
+    },
+    "source_kind": {
+      "const": "synthetic",
+      "title": "Source Kind",
+      "type": "string"
+    },
+    "suite_entry_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Entry Sha256",
+      "type": "string"
+    },
+    "suite_id": {
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_manifest_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Manifest Sha256",
+      "type": "string"
+    },
+    "track": {
+      "const": "mode",
+      "title": "Track",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "owner_id",
+    "origin",
+    "suite_id",
+    "track",
+    "program_version",
+    "provider",
+    "source_kind",
+    "suite_manifest_sha256",
+    "suite_entry_sha256",
+    "provider_config_sha256",
+    "snapshot_sha256",
+    "aos_cpu_study_sha256",
+    "max_experiments",
+    "max_wall_seconds",
+    "model_tokens",
+    "allowed_purpose",
+    "allocation_authority",
+    "gpu_release_verified",
+    "native_inference_authorized",
+    "launch_authorized"
+  ],
+  "title": "LabCpuCapability",
+  "type": "object"
+}

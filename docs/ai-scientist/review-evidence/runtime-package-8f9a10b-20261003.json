@@ -1,0 +1,138 @@
+{
+  "schema": "scientist-runtime-package.v1",
+  "created_at": "2026-10-03T16:54:05.422241+00:00",
+  "scientist_source_commit": "8f9a10bc6e6b7e665df48f74348b30e9d3ad6dff",
+  "aos_observed_source_commit": "627d410dc7f16ffbeae401c6420141137f28d3a6",
+  "image": "sha256:e5118a99e2a6c5821e45d9f63ae6add094744b802a709fbd1975887cdf1a938b",
+  "image_bytes": 933979585,
+  "source_parity_files": 212,
+  "mismatches": [],
+  "dependency_install_cached": true,
+  "build_network": "none",
+  "model_downloaded": false,
+  "model_or_gpu_started": false,
+  "build_attempts": [
+    {
+      "context": "stdin tar with file option",
+      "exit_code": 1,
+      "reason": "ambiguous Dockerfile source"
+    },
+    {
+      "context": "stdin tar",
+      "exit_code": 1,
+      "reason": "legacy Dockerfile parsing; no image built"
+    },
+    {
+      "context": "minimal directory of pinned source files",
+      "exit_code": 0
+    }
+  ],
+  "image_smoke": {
+    "scope": "synthetic CPU image smoke; no Director, LLM, Scorer or AOS acceptance",
+    "uid": 10001,
+    "gpu_devices": false,
+    "exit_code": 0,
+    "oom_killed": false,
+    "elapsed_seconds": 1.1055042540028808,
+    "results": [
+      {
+        "method": "lsh",
+        "rows": 12,
+        "finite_omr_rows": 12,
+        "model_sha256": "f5afacdbe32cc35bfda66f2ea89aae2205b327f0522eacc88998673bf8192647",
+        "elapsed_seconds": 0.008652541997435037
+      },
+      {
+        "method": "optics",
+        "rows": 12,
+        "finite_omr_rows": 12,
+        "model_sha256": "892e720ff9abf1c53da63957d1f53f267fd3d1e07a667e190b415f41b9e853b0",
+        "elapsed_seconds": 0.03291301999706775
+      },
+      {
+        "method": "som",
+        "rows": 12,
+        "finite_omr_rows": 12,
+        "model_sha256": "1b05c7202edea8ad3446ba72d12607148774db0f3e825d3b611fddc188dcbb04",
+        "elapsed_seconds": 0.017074556002626196
+      }
+    ],
+    "limits": {
+      "cpus": 1,
+      "memory_bytes": 805306368,
+      "pids": 64,
+      "read_only_root": true,
+      "network": "none"
+    }
+  },
+  "cleanup": {
+    "inspection_container_started": false,
+    "inspection_container_removed": true,
+    "smoke_container_exited": true,
+    "smoke_container_removed": true
+  },
+  "deployment": {
+    "executed": true,
+    "pending_explicit_backend_approval": false,
+    "files": 16,
+    "unknown_runtime_drift": false,
+    "native_helper_held_for_separate_review": [
+      "scripts/aos_native_launch.py"
+    ],
+    "aos_modified": false,
+    "plan_sha256": "78354f26470ac91eb043f48ac4624a83075eed0a2e54b9764e5ddb26160639fb",
+    "user_approved_scope": "Scientist field-lab CPU profile only",
+    "stop_exit_code": 0,
+    "start_exit_code": 0,
+    "verified_at": "2026-10-03T17:03:21.883515+00:00",
+    "internal_harness_version": "0.47.0",
+    "harness_sha256": "20f4e5f22a40a11ecece78ad40fb6788106897fcab68ade133480332ab7e1df9",
+    "frontend_index_sha256": "df7e407c31454b14bd4a8422b6273c52209a660caf554ced43d9a6c8d70aaa8c",
+    "model_runs_enabled": false,
+    "old_report_hash_preserved": "439bfef2e6f880838fe3d99b88299a30ea03fd0b285856d7c92446984e418a6e",
+    "queue": {
+      "queued": 0,
+      "running": 0,
+      "stop_requested": 0
+    },
+    "services": {
+      "api": "active",
+      "console": "active",
+      "director-drain": "active"
+    },
+    "database": "running",
+    "rollback_required": false,
+    "live_browser": {
+      "scope": "live served frontend with read-only API; no mutations/model/teacher calls",
+      "title": "AI Scientist · Kontrol merkezi",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          390,
+          844
+        ]
+      ],
+      "topology_steps": 7,
+      "main_agent_cta_explicit": true,
+      "manual_grid_explicit": true,
+      "public_dev_no_silent_fallback": true,
+      "model_disabled_preserved": true,
+      "teacher_optional_closed_by_default": true,
+      "external_draft_unapproved_unexecuted": true,
+      "page_errors": [],
+      "mutations": [],
+      "mobile_overflow": false
+    },
+    "mac_browser_verified": false
+  },
+  "evidence_hashes": {
+    "source.private.json": "014921c4b2b0ffc6d3c2733806a453a10a00260e8c03e36923127ece7822ab0f",
+    "parity.private.json": "4a16ea2c73b6772f722eca0b7d39534070533b8d79be35ac87292edba9725ae4",
+    "smoke.private.json": "39f9170e61e4e3e5cfca8be5aa1e5f8e13cddc9bcfc4a30fcef42075c53951a2",
+    "deployment.private.json": "1a3600f2a453dff4bfe6685c73562d45a7e526a0963a59988b23a2296768d00d"
+  },
+  "updated_at": "2026-10-03T17:04:20.311473+00:00"
+}

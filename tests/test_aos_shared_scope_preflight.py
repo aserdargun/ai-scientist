@@ -131,6 +131,17 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
         "provision_sha256": provision_sha,
         "activation_path": str(activation_path),
     }
+    # Only exercise source/config wiring here. The admission factory is inert and never
+    # consumes this deliberately non-authoritative request as a maintenance receipt.
+    case.cfg["native_exclusion"] = {
+        "schema": "scientist.native-exclusion-review.v1",
+        "request": {"fixture": "no maintenance or execution authority"},
+        "receipt_sha256": "9" * 64,
+        "legacy_state_path": str(tmp_path / "inert-current.json"),
+        "candidate_manifest_path": str(root / "scripts/shared-only-runtime-v1/manifest.json"),
+        "candidate_patch_path": str(root / "scripts/shared-only-runtime-v1/source.patch.txt"),
+        "promoted_source_files": dict(static["source_inputs"]),
+    }
     case.cfg["artifact_validity_seconds"] = 900
     case.review["authority"]["caller_unit"] = launch.SHARED_CALLER_UNIT
     case.review["authority"]["expires_boottime"] = 600.0

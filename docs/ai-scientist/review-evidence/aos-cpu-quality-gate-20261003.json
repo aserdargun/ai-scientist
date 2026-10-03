@@ -1,0 +1,66 @@
+{
+  "schema": "scientist.aos-cpu-quality-review.v1",
+  "observed_at": "2026-10-03T14:03:02.686481+00:00",
+  "scientist_base_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+  "harness_version": "0.47.0",
+  "harness_sha256": "4bdeae643f426dff55dcb5a5c7bb20a40ddb210593f789eaa37b1a687e766841",
+  "harness_files": 169,
+  "image_id": "sha256:ec07958e95333a76c34097a71245b3513340e46355a86e9663a214a292a8dd3c",
+  "quality_gate_exit": 0,
+  "checks": [
+    {
+      "command": "ruff",
+      "exit_code": 0
+    },
+    {
+      "command": "pylint",
+      "exit_code": 0
+    },
+    {
+      "command": "bandit",
+      "exit_code": 0
+    },
+    {
+      "command": "pytest",
+      "exit_code": 0
+    },
+    {
+      "command": "mypy",
+      "exit_code": 0
+    },
+    {
+      "command": "uv",
+      "exit_code": 0
+    },
+    {
+      "command": "/home/cachyos/ai-scientist/.venv/bin/python",
+      "exit_code": 0
+    }
+  ],
+  "pytest": {
+    "passed": 3532,
+    "skipped": 49,
+    "deselected": 177,
+    "warnings": 563,
+    "seconds": 265.06
+  },
+  "gate_receipt_sha256": "01c0f45ad62aa31c02b07548dc6d5283f0ac99f457164b253f2dcda47c7d0155",
+  "image_source_parity_files": 211,
+  "real_container_evaluation_import_exit": 0,
+  "initial_attempt": {
+    "exit": 1,
+    "reason": "Duplicate generated lab/sandbox/image.lock in source tree; removed before final complete gate."
+  },
+  "scopes": {
+    "source_candidate": true,
+    "deployed": false,
+    "aos_cpu_runtime_acceptance": false,
+    "gpu_acceptance": false
+  },
+  "remaining": [
+    "AOS CPU controlled start/score/report/cleanup",
+    "AOS web field intent and experience forwarding",
+    "Native activation bootstrap and active-worker inventory",
+    "Coordinated actual GPU coexistence"
+  ]
+}

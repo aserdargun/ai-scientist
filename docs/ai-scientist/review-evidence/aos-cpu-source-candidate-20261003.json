@@ -1,0 +1,68 @@
+{
+  "schema": "scientist-aos-cpu-source-review.v1",
+  "observed_at": "2026-10-03T13:20:56.978688+00:00",
+  "status": "source_candidate_pending_aos_version_pair_ack",
+  "scientist_base_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+  "scientist_tracked_diff_sha256": "b145f2f4fdf0a9b911af141c59e8eac6f2087c9a905158685e0cb112133fbd19",
+  "aos_actual_checkout_commit": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+  "aos_tracked_diff_sha256": "9e02736dd9b91c87917586c0f5cda29905df78fe9f8d8a30a227f2e69b0f64df",
+  "contract": "scientist.lab-cpu-capability.v1",
+  "files": {
+    "lab/api/registry.py": "d6ce4a2f9f962fb4011481a530c0e8a979bdf03790244047b9ebd1ab05fa6af6",
+    "lab/api/app.py": "900fb5bb280a9d6b29938846a06380c245d5e57d343d32c994a2759a22fbd7bf",
+    "lab/api/aos_cpu_capability.py": "8c956ddb97899f83a9a1a6efe658759724ceb222d29c10314f33791aed0c6896",
+    "lab/api/aos_capability.py": "d9d65226b0db7fb398a3464ff7636f8d0a9eaf85b47e74fdd5c0b78b845ea7f1",
+    "lab/cli.py": "71d781133fa8b27403188fe40e8e426a49c7995f842859abe10bde7df2321855",
+    "scripts/register_aos_cpu_study.py": "3028c742443b1932f4cfffe94be0922f83da18083745863e5eddc1ba1bb2edde",
+    "tests/test_aos_cpu_registry.py": "4b2a4fc1e473794dc3b0baacfd0390fcb03fd977a2f71bf30dc234e28f70d97f",
+    "tests/test_aos_cpu_capability.py": "d183df8ce14ab8f8ddf3b522de5f077457089fa4597ecb75569f3381ac83d4e7",
+    "tests/test_aos_cpu_admission.py": "fc46fd8f0a5e9405b6fa1ffb9be821db27b78a06467cdaa44ace12854e6f863f",
+    "tests/test_aos_cpu_dispatch.py": "2741221639160fbedd352d12451e699171a3994b2443b4460dd4f3722567c35c",
+    "docs/contracts/aos-cpu-capability.v1.schema.json": "44c142fa51200e846971df8e57d6c83b0fe18bf1694eb8c4835471cc521b750e",
+    "docs/contracts/aos-cpu-capability.v1.example.json": "48190e291e2fdb55a7987ea66a1ef0b8d4575d64ab8a98ad6b055d8daf816c5f"
+  },
+  "source_manifest_sha256": "2a3f9fca0fa82c07950dbb7433880b22ba4ea327b569452ec6f9170bb41eb3bb",
+  "verification": {
+    "pytest_passed": 155,
+    "pytest_warnings": 81,
+    "pytest_seconds": 6.25,
+    "pytest_exit": 0,
+    "strict_mypy_files": 4,
+    "strict_mypy_exit": 0,
+    "ruff_exit": 0,
+    "bandit_exit": 0,
+    "git_diff_check_exit": 0,
+    "full_quality_gate_run": false,
+    "pytest_log_sha256": "3aabf9e7a22b42512b0b6031291a290835ca634255aac217700b4fb31761a358"
+  },
+  "runtime": {
+    "deployed": false,
+    "aos_execution": false,
+    "gpu_execution": false,
+    "model": null,
+    "quantization": null,
+    "context": null,
+    "model_calls": 0,
+    "vram_peak": null,
+    "handover_latency": null,
+    "user_processes_stopped": false,
+    "source_tests_only": true
+  },
+  "remaining": [
+    "AOS CPU capability consumer and version-pair ACK",
+    "AOS field_intent/prior_experience typed web forwarding",
+    "Real CPU start-score-report-verification through AOS",
+    "Native exclusion producer/consumer and coordinated real GPU acceptance"
+  ],
+  "not_run": [
+    "real AOS CPU experiment",
+    "integrated GPU experiment",
+    "teacher training or learned adapters",
+    "clean-machine installation"
+  ],
+  "publication": {
+    "candidate_committed": false,
+    "candidate_pushed": false,
+    "v010_tag_unchanged": true
+  }
+}

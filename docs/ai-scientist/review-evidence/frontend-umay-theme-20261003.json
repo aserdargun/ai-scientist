@@ -1,0 +1,49 @@
+{
+  "schema": "frontend-umay-theme-review.v1",
+  "observed_at": "2026-10-03T19:07:32.284030+00:00",
+  "source_base": "9a8a7279c979c6eab923580ce6b34686d2fdd952",
+  "reference": "https://umayos.org; primary HTML, stylesheet and desktop/mobile browser readback",
+  "deployed": true,
+  "frontend_only": true,
+  "backend_restarted": false,
+  "build_exit_code": 0,
+  "source_sha256": {
+    "console/web/src/ui/App.tsx": "8554418a826d2530dab47cf396d4a48747753201fa1b29d49879484741310991",
+    "console/web/src/ui/styles.css": "9c0608ebe8a6432e0c4b648c52905d4edb5ce2800c8a3aa0516b8507d4cf15c2"
+  },
+  "live_index_sha256": "656364f4e886833ee5254ab6193bf30950f287c47f72f0e800a3c50c09dd13ae",
+  "visual_comparison": [
+    "white header and navy brand",
+    "navy status panel and navigation",
+    "turquoise actions with navy labels",
+    "light cards and thin borders",
+    "compact edges and readable hierarchy"
+  ],
+  "browser": "existing Playwright Chromium; Browser plugin unavailable",
+  "checks": {
+    "desktop": [
+      1440,
+      1050
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "navigation_pages": 6,
+    "english_default": true,
+    "turkish_selection": true,
+    "selection_persistence": true,
+    "cross_tab_sync": true,
+    "storage_denial_fallback": true,
+    "draft_values_preserved": true,
+    "horizontal_overflow": false,
+    "javascript_errors": 0,
+    "non_readonly_requests": 0
+  },
+  "not_tested": [
+    "remote Mac browser",
+    "GPU/model/training",
+    "AOS runtime integration"
+  ],
+  "font": "Inter Variable, Inter, system fallback; no new font assets downloaded"
+}

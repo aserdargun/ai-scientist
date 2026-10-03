@@ -1,0 +1,86 @@
+{
+  "capability": {
+    "allocation_authority": false,
+    "allowed_purpose": "research",
+    "aos_cpu_study_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "gpu_release_verified": false,
+    "launch_authorized": false,
+    "max_experiments": 1,
+    "max_wall_seconds": 600,
+    "model_tokens": 0,
+    "native_inference_authorized": false,
+    "origin": "aos",
+    "owner_id": "aos:example-owner",
+    "program_version": "mode-grid.v1",
+    "provider": "mode-grid",
+    "provider_config_sha256": "8e30f641714691edb23e4bd8b7e84df9bfea002ba32436e03a54f6995b117284",
+    "schema": "scientist.lab-cpu-capability.v1",
+    "snapshot_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "source_kind": "synthetic",
+    "suite_entry_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "suite_id": "aos-cpu-example",
+    "suite_manifest_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "track": "mode"
+  },
+  "grid": {
+    "available_prefix_count": 1,
+    "configurations": [
+      {
+        "candidate_sha256": "2d6fc78a3a770c4794f80fd10831c87b1510e06d48cde82f030a043b88c07913",
+        "configuration": {
+          "alarm_quantile": 0.99,
+          "calibration": "leave_one_out",
+          "calibration_fraction": 0.2,
+          "dwell": 1,
+          "k": 3,
+          "lsh_merge_tables": 2,
+          "lsh_projections": 3,
+          "lsh_tables": 4,
+          "lsh_width": 0.35,
+          "method": "lsh",
+          "metric": "euclidean",
+          "min_support": 4,
+          "optics_max_eps": 2.0,
+          "optics_min_cluster_size": 8,
+          "optics_min_samples": 8,
+          "optics_xi": 0.05,
+          "release_ratio": 0.8,
+          "seed": 0,
+          "som_columns": 3,
+          "som_iterations": 400,
+          "som_learning_rate": 0.3,
+          "som_rows": 3,
+          "som_sigma": 1.5,
+          "tolerance_multiplier": 1.25,
+          "tolerance_quantile": 0.99,
+          "weighting": "distance"
+        },
+        "configuration_sha256": "ad3561edcb88b365259894129bfb654e3f6185f650e4400bfef80c1c6f3446d5",
+        "method": "lsh",
+        "position": 1
+      }
+    ],
+    "registered_configuration_count": 1,
+    "request_semantics": "first_n_of_available_prefix",
+    "selection": "ordered_registered_prefix"
+  },
+  "schema": "scientist.lab-cpu-study.v1",
+  "snapshot": {
+    "entity_authority": false,
+    "evaluation_input_rows": 192,
+    "first_utc": "2024-01-01T00:00:00+00:00",
+    "last_utc": "2024-01-01T00:06:23+00:00",
+    "rows": 384,
+    "sensors": [
+      "sensor_a",
+      "sensor_b",
+      "sensor_c",
+      "constant_sensor"
+    ],
+    "snapshot_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "source_id": "synthetic.step",
+    "source_kind": "synthetic",
+    "source_version": "v1.seed0",
+    "train_rows": 192
+  }
+}

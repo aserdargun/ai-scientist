@@ -1,0 +1,105 @@
+{
+  "schema": "scientist.frontend-language-delivery.v1",
+  "default_language": "en",
+  "supported_languages": [
+    "en",
+    "tr"
+  ],
+  "storage_key": "ai-scientist.locale.v1",
+  "frontend_index_sha256": "ca5076e3748a970a0141c24eb1550b587aeffe00a2a8a18e413c2de2b40292dd",
+  "source_sha256": {
+    "console/web/index.html": "518fb15a76ab47bd69caef70775b8eda8820166fcf93b64d7a3f669d1aef149d",
+    "console/web/src/ui/App.tsx": "4d1e1e984d6c80431d6d5a65a3eea87623c9d3ee672a915b46deeee26903a67e",
+    "console/web/src/ui/AgentWorkspace.tsx": "d11d7ea1b50512582506e2df12009c5648608108af77806e55e06570634f94c9",
+    "console/web/src/ui/ExperiencePanel.tsx": "ffe586ca9b8e2b789f35cab8ee08003120da6950213ff4cae1f166e5f7039e58",
+    "console/web/src/ui/OperatingModesPage.tsx": "59c623fe03d0ad5c7b8da598c8bc64e85dcaa65f346b269d8ba0962329f1462c",
+    "console/web/src/ui/ModeParameters.tsx": "464d1e1c655e681076028ffbbb3c27654ff5aa662806ba589476862c6d604eef",
+    "console/web/src/ui/ModeDiagnostics.tsx": "83f7bb261200ba47ced0555cf50173340bfa43943258bbdf90d8de079c3e39eb",
+    "console/web/src/ui/ModeStreamForm.tsx": "b35f7b588508e0b34d02f00eda9f961bad10d78d722e8fb5a2ee014c943a11d2",
+    "console/web/src/ui/ModeStreamProgress.tsx": "ec47b0ab9e1e46a591bd3189cd919989af46507c38f941dab87dfbcac235493f",
+    "console/web/src/ui/api.ts": "ef18fc75386f0213de2db634e74d74e169f22c1f70467fcd38a617412cd3857a",
+    "console/web/src/ui/styles.css": "1e8e956beea01d45dd52718c33fee0b95e172fe3028fed85d437a7303971875f",
+    "console/web/src/ui/i18n.ts": "63b427d6cb65377d0f61ae3f498c9746d0f5e3d2bc830088d0d5b98d31b50a60"
+  },
+  "assets": {
+    "index-CWbsST74.css": "f3c4801bad819c0b838234be9d9ab95f6f275376749e7cc6102634d86dc2c951",
+    "index-iFhnSbGO.js": "0ea1e679e94d4d64dba5934114e7d568b102600e328b392b942b20e004da17f2"
+  },
+  "npm_build_exit_code": 0,
+  "live_browser": {
+    "scope": "live UI read-only",
+    "browser_plugin": "not available; existing Playwright used",
+    "url": "http://127.0.0.1:8789",
+    "default_english_with_turkish_browser": true,
+    "language_and_document_title_switch": true,
+    "selection_survives_reload": true,
+    "cross_tab_selection_sync": true,
+    "storage_denial_session_fallback": true,
+    "field_draft_preserved_on_switch": true,
+    "navigation": [
+      {
+        "nav": "Agent",
+        "heading": "Research control center"
+      },
+      {
+        "nav": "Overview",
+        "heading": "Research control center"
+      },
+      {
+        "nav": "Acceptance items",
+        "heading": "Research control center"
+      },
+      {
+        "nav": "Operating modes",
+        "heading": "Research control center"
+      },
+      {
+        "nav": "Experiments",
+        "heading": "Research control center"
+      },
+      {
+        "nav": "System",
+        "heading": "Research control center"
+      }
+    ],
+    "desktop": [
+      1440,
+      1050
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "mobile_overflow": false,
+    "page_errors": [],
+    "non_readonly_requests": []
+  },
+  "service_restart": false,
+  "backend_changed": false,
+  "full_quality_gate": {
+    "exit_code": 0,
+    "command_exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "passed": 3644,
+    "skipped": 49,
+    "deselected": 177,
+    "warnings": 603,
+    "pytest_seconds": 274.8,
+    "service_runtime_seconds": 351.056,
+    "memory_peak_display": "869M",
+    "swap_bytes": 0,
+    "source_freeze_sha256": "df811bfb59c36baed5517808d7a242b9aa984810afbef0e141900315450dab6d",
+    "frozen_source_unchanged": true
+  },
+  "limitations": [
+    "Original user text, API messages and evidence are not automatically translated.",
+    "Chromium was checked locally; aserdargun remote browser, Firefox and Safari were not exercised."
+  ]
+}

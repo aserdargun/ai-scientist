@@ -1,0 +1,538 @@
+{
+  "$comment": "Proposed source contract. Not a peer/runtime acceptance receipt; example identities are inert.",
+  "$defs": {
+    "CpuConfigurationDescriptor": {
+      "additionalProperties": false,
+      "description": "An ordered registered configuration, never an observed score or recommendation.",
+      "properties": {
+        "candidate_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Candidate Sha256",
+          "type": "string"
+        },
+        "configuration": {
+          "$ref": "#/$defs/ModeConfig"
+        },
+        "configuration_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Configuration Sha256",
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "lsh",
+            "optics",
+            "som"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "position": {
+          "maximum": 35,
+          "minimum": 1,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "position",
+        "method",
+        "configuration",
+        "configuration_sha256",
+        "candidate_sha256"
+      ],
+      "title": "CpuConfigurationDescriptor",
+      "type": "object"
+    },
+    "CpuRegisteredGrid": {
+      "additionalProperties": false,
+      "description": "A request with experiments=N uses the first N entries of this available prefix.",
+      "properties": {
+        "available_prefix_count": {
+          "maximum": 35,
+          "minimum": 1,
+          "title": "Available Prefix Count",
+          "type": "integer"
+        },
+        "configurations": {
+          "items": {
+            "$ref": "#/$defs/CpuConfigurationDescriptor"
+          },
+          "maxItems": 35,
+          "minItems": 1,
+          "title": "Configurations",
+          "type": "array"
+        },
+        "registered_configuration_count": {
+          "maximum": 35,
+          "minimum": 1,
+          "title": "Registered Configuration Count",
+          "type": "integer"
+        },
+        "request_semantics": {
+          "const": "first_n_of_available_prefix",
+          "title": "Request Semantics",
+          "type": "string"
+        },
+        "selection": {
+          "const": "ordered_registered_prefix",
+          "title": "Selection",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "registered_configuration_count",
+        "available_prefix_count",
+        "request_semantics",
+        "configurations"
+      ],
+      "title": "CpuRegisteredGrid",
+      "type": "object"
+    },
+    "CpuSnapshotSummary": {
+      "additionalProperties": false,
+      "description": "Public feature metadata only; evaluation input counts precede Scorer filtering.",
+      "properties": {
+        "entity_authority": {
+          "const": false,
+          "title": "Entity Authority",
+          "type": "boolean"
+        },
+        "evaluation_input_rows": {
+          "description": "Snapshot input rows before embargo/masks; not the scored row count.",
+          "maximum": 4094,
+          "minimum": 1,
+          "title": "Evaluation Input Rows",
+          "type": "integer"
+        },
+        "first_utc": {
+          "title": "First Utc",
+          "type": "string"
+        },
+        "last_utc": {
+          "title": "Last Utc",
+          "type": "string"
+        },
+        "rows": {
+          "maximum": 4096,
+          "minimum": 3,
+          "title": "Rows",
+          "type": "integer"
+        },
+        "sensors": {
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Sensors",
+          "type": "array"
+        },
+        "snapshot_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Snapshot Sha256",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^synthetic\\.[a-z_]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_kind": {
+          "const": "synthetic",
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "source_version": {
+          "pattern": "^v1\\.seed[0-9]{1,10}$",
+          "title": "Source Version",
+          "type": "string"
+        },
+        "train_rows": {
+          "maximum": 4095,
+          "minimum": 2,
+          "title": "Train Rows",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source_kind",
+        "snapshot_sha256",
+        "source_id",
+        "source_version",
+        "sensors",
+        "rows",
+        "train_rows",
+        "evaluation_input_rows",
+        "first_utc",
+        "last_utc",
+        "entity_authority"
+      ],
+      "title": "CpuSnapshotSummary",
+      "type": "object"
+    },
+    "LabCpuCapability": {
+      "additionalProperties": false,
+      "description": "Separate from the existing local-model capability and its authority.",
+      "properties": {
+        "allocation_authority": {
+          "const": false,
+          "title": "Allocation Authority",
+          "type": "boolean"
+        },
+        "allowed_purpose": {
+          "const": "research",
+          "title": "Allowed Purpose",
+          "type": "string"
+        },
+        "aos_cpu_study_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Aos Cpu Study Sha256",
+          "type": "string"
+        },
+        "gpu_release_verified": {
+          "const": false,
+          "title": "Gpu Release Verified",
+          "type": "boolean"
+        },
+        "launch_authorized": {
+          "const": false,
+          "title": "Launch Authorized",
+          "type": "boolean"
+        },
+        "max_experiments": {
+          "maximum": 35,
+          "minimum": 1,
+          "title": "Max Experiments",
+          "type": "integer"
+        },
+        "max_wall_seconds": {
+          "maximum": 14400,
+          "minimum": 1,
+          "title": "Max Wall Seconds",
+          "type": "integer"
+        },
+        "model_tokens": {
+          "const": 0,
+          "title": "Model Tokens",
+          "type": "integer"
+        },
+        "native_inference_authorized": {
+          "const": false,
+          "title": "Native Inference Authorized",
+          "type": "boolean"
+        },
+        "origin": {
+          "const": "aos",
+          "title": "Origin",
+          "type": "string"
+        },
+        "owner_id": {
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "program_version": {
+          "title": "Program Version",
+          "type": "string"
+        },
+        "provider": {
+          "const": "mode-grid",
+          "title": "Provider",
+          "type": "string"
+        },
+        "provider_config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Provider Config Sha256",
+          "type": "string"
+        },
+        "schema": {
+          "const": "scientist.lab-cpu-capability.v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "snapshot_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Snapshot Sha256",
+          "type": "string"
+        },
+        "source_kind": {
+          "const": "synthetic",
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "suite_entry_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Suite Entry Sha256",
+          "type": "string"
+        },
+        "suite_id": {
+          "title": "Suite Id",
+          "type": "string"
+        },
+        "suite_manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Suite Manifest Sha256",
+          "type": "string"
+        },
+        "track": {
+          "const": "mode",
+          "title": "Track",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "owner_id",
+        "origin",
+        "suite_id",
+        "track",
+        "program_version",
+        "provider",
+        "source_kind",
+        "suite_manifest_sha256",
+        "suite_entry_sha256",
+        "provider_config_sha256",
+        "snapshot_sha256",
+        "aos_cpu_study_sha256",
+        "max_experiments",
+        "max_wall_seconds",
+        "model_tokens",
+        "allowed_purpose",
+        "allocation_authority",
+        "gpu_release_verified",
+        "native_inference_authorized",
+        "launch_authorized"
+      ],
+      "title": "LabCpuCapability",
+      "type": "object"
+    },
+    "ModeConfig": {
+      "additionalProperties": false,
+      "description": "All fitting, mode admission, neighbor, and alarm parameters are independent.",
+      "properties": {
+        "alarm_quantile": {
+          "default": 0.99,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Alarm Quantile",
+          "type": "number"
+        },
+        "calibration": {
+          "default": "leave_one_out",
+          "enum": [
+            "leave_one_out",
+            "chronological"
+          ],
+          "title": "Calibration",
+          "type": "string"
+        },
+        "calibration_fraction": {
+          "default": 0.2,
+          "exclusiveMaximum": 0.5,
+          "exclusiveMinimum": 0,
+          "title": "Calibration Fraction",
+          "type": "number"
+        },
+        "dwell": {
+          "default": 1,
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Dwell",
+          "type": "integer"
+        },
+        "k": {
+          "default": 3,
+          "maximum": 128,
+          "minimum": 1,
+          "title": "K",
+          "type": "integer"
+        },
+        "lsh_merge_tables": {
+          "default": 2,
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Lsh Merge Tables",
+          "type": "integer"
+        },
+        "lsh_projections": {
+          "default": 3,
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Lsh Projections",
+          "type": "integer"
+        },
+        "lsh_tables": {
+          "default": 4,
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Lsh Tables",
+          "type": "integer"
+        },
+        "lsh_width": {
+          "default": 0.35,
+          "exclusiveMinimum": 0,
+          "maximum": 10,
+          "title": "Lsh Width",
+          "type": "number"
+        },
+        "method": {
+          "default": "lsh",
+          "enum": [
+            "lsh",
+            "optics",
+            "som"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "metric": {
+          "default": "euclidean",
+          "enum": [
+            "euclidean",
+            "manhattan"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "min_support": {
+          "default": 4,
+          "maximum": 512,
+          "minimum": 2,
+          "title": "Min Support",
+          "type": "integer"
+        },
+        "optics_max_eps": {
+          "default": 2.0,
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Optics Max Eps",
+          "type": "number"
+        },
+        "optics_min_cluster_size": {
+          "default": 8,
+          "maximum": 512,
+          "minimum": 2,
+          "title": "Optics Min Cluster Size",
+          "type": "integer"
+        },
+        "optics_min_samples": {
+          "default": 8,
+          "maximum": 512,
+          "minimum": 2,
+          "title": "Optics Min Samples",
+          "type": "integer"
+        },
+        "optics_xi": {
+          "default": 0.05,
+          "exclusiveMaximum": 1,
+          "exclusiveMinimum": 0,
+          "title": "Optics Xi",
+          "type": "number"
+        },
+        "release_ratio": {
+          "default": 0.8,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Release Ratio",
+          "type": "number"
+        },
+        "seed": {
+          "default": 0,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "som_columns": {
+          "default": 3,
+          "maximum": 12,
+          "minimum": 1,
+          "title": "Som Columns",
+          "type": "integer"
+        },
+        "som_iterations": {
+          "default": 400,
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Som Iterations",
+          "type": "integer"
+        },
+        "som_learning_rate": {
+          "default": 0.3,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Som Learning Rate",
+          "type": "number"
+        },
+        "som_rows": {
+          "default": 3,
+          "maximum": 12,
+          "minimum": 1,
+          "title": "Som Rows",
+          "type": "integer"
+        },
+        "som_sigma": {
+          "default": 1.5,
+          "exclusiveMinimum": 0,
+          "maximum": 20,
+          "title": "Som Sigma",
+          "type": "number"
+        },
+        "tolerance_multiplier": {
+          "default": 1.25,
+          "exclusiveMinimum": 0,
+          "maximum": 20,
+          "title": "Tolerance Multiplier",
+          "type": "number"
+        },
+        "tolerance_quantile": {
+          "default": 0.99,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Tolerance Quantile",
+          "type": "number"
+        },
+        "weighting": {
+          "default": "distance",
+          "enum": [
+            "uniform",
+            "distance"
+          ],
+          "title": "Weighting",
+          "type": "string"
+        }
+      },
+      "title": "ModeConfig",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Source-only proposed description; it adds no registration or launch authority.",
+  "properties": {
+    "capability": {
+      "$ref": "#/$defs/LabCpuCapability"
+    },
+    "grid": {
+      "$ref": "#/$defs/CpuRegisteredGrid"
+    },
+    "schema": {
+      "const": "scientist.lab-cpu-study.v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "snapshot": {
+      "$ref": "#/$defs/CpuSnapshotSummary"
+    }
+  },
+  "required": [
+    "schema",
+    "capability",
+    "snapshot",
+    "grid"
+  ],
+  "title": "LabCpuStudy",
+  "type": "object"
+}

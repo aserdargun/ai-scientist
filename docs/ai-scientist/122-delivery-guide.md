@@ -1,100 +1,116 @@
-# 0.46 teslim kılavuzu ve bilinen eksikler
+# v0.1.0 working CPU delivery guide
 
-Tarih: 2026-10-03. Kullanıcı kararı: mevcut çalışan sürümü eksikleriyle teslim;
-gerçek AOS içinde çalışma sonraki aşama. Yeni ürün özelliği bu teslimin koşulu değildir.
+2026-10-03. This guide describes the prepared CachyOS installation and its known
+gaps. The package version is **v0.1.0**. The published v0.1.0 tag preserves
+harness **0.46.0**; the approved live `field-lab` CPU update runs harness
+**0.47.0**. The English/Türkçe UI source candidate is `9a8a727`.
+The published tag was not moved.
 
-## Teslimin içeriği
+The console opens in **English** by default. **Language / Dil** selects English
+or Türkçe and remembers the choice in the browser. Changing language preserves
+form values and does not start an experiment. User text and original reports
+retain their source language.
 
-Çalışan field-lab arayüzü/API/CPU Director, sentetik ve izinli veri kaynağı seçimi,
-istatistikler, LSH/OPTICS/SOM mod deneyleri, NN/residual/OMR, anomali baseline'ları,
-sonlu OMR akışı, deney hafızası ve saha amacı bağlamı. Kaynak, kullanım belgeleri,
-testler ve kanıt özetleri teslim edilir. Özel DB, ham oturumlar, tokenlar ve model
-cache'i kaynak dağıtımının parçası değildir.
+## Start the prepared installation
 
-Mevcut native çekirdek 0.41.1 ayrı korunur. Çalışan 0.46 kaynak dalı
-`feat/omr-stream-v1`, taban commit `8e6ec0c20b21fbdc5a53dc007b884af412f0cbd3`;
-çalışma ağacı değişiklikleri vardır. Ana yerel commit
-`55c5300600112ab823f76ec434029d6dc23e513c`. Bu commitler yayımlanmış sürüm
-commit'i olarak kullanılamaz; temiz public geçmişe teslim ayrı işlemle yapılır.
+Run as the normal desktop user on CachyOS:
 
-## Geçen kabul
+```bash
+cd /home/cachyos/ai-scientist/data/runtime/omr-v1
+bash ops/start-lab.sh --profile field-lab
+```
 
-| Kontrol | Kanıt / sonuç |
+Open **http://127.0.0.1:8789/**. The API uses `127.0.0.1:8767`; the profile DB
+uses port `55434`. Already running services are preserved. The terminal can
+close after startup; use the same command after a new desktop login.
+
+For status:
+
+```bash
+bash ops/start-lab.sh --profile field-lab --check
+```
+
+For another computer, follow the [README connection commands](../../README.md#başka-bilgisayardan-erişim).
+The configured SSH client helper opens local `127.0.0.1:8788` and forwards to
+the CPU console on `8789`. Actual remote Mac/Windows browser acceptance remains
+open; local browser checks do not establish it.
+
+## First manual CPU experiment
+
+1. In **Agent / Eylemci**, check that the Lab connection is ready and open the
+   data/method selection flow, **Operating modes and OMR / Çalışma modları ve OMR**.
+2. Under **Synthetic source / Sentetik kaynak**, keep a small default scenario
+   and press **Generate synthetic snapshot / Sentetik snapshot üret**. Review
+   **Descriptive statistics / Tanımlayıcı istatistik**.
+3. Press **Prepare for Scorer / Scorer için hazırla** and wait for **Scorer ready**.
+4. Set **Experiment type / Deney türü** to **Manual parameter comparison
+   (0 model tokens) / Manuel parametre karşılaştırması (0 model tokenı)**.
+   Select only **OPTICS**, keep the default parameters and use a **600 second**
+   time budget including baselines.
+5. Press **Start measurement with 0 tokens / 0 token ile ölçümü başlat**.
+   Open **Experiments / Deneyler** to monitor the run and read its terminal report.
+
+This is a manual CPU experiment. The current profile disables local model calls
+and has no installed public local-agent grant. Selecting the local agent does
+not enable the model or GPU. Synthetic results do not establish real industrial
+data acceptance or improved research performance.
+
+## View the existing measured report
+
+In **Experiments / Deneyler**, open run
+`50ea6463-4589-4213-a2fe-817287f3a323` and **Report / Rapor**. This preserved SKAB
+DEV example completed in **279.61 seconds**, with **12 independent scores**:
+9 baselines, 1 OPTICS candidate and 2 confirmations. It contains **470 OMR points**
+and 8 sensors; 450 rows were scored after masking. OPTICS received KEEP, but its
+raw VUS-PR `0.59051` was below the best baseline `0.59544`. KEEP is a development
+selection, not evidence of baseline superiority or general learning.
+
+The current deployment revalidated access to the previous public CPU report by
+hash. These records belong to the prepared private installation; they are not a
+live database distributed with the source code.
+
+## Stop an experiment or the profile
+
+For an active experiment, press **Stop / Durdur** in the console and wait for a
+verified terminal state. A stop request alone does not prove worker cleanup.
+Then stop the idle profile:
+
+```bash
+bash ops/start-lab.sh --profile field-lab --stop
+```
+
+This stops only the owned idle profile and preserves its database and reports.
+Do not change a `stop_requested` DB row to `stopped` manually or close another
+application's processes. Quarantine requires identity-bound cleanup evidence.
+
+## Verified current state and gaps
+
+The latest source quality gate passed: **3644 passed / 49 skipped /
+177 deselected**, all seven commands exit **0**. Skipped and excluded checks
+remain unverified. TypeScript/Vite and local desktop/mobile browser checks passed;
+language switching preserved form values. The language verification made no
+experiment or model POST requests. The CPU image smoke verified LSH, OPTICS and
+SOM in an isolated, network-free container; it was not independent research
+scoring or AOS acceptance.
+
+The current live deployment and its evidence are recorded in
+[129: CPU runtime and English/Türkçe delivery](129-runtime-package-preflight.md).
+Older 0.46 release and experiment records describe their historical measurements;
+their test totals and source/image pins are not the current runtime.
+
+| Gap | Current status |
 |---|---|
-| Ürün kaynak kalite kapısı | 3328 passed / 7 skipped / 177 deselected; 7 komut exit 0 |
-| Ön yüz | TypeScript/build; gerçek kayıt üzerinde masaüstü ve mobil okuma |
-| Amaç → deney → rapor | `50ea6463-4589-4213-a2fe-817287f3a323`, 279,61 s, completed |
-| Bağımsız değerlendirme | 9 baseline + 1 OPTICS primary + 2 confirmation |
-| Tekrarlı başlatma | Aynı istek/key aynı run; ikinci iş yok |
-| Kapanış | Director ve 12 Scorer süreç/cgroup yok, sandbox yok, kuyruk boş |
-| Kalıcı kayıt | Önceki raporlar korundu, terminal rapor hash'i doğrulandı |
-| Saha bağlamı | Snapshot + amaç hash'i, Director öneri bağlamına bağlanma ve terminal companion doğrulandı |
+| Local research model in `field-lab` | Disabled; separate authorization and resource admission required |
+| AOS and real shared GPU progress/cancellation | Not accepted; coordinated real model evidence remains open |
+| Teacher / LoRA / QLoRA | UI prepares a draft only; no teacher call or trained adapter delivery |
+| Automatic lasting improvement | Explicit experiment memory exists; independent improvement and promotion remain open |
+| Clean machine installation | Full service/model/data bootstrap has not been accepted on a fresh host |
+| Full M0 / OM / capacity | Open items remain in [the acceptance record](m0-acceptance.md) |
+| Project license / general CI / remote client acceptance | Still open |
 
-Tam [0.46 kanıtı](review-evidence/field-lab-field-intent-20261003.json).
-Raporda OMR noktası sayısı 470, maske sonrası skorlanan satır 450'dir; bunlar
-aynı sayı olarak sunulmaz. Bu koşuda LLM/GPU işi yoktur.
-
-Ayrı tarihsel [yerel model araştırması](118-six-proposal-local-research.md):
-altı öneri, 15 bağımsız ölçüm, 8278 token, 12890 MiB tepe VRAM; tümü DISCARD.
-Bu ölçüm field-lab CPU profilinin GPU açtığı veya AOS ile ortak kabulün geçtiği
-anlamına gelmez.
-
-## Bilinen eksikler / çalıştırılmayan kabul
-
-| Konu | Durum ve sonraki kanıt |
-|---|---|
-| AOS gerçek ortak GPU akışı | HOLD; native dışlama producer/consumer, source/config pinleri ve kontrollü devir gerekiyor |
-| Adil GPU paylaşımı ve gerçek inflight iptal | Bu teslimde çalıştırılmadı; AOS görevi + Scientist çağrısı ilerlemesi ve fiziksel cleanup ölçülecek |
-| Öğretmen eğitimi | UI yalnız taslak/hazırlık; eğitilmiş adapter yok |
-| Sürekli kalıcı gelişim | Açık hafıza seçimi var; otomatik skill/model terfisi ve bağımsız gelişim ölçümü açık |
-| Temiz makine kurulum | Geliştirme komutları var; tam servis/model/data bootstrap henüz başka temiz host'ta kabul edilmedi |
-| Uzak Mac tarayıcı | Erişim köprüsü açık; kullanıcı cihazından pozitif tarayıcı kabulü yapılmadı |
-| Tüm M0/OM/kapasite | Ayrı kabul kaydı geçerli; CPU test sayısı bu kapsamın tamamlanma yüzdesi değildir |
-| Proje lisansı / genel CI | Ayrı yayın işi; lisans seçilmedi, bu teslimde tüm uzak CI garantisi verilmez |
-| Gerçek ücret | Fatura yok; geçmiş log kapsamı ve varsayımsal API fiyat senaryosu ayrı |
-
-## Mevcut kurulumun işletimi
-
-[README başlangıç adımları](../../README.md#hazır-kurulumu-açın) günceldir.
-Linux kullanıcı systemd oturumu, Docker yetkisi, Python 3.12 `.venv`, derlenmiş
-`console/web/dist`, pinli PostgreSQL/sandbox imajları ve profil yapılandırması gerekir.
-`--prepare` yalnız 0700 profil ve 0600 özel yapılandırma oluşturur. İlk servis
-başlangıcı bu profile ait DB rollerini/migration'ları hazırlar; var olan başka
-DB veya birimi devralmaz. İmajlar yoksa indirme yerine anlaşılır hata verir.
-
-Profil varsayılan portları: console 8789, API 8767, DB 55434. İkinci profil aynı
-varsayılan portlarla eşzamanlı başlatılamaz. Mevcut yapılandırma kimliği checkout
-konumuna bağlıdır; klasörü taşıyıp aynı özel receipt'i kullanmayın.
-
-- **Bağlantı yok:** `--check` ve profile ait kullanıcı servis günlüklerini inceleyin.
-- **Port dolu:** sahibi belirlenmeden süreç kapatmayın; yanlış profil açılmış olabilir.
-- **İmaj eksik:** pinli imajın güvenilir build/provision adımını tamamlayın; keyfi `latest` kullanmayın.
-- **İş stop_requested:** terminal cleanup bekleyin. DB durumunu elle `stopped` yapmayın.
-- **Quarantine:** kaynak bırakılmış varsaymayın; kimlikli cleanup kanıtı gerektirir.
-- **Bütçe reddi:** RAM/disk rezervini koruyun; başka uygulamaların cache veya işlerini silmeyin.
-- **Kaynak/veri yok:** izinli snapshot/registry kaydı gerekir; özel DSN'yi UI'ye yapıştırmayın.
-
-Yedekler özel DB, blob deposu, registry ve principal yapılandırmasını kapsamalıdır.
-Yedekleri public repoya koymayın. Bu teslimde restore tatbikatı yapılmadı; veri
-saklama gereksinimleri olan kurulumlarda ayrı doğrulayın.
-
-## Sürüm ve yayın kayıtları
-
-0.46 harness hash: `fa0e0b9d5c76d49216e086a9184bf1985bc0065a3426b99b1def7c08cb892837`.
-Yerel sandbox imajı: `sha256:5dfc403b6fc6e7347c80c99ca461c1902b3ca4725a9428569a33d27f0ff1214c`.
-210 dosya byte eşliği doğrulandı. Bunlar taşınabilir registry pull adresi değildir.
-Yayın yardımcılarının kontrolleri ve gerçek public commit/push sonucu bu teslimden
-ayrı receipt ile kaydedilir; timer kurulmadan saatlik yayın aktif sayılmaz.
-
-## Son yayın paketi kontrolü
-
-Temiz public geçmiş üstüne seçilen 0.46 ürün kaynağı, incelenmiş native
-yardımcıları ve kullanım/yayın araçlarının birleşik kontrolü: **3439 passed,
-49 skipped, 177 deselected, 517 warning**. Opt-in/host bağımlı skip'ler geçmiş
-bir kabul gibi sayılmaz; AOS gerçek ortak çalışma açık kalır.
-
-İlk systemd test ortamında beş kontrol exit 0 sonrası `uv` PATH'te bulunamadı
-ve komut exit 1 verdi. Kod hashleri değişmeden PATH düzeltildi; kalan wheel
-build ve wheel import kontrolü exit 0 tamamlandı. Yedi gerçek kontrol sonucu
-birleşik receipt'te kayıtlıdır; önceki hata gizlenmedi ve 3439 test tekrarlanmadı.
-[Makine okunur teslim kaydı](review-evidence/release-046-delivery.json).
+This is a working CPU delivery with documented gaps, not completion of the full
+research goal. The prepared setup requires a Linux user systemd session, Docker
+access, Python environment, built UI, pinned local images and private profile
+configuration. `--prepare` alone does not install the complete runtime. Preserve
+private database/blob/registry/principal backups outside the public repository;
+a restore drill has not been accepted.

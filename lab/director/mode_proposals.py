@@ -14,7 +14,9 @@ from lab.operating_modes.candidate import candidate_source
 from lab.operating_modes.contracts import ModeConfig
 
 ProposalContract = Literal["candidate-python.v1", "operating-mode-config.v1"]
-MODE_PROMPT_TEMPLATE = "director.operating-mode-contract.metadata-only.v1"
+MODE_PROMPT_TEMPLATE: Literal["director.operating-mode-contract.metadata-only.v1"] = (
+    "director.operating-mode-contract.metadata-only.v1"
+)
 
 
 class OperatingModeProposal(BaseModel):
@@ -62,6 +64,14 @@ MODE_SYSTEM_PROMPT = (
     "feedback and the champion to propose a testable change. Preserve the selected move. "
     "S1 makes a small improvement; S2 may change method or combine parameter changes. "
     "The champion source is host-compiled context, not a request for model-written code."
+)
+MODE_PUBLIC_PROMPT_TEMPLATE: Literal["director.operating-mode-contract.public-label-blind.v1"] = (
+    "director.operating-mode-contract.public-label-blind.v1"
+)
+MODE_PUBLIC_SYSTEM_PROMPT = MODE_SYSTEM_PROMPT.replace(
+    "Fit and calibration use healthy training only; ",
+    "Fit and calibration use only the supplied label-blind source-order training; "
+    "normal training is not guaranteed. Never use labels to select training rows; ",
 )
 
 

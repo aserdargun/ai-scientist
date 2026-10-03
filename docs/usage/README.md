@@ -31,9 +31,12 @@ oluşturduğu varsayımıyla fiyatlanmaz; elektrik/donanım maliyeti ölçülmed
 
 ## Düzenli kayıt ve yayın
 
-`collect_project_usage.py` gözlemleri üretir. `hourly_project_usage.py` yalnız
-iki kullanım raporu dosyasını kesin alan/tip/değer şemasıyla yayımlanabilir hale
-getirir. `publish_reviewed_snapshot.py` incelenmiş, dosya hashleri sabit bir
+`collect_project_usage.py` gözlemleri üretir. `hourly_project_usage.py` iki kullanım
+raporunu kesin alan/tip/değer şemasıyla üretir ve aynı gözlemden README içindeki
+`api-cost-summary` işaretli maliyet bölümünü günceller. Üç dosya tek commit içinde
+yayımlanır. Publisher README bölümünü yeniden hesaplayarak bölüm dışındaki
+baytların ve dosya modunun aynen korunduğunu doğrular. Eksik veya tekrar eden
+işaretler reddedilir; önceki başarılı rapor korunur. `publish_reviewed_snapshot.py` incelenmiş, dosya hashleri sabit bir
 paketi doğru public `origin/main` geçmişinde normal commit/push ile yayımlar.
 
 Saatlik işlem canlı geliştirme ağacını `git add -A` ile toplamaz. Tamamlanan kod

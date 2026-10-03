@@ -345,7 +345,7 @@ def _holdout_report_status(
     snapshot = state.holdout_approved_snapshot
     approved = snapshot.experiment_id if snapshot is not None else None
     if not isinstance(approved, str) or not approved:
-        raise ValueError("Director state has no durable holdout-approved champion")
+        raise ValueError("Director state has no durable retained reference candidate")
     status = state.holdout_last_status
     if status not in {"not_run", "passed", "reverted", "quota_exhausted", "failed"}:
         raise ValueError("Director state has an invalid holdout status")
@@ -421,7 +421,7 @@ def render_run_report(
         holdout_section = (
             "<dl><dt>Development champion</dt><dd>"
             f"<code>{_esc(holdout_status['development_champion_id'])}</code></dd>"
-            "<dt>Last holdout-approved champion</dt><dd>"
+            "<dt>Retained reference candidate</dt><dd>"
             f"<code>{_esc(holdout_status['approved_champion_id'])}</code></dd>"
             "<dt>Holdout status</dt><dd>"
             f"{_esc(holdout_status['status'])}</dd>"

@@ -490,7 +490,10 @@ class _FakeRuntimeUnits:
         diagnostic_log: Path,
         *,
         model_max_len: int,
+        before_launch=None,
     ) -> None:
+        if before_launch is not None:
+            before_launch()
         assert pin.revision == runtime.MODEL_REVISION
         assert diagnostic_log.parent.parent.name == "native-doctor"
         assert model_max_len == 4_096
@@ -1133,9 +1136,7 @@ def test_doctor_profile_is_fixed_and_result_receipt_omits_generated_text(
         "top_p": 0.95,
         "top_k": 20,
     }
-    assert runtime.doctor_main(
-        ["--request-id", "f" * 32, "--profile", "research-s2"]
-    ) == 0
+    assert runtime.doctor_main(["--request-id", "f" * 32, "--profile", "research-s2"]) == 0
     research_result = json.loads(capsys.readouterr().out)
     assert research_result["capacity_status"] == "measurement_only_not_capacity_acceptance"
     assert captured["profile"] == runtime.LOCAL_RESEARCH_S2_PROFILE

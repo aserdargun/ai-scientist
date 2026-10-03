@@ -1487,3 +1487,36 @@ Gerçek arayüzden SKAB DEV çalışması tamamlandı: 283,41 saniye, 9 baseline
 OMR/sensör görünümü ve sahipli süreç kapanışı doğrulandı. AOS gerçek GPU,
 holdout, öğretmen eğitimi ve otomatik öğrenilmiş iyileşme açık kalır.
 [Adımlar ve ölçüm kanıtı](120-public-dev-cpu-study.md).
+
+## 2026-10-03 — AOS kontrollü CPU entegrasyonu ve kapanış
+
+İzole 0.47 adayı; v0.1.0 ve çalışan 0.46 field-lab korunur.
+
+- **Geçti:** AOS typed caller → gerçek Scientist API/PG/Director → bağımsız
+  Scorer → AOS rapor hash doğrulaması; 10 skor, OPTICS DISCARD.
+- **Geçti:** ayrı koşuda iki stop_requested yanıtı → automatic recovery →
+  stopped; terminal rapor ve exact worker/cgroup/sandbox temizliği.
+- **Geçti:** yalnız izole API/PG kapatıldı; kuyruk boş, volume/kayıtlar korundu,
+  kullanıcı field-lab sağlıklı kaldı. AOS ayrıca fiziksel kapanışı doğruladı.
+- **Kanıtlanmadı:** Scorer aktifken iptal. SQL job tamamlanması stop olayından
+  önce olduğu için helper'ın geniş inflight kabul bayrağı geçerli sayılmaz.
+- **Çalıştırılmadı:** gerçek GPU/AOS birlikte çalışma, native devir/release,
+  otonom model kararı, gerçek AOS web uygulaması aktarımı ve öğrenme kabulü.
+
+Karar/onay girdileri fixture, veri sentetiktir; model tokenı sıfırdır.
+[125: kanıt kimlikleri ve sınırlar](125-aos-controlled-cpu-integration.md),
+[iptal/kapanış özeti](review-evidence/aos-controlled-cpu-cancellation-20261003.json).
+Bu kayıt önceki M0/OM/host kapılarını kaldırmaz.
+
+### 2026-10-03 — Public DEV yerel araştırma kaynak dilimi
+
+İzole v0.1.0 sonrası adayda ayrı public yerel-agent kayıt/prompt/işçi yolu ve
+kayıt kilidi içinde public CPU/agent iptal denetimi eklendi. 153 odaklı test
+geçti, bir gerçek PostgreSQL kontrolü atlandı. GPU worker generation bağlama
+regresyonu önce üretildi, dar atomik düzeltmeyle 93 ilişkili kontrol geçti.
+[Detaylar ve operatör kaydı](128-public-dev-local-agent.md).
+
+Bu kaynak/CPU/mock kanıtı M0.AOS.5/.7, gerçek public yerel model araştırması,
+öğretmen çağrısı, holdout veya öğrenilmiş adaptör kabulünü kapatmaz. Canlı profil
+CPU kalır; yeni public araştırma izni kurulmadı. Tam kalite kapısının sonucu
+ayrı kaydedilir.

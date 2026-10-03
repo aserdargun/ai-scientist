@@ -1,9 +1,9 @@
 {
   "schema": "development-progress.v1",
-  "updated_at": "2026-10-03T12:49:51.934749+00:00",
-  "current_work": "v0.1.0 ürün teslimi: çalışan CPU saha deneyi, kullanım/teslim belgeleri ve saatlik güvenli yayın hazır. İç harness/konsol 0.46.0.",
-  "latest_result": "3439 test geçti; 49 skip ve 177 deselected açık. Kaynak ve kullanım raporu public main üzerinde doğrulandı; saatlik görev ilk gerçek çalışmasını exit 0 tamamladı.",
-  "next_step": "Kullanıcı mevcut sürümü arayüzden test eder. Sonraki aşama: AOS producer/consumer ve uygulamaya özel yetki/veri eşlemesi; ardından kontrollü gerçek GPU birlikte çalışma.",
+  "updated_at": "2026-10-03T19:21:58.798759+00:00",
+  "current_work": "Light and dark themes are live, with language and theme buttons arranged like AOS. Preparing the reviewed public delivery.",
+  "latest_result": "3,657 CPU tests passed; 49 skipped and 177 excluded. Desktop/mobile theme and language checks passed. Separate model/adapter preparation and hourly README cost updates are verified in source.",
+  "next_step": "Publish the current CPU snapshot and enable the reviewed hourly README update. AOS shared GPU, model-specific training and learned adapters remain open.",
   "cpu_status": "passed",
   "gpu_status": "blocked"
 }

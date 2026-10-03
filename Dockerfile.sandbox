@@ -8,6 +8,7 @@ RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.t
 COPY harness /opt/swapp-ai-scientist/harness
 COPY lab /opt/swapp-ai-scientist/lab
 COPY vendor /opt/swapp-ai-scientist/vendor
+COPY ops/sandbox-image.lock /opt/swapp-ai-scientist/lab/sandbox/image.lock
 
 RUN groupadd --gid 10001 candidate \
     && useradd --uid 10001 --gid 10001 --no-create-home --shell /usr/sbin/nologin candidate

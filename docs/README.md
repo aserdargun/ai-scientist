@@ -6,6 +6,9 @@
 
 - [README: başlatma ve ilk deney](../README.md)
 - [0.46 teslim kılavuzu / bilinen eksikler](ai-scientist/122-delivery-guide.md)
+- [Güncel CPU kurulumu ve dağıtım kanıtı](ai-scientist/129-runtime-package-preflight.md)
+- [Yerel eylemci, isteğe bağlı öğretmen ve topoloji](ai-scientist/127-local-agent-and-teacher.md)
+- [Public DEV verisinde yerel araştırma kurulumu](ai-scientist/128-public-dev-local-agent.md)
 - [AOS ve uygulama entegrasyonu](ai-scientist/123-application-integration.md)
 - [Saha amacıyla tamamlanmış deney](ai-scientist/121-field-intent-workflow.md)
 - [Gerçek SKAB veri deneyi](ai-scientist/120-public-dev-cpu-study.md)
@@ -25,6 +28,12 @@
 - [Ön yüz geliştirici rehberi](../console/README.md)
 
 Numaralı eski belgeler tarihsel test/kurulum kayıtlarıdır. Güncel başlangıç için
-README ve 122 kullanılır; eski commit, port veya test sayısı bugünkü sürümün
+README ve güncel dağıtım için 129, ilk teslim kapsamı için 122 kullanılır; eski commit, port veya test sayısı bugünkü sürümün
 kanıtı olarak genellenmez. Öğrenme, GPU, saha entegrasyonu ve lisans açıkları
 ayrı izlenir.
+
+## Current CPU delivery additions
+
+- [Post-v0.1.0 CPU delivery](releases/post-v0.1.0-cpu.md)
+- [Model and Unsloth adapter preparation](ai-scientist/130-model-and-adapter-preparation.md)
+- [Hypothetical API cost and coverage](ai-scientist/131-api-cost-summary.md)

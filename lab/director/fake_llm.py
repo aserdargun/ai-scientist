@@ -170,6 +170,7 @@ class ProviderReceipt(BaseModel):
         "director.candidate-contract.metadata-only.v5",
         "director.candidate-contract.metadata-only.v6",
         "director.operating-mode-contract.metadata-only.v1",
+        "director.operating-mode-contract.public-label-blind.v1",
     ]
     context_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")
     prompt_sha256: StrictStr = Field(pattern=r"^[0-9a-f]{64}$")

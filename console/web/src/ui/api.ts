@@ -1,4 +1,5 @@
 import type { Check, Checks, EvidenceResponse, Overview, Run, Runs, RunExperience, StartRun, StartBaseline } from './types';
+import { t } from './i18n';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status?: number) { super(message); this.name = 'ApiError'; }
@@ -13,12 +14,12 @@ export async function request<T>(path: string, init: RequestInit = {}, signal?: 
     });
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error;
-    throw new ApiError('Yerel konsol API’sine ulaşılamıyor. API sunucusunu başlatıp yeniden deneyin.');
+    throw new ApiError(t('Cannot reach the local console API. Start the API server and try again.', 'Yerel konsol API’sine ulaşılamıyor. API sunucusunu başlatıp yeniden deneyin.'));
   }
   const data: unknown = await response.json().catch(() => null);
   if (!response.ok) {
     const detail = typeof data === 'object' && data !== null && 'detail' in data && typeof data.detail === 'string'
-      ? data.detail : `İstek başarısız (${response.status}).`;
+      ? data.detail : t(`Request failed (${response.status}).`, `İstek başarısız (${response.status}).`);
     throw new ApiError(detail, response.status);
   }
   return data as T;
@@ -30,14 +31,14 @@ export const api = {
     const prefix = '/console-api/evidence/';
     let parsed: URL;
     try { parsed = new URL(url, window.location.origin); }
-    catch { throw new ApiError('Kanıt bağlantısı geçersiz.'); }
+    catch { throw new ApiError(t('Invalid evidence link.', 'Kanıt bağlantısı geçersiz.')); }
     if (parsed.origin !== window.location.origin || parsed.search || parsed.hash || !parsed.pathname.startsWith(prefix)) {
-      throw new ApiError('Kanıt bağlantısı geçersiz.');
+      throw new ApiError(t('Invalid evidence link.', 'Kanıt bağlantısı geçersiz.'));
     }
     let id: string;
     try { id = decodeURIComponent(parsed.pathname.slice(prefix.length)); }
-    catch { throw new ApiError('Kanıt bağlantısı geçersiz.'); }
-    if (!id || id.includes('/') || id === '.' || id === '..') throw new ApiError('Kanıt bağlantısı geçersiz.');
+    catch { throw new ApiError(t('Invalid evidence link.', 'Kanıt bağlantısı geçersiz.')); }
+    if (!id || id.includes('/') || id === '.' || id === '..') throw new ApiError(t('Invalid evidence link.', 'Kanıt bağlantısı geçersiz.'));
     return request<EvidenceResponse>(`/evidence/${encodeURIComponent(id)}`, {}, signal);
   },
   checks: (signal?: AbortSignal) => request<Checks>('/checks', {}, signal),

@@ -15,14 +15,24 @@ politikası özel fork/adaptördedir; genel çekirdek bunları gerektirmez.
 | Uygulama varlık kimliği | Kullanıcı beyanı, advisory-only | Yetkili asset resolver + erişim denetimi henüz eklenecek |
 | Veri kaynağı | İzinli PostgreSQL ve snapshot yolu | Uygulamaya özgü katalog/sensör/zaman/birim eşlemesi |
 | AOS kontrol adaptörü | Sürümlü API/kontrol altyapısı var | Aynı checkout/config/caller ile native bağlantı doğrulaması |
-| Native dışlama | Shared-only aday ve DTO tasarımı | Gerçek producer + Scientist consumer + fiziksel kanıt |
+| AOS CPU kontrolü | Ayrı owner bağlı sentetik CPU grant/capability ve işçi kontrolleri kaynak adayında hazır | Aynı source/schema/config çiftiyle gerçek typed AOS başlatma ve rapor doğrulaması |
+| Native dışlama | AOS reader ve Scientist postspawn consumer kaynak adayı hazır | Fresh-launch öncesi maintenance/promoted-source doğrulaması, eksiksiz izinli işçi envanteri ve fiziksel kabul |
 | GPU ortak çalışma | Tek scheduler/fencing/quarantine korunur | İki tarafın ilerlediği sınırlı gerçek koşu ve iptal |
 | Öğrenme | Ledger, seçili hafıza, eğitim hazırlık kayıtları | İzinli veri → öğretmen → değerlendirme → onaylı terfi |
 
 AOS oturumu 2026-10-03 aktarımı: 41 dosya/86 giriş shared-only adayı
-uygulanmadı. Native exclusion schema `aos.native-exclusion.v1` mevcut; gerçek
-`read_native_exclusion` producer ve Scientist host consumer açık. Kaynak/CPU
-incelemesi canlı native kabulü değildir. Aktif AOS süreçleri korunur.
+uygulanmadı. Native exclusion schema `aos.native-exclusion.v1` korunarak gerçek
+`NativeExclusionReader.read_native_exclusion` ve `CurrentRuntimeRights` tüketim
+bağlantısı kaynak adayında eklendi. Kanıt özgün BOOTTIME süresini yalnız kısaltır;
+caller/broker kimliği sonrası okunur ve tahsis/release yetkisi üretmez.
+Aktif model interpreter'ı hâlâ reddedilir; bu ilk primitive gerçek birlikte
+çalışma kabulü değildir. Fresh unit başlamadan bakım/promoted-source kontrolü
+ve brokerla ilişkilendirilmiş tam AOS/Lab işçi envanteri ayrıca tamamlanmalıdır.
+Kaynak/CPU incelemesi canlı native kabulü değildir. Aktif AOS süreçleri korunur.
+
+[CPU sözleşmesi ve operatör kaydı](124-aos-cpu-study-contract.md) yerel model
+capability'sinden ayrıdır. AOS `ScientistCpuCapabilityVerifier` aynı şemanın
+ayrı tüketicisidir; sıfır token bütçesi GPU/model yetkisini gevşetmez.
 
 ## Uygulamaya özelleştirilecek sözleşme
 

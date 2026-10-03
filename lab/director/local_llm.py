@@ -38,6 +38,8 @@ from lab.director.mode_proposals import (
     MODE_COMPILER_SHA256,
     MODE_PROMPT_TEMPLATE,
     MODE_PROPOSAL_SCHEMA,
+    MODE_PUBLIC_PROMPT_TEMPLATE,
+    MODE_PUBLIC_SYSTEM_PROMPT,
     MODE_SCHEMA_NAME,
     MODE_SCHEMA_SHA256,
     MODE_SYSTEM_PROMPT,
@@ -305,9 +307,15 @@ class _AttemptRuntimeView:
 def provider_profile_config(
     profile_set: Literal["smoke", "research"] = "smoke",
     proposal_contract: ProposalContract = "candidate-python.v1",
+    *,
+    public_fit: bool = False,
 ) -> dict[str, object]:
     """Canonical trusted provider configuration selected by immutable registry digest."""
     validate_proposal_contract(proposal_contract)
+    if type(public_fit) is not bool or (
+        public_fit and proposal_contract != "operating-mode-config.v1"
+    ):
+        raise ValueError("public label-blind fitting requires operating-mode proposals")
     pin = ModelPin.from_repository()
     profiles = (
         (LOCAL_SMOKE_S1_PROFILE, LOCAL_SMOKE_S2_PROFILE)
@@ -367,15 +375,25 @@ def provider_profile_config(
                 "system_prompt_sha256": hashlib.sha256(MODE_SYSTEM_PROMPT.encode()).hexdigest(),
             }
         )
+        if public_fit:
+            config.update(
+                prompt_template=MODE_PUBLIC_PROMPT_TEMPLATE,
+                training_policy="label_blind_source_order;normal_fit_not_guaranteed",
+                system_prompt_sha256=hashlib.sha256(MODE_PUBLIC_SYSTEM_PROMPT.encode()).hexdigest(),
+            )
     return config
 
 
 def provider_config_sha256(
     profile_set: Literal["smoke", "research"] = "smoke",
     proposal_contract: ProposalContract = "candidate-python.v1",
+    *,
+    public_fit: bool = False,
 ) -> str:
     return hashlib.sha256(
-        canonical_bytes(provider_profile_config(profile_set, proposal_contract))
+        canonical_bytes(
+            provider_profile_config(profile_set, proposal_contract, public_fit=public_fit)
+        )
     ).hexdigest()
 
 
@@ -391,11 +409,29 @@ def provider_profile_set_for_sha256(
     matches = tuple(
         profile_set
         for profile_set in profile_sets
-        if provider_config_sha256(profile_set, proposal_contract) == expected_sha256
+        if any(
+            provider_config_sha256(profile_set, proposal_contract, public_fit=public_fit)
+            == expected_sha256
+            for public_fit in (
+                (False, True) if proposal_contract == "operating-mode-config.v1" else (False,)
+            )
+        )
     )
     if len(matches) != 1:
         raise ValueError("trusted provider configuration digest is unknown or ambiguous")
     return matches[0]
+
+
+def provider_public_fit_for_sha256(
+    expected_sha256: str, proposal_contract: ProposalContract
+) -> bool:
+    """Derive fitting instructions from the immutable provider digest, never caller input."""
+    profile_set = provider_profile_set_for_sha256(expected_sha256, proposal_contract)
+    return (
+        proposal_contract == "operating-mode-config.v1"
+        and provider_config_sha256(profile_set, proposal_contract, public_fit=True)
+        == expected_sha256
+    )
 
 
 def provider_proposal_contract_for_sha256(expected_sha256: str) -> ProposalContract:
@@ -440,6 +476,7 @@ class LocalQwenProposalProvider:
         registry_entry_sha256: str,
         profile_set: Literal["smoke", "research"] = "smoke",
         proposal_contract: ProposalContract = "candidate-python.v1",
+        public_fit: bool = False,
         cancellation_observer: Callable[[], None] | None = None,
     ) -> None:
         if owner != "lab":
@@ -457,7 +494,10 @@ class LocalQwenProposalProvider:
         self.registry_entry_sha256 = registry_entry_sha256
         self.profile_set = profile_set
         self.proposal_contract = validate_proposal_contract(proposal_contract)
-        self.configuration_sha256 = provider_config_sha256(profile_set, proposal_contract)
+        self.configuration_sha256 = provider_config_sha256(
+            profile_set, proposal_contract, public_fit=public_fit
+        )
+        self.public_fit = public_fit
         self.response_schema = (
             MODE_PROPOSAL_SCHEMA
             if proposal_contract == "operating-mode-config.v1"
@@ -488,13 +528,16 @@ class LocalQwenProposalProvider:
         context: AgentContext,
         profile: ModelTurnProfile,
         proposal_contract: ProposalContract = "candidate-python.v1",
+        public_fit: bool = False,
     ) -> tuple[tuple[dict[str, str], ...], ...]:
         # Keep all task metadata and the full champion source. If necessary,
         # discard the oldest feedback first; never trim candidate contract or
         # trusted task identities to make a prompt fit.
         validate_proposal_contract(proposal_contract)
+        if public_fit and proposal_contract != "operating-mode-config.v1":
+            raise ValueError("public fitting policy requires operating-mode context")
         system_prompt = (
-            MODE_SYSTEM_PROMPT
+            (MODE_PUBLIC_SYSTEM_PROMPT if public_fit else MODE_SYSTEM_PROMPT)
             if proposal_contract == "operating-mode-config.v1"
             else _SYSTEM_PROMPT
         )
@@ -645,7 +688,7 @@ class LocalQwenProposalProvider:
         timeout_seconds: float,
     ) -> tuple[tuple[dict[str, str], ...], int]:
         variants = self._message_variants(
-            context, profile, proposal_contract=self.proposal_contract
+            context, profile, proposal_contract=self.proposal_contract, public_fit=self.public_fit
         )
         counts = self._count_prompt_variants(variants, profile, timeout_seconds=timeout_seconds)
         for messages, token_count in zip(variants, counts, strict=True):
@@ -1144,7 +1187,7 @@ class LocalQwenProposalProvider:
             actual_system=profile.system,
             fallback_from=cast(Literal["S2"] | None, fallback_from),
             context_template=(
-                "director.operating-mode-contract.metadata-only.v1"
+                (MODE_PUBLIC_PROMPT_TEMPLATE if self.public_fit else MODE_PROMPT_TEMPLATE)
                 if self.proposal_contract == "operating-mode-config.v1"
                 else _PROMPT_TEMPLATE
             ),
@@ -1269,7 +1312,9 @@ class LocalQwenProposalProvider:
             + validation_code
             + ". Return one complete, corrected proposal JSON object."
         )
-        bases = self._message_variants(context, profile, proposal_contract=self.proposal_contract)
+        bases = self._message_variants(
+            context, profile, proposal_contract=self.proposal_contract, public_fit=self.public_fit
+        )
         compact_variants = tuple(
             (
                 base[0],

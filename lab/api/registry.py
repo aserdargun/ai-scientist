@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import stat
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
@@ -84,6 +85,63 @@ class PublicDevStudy(BaseModel):
             raise ValueError("public development study exceeds its CPU policy")
 
 
+class PublicDevAgentStudy(PublicDevStudy):
+    """Separate finite local-agent grant; this is not host GPU admission."""
+
+    max_experiments: int = Field(ge=1, le=35)
+    max_wall_seconds: int = Field(ge=1, le=14_400)
+    model_tokens: int = Field(ge=1, le=350_000)
+    profile_set: Literal["smoke", "research"]
+    provider_config_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+
+    def verify_budget(self, experiments: int, wall_seconds: int, model_tokens: int) -> None:
+        if (
+            any(type(value) is not int for value in (experiments, wall_seconds, model_tokens))
+            or not 1 <= experiments <= self.max_experiments
+            or not 1 <= wall_seconds <= self.max_wall_seconds
+            or not 1 <= model_tokens <= self.model_tokens
+        ):
+            raise ValueError("public local-agent study exceeds its finite policy")
+
+
+class AosCpuStudy(BaseModel):
+    """Operator-granted synthetic CPU grid; it confers no local-model authority."""
+
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+    owner_id: StrictStr = Field(min_length=1, max_length=128)
+    origin: Literal["aos"]
+    snapshot_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    provider_config_sha256: StrictStr = Field(pattern=r"^[a-f0-9]{64}$")
+    max_experiments: int = Field(ge=1, le=35)
+    max_wall_seconds: int = Field(ge=1, le=14_400)
+    model_tokens: int = Field(ge=0, le=0)
+
+    @property
+    def sha256(self) -> str:
+        return hashlib.sha256(
+            json.dumps(
+                self.model_dump(mode="json"),
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+
+    def authorize(self, origin: str, owner_id: str) -> None:
+        if origin != self.origin or owner_id != self.owner_id:
+            raise ValueError("AOS CPU study is unavailable to this principal")
+
+    def verify_budget(self, experiments: int, wall_seconds: int, model_tokens: int) -> None:
+        if (
+            any(type(value) is not int for value in (experiments, wall_seconds, model_tokens))
+            or not 1 <= experiments <= self.max_experiments
+            or not 1 <= wall_seconds <= self.max_wall_seconds
+            or model_tokens != 0
+        ):
+            raise ValueError("AOS study exceeds its explicit CPU grant")
+
+
 class SuiteEntry(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -102,6 +160,8 @@ class SuiteEntry(BaseModel):
     )
     snapshot_sha256: StrictStr | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     public_dev_study: PublicDevStudy | None = None
+    public_dev_agent_study: PublicDevAgentStudy | None = None
+    aos_cpu_study: AosCpuStudy | None = None
     allowed_purposes: tuple[Literal["research", "baseline", "mode-stream"], ...] = (
         "research",
         "baseline",
@@ -112,6 +172,10 @@ class SuiteEntry(BaseModel):
         value = cast(dict[str, Any], handler(self))
         if self.public_dev_study is None:
             value.pop("public_dev_study", None)
+        if self.public_dev_agent_study is None:
+            value.pop("public_dev_agent_study", None)
+        if self.aos_cpu_study is None:
+            value.pop("aos_cpu_study", None)
         return value
 
     @field_validator("allowed_purposes", mode="before")
@@ -125,6 +189,36 @@ class SuiteEntry(BaseModel):
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> SuiteEntry:
+        if self.public_dev_agent_study is not None:
+            grant = self.public_dev_agent_study
+            if (
+                self.public_dev_study is not None
+                or self.aos_cpu_study is not None
+                or self.provider != "local-qwen"
+                or self.track != "mode"
+                or self.program_version != "mode-agent.v1"
+                or self.proposal_contract != "operating-mode-config.v1"
+                or self.snapshot_sha256 != grant.snapshot_sha256
+                or self.provider_config_sha256 != grant.provider_config_sha256
+                or self.proposal_limit > grant.max_experiments
+                or self.allowed_purposes != ("research",)
+            ):
+                raise ValueError(
+                    "public local-agent study requires its separate bounded registry grant"
+                )
+        if self.aos_cpu_study is not None:
+            if (
+                self.public_dev_study is not None
+                or self.provider != "mode-grid"
+                or self.track != "mode"
+                or self.program_version != "mode-grid.v1"
+                or self.proposal_contract != "candidate-python.v1"
+                or self.allowed_purposes != ("research",)
+                or self.snapshot_sha256 != self.aos_cpu_study.snapshot_sha256
+                or self.provider_config_sha256 != self.aos_cpu_study.provider_config_sha256
+                or self.proposal_limit > self.aos_cpu_study.max_experiments
+            ):
+                raise ValueError("AOS CPU study requires its owner-bound synthetic research grid")
         if self.provider == "mode-stream":
             if (
                 self.track != "mode"
@@ -150,7 +244,11 @@ class SuiteEntry(BaseModel):
                 raise ValueError(
                     "mode configuration proposals require local-qwen/mode snapshot pins"
                 )
-        elif self.snapshot_sha256 is not None and self.public_dev_study is None:
+        elif (
+            self.snapshot_sha256 is not None
+            and self.public_dev_study is None
+            and self.aos_cpu_study is None
+        ):
             raise ValueError("snapshot pins require the operating mode proposal contract")
         if self.provider == "fake-json":
             if (
@@ -232,6 +330,27 @@ class SuiteRegistry:
         except KeyError:
             raise KeyError("suite is not registered") from None
 
+    def public_agent_policy(
+        self, snapshot_sha256: str, *, owner_id: str, origin: str
+    ) -> PublicDevAgentStudy | None:
+        """Return only an unambiguous, currently verified owner-scoped explicit grant."""
+        matches = [
+            entry
+            for entry in self.entries.values()
+            if entry.public_dev_agent_study is not None
+            and entry.public_dev_agent_study.snapshot_sha256 == snapshot_sha256
+            and entry.public_dev_agent_study.owner_id == owner_id
+            and entry.public_dev_agent_study.origin == origin
+        ]
+        if not matches:
+            return None
+        policy = matches[0].public_dev_agent_study
+        if any(entry.public_dev_agent_study != policy for entry in matches):
+            raise ValueError("public local-agent registry grants conflict")
+        for entry in matches:
+            self.verify_entry(entry)
+        return policy
+
     def verify_entry(self, entry: SuiteEntry) -> tuple[Path, Path | None]:
         if self.entries.get(entry.suite_id) != entry:
             raise ValueError("suite entry does not belong to this loaded registry")
@@ -257,6 +376,10 @@ class SuiteRegistry:
         payload = entry.model_dump(mode="json")
         if entry.public_dev_study is None:
             payload.pop("public_dev_study", None)
+        if entry.public_dev_agent_study is None:
+            payload.pop("public_dev_agent_study", None)
+        if entry.aos_cpu_study is None:
+            payload.pop("aos_cpu_study", None)
         if entry.proposal_contract == "candidate-python.v1" and entry.snapshot_sha256 is None:
             payload.pop("proposal_contract")
             payload.pop("snapshot_sha256")
@@ -274,17 +397,107 @@ class SuiteRegistry:
 
     def verify_snapshot(self, entry: SuiteEntry) -> Path | None:
         """Bind the one-task exception to the exact Scorer-installed source snapshot."""
-        if entry.public_dev_study is not None:
+        if entry.aos_cpu_study is not None:
+            from lab.api.mode_experiments import ModeSnapshotStore
+            from lab.api.mode_sources import authorize_snapshot
+            from lab.director.parameter_grid import ParameterGridProvider
+            from lab.director.suite_manifest import SuiteManifest
+            from lab.operating_modes.contracts import SCENARIOS
+
+            grant = entry.aos_cpu_study
+            root = self.runtime_root / "mode-snapshots"
+            if not root.is_dir():
+                raise ValueError("AOS synthetic snapshot store is unavailable")
+            store = ModeSnapshotStore(root)
+            directory = store.directory(grant.snapshot_sha256)
+            input_path = directory / "manifest.json"
+            if (
+                input_path.is_symlink()
+                or not input_path.is_file()
+                or input_path.stat().st_size > 4096
+            ):
+                raise ValueError("AOS synthetic snapshot manifest is unavailable")
+            manifest = json.loads(input_path.read_bytes())
+            if manifest.get("source_kind", "synthetic") != "synthetic":
+                raise ValueError("AOS CPU grant requires a synthetic snapshot")
+            synthetic_snapshot = store.load(grant.snapshot_sha256)
+            if synthetic_snapshot.selection.source_id not in {
+                "synthetic." + scenario for scenario in SCENARIOS
+            }:
+                raise ValueError("AOS snapshot source is not a synthetic recipe")
+            seed = re.fullmatch(r"v1\.seed(\d{1,10})", synthetic_snapshot.selection.source_version)
+            if seed is None or int(seed.group(1)) >= 2**32:
+                raise ValueError("AOS snapshot source recipe version differs")
+            installed = store.installed(grant.snapshot_sha256)
+            if installed is None:
+                raise ValueError("AOS synthetic snapshot has no Scorer installation receipt")
+            embargo = installed.get("embargo_samples")
+            rows = installed.get("evaluation_rows")
+            if (
+                type(embargo) is not int
+                or not 0 <= embargo < len(synthetic_snapshot.values) - synthetic_snapshot.train_rows
+                or type(rows) is not int
+                or rows != len(synthetic_snapshot.values) - synthetic_snapshot.train_rows - embargo
+            ):
+                raise ValueError("AOS synthetic installation split metadata differs")
+            authorize_snapshot(store, grant.snapshot_sha256, grant.owner_id)
+            path = self.verify_file(entry.suite_manifest_path, entry.suite_manifest_sha256)
+            document = SuiteManifest.model_validate_json(path.read_bytes(), strict=True)
+            original = SuiteManifest.model_validate_json(
+                (directory / "suite.json").read_bytes(), strict=True
+            )
+            if (
+                document.suite_id != entry.suite_id
+                or document.weight_policy != "single_snapshot_study.v1"
+                or document.family_cap != 1.0
+                or len(document.tasks) != 1
+                or document.tasks[0].profile_sha256 != installed.get("profile_sha256")
+                or document.tasks[0].task_id != installed.get("task_id")
+                or document.tasks[0].dataset_id != "synthetic-operating-modes"
+                or document.tasks[0].split_id != "train-window-embargo.v1"
+                or document.tasks[0].session_id != grant.snapshot_sha256
+                or document.tasks[0].provenance.source_manifest_sha256 != grant.snapshot_sha256
+                or document.tasks[0].provenance.license_id != "project-generated-synthetic"
+                or document.tasks[0].columns != synthetic_snapshot.sensors
+                or document.tasks[0].train
+                != synthetic_snapshot.values[: synthetic_snapshot.train_rows]
+                or document.tasks[0].evaluation
+                != synthetic_snapshot.values[synthetic_snapshot.train_rows + embargo :]
+                or document.model_copy(update={"suite_id": original.suite_id}) != original
+            ):
+                raise ValueError(
+                    "AOS mode suite differs from its installed synthetic task and weights"
+                )
+            if entry.scenario_path is None or entry.scenario_sha256 is None:
+                raise ValueError("AOS grid scenario pins are missing")
+            scenario = self.verify_file(
+                entry.scenario_path,
+                entry.scenario_sha256,
+                maximum_bytes=MAX_PROPOSAL_SCENARIO_BYTES,
+            )
+            provider = ParameterGridProvider.load(
+                scenario,
+                configuration_sha256=grant.provider_config_sha256,
+                registry_entry_sha256=self.entry_sha256(entry),
+            )
+            if provider.snapshot_sha256 != grant.snapshot_sha256 or entry.proposal_limit > len(
+                provider
+            ):
+                raise ValueError("AOS grid differs from its granted snapshot or proposal count")
+            grant.verify_budget(entry.proposal_limit, grant.max_wall_seconds, 0)
+            return path
+        policy = entry.public_dev_study or entry.public_dev_agent_study
+        if policy is not None:
             from lab.api.mode_experiments import ModeSnapshotStore
             from lab.api.mode_sources import authorize_snapshot
             from lab.director.suite_manifest import SuiteManifest
 
             store = ModeSnapshotStore(self.runtime_root / "mode-snapshots")
-            snapshot = store.public_snapshot(entry.public_dev_study.snapshot_sha256)
+            snapshot = store.public_snapshot(policy.snapshot_sha256)
             if snapshot is None or store.installed(snapshot.sha256) is None:
                 raise ValueError("public development snapshot is not installed")
-            entry.public_dev_study.verify_snapshot(snapshot)
-            authorize_snapshot(store, snapshot.sha256, entry.public_dev_study.owner_id)
+            policy.verify_snapshot(snapshot)
+            authorize_snapshot(store, snapshot.sha256, policy.owner_id)
             path = self.verify_file(entry.suite_manifest_path, entry.suite_manifest_sha256)
             document = SuiteManifest.model_validate_json(path.read_bytes(), strict=True)
             if (
@@ -295,11 +508,27 @@ class SuiteRegistry:
             ):
                 raise ValueError("public development suite binding differs")
             snapshot.binding.verify_study_task(document.tasks[0])
+            if entry.public_dev_agent_study is not None:
+                from lab.director.local_llm import (
+                    provider_profile_set_for_sha256,
+                    provider_public_fit_for_sha256,
+                )
+
+                agent = entry.public_dev_agent_study
+                if provider_profile_set_for_sha256(
+                    agent.provider_config_sha256, entry.proposal_contract
+                ) != agent.profile_set or not provider_public_fit_for_sha256(
+                    agent.provider_config_sha256, entry.proposal_contract
+                ):
+                    raise ValueError("public local-agent profile differs from its pinned provider")
             return path
         if entry.snapshot_sha256 is None:
             return None
         from lab.api.mode_experiments import ModeSnapshotStore
-        from lab.director.local_llm import provider_profile_set_for_sha256
+        from lab.director.local_llm import (
+            provider_profile_set_for_sha256,
+            provider_public_fit_for_sha256,
+        )
         from lab.director.suite_manifest import SuiteManifest
 
         root = self.runtime_root / "mode-snapshots"
@@ -326,6 +555,8 @@ class SuiteRegistry:
         if entry.provider_config_sha256 is None:
             raise ValueError("mode provider configuration digest is missing")
         provider_profile_set_for_sha256(entry.provider_config_sha256, entry.proposal_contract)
+        if provider_public_fit_for_sha256(entry.provider_config_sha256, entry.proposal_contract):
+            raise ValueError("public fitting policy requires its separate public snapshot grant")
         return path
 
     def resolve(self, relative_path: str, expected_sha256: str, *, maximum_bytes: int) -> Path:

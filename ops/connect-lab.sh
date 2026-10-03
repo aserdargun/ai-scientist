@@ -3,22 +3,29 @@
 set -euo pipefail
 host=cachyos user=cachyos remote_dir=/home/cachyos/ai-scientist local_port=8788
 start_lab=1 browser=1
+profile= remote_port=8788
 usage() {
   cat <<'EOF'
 Usage: bash ops/connect-lab.sh [--host SSH_HOST] [--user SSH_USER]
-       [--local-port PORT] [--remote-dir ABSOLUTE_PATH] [--no-start-lab] [--no-browser]
+       [--local-port PORT] [--remote-dir ABSOLUTE_PATH] [--profile NAME]
+       [--no-start-lab] [--no-browser]
 Run on aserdargun's computer. SSH_HOST must resolve/reach the CachyOS computer
 or name an existing SSH config alias. Default: cachyos. Ctrl+C closes the tunnel.
 By default runs the remote ops/start-lab.sh launcher; --no-start-lab skips it.
+Use --profile field-lab for the CPU profile (remote console port 8789).
+Without --profile, the legacy launcher and remote port 8788 are retained.
 Remote paths may contain only letters, digits, slash, underscore, dot and dash.
 EOF
 }
 while (($#)); do
   case "$1" in
-    --host|--user|--local-port|--remote-dir)
+    --host|--user|--local-port|--remote-dir|--profile)
       (($# >= 2)) || { usage >&2; exit 2; }
       case "$1" in
         --host) host=$2;; --user) user=$2;; --local-port) local_port=$2;; --remote-dir) remote_dir=$2;;
+        --profile) profile=$2
+          [[ "$profile" =~ ^[a-z][a-z0-9-]{0,31}$ ]] || { printf 'Invalid profile name.\n' >&2; exit 2; }
+          remote_port=8789;;
       esac
       shift 2;;
     --start-lab) start_lab=1; shift;;
@@ -50,7 +57,9 @@ if (exec 3<>"/dev/tcp/127.0.0.1/$local_port") 2>/dev/null; then
 fi
 ssh_options=(-o ExitOnForwardFailure=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3)
 if ((start_lab)); then
-  ssh "${ssh_options[@]}" -l "$user" "$host" "cd '$remote_dir' && bash ops/start-lab.sh"
+  remote_command="cd '$remote_dir' && bash ops/start-lab.sh"
+  if [[ -n "$profile" ]]; then remote_command+=" --profile '$profile'"; fi
+  ssh "${ssh_options[@]}" -l "$user" "$host" "$remote_command"
 fi
 ssh_pid=
 cleanup() {
@@ -63,7 +72,7 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 # stdin stays attached for normal SSH authentication/host-key prompts.
-ssh "${ssh_options[@]}" -N -T -L "127.0.0.1:$local_port:127.0.0.1:8788" -l "$user" "$host" <&0 &
+ssh "${ssh_options[@]}" -N -T -L "127.0.0.1:$local_port:127.0.0.1:$remote_port" -l "$user" "$host" <&0 &
 ssh_pid=$!
 url="http://127.0.0.1:$local_port/"
 ready=0

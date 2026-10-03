@@ -363,3 +363,33 @@ def test_exact_operator_reviewed_synthetic_fixture_pin(setup):
     seal(setup, {"README.md": b"reviewed source\n", name: changed})
     with pytest.raises(publisher.PublicationError, match="private-or-binary-payload"):
         publish(setup, dry_run=False)
+
+
+@pytest.mark.parametrize("amount", ["2950.65749108", None])
+def test_cost_block_is_deterministic_and_preserves_surrounding_bytes(amount):
+    readme = (
+        b"# Header\n\n"
+        + publisher.COST_START
+        + b"\nOld content\n"
+        + publisher.COST_END
+        + b"\n\nFooter stays exact.\n"
+    )
+    report = {
+        "development_codex": {
+            "tokens": {"total_tokens": 5532450227},
+            "last_observed_at": "2026-10-03T18:59:59.193000+00:00",
+        },
+        "api_price_scenario": {
+            "actual_bill": False,
+            "usd_priced_subset": amount,
+            "priced_subset_tokens": {"total_tokens": 5532369248},
+        },
+        "product_runtime": {"local_model_tokens": {"total_tokens": 8278}},
+    }
+    result = publisher.update_readme_cost(readme, report)
+    assert publisher.update_readme_cost(result, report) == result
+    assert result.startswith(b"# Header\n\n" + publisher.COST_START)
+    assert result.endswith(publisher.COST_END + b"\n\nFooter stays exact.\n")
+    assert b"80,979" in result and b"8,278" in result
+    assert (b"USD 2,950.66" if amount is not None else b"Unknown / Bilinmiyor") in result
+    assert b"Actual API billing and subscription charges are unknown" in result

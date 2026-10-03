@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.47.0 — AOS CPU entegrasyon adayı (yayımlanmadı)
+
+- Holdout yapılmamış başlangıç baseline’ının raporda onaylı champion olarak
+  etiketlenmesi düzeltildi; artık “Retained reference candidate” gösterilir.
+  Önceki kanıt HTML dosyaları değiştirilmedi.
+
+- Önceden kayıtlı sentetik grid için AOS owner/grant/bütçe doğrulaması, ayrı CPU
+  capability ve işçi başlangıcı/devralma kontrolleri eklendi. Yerel model ve GPU
+  yetkileri değişmedi; v0.1.0 etiketi ve çalışan 0.46.0 profil korunur.
+
 ## v0.1.0 — 2026-10-03
 
 İlk ürün teslimi: dahili harness 0.46.0, çalışan CPU saha deney akışı, kapsamlı
@@ -322,3 +332,7 @@ README/teslim ve AOS devam kılavuzu, ayrı kullanım/maliyet kayıtları.
 - M0.9 Scorer ownership slice: `0009` migration 0008'e kadar çalışan legacy claim yokluğunu şart koşup claim'i gerçek systemd InvocationID, tam unit ve cgroup slice'a bağlar; score/terminal yazımı run→job fence, token ve lease ile eşleşir. Exact unit drain gerçek systemd ana/çocuk süreçleriyle 12/12, worker kimlik sınırı 6/6 ve gerçek PG negatif/pozitif fence 32/32 geçti. Guarded task'tan ayrı systemd Scorer ve doğrulanmış rapora live integration 1/1; Alembic parity `No new upgrade operations detected`. Bu trusted scorer contract değişikliğiyle harness sürümü `0.7.0` oldu. Tam Director 20-deney koşusu ve stop_requested eski claim'i owner drain sonrası recovery açık.
 - M0.9 stop recovery slice: `0010` migration eski Scorer InvocationID'sini yeni recovery neslinden ayırır; recovery yalnız exact owned unit/cgroup gerçekten boşaltıldıktan sonra stop-requested expired claim'i fenced cancellation olarak kapatır. Aynı terminal sonucun tekrar yazımı mevcut immutable sonucu okur; farklı sonuç reddedilir. 23/23 gerçek host/PostgreSQL recovery kontrolleri yanlış nesil koruması, competing queued iş varken recovery dispatch'i, slot açıldıktan sonra diğer işin gerçek VUS scoring ilerlemesi ve sentinel korumasını geçti. Stop recovery contract revizyonu harness sürümünü `0.8.0` yaptı. Tam Director 20-deney koşusu, tüm verdict/crash senaryoları ve AOS/GPU birlikte çalışma kabulü açık.
 - M0.9 experiment ledger slice: `0011` canonical immutable experiment/trajectory ledger, fail-closed dev-only result view ve Director hash receipt ekledi; gerçek PostgreSQL role surface 38/38, lifecycle 32/32 ve Alembic parity geçti. `0012` Scorer finalization'ı terminal experiment + iki belge çifti tamamlanana kadar pending tutar; sealed task plan yeni proposal/nonterminal ilerlemeyi kapatırken atomik terminal pair commit'e izin verir. Gerçek PostgreSQL 18/18 finalization fence kontrolleri ve güncellenmiş typed Docker→Planner→separate Scorer→pending→terminal docs→verified report live integration 1/1 geçti. Quality gate: exit 0, pytest 127/11 deselected, mypy 47 kaynak, Pylint 9.31/10; harness fingerprint sürümü `0.9.0`. Bu dar sentetik smoke ham candidate/document/message blob baytlarını genel content-addressed store'a yazmıyor; baseline kalibrasyonu, tam Director20, replay/holdout, public-data, GPU fairness ve AOS kapsamı açık.
+
+## 2026-10-03 — v0.1.0 sonrası kaynak adayı
+
+- Public DEV için ayrı bütçeli yerel-model araştırma yolu, etiket körü fit prompt’u, izin iptali denetimi ve arayüz sınırları; GPU işçi neslinin atomik ve değişmez bağlanması. Canlı GPU/öğretmen kabulü değildir.

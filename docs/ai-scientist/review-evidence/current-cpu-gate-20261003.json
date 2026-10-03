@@ -1,0 +1,27 @@
+{
+  "schema": "cpu-delivery-gate.v1",
+  "observed_at": "2026-10-03T19:21:58.797993+00:00",
+  "source_base": "9a8a7279c979c6eab923580ce6b34686d2fdd952",
+  "passed": 3657,
+  "skipped": 49,
+  "deselected": 177,
+  "warnings": 603,
+  "commands_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "quality_gate_exit": 0,
+  "quality_gate_receipt_sha256": "230ab7ab45ca8d5c912d6daee4371f27df36604a6ea2e9afb7b8877b120419b6",
+  "frozen_files_unchanged": 464,
+  "gpu_or_live_tests_executed": false,
+  "runtime_seconds": 354.058,
+  "owned_gate_terminal": true,
+  "backend_image_unchanged": true,
+  "frontend_receipt": "frontend-dual-theme-20261003.json",
+  "scope": "CPU source, model preparation and deterministic hourly README cost publication; GPU/live acceptance excluded"
+}

@@ -15,6 +15,8 @@ import subprocess  # nosec B404
 import sys
 import tempfile
 from contextlib import nullcontext
+from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -82,6 +84,86 @@ def digest(value: bytes) -> str:
 def require(condition: bool, code: str) -> None:
     if not condition:
         raise PublicationError(code)
+
+
+COST_START = b"<!-- api-cost-summary:start -->"
+COST_END = b"<!-- api-cost-summary:end -->"
+
+
+def update_readme_cost(readme: bytes, report: dict[str, Any]) -> bytes:
+    """Replace only one exact marked block with bounded, deterministic report facts."""
+    require(readme.count(COST_START) == readme.count(COST_END) == 1, "readme-cost-markers")
+    start, end = readme.index(COST_START), readme.index(COST_END)
+    require(
+        start < end
+        and (start == 0 or readme[start - 1 : start] == b"\n")
+        and readme[start + len(COST_START) : start + len(COST_START) + 1] == b"\n"
+        and readme[end - 1 : end] == b"\n"
+        and (
+            end + len(COST_END) == len(readme)
+            or readme[end + len(COST_END) : end + len(COST_END) + 1] == b"\n"
+        ),
+        "readme-cost-markers",
+    )
+    try:
+        dev, scenario = report["development_codex"], report["api_price_scenario"]
+        require(scenario["actual_bill"] is False, "readme-cost-not-counterfactual")
+        observed = dev["tokens"].get("total_tokens")
+        priced = scenario["priced_subset_tokens"].get("total_tokens")
+        local = report["product_runtime"]["local_model_tokens"].get("total_tokens")
+        for value in (observed, priced, local):
+            require(
+                value is None or type(value) is int and 0 <= value <= 10**18, "readme-cost-counter"
+            )
+        require(observed is None or priced is None or priced <= observed, "readme-cost-counter")
+        unpriced = None if observed is None or priced is None else observed - priced
+        amount = scenario["usd_priced_subset"]
+        if amount is None:
+            cost = "Unknown / Bilinmiyor"
+        else:
+            require(
+                isinstance(amount, str)
+                and len(amount) <= 64
+                and re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", amount) is not None,
+                "readme-cost-amount",
+            )
+            number = Decimal(amount)
+            require(number.is_finite() and 0 <= number <= Decimal("1e18"), "readme-cost-amount")
+            cost = f"USD {number:,.2f}"
+        stamp = dev["last_observed_at"]
+        if stamp is None:
+            stamp = "Unknown / Bilinmiyor"
+        else:
+            require(isinstance(stamp, str) and len(stamp) <= 64, "readme-cost-timestamp")
+            parsed = datetime.fromisoformat(stamp)
+            require(parsed.tzinfo is not None, "readme-cost-timestamp")
+            stamp = parsed.astimezone(UTC).isoformat()
+    except (KeyError, TypeError, ValueError, InvalidOperation) as error:
+        if isinstance(error, PublicationError):
+            raise
+        raise PublicationError("readme-cost-report") from None
+
+    def count(value: int | None) -> str:
+        return "Unknown / Bilinmiyor" if value is None else f"{value:,}"
+
+    body = (
+        "\n## Hypothetical API cost / Varsayımsal API maliyeti\n\n"
+        f"**{cost}** — Standard short-context API scenario; not an actual bill.\n"
+        f"Last observed UTC / Son gözlem UTC: **{stamp}**.\n\n"
+        f"Observed / Gözlenen: **{count(observed)}** tokens; "
+        f"priced / fiyatlandırılan: **{count(priced)}**; "
+        f"unpriced / fiyatlandırılamayan: **{count(unpriced)}**.\n"
+        f"Separate local runtime / Ayrı yerel runtime: **{count(local)}** tokens; "
+        "excluded from this cloud estimate.\n\n"
+        "Actual API billing and subscription charges are unknown. "
+        "Gerçek API faturası ve abonelik bedeli bilinmiyor; bu tutar varsayımsaldır.\n"
+        "Coverage is incomplete; unknown cost is not zero. "
+        "Kapsam eksiktir; bilinmeyen maliyet sıfır değildir.\n\n"
+        "[Hourly details / Saatlik ayrıntılar](docs/usage/project-usage-latest.md) · "
+        "[Latest JSON / Güncel JSON](docs/usage/project-usage-latest.json) · "
+        "[Dated calculation / Tarihli hesap](docs/ai-scientist/131-api-cost-summary.md)\n"
+    ).encode()
+    return readme[: start + len(COST_START)] + body + readme[end:]
 
 
 def private_path(path: Path, *, directory: bool = False) -> None:
@@ -388,6 +470,7 @@ def bundle(
         output_paths = {
             "docs/usage/project-usage-latest.json",
             "docs/usage/project-usage-latest.md",
+            "README.md",
         }
         changed = {
             name
@@ -400,6 +483,13 @@ def bundle(
             and output_paths <= set(payload)
             and set(published) <= set(payload),
             "generated-overlay-path-violation",
+        )
+        require("README.md" in published, "generated-readme-missing-base")
+        report = read_json(root / "files/docs/usage/project-usage-latest.json")
+        require(
+            manifest["files"]["README.md"]["mode"] == published["README.md"][0]
+            and payload["README.md"] == update_readme_cost(published["README.md"][1], report),
+            "generated-readme-outside-deterministic-block",
         )
         outputs = {name: files[name] for name in sorted(output_paths)}
         require(

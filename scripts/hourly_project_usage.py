@@ -1,4 +1,4 @@
-"""Project a frozen usage collector into exactly two public docs under one publisher lock."""
+"""Update two usage docs and the marked README cost block under one publisher lock."""
 
 from __future__ import annotations
 
@@ -20,7 +20,11 @@ from typing import Any
 
 import publish_reviewed_snapshot as pub
 
-OUTPUTS = ("docs/usage/project-usage-latest.json", "docs/usage/project-usage-latest.md")
+OUTPUTS = (
+    "docs/usage/project-usage-latest.json",
+    "docs/usage/project-usage-latest.md",
+    "README.md",
+)
 PROJECTION_SCHEMA = "strict-public-project-usage.v1"
 INT = ("integer",)
 TS = ("timestamp",)
@@ -416,7 +420,9 @@ def seal(
         modes[name.decode()] = mode
     payload[OUTPUTS[0]] = pub.canonical(report) + b"\n"
     payload[OUTPUTS[1]] = markdown(report)
-    modes.update({name: "100644" for name in OUTPUTS})
+    pub.require("README.md" in payload, "generated-readme-missing-base")
+    payload["README.md"] = pub.update_readme_cost(payload["README.md"], report)
+    modes.update({name: "100644" for name in OUTPUTS[:2]})
     files = {
         name: {"sha256": pub.digest(raw), "size": len(raw), "mode": modes[name]}
         for name, raw in payload.items()
@@ -581,6 +587,8 @@ def hourly(
                 pub.digest(Path(price_args[0]).read_bytes()) == config["prices_sha256"],
                 "price-reference-changed",
             )
+        readme = (repo / "README.md").read_bytes()
+        pub.update_readme_cost(readme, report)  # Validate markers even on no-op/dry-run.
         public = repo / OUTPUTS[0]
         if public.is_file():
             previous = project(json.loads(public.read_bytes()))
@@ -612,7 +620,10 @@ def hourly(
                     ),
                     "goal-regression-last-good-preserved",
                 )
-            if meaningful(previous) == meaningful(report):
+            same_meaning = meaningful(previous) == meaningful(report)
+            if same_meaning:
+                report = previous  # Keep the three outputs on one unchanged observation.
+            if same_meaning and pub.update_readme_cost(readme, previous) == readme:
                 pub.atomic_json(
                     audit / "heartbeat.private.json",
                     {

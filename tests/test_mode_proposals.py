@@ -22,6 +22,7 @@ from lab.director.local_llm import (
     provider_profile_config,
     provider_profile_set_for_sha256,
     provider_proposal_contract_for_sha256,
+    provider_public_fit_for_sha256,
 )
 from lab.director.mode_proposals import MODE_SCHEMA_SHA256, OperatingModeProposal
 from lab.operating_modes.candidate import OperatingModeCandidate, candidate_source
@@ -130,6 +131,48 @@ def test_default_research_config_pin_and_explicit_mode_pins():
     assert provider_proposal_contract_for_sha256(provider_config_sha256()) == "candidate-python.v1"
     with pytest.raises(ValueError, match="unknown trusted proposal contract"):
         provider_profile_config("research", "unrecognized")
+
+
+@pytest.mark.parametrize("profile_set", ["smoke", "research"])
+def test_public_fitting_prompt_is_separate_pinned_and_used_in_repair(profile_set):
+    from lab.director.mode_proposals import MODE_PUBLIC_SYSTEM_PROMPT, MODE_SYSTEM_PROMPT
+
+    old_config = provider_profile_config(profile_set, CONTRACT)
+    assert old_config == provider_profile_config(profile_set, CONTRACT, public_fit=False)
+    assert "training_policy" not in old_config
+    assert "healthy training only" in MODE_SYSTEM_PROMPT
+    public_config = provider_profile_config(profile_set, CONTRACT, public_fit=True)
+    public_sha = provider_config_sha256(profile_set, CONTRACT, public_fit=True)
+    assert public_sha != provider_config_sha256(profile_set, CONTRACT)
+    assert provider_public_fit_for_sha256(public_sha, CONTRACT)
+    assert not provider_public_fit_for_sha256(
+        provider_config_sha256(profile_set, CONTRACT), CONTRACT
+    )
+    assert provider_profile_set_for_sha256(public_sha, CONTRACT) == profile_set
+    assert provider_proposal_contract_for_sha256(public_sha) == CONTRACT
+    assert public_config["training_policy"] == "label_blind_source_order;normal_fit_not_guaranteed"
+    assert "normal training is not guaranteed" in MODE_PUBLIC_SYSTEM_PROMPT
+    assert "healthy training only" not in MODE_PUBLIC_SYSTEM_PROMPT
+    _FakeRuntime.response_queue = [json.dumps({"score": 100}), json.dumps(_payload("som"))]
+    provider = LocalQwenProposalProvider(
+        run_id=UUID("7089275f-d7d2-4f46-b04b-27e809d15326"),
+        owner="lab",
+        principal_resolver=object(),
+        runtime_database=Path("unused-no-database-created.sqlite3"),
+        registry_entry_sha256="c" * 64,
+        profile_set=profile_set,
+        proposal_contract=CONTRACT,
+        public_fit=True,
+    )
+    turn = provider.propose_bounded(_context(system="S1"), remaining_wall_seconds=200)
+    assert turn.provider_receipt.provider_config_sha256 == public_sha
+    assert turn.provider_receipt.context_template == public_config["prompt_template"]
+    assert len(turn.provider_attempts) == 2
+    for attempt in turn.provider_attempts:
+        assert attempt.prompt_messages[0].content == MODE_PUBLIC_SYSTEM_PROMPT
+        assert "healthy training only" not in attempt.prompt_messages[0].content
+    with pytest.raises(ValueError):
+        provider_profile_config(profile_set, "candidate-python.v1", public_fit=True)
 
 
 def test_mode_adapter_keeps_unavailable_omr_and_alarm_calibration_explicit():

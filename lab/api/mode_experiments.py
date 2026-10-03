@@ -16,7 +16,7 @@ from lab.director.field_context import FieldIntent
 from lab.director.history_context import PriorExperienceSelection
 
 if TYPE_CHECKING:
-    from lab.api.registry import PublicDevStudy, SuiteEntry, SuiteRegistry
+    from lab.api.registry import PublicDevAgentStudy, PublicDevStudy, SuiteEntry, SuiteRegistry
     from lab.operating_modes import SourceSnapshot
     from lab.operating_modes.public_snapshot import PublicTaskSnapshot
 
@@ -327,6 +327,7 @@ def register_grid(
     runtime_root: Path,
     *,
     public_dev_study: PublicDevStudy | None = None,
+    require_current_public_policy: bool = False,
 ) -> tuple[SuiteRegistry, SuiteEntry]:
     """Persist one immutable provider entry using the existing private suite registry."""
     from lab.api.registry import SuiteEntry
@@ -370,11 +371,22 @@ def register_grid(
         public_dev_study=public_dev_study,
         allowed_purposes=("research",) if public is not None else ("research", "baseline"),
     )
-    return _register_entry(entry, registry_path, runtime_root)
+    return _register_entry(
+        entry,
+        registry_path,
+        runtime_root,
+        required_public_grid_policy=public_dev_study if require_current_public_policy else None,
+    )
 
 
 def register_agent(
-    store: ModeSnapshotStore, request: ModeAgentRequest, registry_path: Path, runtime_root: Path
+    store: ModeSnapshotStore,
+    request: ModeAgentRequest,
+    registry_path: Path,
+    runtime_root: Path,
+    *,
+    public_dev_agent_study: PublicDevAgentStudy | None = None,
+    operator_grant: bool = False,
 ) -> tuple[SuiteRegistry, SuiteEntry]:
     """Use the existing installed suite and local Qwen Director, with no generated executor."""
     from lab.api.registry import SuiteEntry
@@ -383,8 +395,26 @@ def register_agent(
     installed = store.installed(request.snapshot_sha256)
     if installed is None:
         raise ValueError("snapshot has not been installed by Scorer")
-    store.load(request.snapshot_sha256)
-    configuration = provider_config_sha256(request.profile_set, "operating-mode-config.v1")
+    public = store.public_snapshot(request.snapshot_sha256)
+    configuration = provider_config_sha256(
+        request.profile_set, "operating-mode-config.v1", public_fit=public is not None
+    )
+    if public is not None:
+        if public_dev_agent_study is None:
+            raise ValueError("public local-agent study requires its separate registry grant")
+        public_dev_agent_study.verify_snapshot(public)
+        public_dev_agent_study.verify_budget(
+            request.experiments, request.wall_seconds, request.model_tokens
+        )
+        if (
+            public_dev_agent_study.profile_set != request.profile_set
+            or public_dev_agent_study.provider_config_sha256 != configuration
+        ):
+            raise ValueError("public local-agent provider differs from its granted profile")
+    elif public_dev_agent_study is not None:
+        raise ValueError("public local-agent policy cannot authorize a synthetic snapshot")
+    else:
+        store.load(request.snapshot_sha256)
     identity = hashlib.sha256(
         canonical_document(
             {
@@ -392,6 +422,11 @@ def register_agent(
                 "provider_config_sha256": configuration,
                 "proposal_contract": "operating-mode-config.v1",
                 "proposal_limit": request.experiments,
+                **(
+                    {"public_dev_agent_study": public_dev_agent_study.model_dump(mode="json")}
+                    if public_dev_agent_study is not None
+                    else {}
+                ),
             }
         )
     ).hexdigest()
@@ -413,13 +448,24 @@ def register_agent(
         proposal_limit=request.experiments,
         proposal_contract="operating-mode-config.v1",
         snapshot_sha256=request.snapshot_sha256,
+        public_dev_agent_study=public_dev_agent_study,
         allowed_purposes=("research",),
     )
-    return _register_entry(entry, registry_path, runtime_root)
+    return _register_entry(
+        entry,
+        registry_path,
+        runtime_root,
+        required_public_agent_policy=public_dev_agent_study if not operator_grant else None,
+    )
 
 
 def _register_entry(
-    entry: SuiteEntry, registry_path: Path, runtime_root: Path
+    entry: SuiteEntry,
+    registry_path: Path,
+    runtime_root: Path,
+    *,
+    required_public_agent_policy: PublicDevAgentStudy | None = None,
+    required_public_grid_policy: PublicDevStudy | None = None,
 ) -> tuple[SuiteRegistry, SuiteEntry]:
     """Serialize registry publication without replacing any existing suite identity."""
     import fcntl
@@ -441,6 +487,29 @@ def _register_entry(
     try:
         fcntl.flock(descriptor, fcntl.LOCK_EX)
         existing = load_suite_registry(registry_path, runtime_root)
+        if required_public_grid_policy is not None:
+            grid_policy = required_public_grid_policy
+            matches = [
+                item.public_dev_study
+                for item in existing.entries.values()
+                if item.public_dev_study is not None
+                and item.public_dev_study.snapshot_sha256 == grid_policy.snapshot_sha256
+                and item.public_dev_study.owner_id == grid_policy.owner_id
+                and item.public_dev_study.origin == grid_policy.origin
+            ]
+            if not matches or any(value != grid_policy for value in matches):
+                raise ValueError("public CPU grant was revoked or changed before publication")
+        if required_public_agent_policy is not None:
+            policy = required_public_agent_policy
+            if (
+                existing.public_agent_policy(
+                    policy.snapshot_sha256, owner_id=policy.owner_id, origin=policy.origin
+                )
+                != policy
+            ):
+                raise ValueError(
+                    "public local-agent grant was revoked or changed before publication"
+                )
         entries = dict(existing.entries)
         if entry.suite_id in entries and entries[entry.suite_id] != entry:
             raise ValueError("registered suite identity already has different bytes")

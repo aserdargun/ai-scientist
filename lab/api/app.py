@@ -368,6 +368,10 @@ def create_app(
 
     install_aos_capability_route(app, principal_from_authorization)
 
+    from lab.api.aos_cpu_capability import install_aos_cpu_capability_route
+
+    install_aos_cpu_capability_route(app, principal_from_authorization)
+
     from lab.api.mode_stream import install_mode_stream_routes
 
     install_mode_stream_routes(app, principal_from_authorization, PROJECT_ROOT)
@@ -406,8 +410,31 @@ def create_app(
             try:
                 entry = registry.get(request.suite)
                 registry.verify_entry(entry)
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, OSError):
                 raise HTTPException(status_code=422, detail="suite is not available") from None
+            cpu_policy = entry.aos_cpu_study
+            if principal.origin == "aos" and entry.provider == "mode-grid" and cpu_policy is None:
+                raise HTTPException(status_code=403, detail="AOS CPU study grant required")
+            if cpu_policy is not None:
+                try:
+                    cpu_policy.authorize(origin=principal.origin, owner_id=principal.owner_id)
+                except ValueError:
+                    raise HTTPException(
+                        status_code=403, detail="AOS CPU study unavailable"
+                    ) from None
+                try:
+                    cpu_policy.verify_budget(
+                        request.budget.experiments,
+                        request.budget.wall_seconds,
+                        request.budget.model_tokens,
+                    )
+                except ValueError:
+                    raise HTTPException(status_code=422, detail="AOS CPU budget denied") from None
+                request_json.update(
+                    snapshot_sha256=cpu_policy.snapshot_sha256,
+                    aos_cpu_study=cpu_policy.model_dump(mode="json"),
+                    aos_cpu_study_sha256=cpu_policy.sha256,
+                )
             if entry.public_dev_study is not None:
                 policy = entry.public_dev_study
                 if policy.owner_id != principal.owner_id or policy.origin != principal.origin:
@@ -428,6 +455,28 @@ def create_app(
                 request_json.update(
                     snapshot_sha256=policy.snapshot_sha256,
                     public_dev_study=policy.model_dump(mode="json"),
+                )
+            if entry.public_dev_agent_study is not None:
+                agent_policy = entry.public_dev_agent_study
+                if (
+                    agent_policy.owner_id != principal.owner_id
+                    or agent_policy.origin != principal.origin
+                ):
+                    raise HTTPException(403, "public local-agent source unavailable")
+                try:
+                    agent_policy.verify_budget(
+                        request.budget.experiments,
+                        request.budget.wall_seconds,
+                        request.budget.model_tokens,
+                    )
+                    authorize_snapshot(
+                        mode_store(), agent_policy.snapshot_sha256, principal.owner_id
+                    )
+                except (ValueError, OSError):
+                    raise HTTPException(422, "public local-agent policy denied") from None
+                request_json.update(
+                    snapshot_sha256=agent_policy.snapshot_sha256,
+                    public_dev_agent_study=agent_policy.model_dump(mode="json"),
                 )
             if "research" not in entry.allowed_purposes:
                 raise HTTPException(status_code=422, detail="suite does not allow research runs")
@@ -706,7 +755,31 @@ def create_app(
         principal = mode_principal(authorization)
         try:
             authorize_snapshot(mode_store(), digest, principal.owner_id)
-            return mode_store().describe(digest)
+            description = mode_store().describe(digest)
+            if description.get("source_kind") == "public_dev":
+                registry = app.state.suite_registry
+                configured = os.environ.get("LAB_SUITE_REGISTRY_FILE")
+                if configured:
+                    registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
+                policy = (
+                    registry.public_agent_policy(
+                        digest, owner_id=principal.owner_id, origin=principal.origin
+                    )
+                    if registry is not None
+                    else None
+                )
+                description["local_agent_study"] = (
+                    {
+                        "schema": "public-dev-local-agent-study.v1",
+                        "profile_set": policy.profile_set,
+                        "max_experiments": policy.max_experiments,
+                        "max_wall_seconds": policy.max_wall_seconds,
+                        "max_model_tokens": policy.model_tokens,
+                    }
+                    if policy is not None
+                    else None
+                )
+            return description
         except (ValueError, OSError):
             raise HTTPException(status_code=404, detail="snapshot unavailable") from None
 
@@ -786,6 +859,7 @@ def create_app(
                 Path(configured),
                 PROJECT_ROOT / "data/runtime",
                 public_dev_study=policy,
+                require_current_public_policy=public is not None,
             )
         except (ValueError, OSError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from None
@@ -826,8 +900,22 @@ def create_app(
         try:
             store = mode_store()
             authorize_snapshot(store, request.snapshot_sha256, principal.owner_id)
+            policy = None
+            if store.public_snapshot(request.snapshot_sha256) is not None:
+                registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
+                if registry is None:
+                    raise ValueError("public local-agent registry unavailable")
+                policy = registry.public_agent_policy(
+                    request.snapshot_sha256, owner_id=principal.owner_id, origin=principal.origin
+                )
+                if policy is None:
+                    raise ValueError("public local-agent registry grant unavailable")
             registry, entry = register_agent(
-                store, request, Path(configured), PROJECT_ROOT / "data/runtime"
+                store,
+                request,
+                Path(configured),
+                PROJECT_ROOT / "data/runtime",
+                public_dev_agent_study=policy,
             )
         except (ValueError, OSError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from None

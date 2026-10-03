@@ -1,0 +1,23 @@
+{
+  "allocation_authority": false,
+  "allowed_purpose": "research",
+  "aos_cpu_study_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+  "gpu_release_verified": false,
+  "launch_authorized": false,
+  "max_experiments": 1,
+  "max_wall_seconds": 600,
+  "model_tokens": 0,
+  "native_inference_authorized": false,
+  "origin": "aos",
+  "owner_id": "aos:example-owner",
+  "program_version": "mode-grid.v1",
+  "provider": "mode-grid",
+  "provider_config_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "schema": "scientist.lab-cpu-capability.v1",
+  "snapshot_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+  "source_kind": "synthetic",
+  "suite_entry_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "suite_id": "aos-cpu-example",
+  "suite_manifest_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "track": "mode"
+}

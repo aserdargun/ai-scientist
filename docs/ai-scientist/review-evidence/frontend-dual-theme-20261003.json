@@ -1,0 +1,57 @@
+{
+  "schema": "frontend-dual-theme-review.v1",
+  "observed_at": "2026-10-03T19:21:58.798149+00:00",
+  "source_base": "9a8a7279c979c6eab923580ce6b34686d2fdd952",
+  "reference": "UMAY OS light theme; actual AOS ThemeSwitch/theme.css/language.css and topbar source read-only",
+  "deployed": true,
+  "frontend_only": true,
+  "backend_restarted": false,
+  "build_exit_code": 0,
+  "source_sha256": {
+    "console/web/src/ui/App.tsx": "140fb22126031b32ce01f063e3959afbe80742a61811281692ee8807c36cd624",
+    "console/web/src/ui/styles.css": "753d4c6ea62ddef8a267f1e507753d5c49021b12fa472f13eae788d642503990",
+    "console/web/src/ui/theme.ts": "6ecb0c4be94962f2d7ec7774b6d04eecac2390679febb3481b28be02f65f5b07"
+  },
+  "live_index_sha256": "ab13cde88c090f1d8506c537a7bccdcbd770247771dfc3d20765c34f89d6068a",
+  "visual_comparison": [
+    "white header and navy brand",
+    "navy status panel and navigation",
+    "turquoise actions with navy labels",
+    "light cards and thin borders",
+    "compact edges and readable hierarchy"
+  ],
+  "browser": "existing Playwright Chromium; Browser plugin unavailable",
+  "checks": {
+    "desktop": [
+      1440,
+      1050
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "navigation_pages": 6,
+    "english_default": true,
+    "turkish_selection": true,
+    "selection_persistence": true,
+    "cross_tab_sync": true,
+    "storage_denial_fallback": true,
+    "draft_values_preserved": true,
+    "horizontal_overflow": false,
+    "javascript_errors": 0,
+    "non_readonly_requests": 0,
+    "light_and_dark": true,
+    "theme_reload_persistence": true,
+    "theme_cross_tab_sync": true,
+    "theme_storage_denial_fallback": true
+  },
+  "not_tested": [
+    "remote Mac browser",
+    "GPU/model/training",
+    "AOS runtime integration"
+  ],
+  "font": "Inter Variable, Inter, system fallback; no new font assets downloaded",
+  "theme_default": "light",
+  "language_default": "en",
+  "controls": "Adjacent compact language and theme button groups after brand; aria-pressed state; mobile wrap with padding"
+}

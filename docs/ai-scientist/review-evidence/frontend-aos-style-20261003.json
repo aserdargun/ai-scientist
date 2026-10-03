@@ -1,0 +1,50 @@
+{
+  "schema": "frontend-aos-style-review.v1",
+  "observed_at": "2026-10-03T18:57:36.378923+00:00",
+  "source_base": "9a8a7279c979c6eab923580ce6b34686d2fdd952",
+  "reference": "AOS publication UI a892a8926e6916c97532f4732c4127a6e412ef71; sibling source read-only",
+  "deployed": true,
+  "frontend_only": true,
+  "backend_restarted": false,
+  "build_exit_code": 0,
+  "source_sha256": {
+    "console/web/src/ui/App.tsx": "8554418a826d2530dab47cf396d4a48747753201fa1b29d49879484741310991",
+    "console/web/src/ui/styles.css": "e9001480b6e41649110babbd9d1fa3e4a4d0fba92e4e9619afbecb76f1e273a5"
+  },
+  "live_index_sha256": "135e36b58f156c1ae8b60053bc6872fd5ce849a46fe3efcab31915733aa40e98",
+  "visual_comparison": [
+    "navy shell and mint brand",
+    "white canvas and slate headings",
+    "green actions",
+    "thin borders and compact radii",
+    "typography and spacing"
+  ],
+  "browser": "existing Playwright Chromium; Browser plugin unavailable",
+  "checks": {
+    "desktop": [
+      1440,
+      1050
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "navigation_pages": 6,
+    "english_default": true,
+    "turkish_selection": true,
+    "selection_persistence": true,
+    "cross_tab_sync": true,
+    "storage_denial_fallback": true,
+    "draft_values_preserved": true,
+    "horizontal_overflow": false,
+    "javascript_errors": 0,
+    "non_readonly_requests": 0
+  },
+  "not_tested": [
+    "remote Mac browser",
+    "GPU/model/training",
+    "AOS runtime integration"
+  ],
+  "superseded_by": "frontend-umay-theme-20261003.json",
+  "current_theme": false
+}

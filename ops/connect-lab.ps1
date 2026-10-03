@@ -5,6 +5,7 @@ param(
     [string]$SshUser = 'cachyos',
     [ValidateRange(1, 65535)][int]$LocalPort = 8788,
     [string]$RemoteDir = '/home/cachyos/ai-scientist',
+    [Alias('Profile')][string]$LabProfile = '',
     [switch]$NoStartLab,
     [switch]$NoBrowser
 )
@@ -16,6 +17,10 @@ if ($HostName -notmatch '^[a-zA-Z0-9][a-zA-Z0-9._-]*$' -or
 if ($RemoteDir -notmatch '^/[a-zA-Z0-9._/-]+$') {
     throw 'RemoteDir must be an absolute path using letters, digits, /, _, . and -.'
 }
+if ($LabProfile -and $LabProfile -cnotmatch '^[a-z][a-z0-9-]{0,31}$') {
+    throw 'Invalid profile name; use a lowercase name such as field-lab.'
+}
+$remotePort = if ($LabProfile) { 8789 } else { 8788 }
 $ssh = (Get-Command ssh.exe -ErrorAction SilentlyContinue).Source
 if (-not $ssh) { throw 'Windows OpenSSH ssh.exe is required.' }
 
@@ -30,14 +35,16 @@ $sshOptions = @('-o', 'ExitOnForwardFailure=yes', '-o', 'ConnectTimeout=15',
     '-o', 'ServerAliveInterval=15', '-o', 'ServerAliveCountMax=3')
 if (-not $NoStartLab) {
     # RemoteDir is restricted above; single quotes are preserved by SSH's shell command.
-    & $ssh @sshOptions -l $SshUser $HostName "cd '$RemoteDir' && bash ops/start-lab.sh"
+    $remoteCommand = "cd '$RemoteDir' && bash ops/start-lab.sh"
+    if ($LabProfile) { $remoteCommand += " --profile '$LabProfile'" }
+    & $ssh @sshOptions -l $SshUser $HostName $remoteCommand
     if ($LASTEXITCODE -ne 0) { throw "Remote Lab launcher failed ($LASTEXITCODE)." }
 }
 
 $tunnel = $null
 try {
     # All arguments here are validated and contain no whitespace or native quoting chars.
-    $arguments = $sshOptions + @('-N', '-T', '-L', "127.0.0.1:${LocalPort}:127.0.0.1:8788",
+    $arguments = $sshOptions + @('-N', '-T', '-L', "127.0.0.1:${LocalPort}:127.0.0.1:$remotePort",
         '-l', $SshUser, $HostName)
     $tunnel = Start-Process -FilePath $ssh -ArgumentList $arguments -NoNewWindow -PassThru
     $url = "http://127.0.0.1:$LocalPort/"

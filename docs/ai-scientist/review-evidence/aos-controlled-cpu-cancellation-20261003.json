@@ -1,0 +1,43 @@
+{
+  "schema": "scientist.controlled-cpu-cancellation-summary.v1",
+  "status": "boundary_stop_repeat_recovery_cleanup_passed",
+  "run_id": "a7c3f7e4-a04c-4a0f-ba7a-2c4a9bea8351",
+  "report_sha256": "25a95ef4d2fcb6c196408af51fc7ea8800b13b319d6d68e1952c613e0cbc58f7",
+  "stop_responses": [
+    "stop_requested",
+    "stop_requested"
+  ],
+  "terminal_state": "stopped",
+  "chronology": {
+    "evidence_scope": "prior-live observation only; live-at-request not established",
+    "first_stop_event_at": "2026-10-03T14:52:36.958495+00:00",
+    "observed_before_request_before_terminal_update": false,
+    "observed_job_terminal_updated_at": "2026-10-03T14:52:36.404943+00:00",
+    "observed_live_scorer_at": "2026-10-03T14:52:36.408127+00:00",
+    "os_liveness_at_exact_request_instant_sampled": false
+  },
+  "scorer_active_at_stop_proven": false,
+  "supersedes_private_helper_inflight_acceptance_flag": true,
+  "worker_cleanup_sha256": "813a2b14e77092711d0ada4280ff183eb1b8d9a9e06b162b160527a4bca895b3",
+  "owned_service_cleanup_sha256": "7c6f1a8f1091f0c52f697cc1ffbf8bd0ecfa9acd5f6ad7fcad57fa4517cbc694",
+  "exact_worker_units_absent": true,
+  "exact_worker_cgroups_absent_or_empty": true,
+  "sandbox_residuals": 0,
+  "api_stopped": true,
+  "database_stopped": true,
+  "database_volume_retained": true,
+  "queue_before_database_stop": {
+    "queued": 0,
+    "running": 0,
+    "stop_requested": 0
+  },
+  "model_tokens": 0,
+  "gpu_acceptance": false,
+  "fixture_decision_and_approval": true,
+  "remaining": [
+    "Scorer-active-at-stop cancellation",
+    "native GPU handoff and coexistence",
+    "AOS web field intent integration"
+  ],
+  "observed_at": "2026-10-03T15:07:48.019057+00:00"
+}

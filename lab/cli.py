@@ -41,6 +41,7 @@ from lab.director.local_llm import (
     LocalQwenProposalProvider,
     provider_config_sha256,
     provider_profile_set_for_sha256,
+    provider_public_fit_for_sha256,
 )
 from lab.director.loop import DirectorLoop, DirectorLoopResult, load_fake_provider
 from lab.director.ownership import (
@@ -115,6 +116,7 @@ def _local_qwen_provider(
     proposal_contract: Literal[
         "candidate-python.v1", "operating-mode-config.v1"
     ] = "candidate-python.v1",
+    public_fit: bool = False,
 ) -> LocalQwenProposalProvider:
     """Build the fixed local provider from service-owned identity and runtime paths."""
     if re.fullmatch(r"[0-9a-f]{64}", registry_entry_sha256) is None:
@@ -132,7 +134,7 @@ def _local_qwen_provider(
     expected_configuration = (
         provider_config_sha256(profile_set)
         if proposal_contract == "candidate-python.v1"
-        else provider_config_sha256(profile_set, proposal_contract)
+        else provider_config_sha256(profile_set, proposal_contract, public_fit=public_fit)
     )
     provider = LocalQwenProposalProvider(
         run_id=run_id,
@@ -142,6 +144,7 @@ def _local_qwen_provider(
         registry_entry_sha256=registry_entry_sha256,
         profile_set=profile_set,
         proposal_contract=proposal_contract,
+        public_fit=public_fit,
         cancellation_observer=_director_model_observer(director_engine, owner),
     )
     if provider.configuration_sha256 != expected_configuration:
@@ -335,10 +338,97 @@ def _request_proposal_contract(
     )
 
 
+def _verify_aos_cpu_request_binding(
+    request: Mapping[str, Any],
+    *,
+    owner_id: str,
+    origin: str,
+    registry: SuiteRegistry,
+    entry: SuiteEntry,
+) -> None:
+    """Keep the queued request bound to the current explicit AOS CPU grant."""
+    frozen = "aos_cpu_study" in request or "aos_cpu_study_sha256" in request
+    if entry.provider != "mode-grid" and not frozen:
+        return
+    policy = entry.aos_cpu_study
+    if policy is None:
+        if frozen or (origin == "aos" and entry.provider == "mode-grid"):
+            raise ValueError("AOS CPU execution requires its current explicit registry grant")
+        return
+    policy.authorize(origin=origin, owner_id=owner_id)
+    if (
+        request.get("aos_cpu_study") != policy.model_dump(mode="json")
+        or request.get("aos_cpu_study_sha256") != policy.sha256
+        or request.get("suite") != entry.suite_id
+        or request.get("program_version") != entry.program_version
+        or request.get("track") != entry.track
+        or request.get("provider") != entry.provider
+        or request.get("purpose", "research") != "research"
+        or request.get("study_kind") != "single_snapshot_study"
+        or request.get("snapshot_sha256") != policy.snapshot_sha256
+        or request.get("suite_manifest_sha256") != entry.suite_manifest_sha256
+        or request.get("scenario_sha256") != entry.scenario_sha256
+        or request.get("provider_config_sha256") != policy.provider_config_sha256
+        or request.get("provider_registry_entry_sha256") != registry.entry_sha256(entry)
+        or _request_proposal_contract(request) != entry.proposal_contract
+    ):
+        raise ValueError("AOS CPU request differs from the immutable registry grant")
+    budget = request.get("budget")
+    if not isinstance(budget, dict):
+        raise ValueError("AOS CPU execution budget is unavailable")
+    experiments = budget.get("experiments")
+    wall_seconds = budget.get("wall_seconds")
+    model_tokens = budget.get("model_tokens")
+    if (
+        not isinstance(experiments, int)
+        or not isinstance(wall_seconds, int)
+        or not isinstance(model_tokens, int)
+    ):
+        raise ValueError("AOS CPU execution budget must contain integers")
+    policy.verify_budget(experiments, wall_seconds, model_tokens)
+    if (
+        request.get("proposal_limit") != budget["experiments"]
+        or budget["experiments"] > entry.proposal_limit
+    ):
+        raise ValueError("AOS CPU proposal count differs from the registered limit")
+
+
+def _registered_aos_cpu_grid_binding(
+    request: dict[str, Any],
+    suite_file: Path,
+    scenario_file: Path | None,
+    *,
+    owner_id: str,
+    origin: str,
+) -> None:
+    """Recheck current authority before fresh/resumed Director work reaches baselines."""
+    frozen = "aos_cpu_study" in request or "aos_cpu_study_sha256" in request
+    if request.get("provider") != "mode-grid" and not frozen:
+        return
+    configured = os.environ.get("LAB_SUITE_REGISTRY_FILE", "")
+    if not configured:
+        if origin == "aos" or frozen:
+            raise ValueError("AOS CPU registry is unavailable")
+        return
+    registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
+    entry = registry.get(request["suite"])
+    _verify_aos_cpu_request_binding(
+        request, owner_id=owner_id, origin=origin, registry=registry, entry=entry
+    )
+    if entry.aos_cpu_study is not None:
+        manifest, scenario = registry.verify_entry(entry)
+        if (
+            manifest != suite_file.resolve(strict=True)
+            or scenario_file is None
+            or scenario != scenario_file.resolve(strict=True)
+        ):
+            raise ValueError("AOS CPU Director paths differ from the registered source")
+
+
 def _registered_public_grid_binding(
     request: dict[str, Any], suite_file: Path, *, owner_id: str, origin: str, snapshot_sha256: str
 ) -> PublicTaskBinding:
-    """Recheck immutable public CPU authority before any candidate or baseline dispatch."""
+    """Recheck the separate public grid/agent grant before any evaluation dispatch."""
     from lab.api.mode_experiments import ModeSnapshotStore
 
     configured = os.environ.get("LAB_SUITE_REGISTRY_FILE", "")
@@ -346,7 +436,10 @@ def _registered_public_grid_binding(
         raise ValueError("public development registry unavailable")
     registry = load_suite_registry(Path(configured), PROJECT_ROOT / "data/runtime")
     entry = registry.get(request["suite"])
-    policy = entry.public_dev_study
+    agent = entry.provider == "local-qwen"
+    policy = entry.public_dev_agent_study if agent else entry.public_dev_study
+    policy_key = "public_dev_agent_study" if agent else "public_dev_study"
+    other_key = "public_dev_study" if agent else "public_dev_agent_study"
     public = ModeSnapshotStore(PROJECT_ROOT / "data/runtime/mode-snapshots").public_snapshot(
         snapshot_sha256
     )
@@ -355,7 +448,8 @@ def _registered_public_grid_binding(
         or public is None
         or policy.owner_id != owner_id
         or policy.origin != origin
-        or request.get("public_dev_study") != policy.model_dump(mode="json")
+        or request.get(policy_key) != policy.model_dump(mode="json")
+        or other_key in request
         or request.get("provider") != entry.provider
         or request.get("track") != entry.track
         or request.get("study_kind") != "single_snapshot_study"
@@ -363,6 +457,7 @@ def _registered_public_grid_binding(
         or request.get("provider_registry_entry_sha256") != registry.entry_sha256(entry)
         or request.get("suite_manifest_sha256") != entry.suite_manifest_sha256
         or request.get("snapshot_sha256") != policy.snapshot_sha256
+        or (agent and request.get("proposal_contract") != entry.proposal_contract)
         or registry.verify_entry(entry)[0] != suite_file.resolve(strict=True)
     ):
         raise ValueError("public development dispatch differs from immutable registry authority")
@@ -503,6 +598,16 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
 
         prior_findings = load_frozen_prior_findings(request)
         field_context = load_frozen_field_context(request)
+        if request.get("provider") == "mode-grid" or any(
+            key in request for key in ("aos_cpu_study", "aos_cpu_study_sha256")
+        ):
+            _registered_aos_cpu_grid_binding(
+                request,
+                args.suite_file,
+                args.scenario_file,
+                owner_id=run["owner_id"],
+                origin=run["origin"],
+            )
         study_snapshot = None
         public_binding = None
         if request.get("provider") == "mode-grid" and request.get("track") == "mode":
@@ -538,6 +643,17 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
             study_snapshot = _registered_mode_agent_snapshot(request, args.suite_file)
             if args.provider != "local-qwen":
                 raise ValueError("mode agent study requires the registered local provider")
+            from lab.api.mode_experiments import ModeSnapshotStore
+
+            store = ModeSnapshotStore(PROJECT_ROOT / "data/runtime/mode-snapshots")
+            if store.public_snapshot(study_snapshot) is not None:
+                public_binding = _registered_public_grid_binding(
+                    request,
+                    args.suite_file,
+                    owner_id=run["owner_id"],
+                    origin=run["origin"],
+                    snapshot_sha256=study_snapshot,
+                )
         if field_context is not None:
             load_frozen_field_context(request, expected_snapshot_sha256=study_snapshot)
             if study_snapshot is None:
@@ -618,10 +734,16 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
                 raise ValueError("immutable local provider configuration digest is missing")
             proposal_contract = _request_proposal_contract(request)
             profile_set = provider_profile_set_for_sha256(config_sha, proposal_contract)
+            public_fit = provider_public_fit_for_sha256(config_sha, proposal_contract)
+            if public_fit != (public_binding is not None):
+                raise ValueError(
+                    "local provider fitting policy differs from verified public binding"
+                )
             if (
                 not isinstance(entry_sha, str)
                 or request.get("scenario_sha256") is not None
-                or config_sha != provider_config_sha256(profile_set, proposal_contract)
+                or config_sha
+                != provider_config_sha256(profile_set, proposal_contract, public_fit=public_fit)
                 or request.get("provider_registry_entry_sha256") != entry_sha
             ):
                 raise ValueError("local provider configuration differs from immutable request")
@@ -632,6 +754,7 @@ def _run_director(args: argparse.Namespace) -> dict[str, object]:
                 director_engine=director,
                 profile_set=profile_set,
                 proposal_contract=proposal_contract,
+                public_fit=public_fit,
             )
             if (
                 getattr(provider, "provider_id", None) != "local-qwen.v1"
@@ -978,6 +1101,7 @@ class _ValidatedDispatch:
     proposal_limit: int
     purpose: str
     profile_set: Literal["smoke", "research"] | None
+    public_fit: bool
     entry_sha256: str
     contract: ExecutionContract
 
@@ -991,6 +1115,13 @@ def _validate_dispatch_target(
         raise ValueError("queued run has an invalid immutable request")
     entry = registry.get(str(request.get("suite", "")))
     suite_path, scenario_path = registry.verify_entry(entry)
+    _verify_aos_cpu_request_binding(
+        request,
+        owner_id=row.get("owner_id", ""),
+        origin=row.get("origin", ""),
+        registry=registry,
+        entry=entry,
+    )
     budget_json = request["budget"]
     proposal_limit = budget_json.get("experiments")
     if any(
@@ -1029,7 +1160,23 @@ def _validate_dispatch_target(
         raise ValueError("baseline request must reserve zero proposals and model tokens")
     if purpose == "research" and not 1 <= proposal_limit <= entry.proposal_limit:
         raise ValueError("research request proposal budget is outside the registered limit")
+    if (
+        getattr(entry, "public_dev_study", None) is not None
+        or getattr(entry, "public_dev_agent_study", None) is not None
+        or "public_dev_study" in request
+        or "public_dev_agent_study" in request
+    ):
+        if entry.snapshot_sha256 is None:
+            raise ValueError("public dispatch has no registered snapshot identity")
+        _registered_public_grid_binding(
+            request,
+            suite_path,
+            owner_id=row.get("owner_id", ""),
+            origin=row.get("origin", ""),
+            snapshot_sha256=entry.snapshot_sha256,
+        )
     profile_set: Literal["smoke", "research"] | None = None
+    public_fit = False
     if purpose == "research" and entry.provider in {"fake-json", "mode-grid"}:
         if scenario_path is None:
             raise ValueError("trusted fake provider scenario is unavailable")
@@ -1039,7 +1186,14 @@ def _validate_dispatch_target(
         profile_set = provider_profile_set_for_sha256(
             entry.provider_config_sha256, entry.proposal_contract
         )
-        current_config_sha = provider_config_sha256(profile_set, entry.proposal_contract)
+        public_fit = provider_public_fit_for_sha256(
+            entry.provider_config_sha256, entry.proposal_contract
+        )
+        if public_fit != (entry.public_dev_agent_study is not None):
+            raise ValueError("local provider fitting policy lacks its separate public grant")
+        current_config_sha = provider_config_sha256(
+            profile_set, entry.proposal_contract, public_fit=public_fit
+        )
         if current_config_sha != entry.provider_config_sha256:
             raise ValueError("registered local provider profile differs from this worker")
     # Suite version belongs to the hash-pinned manifest, not the registry entry.
@@ -1105,6 +1259,7 @@ def _validate_dispatch_target(
         proposal_limit,
         purpose,
         profile_set,
+        public_fit,
         entry_sha,
         contract,
     )
@@ -1141,6 +1296,7 @@ def _dispatch_director_run(run_id: UUID) -> dict[str, object]:
         suite_path, scenario_path = target.suite_path, target.scenario_path
         budget_json, proposal_limit = target.budget, target.proposal_limit
         purpose, profile_set = target.purpose, target.profile_set
+        public_fit = target.public_fit
         entry_sha, contract = target.entry_sha256, target.contract
         observed = capture_current_owner(str(row["payload_sha256"]), run_id)
         process = OwnerProcessIdentity(
@@ -1181,6 +1337,7 @@ def _dispatch_director_run(run_id: UUID) -> dict[str, object]:
                     director_engine=director,
                     profile_set=profile_set,
                     proposal_contract=entry.proposal_contract,
+                    public_fit=public_fit,
                 )
             runtime = _private_runtime_directory(
                 PROJECT_ROOT / "data/runtime/director-artifacts" / str(run_id)

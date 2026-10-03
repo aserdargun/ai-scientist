@@ -1,0 +1,68 @@
+{
+  "schema": "scientist.aos-controlled-cpu-integration.v1",
+  "observed_at": "2026-10-03T14:36:04.470063+00:00",
+  "status": "normal_cpu_integration_passed",
+  "run_id": "aa7d3d6f-e44e-4a88-9b53-6fa46f484e0a",
+  "scope": "real isolated API/PostgreSQL/Director/Scorer; synthetic snapshot; controlled fixture decision/approval",
+  "contract": "scientist.lab-cpu-capability.v1",
+  "source": {
+    "scientist_base_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+    "scientist_tracked_diff_sha256": "c929c9ef53c24ed373a3fddfba31238bf8ce0f1d00f3eb395d31fa149629257f",
+    "scientist_source_freeze_sha256": "e425b12881cc1c962abf4df7affba262ca8612277efed646e32f1004f663ddd8",
+    "aos_actual_checkout_commit": "ed6e857b0e61e9c19c8ba63933e2cc9f318fe444",
+    "aos_published_source_base": "931b55ef9b8ffe0f9a93f068ff7175ef1110dc8d",
+    "aos_tracked_diff_sha256": "83b0b65888abadcb3cfc5a711b86d42e4bb3bc15b1ba4335b2f412d84fb35dd7",
+    "aos_source_freeze_sha256": "48fb8530307c5c0397d81c66f535c14a604ddda6ce3e989a913e79e0fa95a827",
+    "untracked_runtime_source_covered_by_freeze_not_git_diff": true,
+    "candidate_harness_version": "0.47.0",
+    "v010_tag_unchanged": true
+  },
+  "execution": {
+    "snapshot_train_rows": 192,
+    "snapshot_evaluation_rows": 192,
+    "scored_rows": 182,
+    "baseline_algorithms": 3,
+    "baseline_scores": 9,
+    "optics_primary_scores": 1,
+    "model_tokens": 0,
+    "model": null,
+    "quantization": null,
+    "context": null,
+    "vram_peak": null,
+    "gpu_handover_latency": null,
+    "director_dispatch_seconds": 222.196,
+    "aos_end_to_end_seconds": 303.697,
+    "director_exit": 0,
+    "finalizer_exit": 0,
+    "aos_caller_exit": 0,
+    "referee_decision": "DISCARD",
+    "learned_improvement_proven": false,
+    "benchmark_acceptance": false
+  },
+  "proof": {
+    "report_sha256": "ef4944202eb341d53b11d9ddf5cd5e181811fea31cc99c5f99665ab07f66068f",
+    "html_report_sha256": "3c5414034d441643734b32bee89a85028b3eddefed0ba74c1865055aeb9468f2",
+    "observer_sha256": "e418d5f3b1a9ff3ae594c7a597c0a27ff169613c8af07a26c9d8f15a9c16a524",
+    "worker_drain_sha256": "c7b739d55dc1503a6877110797db7d3c704b850114f68b5d18bd96030fb14403",
+    "director_dead_and_cgroup_absent": true,
+    "scorer_jobs_completed_and_units_absent": 10,
+    "scorer_and_finalizer_cgroups_absent_or_empty": 11,
+    "sandbox_residual_count": 0,
+    "api_and_pg_retained_idle_for_separate_case": true,
+    "whole_run_resource_peak_proven": false
+  },
+  "not_run": [
+    "controlled inflight cancellation (next separate case)",
+    "autonomous model decision",
+    "real AOS user-interface acceptance",
+    "integrated GPU handover/cancellation",
+    "teacher training and learned adapter"
+  ],
+  "remaining": [
+    "AOS typed application dataset/asset/field intent forwarding",
+    "native activation bootstrap and allowed active-worker inventory",
+    "original full M0/GPU acceptance",
+    "final exact API/PostgreSQL shutdown after cancellation case"
+  ],
+  "followup_cancellation_summary": "aos-controlled-cpu-cancellation-20261003.json"
+}

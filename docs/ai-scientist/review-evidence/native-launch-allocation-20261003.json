@@ -1,0 +1,134 @@
+{
+  "schema": "scientist-native-launch-allocation-fix.v1",
+  "created_at": "2026-10-03T17:22:35.041463+00:00",
+  "scope": "isolated source; CPU mocked model/systemd observations; not deployed",
+  "base_commit": "8f9a10bc6e6b7e665df48f74348b30e9d3ad6dff",
+  "source_sha256": {
+    "lab/llm/native_runtime.py": "adec23da98af3adf27d45cba041bfd5a42de1a9001287ad76957ae58849643fe",
+    "tests/test_native_launch_allocation.py": "91bc2c5940b48fb38ca16aa90d5a40ed2c62641d022756228cd4bc2fb5f025b5",
+    "tests/test_native_runtime.py": "942f24687645a4fe521e3812c37178450808604019ed1d781bfa26d44619d020"
+  },
+  "regression_before_fix": {
+    "exit_code": 1,
+    "failed": 23,
+    "passed": 1,
+    "evidence": "worker tool execution transcript; no separate RED log saved",
+    "observed": "expired allocation reached inert units.launch; intent and uncertain transitions admitted invalid allocations"
+  },
+  "focused_after_fix": {
+    "exit_code": 0,
+    "passed": 119,
+    "seconds": 2.05,
+    "command": ".venv/bin/python -m pytest -q tests/test_native_launch_allocation.py tests/test_native_unit_binding_immutability.py tests/test_native_runtime.py tests/test_gpu_scheduler.py -m 'not gpu and not live'",
+    "log_sha256": "4360803b2f58f204a1b335f9fca13b229a0013a6f7e8e21719f2744e79fbee46"
+  },
+  "static_checks": {
+    "ruff": 0,
+    "strict_mypy": 0,
+    "diff_check": 0
+  },
+  "preserved": [
+    "standalone Director principal",
+    "one canonical scheduler",
+    "postlaunch created observation after expiry",
+    "quarantine worker identity capture",
+    "uncertain absent worker is not immediate drain proof"
+  ],
+  "not_proven": [
+    "SQL and physical systemd spawn atomicity",
+    "complete active-worker inventory",
+    "shared-host finite activation authorization",
+    "actual GPU or AOS coexistence acceptance"
+  ],
+  "gpu_started": false,
+  "live_deployed": false,
+  "aos_modified": false,
+  "full_gate": {
+    "status": "passed",
+    "source_files": 454,
+    "source_manifest_sha256": "c05d757fe9e6568213554bc72d7a48255412b31302da5a657d2998cb237d463c",
+    "exit_code": 0,
+    "commands": [
+      {
+        "command": [
+          "ruff",
+          "check",
+          "."
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit",
+          "-q",
+          "-r",
+          "harness",
+          "lab"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pytest",
+          "-m",
+          "not gpu and not live"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "mypy",
+          "--strict",
+          "harness",
+          "lab/referee",
+          "lab/analytics",
+          "lab/operating_modes",
+          "lab/llm",
+          "lab/sandbox",
+          "lab/api",
+          "lab/db",
+          "lab/director",
+          "lab/scorer",
+          "lab/training",
+          "lab/cli.py",
+          "lab/reporting.py",
+          "lab/replay.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv",
+          "build",
+          "--wheel",
+          "--out-dir",
+          "/var/tmp/q-1_6ivdpw/swapp-ai-scientist-wheel-edz0dsx1"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/home/cachyos/ai-scientist/.venv/bin/python",
+          "-c",
+          "from harness.metrics import vus_metrics; from vendor.tsb_ad_eval import basic_metrics; from lab.sandbox.docker_runner import DEFAULT_SANDBOX_IMAGE; from lab.sandbox.evaluation import run_guarded_seed_evaluation; print('wheel imports ok:', basic_metrics.__file__, DEFAULT_SANDBOX_IMAGE)"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "pytest_summary": "== 3621 passed, 49 skipped, 177 deselected, 603 warnings in 281.56s (0:04:41) ==",
+    "source_unchanged": true,
+    "runtime_seconds": 358.757,
+    "memory_peak_reported": "889.3M",
+    "swap_bytes": 0,
+    "receipt_sha256": "c8cc3b1072ab8b1ae2985afc32aae323a54fda49569b45dc18a0a95b91cf2875"
+  },
+  "updated_at": "2026-10-03T17:28:28.414441+00:00"
+}

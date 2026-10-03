@@ -1,0 +1,108 @@
+{
+  "schema": "public-dev-local-agent-source-review.v1",
+  "created_at": "2026-10-03T16:36:26.925722+00:00",
+  "scientist_base_commit": "384f05213fb71997dd2899a0687b73cd4f2080b6",
+  "aos_observed_source_commit": "ac255735d34014818e61fbae9c580d082ed46ce2",
+  "scope": "isolated source candidate; not deployed; no public model, GPU, training or AOS runtime acceptance",
+  "quality_gate": {
+    "overall_exit_code": 0,
+    "commands": [
+      {
+        "command": [
+          "ruff"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pylint"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "bandit"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "pytest"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "mypy"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "uv"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/home/cachyos/ai-scientist/.venv/bin/python"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "passed": 3595,
+    "skipped": 49,
+    "deselected": 177,
+    "receipt_sha256": "6a97b8c8654cd6a7a9f4b53a08ed040a34619aa4868554b9ac08226197644872",
+    "source_freeze_files": 453,
+    "source_freeze_sha256": "175568d211234e13c3c40ff11c9a8c497b558da10e46dd2d90ac8770f76d2b97",
+    "prior_attempt": {
+      "overall_exit_code": 1,
+      "pytest_passed": 3595,
+      "failure": "Bandit B101 assert_used in registry",
+      "correction": "assign optional policy before the explicit non-null branch; no assertion",
+      "full_gate_rerun": true
+    }
+  },
+  "focused": {
+    "public_agent_passed": 153,
+    "public_agent_skipped": 1,
+    "native_binding_passed": 93,
+    "native_regression_failed_before_fix": 4,
+    "independent_review": "no remaining execution bypass found in bounded review"
+  },
+  "ui": {
+    "build_exit_code": 0,
+    "policy_cases": [
+      "missing grant",
+      "disabled runtime",
+      "bounded grant",
+      "boolean token cap rejected",
+      "array profile rejected"
+    ],
+    "read_only": true,
+    "policy_and_runtime_readiness_mocked": true,
+    "mutations": 0,
+    "page_errors": 0,
+    "deployed": false
+  },
+  "legacy_provider_hashes_unchanged": true,
+  "model_runtime_invoked": false,
+  "gpu_runtime_invoked": false,
+  "new_runtime_image_built": false,
+  "aos_peer_ack": false,
+  "files": {
+    "lab/api/registry.py": "0113e7ed4e8582e8a63b673c07e538a6700914ed436b7002ed937bd277969e66",
+    "lab/api/app.py": "ca866cc50935c922886ea6b153ba82ef9907b79ea4e4b5dc02546c85be2e5f5a",
+    "lab/api/mode_experiments.py": "ad2f89ff70635f0fb0db1e3564a57c1bca0b8e22faf001a78efe96bf7a72e76b",
+    "lab/cli.py": "0ec9d896fbc3eb669716858d95b6f1e850a0b89810e50bbf08ec1509b415205a",
+    "lab/director/local_llm.py": "236fa1e9df78f4d506b30d24dcb5e6650ea62c70d9ee326cd71b6d675ccdbfbe",
+    "lab/director/mode_proposals.py": "3644f7b11806b39ee446bdc7113ca6621a354462596ddb470b792d1494c100f2",
+    "lab/director/fake_llm.py": "3012244c614e06b9771eca7480fa2b380844617498706ef423198e3e552c6b34",
+    "lab/llm/native_runtime.py": "f596f13840d446d28bbf97eeca5ae634a7f778476cdcd6ebf95f7921547fa987",
+    "scripts/register_public_mode_agent.py": "9947552e231ed2d9f38c219aaf2466907cc910030b17aca999ba5067089a92bd",
+    "tests/test_public_mode_agent.py": "e89fffcbdc940fb41f8a090222c7ca80768f279c78274957819cedd171b559ab",
+    "tests/test_native_unit_binding_immutability.py": "58b1ad68db9de1fc7bea5e9b0d04b96814965b9f634b82dfafcca0af0aff91d8",
+    "console/web/src/ui/OperatingModesPage.tsx": "0b0ce7986e04d83f46cbe6bbe8223f6fad244691f03813e4294156c73e679fc3"
+  }
+}
