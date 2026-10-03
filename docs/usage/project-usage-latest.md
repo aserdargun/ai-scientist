@@ -35,19 +35,19 @@ Observed counters have incomplete coverage. Actual billing and subscription cost
 | 2026-10-02 | openai | gpt-6.1-sol | medium | 100209021 | 98339072 | 332008 | 100541029 |
 | 2026-10-02 | openai | gpt-6.1-sol | xhigh | 15514541 | 14852992 | 102451 | 15616992 |
 | 2026-10-02 | unknown | unknown | unknown | 47465 | 7808 | 148 | 47613 |
-| 2026-10-03 | openai | gpt-6-astra | high | 202641736 | 198324352 | 612439 | 203254175 |
+| 2026-10-03 | openai | gpt-6-astra | high | 225224053 | 220009984 | 681284 | 225905337 |
 | 2026-10-03 | openai | gpt-6-astra | max | 55353459 | 53403264 | 255309 | 55608768 |
-| 2026-10-03 | openai | gpt-6.1-sol | high | 182387878 | 177971456 | 746598 | 183134476 |
+| 2026-10-03 | openai | gpt-6.1-sol | high | 187170281 | 182648064 | 772838 | 187943119 |
 | 2026-10-03 | openai | gpt-6.1-sol | medium | 2486090 | 2351360 | 10816 | 2496906 |
-| 2026-10-03 | openai | gpt-6.1-sol | xhigh | 13819935 | 13362816 | 66672 | 13886607 |
+| 2026-10-03 | openai | gpt-6.1-sol | xhigh | 17774890 | 17187840 | 93835 | 17868725 |
 
-Development observed totals: input_tokens=5480716548, cached_input_tokens=5360700160, output_tokens=20291756, total_tokens=5501008304.
+Development observed totals: input_tokens=5512036223, cached_input_tokens=5390887424, output_tokens=20414004, total_tokens=5532450227.
 Runtime reviewed runs=3; model calls=6; local model input_tokens=5478, output_tokens=2800, total_tokens=8278.
-Recorded goal observations: observed_periods=2, tokens_used=137748997, active_seconds=396539.
+Recorded goal observations: observed_periods=2, tokens_used=138983571, active_seconds=400217.
 
 Cached input and reasoning output are subsets, not extra tokens. Ambiguous intervals are excluded; these counters are not bills.
 
-Counterfactual Standard short-context priced-subset equivalent: 2914.70711388 USD. Historical rates, service tier and long-context classification are unverified.
+Counterfactual Standard short-context priced-subset equivalent: 2950.65749108 USD. Historical rates, service tier and long-context classification are unverified.
 
 Product runtime includes only explicitly reviewed local/CPU receipts. Electricity and hardware costs were not measured.
 
