@@ -1,9 +1,9 @@
 {
   "schema": "development-progress.v1",
-  "updated_at": "2026-10-03T20:03:50.216438+00:00",
-  "current_work": "Active CPU Scorer stop and cleanup verified; preparing the separate AOS panel acceptance.",
+  "updated_at": "2026-10-03T20:45:26.007467+00:00",
+  "current_work": "Disabled shared AOS launch ledger completed; full source gate passed: 3,679 tests and seven checks. Runtime composition remains pending.",
   "latest_result": "Real synthetic run stopped during an active baseline Scorer. Repeated stop, report hash and six worker-unit closures verified. The live console remains healthy; light surfaces are fully light.",
-  "next_step": "Finalize fresh AOS CPU consumer configuration and pass combined memory admission before the one-candidate panel run. Shared GPU and learned adapters remain unverified.",
+  "next_step": "AOS reviews proposal 2 and the authenticated launch composition. The unused CPU API/PG scope is closed with zero runs; a future panel acceptance needs fresh identity/window and corrected 20.25 GiB resource admission.",
   "cpu_status": "passed",
   "gpu_status": "blocked"
 }

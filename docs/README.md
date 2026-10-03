@@ -37,3 +37,5 @@ ayrı izlenir.
 - [Post-v0.1.0 CPU delivery](releases/post-v0.1.0-cpu.md)
 - [Model and Unsloth adapter preparation](ai-scientist/130-model-and-adapter-preparation.md)
 - [Hypothetical API cost and coverage](ai-scientist/131-api-cost-summary.md)
+
+- [Shared desktop launch: Scientist reciprocal proposal](ai-scientist/133-shared-launch-response.md)

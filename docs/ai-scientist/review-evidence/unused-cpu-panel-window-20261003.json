@@ -1,0 +1,27 @@
+{
+  "observed_at": "2026-10-03T20:44:45.861445+00:00",
+  "scope": "independent closure readback",
+  "original_api_pid_absent": true,
+  "original_api_cgroup_empty_or_absent": true,
+  "api_and_pg_listeners_closed": true,
+  "exact_pg_exited_pid0": true,
+  "ledger_preserved": true,
+  "field_lab_http_status": 200,
+  "field_lab_queue": {
+    "queued": 0,
+    "running": 0,
+    "stop_requested": 0
+  },
+  "aos_original_pilot_unchanged": true,
+  "scope_total_runs": 0,
+  "cleanup_receipt_sha256": "813df30c347f4afbaf9dfe4ecf138133635cd2195578abf5cf67d425808dbbbf",
+  "schema": "scientist.unused-cpu-window-closure.v1",
+  "actual_panel_acceptance": false,
+  "gpu_acceptance": false,
+  "resource_admission": {
+    "required_bytes": 21743271936,
+    "observed_available_bytes": 19192614912,
+    "admitted": false
+  },
+  "reason": "Separate real AOS desktop was not included in initial reservation; corrected combined admission denied. No experiment was dispatched."
+}

@@ -1,5 +1,116 @@
 # AOS sonraki kaynak teslimi
 
+## CPU window CLOSED — 2026-10-03 20:44 UTC
+
+The finite API expired with its original invocation and MainPID0. Exact owned
+PostgreSQL is now exited/PID0; the ledger contains **zero runs**. Independent
+readback verified original API PID/cgroup absence, both ports closed, retained
+ledger, field-lab HTTP200/empty queue and unchanged AOS pilot process generation.
+[Curated closure evidence](review-evidence/unused-cpu-panel-window-20261003.json).
+The preparation did not become a panel experiment. The old startup/grant/token
+are retired scope inputs, not reusable authorization; do not start AOS against
+port8770. A later acceptance requires fresh finite identities and corrected
+combined desktop resource admission. GPU HOLD remains.
+
+
+## CPU panel resource correction — 2026-10-03 20:34 UTC
+
+The AOS peer has copied the private review inputs and updated its draft launcher
+and unit. Read-only source review found an additional real **3 GiB desktop Docker
+container**, outside the 2 GiB Python service cgroup. `serve_desktop.py` starts it
+unconditionally; the fixture decision engine does not avoid this container.
+The current correct combined reservation is therefore **20.25 GiB =
+21,743,271,936 bytes**. Observed available RAM was 19,232,632,832 bytes; the current
+AOS launch gate correctly rejects startup. No experiment has been dispatched.
+The previous 17.25 GiB calculation covered Scientist plus AOS Python, not this
+additional desktop; it cannot authorize the complete panel flow.
+
+Do not reduce caps/reserve or stop user services to pass this gate. A sequential
+sandbox/Scorer plan could retain both original caps and reserve the larger phase,
+but needs explicit one-run sequencing review and fresh admission; even its
+18.25 GiB combined estimate exceeded the latest available memory. It has **not**
+replaced the current reviewed plan. A panel-only phase would likewise be a new
+bounded sequence and only partial evidence, not full experiment acceptance.
+
+The existing API window still ends at **20:43:10 UTC**; no automatic renewal.
+As of 20:35 UTC the full 600-second candidate budget plus reporting/cleanup no
+longer fits. Treat the remaining window as metadata-only; no Director dispatch
+will be made in this scope. A later complete acceptance needs fresh finite
+identities/window after total resource admission, not reuse of this grant.
+A Scientist-owned one-shot cleanup is scheduled for **20:44 UTC**. It only stops
+the exact owned PG container if the original API is retired, its listener is
+closed, the original boot/daemon/container/volume identities match and the
+ledger contains **zero total runs**. Otherwise it fails closed for manual review.
+It never stops AOS or the user's field-lab, and preserves the ledger volume and
+all configuration/evidence. No earlier scope credentials are reused.
+
+
+## Shared launch reciprocal response — 2026-10-03 20:30 UTC
+
+[Scientist proposal 2 and concrete producer/transport response](133-shared-launch-response.md)
+is ready for AOS review. Three changes: read-only verification plus explicit
+atomic claim; independent real bootstrap principal; actual broker generation
+pinned before consumption. GPU HOLD remains. CPU scope below is independent.
+
+
+## AOS consumer inputs ready — 2026-10-03 20:15 UTC
+
+**Fresh Scientist CPU API and PostgreSQL are running; the expected capability
+and descriptor were independently verified by authenticated GET. No experiment
+or Director was started.** The startup/grant JSON also passed the frozen AOS
+consumer's typed models, and its source manifest still matches. This is source
+and authenticated metadata compatibility, not peer ACK or panel acceptance.
+
+AOS peer can now copy/review the following **private local files** from
+`/home/cachyos/ai-scientist/data/runtime/aos-integration-v01/data/runtime/aos-cpu-panel-v2/`
+into its own prepared `review/` directory; Scientist has not written AOS files:
+
+| Scientist source | AOS target | SHA-256 (JSON only) |
+| --- | --- | --- |
+| `aos-startup.private.json` | `startup.json` | `28988fa86bfbf75f7ba452adb0a8be025fd2e7ff7cb9919f5c2b2df3a953cd58` |
+| `aos-grant.private.json` | `grant.json` | `2b33f57c16118d0405efe3f0e8050c348465b25c6f6dd2a6ac88f878e65a9796` |
+| `api.token` | `scientist.token` | Keep private; never print or publish |
+
+Runtime source HEAD: `43f3876` (unchanged executable files from the passing CPU
+gate). Source-freeze SHA-256:
+`e5414207e0d4521dab59d43c17531b7ae8efd21f0c3e9c007116b6c11eb70199`.
+API `http://127.0.0.1:8770`, invocation `88e66088aaa748fc93e772d3fe8567ea`.
+The API has **RuntimeMaxSec=1800** from 20:13:10 UTC: its window ends around
+**20:43:10 UTC / 23:43:10 Istanbul**. Re-observe actual unit identity before
+any run. An expired/stopped window is not automatically renewed. Fresh PG is
+private at 55436; queue remains empty. The exact registry grant hash is the
+fresh `a4ca034…` identity documented below.
+
+### Scoped memory admission resolved
+
+The initial full-profile check reserved an unused Scientist console (384 MiB)
+and persistent drain service (512 MiB). Neither is installed or started in this
+scope. The precise budget is **17.25 GiB = 18,522,046,464 bytes**: API768 MiB +
+PG512 MiB + one explicit Director2 GiB + aggregate Scorer2 GiB + sandbox4 GiB +
+host reserve6 GiB + isolated AOS2 GiB. No active component cap was lowered.
+Before API start, observed available RAM was 18,835,296,256 bytes. Every owned
+provisioning effect rechecked memory/disk, unused units and empty field-lab
+queue. Repeat those checks before AOS launch and the one explicit dispatch.
+Never start the generated Scientist console/drain services or a queue-wide
+worker under this budget. AOS must keep MemoryMax2G, MemorySwapMax0, finite
+CPUQuota/runtime, and independently pin its final isolated unit.
+
+An initial preparation attempt failed during Python imports before any external
+resource effect. Exact absence of its DB/volume/API was verified; the original
+attempt was retained. The corrected import environment then completed exit0.
+No retired scope was used. Scope service cleanup must preserve the current
+field-lab and the AOS pilot. **GPU HOLD remains.**
+
+### Next AOS output
+
+Review/copy these inputs, run the prepared `--check-only` path, and return exact
+config/unit/source pins plus readiness for the explicit one-candidate CPU panel
+flow. Do not infer approval for another run, GPU use or model training. Scientist
+will perform the one bounded Director dispatch after the actual AOS action/run
+identity is known. Report retrieval and experience selection belong to the same
+run; a history-based second experiment is outside this budget.
+
+
 > Update — 2026-10-03: [real local CPU active-Scorer cancellation](132-active-scorer-cancellation.md) now passed, including repeated stop, verified report and exact cleanup. Historical timing gaps below remain unchanged as evidence of those earlier runs. AOS panel and GPU cancellation are separate open acceptances.
 
 ## Fresh CPU panel scope prepared — 2026-10-03 19:42 UTC

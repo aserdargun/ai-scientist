@@ -1,0 +1,57 @@
+{
+  "schema": "scientist.shared-launch-draft-evidence.v1",
+  "observed_at": "2026-10-03T20:41:55.192520+00:00",
+  "contract": "aos-scientist.shared-launch.v1-proposal2.draft",
+  "runtime_enabled": false,
+  "joint_contract_agreed": false,
+  "operational_database_modified": false,
+  "gpu_executed": false,
+  "focused_cpu_checks": 22,
+  "source_quality_gate": {
+    "overall_exit_code": 0,
+    "commands": [
+      {
+        "check": "ruff",
+        "exit_code": 0
+      },
+      {
+        "check": "pylint",
+        "exit_code": 0
+      },
+      {
+        "check": "bandit",
+        "exit_code": 0
+      },
+      {
+        "check": "pytest CPU",
+        "exit_code": 0
+      },
+      {
+        "check": "mypy strict",
+        "exit_code": 0
+      },
+      {
+        "check": "wheel build",
+        "exit_code": 0
+      },
+      {
+        "check": "wheel import",
+        "exit_code": 0
+      }
+    ],
+    "pytest_summary": "== 3679 passed, 49 skipped, 177 deselected, 603 warnings in 275.39s (0:04:35) ==",
+    "raw_private_receipt_sha256": "7f59a3859761e6cb5746d1ed18ecf9cafaf64152afe05faf5064234acf1374cf"
+  },
+  "source_files": {
+    "lab/llm/shared_launch_ledger.py": "7dc2cc32242e79c0bddc9a9eb82b0a4e8c648e890888eca6c7ef221b6914c68f",
+    "tests/test_shared_launch_ledger.py": "5c3e56f22736458860822245fe9aef9f849a2222b480dc54c8d03bf55afc1c3b"
+  },
+  "remaining": [
+    "authenticated launch producer/transport",
+    "real current-authority verifier",
+    "AOS explicit claim hook",
+    "post-spawn entry guard",
+    "reviewed cleanup discharge",
+    "joint GPU acceptance"
+  ]
+}
