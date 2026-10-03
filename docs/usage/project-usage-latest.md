@@ -35,19 +35,19 @@ Observed counters have incomplete coverage. Actual billing and subscription cost
 | 2026-10-02 | openai | gpt-6.1-sol | medium | 100209021 | 98339072 | 332008 | 100541029 |
 | 2026-10-02 | openai | gpt-6.1-sol | xhigh | 15514541 | 14852992 | 102451 | 15616992 |
 | 2026-10-02 | unknown | unknown | unknown | 47465 | 7808 | 148 | 47613 |
-| 2026-10-03 | openai | gpt-6-astra | high | 178599805 | 174931712 | 553387 | 179153192 |
+| 2026-10-03 | openai | gpt-6-astra | high | 202641736 | 198324352 | 612439 | 203254175 |
 | 2026-10-03 | openai | gpt-6-astra | max | 55353459 | 53403264 | 255309 | 55608768 |
 | 2026-10-03 | openai | gpt-6.1-sol | high | 182387878 | 177971456 | 746598 | 183134476 |
 | 2026-10-03 | openai | gpt-6.1-sol | medium | 2486090 | 2351360 | 10816 | 2496906 |
-| 2026-10-03 | openai | gpt-6.1-sol | xhigh | 6134224 | 5878784 | 21933 | 6156157 |
+| 2026-10-03 | openai | gpt-6.1-sol | xhigh | 13819935 | 13362816 | 66672 | 13886607 |
 
-Development observed totals: input_tokens=5448988906, cached_input_tokens=5329823488, output_tokens=20187965, total_tokens=5469176871.
+Development observed totals: input_tokens=5480716548, cached_input_tokens=5360700160, output_tokens=20291756, total_tokens=5501008304.
 Runtime reviewed runs=3; model calls=6; local model input_tokens=5478, output_tokens=2800, total_tokens=8278.
-Recorded goal observations: observed_periods=2, tokens_used=136806859, active_seconds=392745.
+Recorded goal observations: observed_periods=2, tokens_used=137748997, active_seconds=396539.
 
 Cached input and reasoning output are subsets, not extra tokens. Ambiguous intervals are excluded; these counters are not bills.
 
-Counterfactual Standard short-context priced-subset equivalent: 2880.26981268 USD. Historical rates, service tier and long-context classification are unverified.
+Counterfactual Standard short-context priced-subset equivalent: 2914.70711388 USD. Historical rates, service tier and long-context classification are unverified.
 
 Product runtime includes only explicitly reviewed local/CPU receipts. Electricity and hardware costs were not measured.
 
