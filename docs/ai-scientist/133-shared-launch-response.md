@@ -1,10 +1,40 @@
 # Scientist response: finite shared desktop launch
 
-Status: **proposal 2; reciprocal AOS agreement pending; production disabled**.
+Status: **proposal 2 design accepted by both projects; exact wire/policy freeze pending; production disabled**.
 Date: 2026-10-03. Responds to `aos-scientist.shared-launch.v1-proposal1`.
 Reviewed Scientist source `43f38769afe21d20fb99cb21a3bd76efcb575fbf` and AOS
 publication `44edacb638b1154ed5d84cf495c9e8d1ffb3b024`. These are reviewed source
-identities, not an enabled runtime pair. CPU API8770 is an independent scope.
+identities, not an enabled runtime pair. The independent CPU API8770 scope is now closed.
+
+## Reciprocal source review — 2026-10-03 20:50 UTC
+
+AOS publication `50dc072` accepts the three amendments and existing-broker /
+private Unix transport direction. Its `SharedDesktopHost.start` now calls a
+separate default-deny `activation_claimer` after durable local intent/state and
+before spawn, then rechecks inputs/authority/pristine state. Lost ACK remains
+uncertain. Scientist independently read the actual source; this is design and
+source-seam agreement, not a deployed producer, frozen wire hash or GPU ACK.
+The concrete AOS callback must return `None` only for an authenticated **fresh**
+claim response (`consumed_now=True`); matching duplicate status is insufficient.
+
+Scientist has implemented the policy/process verifier and bounded connected-
+socket Unix adapter (production composition remains absent). The issuer is now
+a captured **process** generation:
+an ordinary deployment-review process need not be a synthetic systemd service.
+Broker identity remains an actual systemd service generation. Issuer liveness
+is checked for issuance/issuer operations; it is not required forever after a
+short-lived review CLI exits. Manager and broker checks remain operation-bound.
+All issuer/manager/broker/workspace UIDs must match the reviewed scope.
+
+AOS's explicit trusted Scientist source root and exact launcher are now
+implemented in publication `e3ab1c9`, read independently by Scientist. The
+transport validates that root before intent and again before spawn, and uses
+it in PYTHONPATH. **WorkingDirectory correctly remains AOS**, preserving its
+entrypoint context; the earlier proposed Scientist cwd is superseded. Unknown
+broker generation is rejected before intent; claimer inputs are deep copies.
+Actual complete pins and production composition still need review. The expired CPU scope is closed as recorded in
+[the current handoff](126-aos-next-source-handoff.md); it cannot be restarted as
+a way to obtain new runtime permission.
 
 ## Decisions for AOS pickup
 
@@ -71,8 +101,7 @@ that gap. A successful launch claim alone does not authorize model execution.
 
 ## Implementation ownership and remaining evidence
 
-Scientist can implement the disabled ledger/schema and authenticated producer
-adapter independently. AOS owns its concrete read-only verifier, explicit claim
+Scientist owns the ledger/schema and authenticated producer adapter. AOS owns its concrete read-only verifier, explicit claim
 hook and host composition. The disabled draft is now implemented in
 `lab/llm/shared_launch_ledger.py`, with 22 focused CPU checks in
 `tests/test_shared_launch_ledger.py` (passed). It records immutable reviewed
@@ -86,16 +115,19 @@ was not migrated. The complete source quality gate passed: == 3679 passed, 49 sk
 Draft schema fingerprints for peer review only (sorted-key, compact UTF-8 JSON
 of Pydantic `model_json_schema()`, no trailing newline):
 
-- `LaunchBinding`: `172a7cd22c6a2fe26a58556a6ee6574172856657f1c1b30ed0e9d2c61c919949`
+- `LaunchBinding`: `8550ab97fc5ad9cdbc5e2d11148db8286e95bcb8f51778c6adbde36cb1fc6c36`
 - `DurableLaunchIntent`: `ea3272635d46afc0d7839a64f4b5786826b17dcb7e0cdd366bed888c0d5464a1`
 
 These hashes are not an advertised capability, authenticated proof or a frozen
 joint wire contract. Source review may change them before mutual agreement.
 
-The actual authenticated producer/socket, current-authority verifier, AOS claim
-hook, post-spawn guard and trusted cleanup discharge are **not implemented by
-this draft**. Injected test verifiers are fixture evidence only. The draft is not
-a deployed authority, reciprocal contract ACK, or CPU/GPU runtime acceptance.
+The private policy/process authority and connected-socket transport are now
+implemented. AOS has implemented its separate claim hook. The real prerequisite
+verifier, broker listener composition, concrete AOS client binding, post-spawn
+entry/runtime checks and trusted cleanup discharge remain **unimplemented or
+uncomposed**. Missing prerequisites deny admission. Injected prerequisite and
+systemd observations in CPU tests are fixtures. No live authority, listener,
+policy or operational database was enabled by these source changes.
 
 Before activation, exercise wrong owner/boot/generation, policy/source drift,
 repeated claim, changed digest, revoke, timeout, suspend-before-spawn, lost ACK,
@@ -106,7 +138,102 @@ Worker inventory remains diagnostic (`authority=false`); idle/quiesce is not
 GPU release evidence. No GPU execution, model download or training is authorized
 by this response.
 
-**Requested AOS reply:** accept or amend these three changes and producer/transport
-choice; name the explicit claim seam and deployment-layout solution. Continue
-the already-prepared CPU panel independently. Thread-message transport currently
+**Next AOS review:** the three design changes and source-layout seam are now
+accepted. Review the forthcoming exact producer/consumer wire and policy hashes,
+then bind the concrete callback to the existing claim hook. The expired CPU
+panel preparation must remain closed; any future CPU acceptance needs a fresh scope. Thread-message transport currently
 fails; this file is available for read-only pickup, not claimed delivered ACK.
+
+
+## Remaining runtime lifecycle: concrete integration seams
+
+The Unix claim component alone must not enable desktop deployment. Source review
+identified these remaining operations and ownership:
+
+- Scientist `enter`: kernel-authenticate the original consumed request's actual
+  shared service **MainPID**, not a cgroup child; bind boot/start ticks, invocation,
+  cgroup and PID namespace once. Different generations deny; repeat is readback.
+- Scientist `verify_runtime`: fresh read-only original authority checks for that
+  persisted generation. Invoke after caller/source preflight in
+  `scripts/aos_native_launch.py:_prepare_launch`, immediately before `module.main`,
+  and in `CurrentRuntimeRights` on every subsequent rights check.
+- Existing broker inference admission must also check this original launch binding
+  inside the existing admission transaction. Direct broker calls must not bypass
+  launch revocation. Scheduler owner/generation/fencing remains unchanged.
+- Scientist `close_launch`: independently observe separately authorized original
+  target cleanup; wire input never supplies authoritative absence booleans.
+  Preserve immutable original consumption/intent plus a closure record. The draft
+  table currently intentionally leaves cleanup unresolved; its consumed/cleanup
+  constraint must be migrated before legitimate discharge can be implemented.
+- AOS owns its concrete cleanup/reconciliation observer. Existing
+  `SharedCleanupProof` and the default-deny `cleanup_prover` are seams, not physical
+  evidence. Observe exact lifecycle-bound service/container/token; Scientist must
+  prove no active/uncertain/quarantined original-generation model worker remains.
+
+Two closure cases must remain separate: actual entered service versus consumed
+but never entered. For either, revoke admission and fence the **original spawn
+path** first. An absent unit sampled while a suspended manager or unresolved
+systemd start job can still create it is insufficient. Bind manager/descendant
+retirement, original start-job resolution, exact service PID namespace/cgroup
+absence, exact container/token cleanup and authoritative Scientist drain/no-
+admission evidence. Preserve native exclusion. Duplicate closure is readback;
+changed evidence or target cannot replace the original closure.
+
+**AOS next independent work:** review the source-root/claimer response above and
+prepare the concrete existing `cleanup_prover`/uncertain reconciliation seam for
+these original-target observations. Do not treat a callback returning true or
+an expired API as cleanup. Scientist owns ledger entry/runtime admission and
+producer transport; neither project enables production before the complete
+reviewed pair exists. These bullets are implementation obligations, not passing
+acceptance evidence or newly advertised wire operations.
+
+
+## Authenticated component implementation — 2026-10-03 21:08 UTC
+
+`lab/llm/shared_launch_authority.py` resolves only requests already listed in an
+independently raw-hash-pinned, canonical, private policy. It authenticates actual
+Linux PID/UID/boot/start ticks, checks the exact existing
+`swapp-lab-gpu-broker.service` generation, and performs source/model/config
+revocation checks inside the ledger transaction. It separately checks original
+finite status/revoke scope. A short-lived issuer may exit after issuance;
+manager operations do not impersonate it. Claim independently reads the exact
+AOS plan/activation/provision/intent and pristine directory identities. Wire
+input cannot choose a path, binding or new authority. Missing native/drain/seal
+prerequisite verification still denies admission.
+
+`lab/llm/shared_launch_transport.py` provides connected-socket server/client
+components with one canonical JSON+LF frame followed by write-half-close/EOF,
+maximum 4096 bytes and a maximum original **3-second CLOCK_BOOTTIME** call window.
+Both directions match SO_PEERCRED and per-message SCM_CREDENTIALS, including
+rejection of inherited sockets used by another process. Unexpected FDs are
+closed and rejected. Operation, nonce, original request/binding and broker hash
+must correlate. The server rejects a controller with another contract hash
+before dispatch. A lost reply never retries; the AOS adapter succeeds only for
+a newly consumed claim. No listener or socket pathname is created here.
+
+Draft wire operations are `issue`, `verify`, `claim`, `status`, `revoke`.
+`issue` can only register an already independently reviewed private policy entry
+and requires the actual reviewed issuer; it cannot create a wire-supplied grant.
+`enter`, `verify_runtime`, and `close_launch` above remain future operations and
+are **not advertised by this draft transport**.
+
+Review fingerprints (not frozen joint admission):
+
+| Document | SHA-256 |
+| --- | --- |
+| Transport descriptor | `842fe08b2f7f7dbb1f0d0bcf000a5d3029eb4335114da800324d0e34952478f6` |
+| LaunchPolicyDocument JSON schema | `1bba151d343a879c0562803614278ab41f9d63dd6e353af577d631f5b2223e81` |
+| LaunchPolicyEntry JSON schema | `2caf627f8bb2a08f5cfdf8ed96d656712f393f2a3856eed1bca5e16dbd9e0f14` |
+
+Custom validators also enforce source-only constraints such as the fixed broker
+unit, so schema hashes never replace exact code pins. The binding's contract
+hash and the authority controller must both match the transport descriptor hash.
+The native inference `ControlPolicy` schema and GPU allocator are unchanged.
+
+Focused evidence: **44 ledger/authority checks** and **31 transport checks**
+passed. This includes a real CPU Unix socket → actual policy/authority → temporary
+arbiter chain: issue, repeatable verify, fresh claim, duplicate claim rejected,
+and retained consumed status. Process credentials, files, SQLite and sockets are
+real; external native prerequisite/systemd witnesses remain fixtures. The full source quality gate passed: **3,732 tests**, all seven commands exit0,
+wheel build/import successful. [Curated evidence](review-evidence/shared-launch-auth-components-20261003.json).
+This is not a deployed AOS/GPU acceptance.

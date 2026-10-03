@@ -36,7 +36,7 @@ def binding(**updates):
         "review_id": "2" * 32,
         "operation": "launch_shared_desktop",
         "purpose": "reviewed_shared_desktop",
-        "issuer": service,
+        "issuer": process,
         "broker": {**service, "pid": 124},
         "manager": process,
         "unit": "swapp-aos-gpu-shared-desktop-default.service",
@@ -166,6 +166,14 @@ def test_disabled_construction_and_initialization_are_inert(tmp_path):
 def test_strict_closed_original_binding(updates):
     with pytest.raises(ValidationError):
         binding(**updates)
+
+
+@pytest.mark.parametrize("principal", ["issuer", "manager", "broker"])
+def test_all_principal_uids_must_match_reviewed_workspace(principal):
+    original = binding().model_dump(by_alias=True)
+    changed = {**original[principal], "uid": os.getuid() + 1}
+    with pytest.raises(ValidationError):
+        binding(**{principal: changed})
 
 
 def test_verify_is_repeatable_read_only_and_claim_single_use(rig):

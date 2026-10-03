@@ -95,7 +95,7 @@ class LaunchBinding(_Strict):
     review_id: ID
     operation: Literal["launch_shared_desktop"]
     purpose: Literal["reviewed_shared_desktop"]
-    issuer: ServiceGeneration
+    issuer: ProcessGeneration
     broker: ServiceGeneration
     manager: ProcessGeneration
     unit: Literal["swapp-aos-gpu-shared-desktop-default.service"]
@@ -128,8 +128,11 @@ class LaunchBinding(_Strict):
             raise ValueError("launch cannot outlive its original prerequisite evidence")
         if any(item.boot_id != self.boot_id for item in (self.issuer, self.broker, self.manager)):
             raise ValueError("all original generations must belong to the same boot")
-        if self.uid != self.workspace_uid or self.issuer.uid != self.uid:
-            raise ValueError("issuer and workspace must belong to the reviewed UID")
+        if any(
+            value != self.uid
+            for value in (self.workspace_uid, self.issuer.uid, self.manager.uid, self.broker.uid)
+        ):
+            raise ValueError("issuer, manager, broker and workspace require the reviewed UID")
         return self
 
     def sha256(self) -> str:

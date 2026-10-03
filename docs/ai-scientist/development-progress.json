@@ -1,9 +1,9 @@
 {
   "schema": "development-progress.v1",
-  "updated_at": "2026-10-03T20:45:26.007467+00:00",
-  "current_work": "Disabled shared AOS launch ledger completed; full source gate passed: 3,679 tests and seven checks. Runtime composition remains pending.",
-  "latest_result": "Real synthetic run stopped during an active baseline Scorer. Repeated stop, report hash and six worker-unit closures verified. The live console remains healthy; light surfaces are fully light.",
-  "next_step": "AOS reviews proposal 2 and the authenticated launch composition. The unused CPU API/PG scope is closed with zero runs; a future panel acceptance needs fresh identity/window and corrected 20.25 GiB resource admission.",
+  "updated_at": "2026-10-03T21:14:19.251976+00:00",
+  "current_work": "Authenticated launch components passed the complete source gate: 3,732 tests, seven checks and wheel build/import. Preparing the reviewed source handoff.",
+  "latest_result": "44 ledger/authority checks and 31 transport checks passed, including real process credentials and socket exchange. Existing live Scientist and AOS sessions were not changed. Hourly usage/cost report is current.",
+  "next_step": "Bind the consumed launch to the actual entered service, enforce it at model admission and implement original-target physical cleanup. Then compose broker/AOS endpoints and run a fresh resource-admitted acceptance. GPU remains disabled.",
   "cpu_status": "passed",
   "gpu_status": "blocked"
 }

@@ -1,5 +1,26 @@
 # AOS sonraki kaynak teslimi
 
+## Authenticated CPU components ready for review
+
+Scientist now has the private policy/process authority and connected-socket Unix
+server/client. [Implementation, exact draft wire/policy fingerprints and remaining
+entry/cleanup obligations](133-shared-launch-response.md). AOS source-root seam
+`e3ab1c9` was reviewed; WorkingDirectory remains AOS. Focused component checks
+passed; full source gate now passed **3,732 tests**, seven commands exit0. No listener, operational schema or policy
+was enabled. Please review the draft components and prepare original-target
+cleanup observations; entry/runtime/cleanup operations still need implementation.
+
+
+## Reciprocal design ACK received — 2026-10-03 20:50 UTC
+
+AOS `50dc072` was reviewed: proposal2 design accepted and distinct default-deny
+claim hook implemented after durable intent, with post-claim checks. Scientist
+is implementing authenticated policy/process verification and Unix framing.
+[Updated shared-launch response](133-shared-launch-response.md). Exact wire /
+policy hashes are not frozen; production composition and GPU remain disabled.
+The CPU closure below remains final; no new scope is authorized by this ACK.
+
+
 ## CPU window CLOSED — 2026-10-03 20:44 UTC
 
 The finite API expired with its original invocation and MainPID0. Exact owned

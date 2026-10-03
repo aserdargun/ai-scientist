@@ -247,18 +247,18 @@ Aşağıdaki fiili model listesi metadata gözlemidir; talep edilen model fiilen
 çalışmış gibi kaydedilmez. Goal tokenı, API tokenı ve fatura birbirine eklenmez.
 
 <!-- development-metrics:start -->
-Sayaç güncellemesi: **2026-10-03 23:45:26 Europe/Istanbul**.
+Sayaç güncellemesi: **2026-10-04 00:14:30 Europe/Istanbul**.
 
 | Ölçüm | Değer |
 |---|---:|
-| Güncel goal dönemi aktif süre | 41 saat 6 dakika 56 saniye |
-| Güncel goal dönemi aktif süre (saniye) | 148016 |
-| Güncel goal dönemi token | 38191620 |
-| Güncel goal dönemi takvim süresi | 62.358056 saat |
+| Güncel goal dönemi aktif süre | 41 saat 36 dakika 0 saniye |
+| Güncel goal dönemi aktif süre (saniye) | 149760 |
+| Güncel goal dönemi token | 38576972 |
+| Güncel goal dönemi takvim süresi | 62.842500 saat |
 | Kaydedilen dönem sayısı | 2 |
-| Kaydedilen dönemlerin toplam aktif süresi | 112.951667 saat |
-| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 406626 |
-| Kaydedilen dönemlerin toplam tokenı | 140393438 |
+| Kaydedilen dönemlerin toplam aktif süresi | 113.436111 saat |
+| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 408370 |
+| Kaydedilen dönemlerin toplam tokenı | 140778790 |
 
 Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.
 Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplamıdır; ardışık snapshot'lar ve tekrarlar toplanmaz. Tarihsel gözlemlerin kapsamı eksiktir; gözlenmeyen dönemler veya son gözlemden sonraki kullanım bilinmez.
@@ -270,11 +270,11 @@ Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplam�
 | gpt-6-astra | xhigh | Ana Codex oturumu | 3 |
 | gpt-6-luna | high | İlk uygulama ve odaklı doğrulama işleri | 7 |
 | gpt-6-sol | high | Kodlama, entegrasyon ve inceleme işleri | 2 |
-| gpt-6.1-sol | high | Rol doğrulanmadı | 21 |
+| gpt-6.1-sol | high | Rol doğrulanmadı | 22 |
 | gpt-6.1-sol | medium | Kalan teknik orkestrasyon, uygulama ve inceleme | 41 |
 | gpt-6.1-sol | xhigh | Rol doğrulanmadı | 3 |
 
-Bu taramada ilişkili oturum: 102.
+Bu taramada ilişkili oturum: 103.
 
 [Sayaç ve köken kaydı](docs/development-metrics.json).
 <!-- development-metrics:end -->

@@ -1,0 +1,85 @@
+{
+  "schema": "scientist.shared-launch-auth-components.v1",
+  "observed_at": "2026-10-03T21:12:14.956736+00:00",
+  "scope": "CPU source and connected-socket component evidence; no live AOS/GPU acceptance",
+  "source_pair": {
+    "scientist_base_head": "8e37f3221eb705481bb917783677b70f996a2444",
+    "aos_publication_head": "c424641bc21dd308b4baef7cc8c508bec415ccd3",
+    "aos_runtime_source_promoted": false
+  },
+  "scientist_tracked_diff_sha256": "e009277e3af5e269c3927e22054abcd678cbcd877eb8a3ee4152ff22449f1eae",
+  "tracked_diff_scope": "Untracked new files are represented separately by source_files; this is not a complete deployment closure.",
+  "source_files": {
+    "lab/llm/shared_launch_ledger.py": "c31cbf01a773e990b7debc1827162f0df083b76deff5099106b1bc62b6e5c3d6",
+    "lab/llm/shared_launch_authority.py": "6a475587dbc13af74ec02d7081864e79197c37c4f5f7e7c2ab52f3dee7389d4b",
+    "lab/llm/shared_launch_transport.py": "a5aa135c896bffd965b9564b5ea4ffda76c046dde4b927673f04c8428670b881",
+    "tests/test_shared_launch_ledger.py": "762973accd4a81b01451de0bac2510a921a25c6d48c95685dc45da4b444221aa",
+    "tests/test_shared_launch_authority.py": "83731a763d26ad7d375d69bee910f133e74c3f0bcc517e3e5dcea075e63339b3",
+    "tests/test_shared_launch_transport.py": "fd79b503eb2567db5b17532f1d640dab9d39819212180ae017cd58646175ac50"
+  },
+  "aos_host_source_sha256": "f03f4ce367618f4b94bdad47f004da87bf31f214977d5972a99d107f206c19b9",
+  "transport_schema": "aos-scientist.shared-launch.transport.v1-proposal2.draft",
+  "transport_schema_sha256": "842fe08b2f7f7dbb1f0d0bcf000a5d3029eb4335114da800324d0e34952478f6",
+  "wire_frozen_with_aos": false,
+  "quality_gate": {
+    "summary": "== 3732 passed, 49 skipped, 177 deselected, 603 warnings in 268.00s (0:04:28) ==",
+    "checks": [
+      {
+        "check": "ruff",
+        "exit_code": 0
+      },
+      {
+        "check": "pylint",
+        "exit_code": 0
+      },
+      {
+        "check": "bandit",
+        "exit_code": 0
+      },
+      {
+        "check": "pytest CPU",
+        "exit_code": 0
+      },
+      {
+        "check": "mypy strict",
+        "exit_code": 0
+      },
+      {
+        "check": "wheel build",
+        "exit_code": 0
+      },
+      {
+        "check": "wheel import",
+        "exit_code": 0
+      }
+    ],
+    "raw_private_receipt_sha256": "8b6e5a70a7b71e40d59c55f2b007af8508be94c79013b618ea2fc1160c39863a"
+  },
+  "focused_checks": {
+    "ledger_and_authority": 44,
+    "transport": 31
+  },
+  "real_cpu_surfaces": [
+    "kernel Unix credentials",
+    "connected sockets",
+    "private files",
+    "temporary arbiter transactions",
+    "actual local process birth/UID"
+  ],
+  "fixture_surfaces": [
+    "systemd broker observations in integration test",
+    "native drain/seal/exclusion prerequisite witness"
+  ],
+  "runtime_listener_enabled": false,
+  "operational_arbiter_migrated": false,
+  "gpu_calls": 0,
+  "model_calls": 0,
+  "vram_peak_mib": null,
+  "remaining": [
+    "real prerequisite witness composition",
+    "broker listener and concrete AOS client composition",
+    "entered runtime binding and fresh inference admission",
+    "original-target physical cleanup and immutable closure",
+    "joint resource-admitted CPU panel/GPU acceptance"
+  ]
+}
