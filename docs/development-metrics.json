@@ -1,14 +1,14 @@
 {
   "schema": "development-goal-usage.v1",
   "source": "Codex get_goal",
-  "captured_at": "2026-10-03T12:20:15.484052+00:00",
+  "captured_at": "2026-10-03T12:45:46.962835+00:00",
   "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
   "goal_created_at_epoch": 1790835837,
-  "goal_updated_at_epoch": 1791029920,
-  "tokens_used": 30575177,
-  "active_seconds": 117610,
-  "active_hours": 32.669444444444444,
-  "calendar_hours": 53.911944444444444,
+  "goal_updated_at_epoch": 1791031507,
+  "tokens_used": 31076402,
+  "active_seconds": 119198,
+  "active_hours": 33.11055555555556,
+  "calendar_hours": 54.352777777777774,
   "status": "active",
   "scope_note": "Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.",
   "development_models": [
@@ -80,9 +80,9 @@
   "recorded_goal_period_totals": {
     "source": "latest observed counters per (goal_thread_id, goal_created_at_epoch)",
     "observed_periods": 2,
-    "tokens_used": 132776995,
-    "active_seconds": 376220,
-    "active_hours": 104.50555555555556,
+    "tokens_used": 133278220,
+    "active_seconds": 377808,
+    "active_hours": 104.94666666666667,
     "periods": [
       {
         "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
@@ -94,9 +94,9 @@
       {
         "goal_thread_id": "01a0d270-b9b5-7173-83fe-2a269645bbf0",
         "goal_created_at_epoch": 1790835837,
-        "goal_updated_at_epoch": 1791029920,
-        "tokens_used": 30575177,
-        "active_seconds": 117610
+        "goal_updated_at_epoch": 1791031507,
+        "tokens_used": 31076402,
+        "active_seconds": 119198
       }
     ],
     "complete": false,

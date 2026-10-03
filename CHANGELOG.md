@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.0 — 2026-10-03
+
+İlk ürün teslimi: dahili harness 0.46.0, çalışan CPU saha deney akışı, kapsamlı
+README/teslim ve AOS devam kılavuzu, ayrı kullanım/maliyet kayıtları.
+3439 test geçti; açık kabuller ve ilk ortam PATH hatası sürüm notlarında.
+
+
 ## 2026-10-03 — local field-lab preview, unreleased
 
 - Added optional field intent (asset label, research goal and objective),
@@ -47,22 +54,22 @@
   cleanup and the private database backup were verified. AOS/public/holdout
   and training acceptance remain separate and open.
 
-- Added owner-scoped PostgreSQL capture for finite CPU OMR streams, real UTC
+- Completed local feature commit `5201e95`: owner-scoped PostgreSQL
+  capture for finite CPU OMR streams, real UTC
   and gap provenance, stable capture retries and bounded cancellation. A real
   PostgreSQL fixture ran 4224 rows/66 chunks in 227.58 s; active FETCH cleanup
   after an actual HTTP disconnect took 0.174 s. The prior timeout-only result
   was rejected and the ASGI disconnect watcher corrected. Separate local
   branch only; generated data, no independent accuracy score or GPU use.
-- Carried forward the verified development-counter correction: cumulative
-  recorded totals use the latest sample from each goal period, with model
-  identities verified from session metadata and historical gaps labeled.
-- Added finite CPU OMR streams with one frozen fit, ordered chunk checkpoints,
-  alarm continuity, live diagnostics and an independent unscored terminal
-  report. A real 4352-row LSH run completed in 240.78 seconds; actual inflight
-  prediction cancellation and repeated stop produced a verified stopped report
-  and clean owned-worker/container/database shutdown. PostgreSQL: 56 checks;
-  required gate: 3103 tests and all seven commands exit 0. Browser visual and
-  AOS/GPU acceptance remain open; this separate branch is not deployed.
+- Completed the separate `feat/omr-stream-v1` local delivery (`08bd136`):
+  a 4352-row CPU OMR stream, actual inflight stop/repeated stop, independent
+  unscored reports and verified owned cleanup. Its required gate passed 3103
+  tests/all seven commands; 56 real PostgreSQL checks passed. Main native
+  source pins are preserved; no merge, push or deployment was performed.
+- Corrected development totals to sum the latest recorded observation from
+  each goal period. README now separates the current period from cumulative
+  recorded usage and labels its incomplete historical coverage. Thirteen
+  focused checks passed; model identities still come from session metadata.
 - Made native artifact validity explicitly selectable (1–900 seconds,
   default 300), capped by the existing original retained authority.
   Receipts remain exclusive and cannot renew expired rights. Prepared

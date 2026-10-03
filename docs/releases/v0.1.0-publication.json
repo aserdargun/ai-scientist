@@ -1,0 +1,42 @@
+{
+  "schema": "v0.1.0-publication-operation.v1",
+  "observed_at": "2026-10-03T12:49:51.934462+00:00",
+  "source_delivery_commit": "7e4bacf47696dd4d9d62e86a7804d16209886b4e",
+  "first_usage_publication_commit": "2bc28794b91c07b7e9c6560b306e7b50c7a80604",
+  "branch": "main",
+  "remote": "https://github.com/aserdargun/ai-scientist.git",
+  "source_and_usage_push_readback": true,
+  "force_push_used": false,
+  "timer": {
+    "unit": "scientist-reviewed-publication.timer",
+    "active": true,
+    "enabled": true,
+    "schedule": "hourly",
+    "first_service_exit_code": 0,
+    "first_service_result": "success",
+    "first_service_cpu_seconds": 20.001,
+    "first_service_wall_seconds": 43.141,
+    "memory_peak_journal": "334.7M",
+    "cpu_quota_percent": 50,
+    "memory_limit_bytes": 1073741824,
+    "required_free_disk_bytes": 23622320128,
+    "operates_while_user_manager_and_network_available": true
+  },
+  "no_change_behavior": {
+    "source_consumer_check": "empty-queue; no mutation",
+    "content_identical_overlay": "covered by local integration tests; live session continues generating usage"
+  },
+  "scope": "reviewed code snapshots plus two strictly projected aggregate usage documents",
+  "exclusions": [
+    "private source history",
+    "raw Codex text",
+    "runtime credentials",
+    "application database",
+    "AOS repo changes"
+  ],
+  "retention_limit": "ACKed private full payload retained; about 60 MiB per meaningful publication; no automatic pruning; disk guard refuses below threshold",
+  "inherited_source_gate": {
+    "receipt": "../ai-scientist/review-evidence/release-046-delivery.json",
+    "all_source_code_unchanged_for_version_label": true
+  }
+}

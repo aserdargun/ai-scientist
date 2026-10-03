@@ -4,7 +4,10 @@ Yerel dil modelleriyle çalışan bir AI/ML araştırma laboratuvarı. Saha ekip
 veri seçimi, çalışma modu kümeleme, anomali tespiti ve bütçeli hiperparametre
 deneylerini bir araya getirir. SWAPP veya AOS kurulumu çekirdeğin bağımlılığı değildir.
 
-**Teslim adayı: 0.46.0 · 2026-10-03.** Mevcut CachyOS kurulumunda CPU deney
+**İlk ürün teslimi: v0.1.0 · 2026-10-03.**
+Ürün/package sürümü `0.1.0`; içerdiği harness ve çalışan konsolun teknik
+sürümü `0.46.0`. Git etiketi ürün teslimini sabitler; harness hash/sürümü değişmez.
+[Sürüm notları](docs/releases/v0.1.0.md). Mevcut CachyOS kurulumunda CPU deney
 akışı çalışır. Tam M0, temiz makine kurulumu ve AOS ile gerçek GPU birlikte çalışma
 kabulü tamamlanmadı. Kod deposu public; proje lisansı henüz seçilmedi.
 
@@ -175,18 +178,18 @@ Aşağıdaki fiili model listesi metadata gözlemidir; talep edilen model fiilen
 çalışmış gibi kaydedilmez. Goal tokenı, API tokenı ve fatura birbirine eklenmez.
 
 <!-- development-metrics:start -->
-Sayaç güncellemesi: **2026-10-03 15:18:40 Europe/Istanbul**.
+Sayaç güncellemesi: **2026-10-03 15:45:07 Europe/Istanbul**.
 
 | Ölçüm | Değer |
 |---|---:|
-| Güncel goal dönemi aktif süre | 32 saat 40 dakika 10 saniye |
-| Güncel goal dönemi aktif süre (saniye) | 117610 |
-| Güncel goal dönemi token | 30575177 |
-| Güncel goal dönemi takvim süresi | 53.911944 saat |
+| Güncel goal dönemi aktif süre | 33 saat 6 dakika 38 saniye |
+| Güncel goal dönemi aktif süre (saniye) | 119198 |
+| Güncel goal dönemi token | 31076402 |
+| Güncel goal dönemi takvim süresi | 54.352778 saat |
 | Kaydedilen dönem sayısı | 2 |
-| Kaydedilen dönemlerin toplam aktif süresi | 104.505556 saat |
-| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 376220 |
-| Kaydedilen dönemlerin toplam tokenı | 132776995 |
+| Kaydedilen dönemlerin toplam aktif süresi | 104.946667 saat |
+| Kaydedilen dönemlerin toplam aktif süresi (saniye) | 377808 |
+| Kaydedilen dönemlerin toplam tokenı | 133278220 |
 
 Goal aracının raporladığı sayaçlar. Faturalandırma miktarı veya insan işçiliği değildir; alt ajan/cache hesaplama kapsamı araç tarafından açıklanmıyor.
 Toplam, aynı oturumun her goal dönemi için son gözlenen sayaçların toplamıdır; ardışık snapshot'lar ve tekrarlar toplanmaz. Tarihsel gözlemlerin kapsamı eksiktir; gözlenmeyen dönemler veya son gözlemden sonraki kullanım bilinmez.

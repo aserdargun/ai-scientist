@@ -1,9 +1,9 @@
 {
   "schema": "development-progress.v1",
-  "updated_at": "2026-10-03T12:16:22.767640+00:00",
-  "current_work": "0.46 teslimi hazırlanıyor: çalışan CPU araştırma akışı donduruldu; README, bilinen eksikler, kullanım raporu ve güvenli yayın tamamlanıyor.",
-  "latest_result": "279,61 saniye; 9 baseline + 3 OPTICS skoru; bir önerinin saha amacı ve snapshot bağı doğrulandı. Aynı istek aynı koşuya döndü. Masaüstü/mobil geçti; Director/12 Scorer/sandbox temiz. Kalite kapısı 3328 test, 7 komut exit 0.",
-  "next_step": "Mevcut sürümü kanıtları ve eksikleriyle teslim et. Gerçek AOS/GPU birlikte çalışma ve uygulama adaptörleri sonraki aşama; yeni ürün özelliği eklenmiyor.",
+  "updated_at": "2026-10-03T12:49:51.934749+00:00",
+  "current_work": "v0.1.0 ürün teslimi: çalışan CPU saha deneyi, kullanım/teslim belgeleri ve saatlik güvenli yayın hazır. İç harness/konsol 0.46.0.",
+  "latest_result": "3439 test geçti; 49 skip ve 177 deselected açık. Kaynak ve kullanım raporu public main üzerinde doğrulandı; saatlik görev ilk gerçek çalışmasını exit 0 tamamladı.",
+  "next_step": "Kullanıcı mevcut sürümü arayüzden test eder. Sonraki aşama: AOS producer/consumer ve uygulamaya özel yetki/veri eşlemesi; ardından kontrollü gerçek GPU birlikte çalışma.",
   "cpu_status": "passed",
   "gpu_status": "blocked"
 }

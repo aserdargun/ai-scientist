@@ -2,6 +2,8 @@
 
 ## Kullanıcı ve teslim
 
+- [v0.1.0 sürüm notları](releases/v0.1.0.md)
+
 - [README: başlatma ve ilk deney](../README.md)
 - [0.46 teslim kılavuzu / bilinen eksikler](ai-scientist/122-delivery-guide.md)
 - [AOS ve uygulama entegrasyonu](ai-scientist/123-application-integration.md)
