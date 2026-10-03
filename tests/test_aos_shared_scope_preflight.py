@@ -20,6 +20,60 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def test_shared_builder_receives_only_the_explicit_reviewed_scientist_root(tmp_path):
+    plan, activation = object(), object()
+    observed = []
+
+    class Transport:
+        def __init__(self, *, scientist_root):
+            observed.append(scientist_root)
+
+        def launch_command(self, selected_plan, selected_activation):
+            assert (selected_plan, selected_activation) == (plan, activation)
+            return ["reviewed-command"]
+
+    assert launch._shared_launch_command(Transport, plan, activation, str(tmp_path)) == [
+        "reviewed-command"
+    ]
+    assert observed == [tmp_path]
+
+
+@pytest.mark.parametrize("api", ["legacy-static", "implicit-kwargs", "wrong-builder"])
+def test_unsupported_shared_transport_api_fails_without_default_root_fallback(tmp_path, api):
+    constructed = Mock()
+    builder = Mock()
+
+    class LegacyTransport:
+        def __init__(self):
+            constructed()
+
+        launch_command = staticmethod(builder)
+
+    class ImplicitTransport:
+        def __init__(self, **kwargs):
+            constructed(**kwargs)
+
+        launch_command = staticmethod(builder)
+
+    class WrongBuilderTransport:
+        def __init__(self, *, scientist_root):
+            constructed(scientist_root=scientist_root)
+
+        def launch_command(self, plan):
+            builder(plan)
+
+    selected = {
+        "legacy-static": LegacyTransport,
+        "implicit-kwargs": ImplicitTransport,
+        "wrong-builder": WrongBuilderTransport,
+    }[api]
+    with pytest.raises(ValueError, match="Unsupported shared Desktop"):
+        launch._shared_launch_command(selected, object(), object(), str(tmp_path))
+    if api != "wrong-builder":
+        constructed.assert_not_called()
+    builder.assert_not_called()
+
+
 @pytest.fixture
 def shared_launch(receipt_launch, monkeypatch, tmp_path):
     """The scope validators/builders are real; all native/service hooks stay inert."""
@@ -34,7 +88,7 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     # Explicit opt-in never masks import errors or source pin failures as integration skips.
     import aos
     from aos.contracts import canonical, digest
-    from aos.shared_desktop_host import FIXED_LAUNCHER, SystemdSharedDesktopTransport
+    from aos.shared_desktop_host import SystemdSharedDesktopTransport
     from aos.shared_desktop_plan import (
         SharedDesktopActivation,
         SharedDesktopLimits,
@@ -64,6 +118,9 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     assert all(sha((root / name).read_bytes()) == pin for name, pin in selected.items())
     sources = selected
     args = case.cfg["factory_arguments"]
+    scientist_root = Path(args["source_roots"]["scientist"])
+    launcher = scientist_root / "scripts/aos_native_launch.py"
+    launcher.write_bytes(Path(launch.__file__).read_bytes())
     args["source_roots"]["aos"] = str(root)
     args["source_files"]["aos"] = sources
     static_path = Path(case.cfg["artifact_input_path"])
@@ -71,6 +128,7 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     static["source_inputs"].update(
         {str(root / name): checksum for name, checksum in sources.items()}
     )
+    static["source_inputs"][str(launcher)] = sha(launcher.read_bytes())
 
     def pin(path, value):
         raw = canonical(value).encode()
@@ -89,7 +147,7 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     template_sources.update(
         {
             str(binary): sha(binary.read_bytes()),
-            str(FIXED_LAUNCHER): sha(FIXED_LAUNCHER.read_bytes()),
+            str(launcher): sha(launcher.read_bytes()),
         }
     )
     template = SharedDesktopTemplate(
@@ -98,8 +156,8 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
         session_root=str(manager),
         python_path=str(binary),
         python_sha256=sha(binary.read_bytes()),
-        launcher_path=str(FIXED_LAUNCHER),
-        launcher_sha256=sha(FIXED_LAUNCHER.read_bytes()),
+        launcher_path=str(launcher),
+        launcher_sha256=sha(launcher.read_bytes()),
         source_files=template_sources,
         source_sha256=digest(template_sources),
         config_files={str(config): config_sha},
@@ -174,7 +232,9 @@ def shared_launch(receipt_launch, monkeypatch, tmp_path):
     )
     activation_sha = pin(activation_path, activation.model_dump(mode="json"))
     claim_launch(plan, provision, provision_sha, activation_sha, current_boot_id=boot)
-    command = SystemdSharedDesktopTransport.launch_command(plan, activation)
+    command = SystemdSharedDesktopTransport(scientist_root=scientist_root).launch_command(
+        plan, activation
+    )
     argv = command[command.index("--expected-launch-input-sha256") + 2 :]
     monkeypatch.setattr(sys, "argv", ["aos_native_launch.py", *argv])
     case.plan, case.provision, case.activation = plan, provision, activation
@@ -236,6 +296,45 @@ def test_exact_pristine_claim_is_read_only_and_preserves_legacy_authority_gates(
     case.capture.assert_called_once()
     case.native.assert_called_once()
     assert json.loads(case.output.read_bytes())["expires_boottime"] == 600.0
+
+
+def test_unsupported_transport_fails_before_native_verification_or_receipt(
+    shared_launch, monkeypatch
+):
+    import aos.shared_desktop_host
+
+    case = shared_launch
+    fallback = Mock()
+
+    class UnsupportedTransport:
+        def __init__(self):
+            fallback()
+
+    monkeypatch.setattr(
+        aos.shared_desktop_host, "SystemdSharedDesktopTransport", UnsupportedTransport
+    )
+    with pytest.raises(ValueError, match="explicit scientist_root is required"):
+        case.prepare()
+    fallback.assert_not_called()
+    case.native.assert_not_called()
+    assert not case.output.exists()
+
+
+def test_shared_builder_does_not_adopt_the_aos_default_scientist_root(
+    shared_launch, monkeypatch, tmp_path
+):
+    import aos.shared_desktop_host
+
+    case = shared_launch
+    roots = case.cfg["factory_arguments"]["source_roots"]
+    monkeypatch.setattr(aos.shared_desktop_host, "SCIENTIST_ROOT", Path(roots["scientist"]))
+    different_root = tmp_path / "other-scientist"
+    different_root.mkdir()
+    roots["scientist"] = str(different_root)
+    with pytest.raises(ValueError, match="independently configured Scientist source root"):
+        case.guard()
+    case.native.assert_not_called()
+    assert not case.output.exists()
 
 
 @pytest.mark.parametrize(

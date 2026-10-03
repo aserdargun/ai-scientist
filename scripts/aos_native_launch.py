@@ -73,6 +73,32 @@ def _shared_scope_contract(cfg):
     return scope
 
 
+def _shared_launch_command(transport_type, plan, activation, scientist_root):
+    """Bind the current AOS builder to the independently reviewed Scientist root."""
+    root = Path(scientist_root)
+    if not root.is_absolute() or root.resolve(strict=True) != root or not root.is_dir():
+        raise ValueError("Shared builder requires the exact canonical Scientist source root")
+    message = "Unsupported shared Desktop transport API: explicit scientist_root is required"
+    try:
+        signature = inspect.signature(transport_type)
+        parameter = signature.parameters.get("scientist_root")
+        if parameter is None or parameter.kind not in {
+            inspect.Parameter.KEYWORD_ONLY,
+            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        }:
+            raise ValueError(message)
+        signature.bind(scientist_root=root)
+    except (TypeError, ValueError) as error:
+        raise ValueError(message) from error
+    transport = transport_type(scientist_root=root)
+    try:
+        builder = transport.launch_command
+        inspect.signature(builder).bind(plan, activation)
+    except (AttributeError, TypeError, ValueError) as error:
+        raise ValueError("Unsupported shared Desktop launch_command API") from error
+    return builder(plan, activation)
+
+
 def _shared_scope_preflight(cfg, args, static, path, expected, deadline):
     """Read-only scope integrity; existing live bindings/factory retain all authority gates."""
     scope = _shared_scope_contract(cfg)
@@ -210,7 +236,9 @@ def _shared_scope_preflight(cfg, args, static, path, expected, deadline):
         != marker
     ):
         raise ValueError("Shared launch intent changed during scope verification")
-    command = SystemdSharedDesktopTransport.launch_command(plan, activation)
+    command = _shared_launch_command(
+        SystemdSharedDesktopTransport, plan, activation, args["source_roots"]["scientist"]
+    )
     desktop = command[command.index("--expected-launch-input-sha256") + 2 :]
     if sys.argv[1:] != desktop:
         raise ValueError("Shared Desktop argv differs from the exact reviewed builder output")

@@ -1,0 +1,42 @@
+{
+  "schema": "scientist.shared-launch-current-api-review.v1",
+  "observed_at": "2026-10-03T21:33:41.489591+00:00",
+  "scientist_base_commit": "f66afc84e6cfe16e5fa77e569ea44463e4adda93",
+  "aos_publication_commit": "33c15b0715b29016640e783392fcbaef0895207b",
+  "source_sha256": {
+    "scripts/aos_native_launch.py": "a06ee132ef6cf618e53d99c4e102d3cdb3bf12820dfcecd0936817dc1ed90b13",
+    "tests/test_aos_shared_scope_preflight.py": "845ea993b7a568dfe8e7d0aa9cb7da3aade399aa387649f6d306e9ebfc857259"
+  },
+  "aos_source_manifest_sha256": "12ec801187292208a519b4072dbd32cb99972da10da1bbc615a9febf28e6f032",
+  "aos_source_manifest_files": 115,
+  "original_failure": "Static builder invocation raises TypeError: missing activation on current instance API",
+  "fix": "Instantiate current transport with independently reviewed Scientist source root; reject incompatible constructor/builder signatures without default fallback",
+  "focused_cpu": {
+    "passed": 126,
+    "skipped": 0,
+    "exit_code": 0,
+    "python": "3.14.7",
+    "pytest": "8.4.2",
+    "scope": "Real AOS source helpers and filesystem fixtures; service and native runtime hooks inert"
+  },
+  "full_gate": {
+    "passed": 3736,
+    "skipped": 51,
+    "deselected": 177,
+    "warnings": 603,
+    "commands": 7,
+    "exit_code": 0,
+    "receipt_sha256": "3429d61904a40bad3681beb2326e09e4e7b0f86b4e71e15848737afe34c86867",
+    "unit": "scientist-current-launch-gate.service",
+    "invocation_id": "0116640237184251bc9a74da46459dfd",
+    "cleanup": "inactive; MainPID=0; ExecMainStatus=0"
+  },
+  "gpu_execution": false,
+  "service_changes": false,
+  "model_calls": 0,
+  "limitations": [
+    "Source interoperability is not a production grant or runtime acceptance.",
+    "Consumed-launch entry, per-inference enforcement and physical cleanup remain open.",
+    "The manifest is a test source snapshot, not weights/dependency acceptance or deployment approval."
+  ]
+}

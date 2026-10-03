@@ -1,9 +1,9 @@
 {
   "schema": "development-progress.v1",
-  "updated_at": "2026-10-03T21:14:19.251976+00:00",
-  "current_work": "Authenticated launch components passed the complete source gate: 3,732 tests, seven checks and wheel build/import. Preparing the reviewed source handoff.",
-  "latest_result": "44 ledger/authority checks and 31 transport checks passed, including real process credentials and socket exchange. Existing live Scientist and AOS sessions were not changed. Hourly usage/cost report is current.",
-  "next_step": "Bind the consumed launch to the actual entered service, enforce it at model admission and implement original-target physical cleanup. Then compose broker/AOS endpoints and run a fresh resource-admitted acceptance. GPU remains disabled.",
+  "updated_at": "2026-10-03T21:38:55.391638+00:00",
+  "current_work": "Current AOS launcher compatibility is fixed and passed the full source gate. Hardening policy revocation for queued model calls next.",
+  "latest_result": "126 current-AOS CPU checks passed without skips; full gate: 3,736 passed, seven checks and wheel import. No live services or GPU changed.",
+  "next_step": "Validate the reviewed source pair, then bind consumed launch authority to the actual entered service and each model admission. Physical cleanup and coordinated GPU acceptance remain pending.",
   "cpu_status": "passed",
   "gpu_status": "blocked"
 }

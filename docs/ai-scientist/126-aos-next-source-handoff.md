@@ -456,3 +456,26 @@ sonraki süreç askıya alınması ve sonlu uncertain bekleme ufku, ortak GPU ka
 açık inceleme sınırıdır; bu düzeltme bütün launch yarışlarının kapandığı iddiası
 değildir. Tam işçi envanteri, finite shared activation ve gerçek devir hâlâ açık.
 [Kaynak ve kontrol kaydı](review-evidence/native-launch-allocation-20261003.json).
+
+
+## Current AOS launch API compatibility — 2026-10-03 21:33 UTC
+
+Scientist now builds shared Desktop arguments through an instance of
+`SystemdSharedDesktopTransport(scientist_root=reviewed_scientist_root)`. The
+previous static call fails against AOS publication
+`d631f35d5545372b9aa5984e7c58d2b9db794ccc`; its removed `FIXED_LAUNCHER` constant
+is no longer used by Scientist fixtures. Unsupported API shapes fail before
+native verification or receipt generation. No implicit sibling-root fallback
+is allowed. Existing source, owner, deadline, exclusion and receipt checks remain.
+
+126 CPU checks passed without skips using the real AOS source closure and its
+native Python 3.14.7 interpreter family, with inert service/native hooks and
+isolated filesystem fixtures. This proves source compatibility only. The test
+manifest includes 115 files and the required native-exclusion schema; it does
+not authorize deployment, accept weights/dependencies or prove GPU handoff.
+[Source-pair evidence](review-evidence/shared-launch-current-api-20261003.json).
+
+AOS adapter `d631f35` is acknowledged as source preparation. The existing draft
+wire stays unchanged; runtime composition still needs original consumed-launch
+entry, per-inference checks, independently observed cleanup and reciprocal
+full-source/policy review. **GPU HOLD; no services changed.**
